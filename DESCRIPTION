@@ -1,0 +1,17 @@
+Package: cummeRbund
+Title: cummeRbund: Analysis, manipulation, and visualization of Cufflinks HTS output
+Version: 0.1.1
+Author: L. Goff, C. Trapnell
+Description: Functions that are needed by many other packages or which replace R functions.
+Suggests: 
+Depends: R (>= 2.7.0), Biobase, reshape, ggplot2, methods
+Maintainer: Loyal Goff <lgoff@csail.mit.edu>
+License: MIT License
+Collate: 	AllGenerics.R 
+			AllClasses.R 
+			methods-CuffSet.R
+			methods-DiffData.R
+			tools.R
+LazyLoad: yes
+biocViews: Infrastructure, Bioinformatics
+Packaged: 2011-03-31 18:54:10 UTC; lgoff

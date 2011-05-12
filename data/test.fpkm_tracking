@@ -1,0 +1,6 @@
+tracking_id	class_code	nearest_ref_id	gene_short_name	tss_id	locus	H1_polyA_FPKM	H1_polyA_conf_lo	H1_polyA_conf_hi	H1_non_polyA_FPKM	H1_non_polyA_conf_lo	H1_non_polyA_conf_hi	H1_cytosolic_FPKM	H1_cytosolic_conf_lo	H1_cytosolic_conf_hi	H1_nuclear_FPKM	H1_nuclear_conf_lo	H1_nuclear_conf_hi
+UCSC_000001	-	-	-	TSS1	chr1:11873-29961	0	0	5.82683e-157	0	0	0	0	0	0	0	0	7.13638e-157
+UCSC_000002	-	-	OR4F5	-	chr1:69090-70008	0	0	0	0	0	0	0	0	0	0	0	0
+UCSC_000005	-	-	-	TSS2,TSS3	chr1:322036-328580	4.32709	0.166445	8.48774	1.17271	0	3.33861	2.26592	0	5.27733	13.015	5.79889	20.2311
+UCSC_000006	-	-	OR4F16	-	chr1:367658-368595	0	0	0	0.00516527	0	0.148905	0	0	0	0	0	0
+UCSC_000007	-	-	-	TSS4	chr1:420205-421839	0	0	0	0	0	0	0	0	0	0	0	0
