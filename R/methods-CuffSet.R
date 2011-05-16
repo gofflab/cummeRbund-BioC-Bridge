@@ -1,8 +1,30 @@
-#Main CuffSet object
+##################
+#methods-CuffSet.R
+#
+#Introduces the CuffSet Class for analysis, manipulation, and plotting of Cufflinks data
+#
+#Author: Loyal A. Goff
+#
+##################
 
-SELECT g.gene_id, g.class_code, g.nearest_ref_id, g.gene_short_name, g.locus, g.length, g.coverage, g.status, gd.sample_name, gd.fpkm, gd.conf_hi, gd.conf_lo FROM genes g LEFT JOIN geneData gd ON g.gene_id = gd.gene_id WHERE (g.gene_id = 'XLOC_000001');
+#Initialize
+setMethod("initialize","CuffSet",
+		function(.Object
+				){
+					
+		}
+)
 
-SELECT g.gene_id, ged.* FROM genes g LEFT JOIN geneExpDiffData ged on g.gene_id = ged.gene_id WHERE ((sample_1 = 'H1_hESC' AND sample_2 = 'Fibroblasts') OR (sample_1 = 'Fibroblasts' AND sample_2 = 'H1_hESC')) AND ged.ln_fold_change>-20 AND ged.ln_fold_change<20 ;
 
-#Pivot table SQL for scatterplots
-select g.*, sum(case when gd.sample_name = 'Fibroblasts' then fpkm end) as Fibroblasts, sum(case when gd.sample_name = 'H1_hESC' then fpkm end) as H1_hESC from genes g LEFT JOIN geneData gd on g.gene_id = gd.gene_id group by g.gene_id;
+#Class Description
+
+############
+#Accessors
+############
+sampleNames<-function(object){
+	
+}
+
+############
+#SQL access
+############

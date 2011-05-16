@@ -1,6 +1,6 @@
 #useDynLib(cummeRbund, copyEnv_sym=copyEnv, sublist_extract)
 
-exportClasses(cuffSet,DiffData)
+exportClasses(CuffSet,CuffData)
 
 exportMethods(fpkm,
 			conf_lo,

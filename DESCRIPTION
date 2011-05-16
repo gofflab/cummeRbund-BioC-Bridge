@@ -1,17 +1,18 @@
 Package: cummeRbund
-Title: cummeRbund: Analysis, manipulation, and visualization of Cufflinks HTS output
-Version: 0.1.1
+Title: cummeRbund: The finishing touch on your Tuxedo workflow. Analysis, manipulation, and visualization of Cufflinks HTS data.
+Version: 0.1.2
 Author: L. Goff, C. Trapnell
-Description: Functions that are needed by many other packages or which replace R functions.
+Description: Allows for persistent storage, access, and manipulation of Cufflinks high-throughput sequencing data.  In addition, provides numerous plotting functions for commonly used visualizations.
 Suggests: 
-Depends: R (>= 2.7.0), Biobase, reshape, ggplot2, methods
-Maintainer: Loyal Goff <lgoff@csail.mit.edu>
+Depends: R (>= 2.7.0), RSQLite, reshape, ggplot2, methods
+Maintainer: Loyal A. Goff <lgoff@csail.mit.edu>
 License: MIT License
 Collate: 	AllGenerics.R 
 			AllClasses.R 
+			database-setup.R
 			methods-CuffSet.R
-			methods-DiffData.R
+			methods-CuffData.R
 			tools.R
 LazyLoad: yes
-biocViews: Infrastructure, Bioinformatics
+biocViews: Infrastructure, Bioinformatics, Visualization
 Packaged: 2011-03-31 18:54:10 UTC; lgoff
