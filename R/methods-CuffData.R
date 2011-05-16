@@ -132,7 +132,7 @@ setMethod("diffData",signature(object="CuffData"),.diffData)
 			p<-p+geom_density(aes(x=fpkm,group=sample_name,color=sample_name,fill=sample_name),alpha=I(1/3))
 		}
 	
-	p<-opts(title=object@tables$mainTable)	
+	p<-p + opts(title=object@tables$mainTable)	
 	#TODO: Add label callout
 	p
 }
