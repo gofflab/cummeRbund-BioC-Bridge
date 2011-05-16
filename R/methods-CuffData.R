@@ -10,14 +10,27 @@
 ##################
 setMethod("initialize","CuffData",
 			function(.Object,
-					){
-						
+					DBFile,
+					mainTable,
+					dataTable,
+					expDiffTable,
+					filterList,
+					type = c("genes","isoforms","TSS","CDS"),
+					... ){
+				.Object<-callNextMethod(.Object,
+						DBFile = DBFile,
+						mainTable = mainTable,
+						dataTable, = dataTable,
+						expDiffTable - expDiffTable,
+						filterList = filterList,
+						type = type,
+						...)				
 		}
 )
 
 
-setValidity("CuffData",function(){
-			
+setValidity("CuffData",function(object){
+		TRUE
 		}
 )			
 			
