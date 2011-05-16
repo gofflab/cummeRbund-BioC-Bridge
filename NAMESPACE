@@ -3,32 +3,26 @@
 exportClasses(CuffSet,CuffData)
 
 exportMethods(fpkm,
-			conf_lo,
-			conf_hi,
-			csBoxplot,
-			geneNames,
-			write.fpkm,
-			csmelt,
 			csDensity,
-			csHist,
-			csBoxplot,
-			csHeatmap,
-			expressionBarplot,
-			expressionPlot,
-			csScatter)
+			features,
+			samples
+			)
 
 export("readCufflinks",
+		"loadGenes",
+		"loadIsoforms",
+		"loadTSS",
+		"loadCDS",
+		"populateSampleTable",
+		"createDB",
 		"JSdist",
-		"csApply",
 		"shannon.entropy",
-		"makeprobs",
-		"diffDataNew", 
-		"diffDataValidMembers"
+		"makeprobs"
 		)
 
-importFrom("Biobase", "geneNames")
-importFrom("Biobase", "geneNames<-")
+#importFrom("Biobase", "geneNames")
+#importFrom("Biobase", "geneNames<-")
 
-importClassesFrom("Biobase","eSet")
-importClassesFrom("Biobase","Versioned")
-importClassesFrom("Biobase","VersionedBiobase")
+#importClassesFrom("Biobase","eSet")
+#importClassesFrom("Biobase","Versioned")
+#importClassesFrom("Biobase","VersionedBiobase")

@@ -62,17 +62,18 @@ setMethod("dim","CuffData",
 ##################
 #Data Retrieval
 ##################
-.names<-function(object){
-	
-}
-
-setMethod("names","CuffData",.names)
-
 .features<-function(object){
 	dbReadTable(object@DB, object@tables$mainTable)
 }
 
 setMethod("features","CuffData",.features)
+
+.samples<-function(object){
+	res<-dbReadTable(object@DB,'samples')
+	res<-res$sample_name
+}
+
+setMethod("samples","CuffData",.samples)
 
 .fpkm<-function(object){
 	FPKMQuery<-paste("SELECT * FROM",object@tables$dataTable)
@@ -81,11 +82,26 @@ setMethod("features","CuffData",.features)
 
 setMethod("fpkm","CuffData",.fpkm)
 
-.diff<-function(){
-	
+.fpkmMatrix<-function(object){
+	samp<-samples(object)
+	FPKMMatQuery<-"select x.*, "
+	for (i in samp){
+		FPKMMatQuery<-paste(FPKMMatQuery,"sum(case when xd.sample_name ='",i,"' then fpkm end) as ",i,",",sep="")
+	}
+	FPKMMatQuery<-substr(FPKMMatQuery, 1, nchar(FPKMMatQuery)-1)
+	FPKMMatQuery<-paste(FPKMMatQuery," from ",object@tables$mainTable," x LEFT JOIN ",object@tables$dataTable," xd on x.",object@idField," = xd.",object@idField," group by x.",object@idField,sep="")
+	dbGetQuery(object@DB,FPKMMatQuery)
 }
 
-setMethod("diff","CuffData",.diff)
+setMethod("fpkmMatrix","CuffData",.fpkmMatrix)
+
+.diffData<-function(object,x,y,lnFcCutoff=20){
+	diffQuery<-paste("SELECT x.",object@idField,", xed.* FROM ",object@tables$mainTable," x LEFT JOIN ",object@tables$expDiffTable," xed on x.",object@idField," = xed.",object@idField," WHERE ((sample_1 = '",x,"' AND sample_2 = '",y,"') OR (sample_1 = '",y,"' AND sample_2 = '",x,"')) AND xed.ln_fold_change>",-lnFcCutoff," AND xed.ln_fold_change<",lnFcCutoff,sep="")
+	dat<-dbGetQuery(object@DB,diffQuery)
+	#diffQuery
+}
+
+setMethod("diffData",signature(object="CuffData"),.diffData)
 
 #Useful SQL commands
 
@@ -114,6 +130,8 @@ setMethod("diff","CuffData",.diff)
 		}else{
 			p<-p+geom_density(aes(x=fpkm,group=sample_name,color=sample_name,fill=sample_name),alpha=I(1/3))
 		}
+	
+	p<-opts(title=object@tables$mainTable)	
 	#TODO: Add label callout
 	p
 }
@@ -140,10 +158,67 @@ setMethod("csDensity",signature(object="CuffData"),.density)
 	
 }
 
-.scatter<-function(){
+.scatter<-function(object,x,y,logMode=TRUE,pseudocount=0.0001,labels, smooth=FALSE,...){
+	dat<-fpkmMatrix(object)
+	samp<-samples(object)
 	
+	#check to make sure x and y are in samples
+	if (!all(c(x,y) %in% samp)){
+		stop("One or more values of 'x' or 'y' are not valid sample names!")
+	}
+	
+	#add pseudocount if necessary
+	if(logMode){
+		for (i in samp){
+			dat[[i]]<-dat[[i]]+pseudocount
+		}
+	}
+	
+	#make plot object
+	p<-ggplot(dat)
+	p<- p + aes_string(x=x,y=y)
+	p<- p + geom_point(size=1.2,alpha=I(1/3)) + geom_abline(intercept=0,slope=1,linetype=2) + geom_rug(size=0.5,alpha=0.01)
+	
+	#add smoother
+	if(smooth){
+		p <- p + stat_smooth(method="lm",fill="blue",alpha=0.2)
+	}
+	
+	#Add highlights from labels
+#	if(!missing(labels)){
+#		labelIdx<-fData(object)$gene_short_name %in% labels
+#		labelfp<-fp[labelIdx,]
+#		labelfp$gene_short_name<-fData(object)$gene_short_name[labelIdx]
+#		#print(head(labelfp))
+#		p <- p + geom_point(data=labelfp,size=1.2,color="red")
+#		p <- p + geom_text(data=labelfp,aes(label=gene_short_name),color="red",hjust=0,vjust=0,angle=45,size=2)
+#	}
+#	
+	#logMode
+	if(logMode){
+		p <- p + scale_y_log2() + scale_x_log2()
+	}
+	
+	#Add title & Return value
+	p<- p + opts(title=object@tables$mainTable)
+	p
 }
 
-.volcano<-function(){
+setMethod("csScatter",signature(object="CuffData"),.scatter)
+
+.volcano<-function(object,x,y){
+	dat<-diffData(object=object,x=x,y=y)
+	s1<-unique(dat$sample_1)
+	s2<-unique(dat$sample_2)
 	
+	p<-ggplot(dat)
+	p<- p + geom_point(aes(x=ln_fold_change,y=-log10(p_value),color=significant),size=1,alpha=I(1/3))
+	
+	#Add title and return
+	p<- p + opts(title=paste(object@tables$mainTable,": ",s2,"/",s1,sep=""))
+	p
 }
+
+setMethod("csVolcano",signature(object="CuffData"),.volcano)
+
+

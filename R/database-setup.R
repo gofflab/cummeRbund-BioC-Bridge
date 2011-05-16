@@ -859,15 +859,14 @@ readCufflinks<-function(dbFile="cuffData.db",
 		loadTSS(TSSFPKM,TSSDiff,dbConn)
 		loadCDS(CDSFPKM,CDSExpDiff,dbConn)
 		
-	#if not, create it.
 	}
 	dbConn<-dbConnect(dbDriver(driver),dbFile)
 	return (
 			new("CuffSet",DB = dbConn,
-					genes = new("CuffData",DB = dbConn, tables = list(mainTable = "genes",dataTable = "geneData",expDiffTable = "geneExpDiff",otherTable = "promoterDiffData"), filters = list(),type = "genes",idField = "gene_id"),
-					isoforms = new("CuffData", DB = dbConn, tables = list(mainTable = "isoforms",dataTable = "isoformData",expDiffTable = "isoformExpDiff",otherTable = ""), filters = list(),type="isoforms",idField = "isoform_id"),
-					TSS = new("CuffData", DB = dbConn, tables = list(mainTable = "TSS",dataTable = "TSSData",expDiffTable = "TSSExpDiff", otherTable = "splicingDiffData"), filters = list(),type = "TSS",idField = "TSS_group_id"),
-					CDS = new("CuffData", DB = dbConn, tables = list(mainTable = "CDS",dataTable = "CDSData",expDiffTable = "CDSExpDiff", otherTable = "CDSDiffData"), filters = list(),type = "CDS",idField = "CDS_id")
+					genes = new("CuffData",DB = dbConn, tables = list(mainTable = "genes",dataTable = "geneData",expDiffTable = "geneExpDiffData",otherTable = "promoterDiffData"), filters = list(),type = "genes",idField = "gene_id"),
+					isoforms = new("CuffData", DB = dbConn, tables = list(mainTable = "isoforms",dataTable = "isoformData",expDiffTable = "isoformExpDiffData",otherTable = ""), filters = list(),type="isoforms",idField = "isoform_id"),
+					TSS = new("CuffData", DB = dbConn, tables = list(mainTable = "TSS",dataTable = "TSSData",expDiffTable = "TSSExpDiffData", otherTable = "splicingDiffData"), filters = list(),type = "TSS",idField = "TSS_group_id"),
+					CDS = new("CuffData", DB = dbConn, tables = list(mainTable = "CDS",dataTable = "CDSData",expDiffTable = "CDSExpDiffData", otherTable = "CDSDiffData"), filters = list(),type = "CDS",idField = "CDS_id")
 			)
 	)	
 							

@@ -26,10 +26,16 @@ setGeneric("loadIsoforms",function(fpkmFile,..) standardGeneric("loadIsoforms"))
 setGeneric("loadTSS",function(fpkmFile,..) standardGeneric("loadTSS"))
 setGeneric("loadCDS",function(fpkmFile,..) standardGeneric("loadCDS"))
 
+#CuffSet generics
+setGeneric("samples",function(object) standardGeneric("samples"))
 
+#CuffData generics
 setGeneric("features",function(object) standardGeneric("features"))
 setGeneric("fpkm",function(object) standardGeneric("fpkm"))
+setGeneric("diffData",function(object,x,y,...) standardGeneric("diffData"))
 
 
 #plotting
 setGeneric("csDensity",function(object, ...) standardGeneric("csDensity"))
+setGeneric("csScatter",function(object,x,y,...) standardGeneric("csScatter"))
+setGeneric("csVolcano",function(object,x,y,...) standardGeneric("csVolcano"))
