@@ -15,8 +15,20 @@ setMethod("initialize","CuffSet",
 		}
 )
 
+##################
+#Class Methods
+##################
+setMethod("show","CuffSet",
+		function(object){
+			cat(class(object), "instance with:\n")
+		}
+)
 
-#Class Description
+setValidity("CuffSet",
+		function(object){
+		TRUE	
+		}
+)
 
 ############
 #Accessors

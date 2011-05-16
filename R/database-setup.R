@@ -2,15 +2,12 @@
 # 
 # Author: lgoff
 ###############################################################################
-library(RSQLite)
-library(reshape)
-
-drv <- dbDriver("SQLite")
-
+#library(RSQLite)
+#library(reshape)
+#drv <- dbDriver("SQLite")
 #####################
 #File Archetype parsing
 #####################
-
 #Genes
 loadGenes<-function(fpkmFile,
 		diffFile,
@@ -39,23 +36,22 @@ loadGenes<-function(fpkmFile,
 	idCols = c(1:10)
 
 	#Read primary file
-	print(paste("Reading ",fpkmFile,sep=""))
+	write(paste("Reading ",fpkmFile,sep=""),stderr())
 	fpkmArgs$file = fpkmFile
 	full = as.data.frame(do.call(read.table,fpkmArgs))
 	
-	#TODO: Check that samples table is populated
 	
 	######
 	#Populate genes table
 	######
 	genesTable<-full[,c(1:3,5,7:10)]
-	print("Writing genes table")
+	write("Writing genes table",stderr())
 	dbWriteTable(dbConn,'genes',genesTable,row.names=F,append=T)
 	
 	######
 	#Populate geneData table
 	######
-	print("Reshaping geneData table")
+	write("Reshaping geneData table",stderr())
 	genemelt<-melt(full,id.vars=c("tracking_id"),measure.vars=-idCols,variable_name="sample_name")
 	
 	#Clean up and normalize data
@@ -72,12 +68,27 @@ loadGenes<-function(fpkmFile,
 	#Adjust sample names with make.db.names
 	genemelt$sample_name <- make.db.names(dbConn,as.vector(genemelt$sample_name),unique=FALSE)
 	
+	#Check that samples table is populated
+	write("Checking samples table...",stderr())
+	samples<-getSamples(genemelt)
+	dbSamples<-dbReadTable(dbConn,"samples")
+	if (dim(dbSamples)[1]>0) {
+		if (all(samples %in% dbSamples$sample_name)){
+			write ("OK!",stderr())
+		}else{
+			stop("Sample mismatch!")
+		}
+	}else{
+		write("Populating samples table...",stderr())
+		populateSampleTable(samples,dbConn)
+	}
+	
 	#Recast
-	print("Recasting")
+	write("Recasting",stderr())
 	genemelt<-cast(genemelt,...~measurement)
 	
 	#Write geneData table
-	print("Writing geneData table")
+	write("Writing geneData table",stderr())
 	dbWriteTable(dbConn,'geneData',as.data.frame(genemelt[,c(1:2,5,3,4)]),row.names=F,append=T)
 	
 	#######
@@ -86,7 +97,7 @@ loadGenes<-function(fpkmFile,
 	
 	if(!missing(diffFile)){
 		#Read diff file
-		print(paste("Reading ",diffFile,sep=""))
+		write(paste("Reading ",diffFile,sep=""),stderr())
 		diffArgs$file = diffFile
 		diff<-as.data.frame(do.call(read.table,diffArgs))
 		
@@ -94,7 +105,7 @@ loadGenes<-function(fpkmFile,
 		diff$sample_1<-make.db.names(dbConn,as.vector(diff$sample_1),unique=FALSE)
 		diff$sample_2<-make.db.names(dbConn,as.vector(diff$sample_2),unique=FALSE)
 		
-		print("Writing geneExpDiffData table")
+		write("Writing geneExpDiffData table",stderr())
 		diffCols<-c(1,5:14)
 		dbWriteTable(dbConn,'geneExpDiffData',diff[,diffCols],row.names=F,append=T)
 	}
@@ -134,11 +145,9 @@ loadIsoforms<-function(fpkmFile,
 	idCols = c(1:10)
 	
 	#Read primary file
-	print(paste("Reading ",fpkmFile,sep=""))
+	write(paste("Reading ",fpkmFile,sep=""),stderr())
 	fpkmArgs$file = fpkmFile
 	full = as.data.frame(do.call(read.table,fpkmArgs))
-	
-	#TODO: Check that samples table is populated
 	
 	######
 	#Populate genes table
@@ -148,14 +157,14 @@ loadIsoforms<-function(fpkmFile,
 	
 	#This is a temporary fix until p_id is added to the 'isoforms.fpkm_tracking' file
 	isoformsTable<-cbind(isoformsTable[,1:2],data.frame(CDS_id=rep("NA",dim(isoformsTable)[1])),isoformsTable[,-c(1:2)])
-	print (head(isoformsTable))
-	print("Writing isoforms table")
+	#print (head(isoformsTable))
+	write("Writing isoforms table",stderr())
 	dbWriteTable(dbConn,'isoforms',as.data.frame(isoformsTable),row.names=F,append=T)
 	
 	######
 	#Populate geneData table
 	######
-	print("Reshaping isoformData table")
+	write("Reshaping isoformData table",stderr())
 	isoformmelt<-melt(full,id.vars=c("tracking_id"),measure.vars=-idCols,variable_name="sample_name")
 	
 	#Clean up and normalize data
@@ -172,12 +181,28 @@ loadIsoforms<-function(fpkmFile,
 	#Adjust sample names with make.db.names
 	isoformmelt$sample_name <- make.db.names(dbConn,as.vector(isoformmelt$sample_name),unique=FALSE)
 	
+	#Check that samples table is populated
+	write("Checking samples table...",stderr())
+	samples<-getSamples(isoformmelt)
+	dbSamples<-dbReadTable(dbConn,"samples")
+	if (dim(dbSamples)[1]>0) {
+		if (all(samples %in% dbSamples$sample_name)){
+			write ("OK!",stderr())
+		}else{
+			stop("Sample mismatch!")
+		}
+	}else{
+		write("Populating samples table...",stderr())
+		populateSampleTable(samples,dbConn)
+	}
+	
+	
 	#Recast
-	print("Recasting")
+	write("Recasting",stderr())
 	isoformmelt<-cast(isoformmelt,...~measurement)
 	
 	#Write geneData table
-	print("Writing isoformData table")
+	write("Writing isoformData table",stderr())
 	dbWriteTable(dbConn,'isoformData',as.data.frame(isoformmelt[,c(1:2,5,3,4)]),row.names=F,append=T)
 	
 	#######
@@ -186,7 +211,7 @@ loadIsoforms<-function(fpkmFile,
 	
 	if(!missing(diffFile)){
 		#Read diff file
-		print(paste("Reading ",diffFile,sep=""))
+		write(paste("Reading ",diffFile,sep=""),stderr())
 		diffArgs$file = diffFile
 		diff<-as.data.frame(do.call(read.table,diffArgs))
 		
@@ -194,7 +219,7 @@ loadIsoforms<-function(fpkmFile,
 		diff$sample_1<-make.db.names(dbConn,as.vector(diff$sample_1),unique=FALSE)
 		diff$sample_2<-make.db.names(dbConn,as.vector(diff$sample_2),unique=FALSE)
 		
-		print("Writing isoformExpDiffData table")
+		write("Writing isoformExpDiffData table",stderr())
 		diffCols<-c(1,5:14)
 		dbWriteTable(dbConn,'isoformExpDiffData',diff[,diffCols],row.names=F,append=T)
 	}
@@ -229,7 +254,7 @@ loadTSS<-function(fpkmFile,
 	idCols = c(1:10)
 	
 	#Read primary file
-	print(paste("Reading ",fpkmFile,sep=""))
+	write(paste("Reading ",fpkmFile,sep=""),stderr())
 	fpkmArgs$file = fpkmFile
 	full = as.data.frame(do.call(read.table,fpkmArgs))
 	
@@ -239,13 +264,13 @@ loadTSS<-function(fpkmFile,
 	#Populate genes table
 	######
 	tssTable<-full[,c(1:4,7:10)]
-	print("Writing TSS table")
+	write("Writing TSS table",stderr())
 	dbWriteTable(dbConn,'TSS',tssTable,row.names=F,append=T)
 	
 	######
 	#Populate geneData table
 	######
-	print("Reshaping TSSData table")
+	write("Reshaping TSSData table",stderr())
 	tssmelt<-melt(full,id.vars=c("tracking_id"),measure.vars=-idCols,variable_name="sample_name")
 	
 	#Clean up and normalize data
@@ -262,12 +287,28 @@ loadTSS<-function(fpkmFile,
 	#Adjust sample names with make.db.names
 	tssmelt$sample_name <- make.db.names(dbConn,as.vector(tssmelt$sample_name),unique=FALSE)
 	
+	#Check that samples table is populated
+	write("Checking samples table...",stderr())
+	samples<-getSamples(tssmelt)
+	dbSamples<-dbReadTable(dbConn,"samples")
+	if (dim(dbSamples)[1]>0) {
+		if (all(samples %in% dbSamples$sample_name)){
+			write ("OK!",stderr())
+		}else{
+			stop("Sample mismatch!")
+		}
+	}else{
+		write("Populating samples table...",stderr())
+		populateSampleTable(samples,dbConn)
+	}
+	
+	
 	#Recast
-	print("Recasting")
+	write("Recasting",stderr())
 	tssmelt<-cast(tssmelt,...~measurement)
 	
 	#Write geneData table
-	print("Writing TSSData table")
+	write("Writing TSSData table",stderr())
 	dbWriteTable(dbConn,'TSSData',as.data.frame(tssmelt[,c(1:2,5,3,4)]),row.names=F,append=T)
 	
 	#######
@@ -276,7 +317,7 @@ loadTSS<-function(fpkmFile,
 	
 	if(!missing(diffFile)){
 		#Read diff file
-		print(paste("Reading ",diffFile,sep=""))
+		write(paste("Reading ",diffFile,sep=""),stderr())
 		diffArgs$file = diffFile
 		diff<-as.data.frame(do.call(read.table,diffArgs))
 		
@@ -284,7 +325,7 @@ loadTSS<-function(fpkmFile,
 		diff$sample_1<-make.db.names(dbConn,as.vector(diff$sample_1),unique=FALSE)
 		diff$sample_2<-make.db.names(dbConn,as.vector(diff$sample_2),unique=FALSE)
 		
-		print("Writing TSSExpDiffData table")
+		write("Writing TSSExpDiffData table",stderr())
 		diffCols<-c(1,5:14)
 		dbWriteTable(dbConn,'TSSExpDiffData',diff[,diffCols],row.names=F,append=T)
 	}
@@ -324,7 +365,7 @@ loadCDS<-function(fpkmFile,
 	idCols = c(1:10)
 	
 	#Read primary file
-	print(paste("Reading ",fpkmFile,sep=""))
+	write(paste("Reading ",fpkmFile,sep=""),stderr())
 	fpkmArgs$file = fpkmFile
 	full = as.data.frame(do.call(read.table,fpkmArgs))
 	
@@ -334,13 +375,13 @@ loadCDS<-function(fpkmFile,
 	#Populate genes table
 	######
 	cdsTable<-full[,c(1:4,6:10)]
-	print("Writing CDS table")
+	write("Writing CDS table",stderr())
 	dbWriteTable(dbConn,'CDS',cdsTable,row.names=F,append=T)
 	
 	######
 	#Populate geneData table
 	######
-	print("Reshaping CDSData table")
+	write("Reshaping CDSData table",stderr())
 	cdsmelt<-melt(full,id.vars=c("tracking_id"),measure.vars=-idCols,variable_name="sample_name")
 	
 	#Clean up and normalize data
@@ -357,12 +398,28 @@ loadCDS<-function(fpkmFile,
 	#Adjust sample names with make.db.names
 	cdsmelt$sample_name <- make.db.names(dbConn,as.vector(cdsmelt$sample_name),unique=FALSE)
 	
+	#Check that samples table is populated
+	write("Checking samples table...",stderr())
+	samples<-getSamples(cdsmelt)
+	dbSamples<-dbReadTable(dbConn,"samples")
+	if (dim(dbSamples)[1]>0) {
+		if (all(samples %in% dbSamples$sample_name)){
+			write ("OK!",stderr())
+		}else{
+			stop("Sample mismatch!")
+		}
+	}else{
+		write("Populating samples table...",stderr())
+		populateSampleTable(samples,dbConn)
+	}
+	
+	
 	#Recast
-	print("Recasting")
+	write("Recasting",stderr())
 	cdsmelt<-cast(cdsmelt,...~measurement)
 	
 	#Write geneData table
-	print("Writing CDSData table")
+	write("Writing CDSData table",stderr())
 	dbWriteTable(dbConn,'CDSData',as.data.frame(cdsmelt[,c(1:2,5,3,4)]),row.names=F,append=T)
 	
 	#######
@@ -371,7 +428,7 @@ loadCDS<-function(fpkmFile,
 	
 	if(!missing(diffFile)){
 		#Read diff file
-		print(paste("Reading ",diffFile,sep=""))
+		write(paste("Reading ",diffFile,sep=""),stderr())
 		diffArgs$file = diffFile
 		diff<-as.data.frame(do.call(read.table,diffArgs))
 		
@@ -379,7 +436,7 @@ loadCDS<-function(fpkmFile,
 		diff$sample_1<-make.db.names(dbConn,as.vector(diff$sample_1),unique=FALSE)
 		diff$sample_2<-make.db.names(dbConn,as.vector(diff$sample_2),unique=FALSE)
 		
-		print("Writing CDSExpDiffData table")
+		write("Writing CDSExpDiffData table",stderr())
 		diffCols<-c(1,5:14)
 		dbWriteTable(dbConn,'CDSExpDiffData',diff[,diffCols],row.names=F,append=T)
 	}
@@ -764,23 +821,66 @@ COMMIT;
 
 getSamples<-function(fpkmDF){
 	sample_name<-unique(fpkmDF$sample)
-	sample_name<-as.data.frame(sample_name)
+	#sample_name<-as.data.frame(sample_name)
 }
 
 populateSampleTable<-function(samples,dbConn){
 	samples<-make.db.names(dbConn,samples,unique=FALSE)
-	dbWriteTable(dbConn,'samples',samples,row.names=F,overwrite=T)
+	samples<-as.data.frame(samples)
+	dbWriteTable(dbConn,'samples',samples,row.names=F,append=T)
 }
 
+#############
+#readCufflinks
+#############
+readCufflinks<-function(dbFile="cuffData.db",
+						geneFPKM="genes.fpkm_tracking",
+						geneDiff="gene_exp.diff",
+						isoformFPKM="isoforms.fpkm_tracking",
+						isoformDiff="isoform_exp.diff",
+						TSSFPKM="TSS_groups.fpkm_tracking",
+						TSSDiff="TSS_group_exp.diff",
+						CDSFPKM="CDS.fpkm_tracking",
+						CDSExpDiff="CDS_exp.diff",
+						CDSDiff="CDS.diff",
+						promoterFile="promoters.diff",
+						splicingFile="splicing.diff",
+						driver = "SQLite",
+						rebuild = FALSE,
+						...){
+				
+	#Check to see whether dbFile exists
+	if (!file.exists(dbFile) || rebuild == TRUE){
+		#if not, create it
+		dbConn<-createDB(dbFile)
+		#populate DB
+		loadGenes(geneFPKM,geneDiff,dbConn)
+		loadIsoforms(isoformFPKM,isoformDiff,dbConn)
+		loadTSS(TSSFPKM,TSSDiff,dbConn)
+		loadCDS(CDSFPKM,CDSExpDiff,dbConn)
+		
+	#if not, create it.
+	}
+	dbConn<-dbConnect(dbDriver(driver),dbFile)
+	return (
+			new("CuffSet",DB = dbConn,
+					genes = new("CuffData",DB = dbConn, tables = list(mainTable = "genes",dataTable = "geneData",expDiffTable = "geneExpDiff",otherTable = "promoterDiffData"), filters = list(),type = "genes",idField = "gene_id"),
+					isoforms = new("CuffData", DB = dbConn, tables = list(mainTable = "isoforms",dataTable = "isoformData",expDiffTable = "isoformExpDiff",otherTable = ""), filters = list(),type="isoforms",idField = "isoform_id"),
+					TSS = new("CuffData", DB = dbConn, tables = list(mainTable = "TSS",dataTable = "TSSData",expDiffTable = "TSSExpDiff", otherTable = "splicingDiffData"), filters = list(),type = "TSS",idField = "TSS_group_id"),
+					CDS = new("CuffData", DB = dbConn, tables = list(mainTable = "CDS",dataTable = "CDSData",expDiffTable = "CDSExpDiff", otherTable = "CDSDiffData"), filters = list(),type = "CDS",idField = "CDS_id")
+			)
+	)	
+							
+}
 
 #######
 #Unit Test
 #######
 
-dbConn<-createDB()
-date()
-loadGenes("genes.fpkm_tracking","gene_exp.diff",dbConn)
-loadIsoforms("isoforms.fpkm_tracking","isoform_exp.diff",dbConn)
-loadTSS("tss_groups.fpkm_tracking","tss_group_exp.diff",dbConn)
-loadCDS("cds.fpkm_tracking","cds_exp.diff",dbConn)
-date()
+#dbConn<-createDB()
+#date()
+#loadGenes("genes.fpkm_tracking","gene_exp.diff",dbConn)
+#loadIsoforms("isoforms.fpkm_tracking","isoform_exp.diff",dbConn)
+#loadTSS("tss_groups.fpkm_tracking","tss_group_exp.diff",dbConn)
+#loadCDS("cds.fpkm_tracking","cds_exp.diff",dbConn)
+#date()

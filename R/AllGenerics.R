@@ -25,3 +25,11 @@ setGeneric("loadGenes",function(fpkmFile,..) standardGeneric("loadGenes"))
 setGeneric("loadIsoforms",function(fpkmFile,..) standardGeneric("loadIsoforms"))
 setGeneric("loadTSS",function(fpkmFile,..) standardGeneric("loadTSS"))
 setGeneric("loadCDS",function(fpkmFile,..) standardGeneric("loadCDS"))
+
+
+setGeneric("features",function(object) standardGeneric("features"))
+setGeneric("fpkm",function(object) standardGeneric("fpkm"))
+
+
+#plotting
+setGeneric("csDensity",function(object, ...) standardGeneric("csDensity"))
