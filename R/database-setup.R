@@ -397,6 +397,8 @@ loadCDS<-function(fpkmFile,
 #####################
 
 createDB<-function(dbFname="cuffData.db",driver="SQLite") {
+	#Builds sqlite db at 'dbFname' and returns a dbConnect object pointing to newly created database.
+	
 	drv<-dbDriver(driver)
 	db <- dbConnect(drv,dbname=dbFname)
 	
