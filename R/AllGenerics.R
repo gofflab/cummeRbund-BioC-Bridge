@@ -32,6 +32,7 @@ setGeneric("samples",function(object) standardGeneric("samples"))
 #CuffData generics
 setGeneric("features",function(object) standardGeneric("features"))
 setGeneric("fpkm",function(object) standardGeneric("fpkm"))
+setGeneric("fpkmMatrix",function(object) standardGeneric("fpkmMatrix"))
 setGeneric("diffData",function(object,x,y,...) standardGeneric("diffData"))
 
 

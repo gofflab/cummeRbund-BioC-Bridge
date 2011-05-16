@@ -4,6 +4,10 @@ exportClasses(CuffSet,CuffData)
 
 exportMethods(fpkm,
 			csDensity,
+			csScatter,
+			csVolcano,
+			fpkmMatrix,
+			diffData,
 			features,
 			samples
 			)

@@ -71,6 +71,7 @@ setMethod("features","CuffData",.features)
 .samples<-function(object){
 	res<-dbReadTable(object@DB,'samples')
 	res<-res$sample_name
+	res
 }
 
 setMethod("samples","CuffData",.samples)
@@ -204,7 +205,7 @@ setMethod("csDensity",signature(object="CuffData"),.density)
 	p
 }
 
-setMethod("csScatter",signature(object="CuffData"),.scatter)
+setMethod("csScatter",signature(object="CuffData"), .scatter)
 
 .volcano<-function(object,x,y){
 	dat<-diffData(object=object,x=x,y=y)
@@ -219,6 +220,6 @@ setMethod("csScatter",signature(object="CuffData"),.scatter)
 	p
 }
 
-setMethod("csVolcano",signature(object="CuffData"),.volcano)
+setMethod("csVolcano",signature(object="CuffData"), .volcano)
 
 
