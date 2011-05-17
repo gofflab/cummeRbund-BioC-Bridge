@@ -35,7 +35,7 @@ setGeneric("featureNames",function(object) standardGeneric("featureNames"))
 setGeneric("fpkm",function(object) standardGeneric("fpkm"))
 setGeneric("fpkmMatrix",function(object) standardGeneric("fpkmMatrix"))
 setGeneric("diffData",function(object,x,y,...) standardGeneric("diffData"))
-
+setGeneric("addFeatures",function(object,featDF,..) standardGeneric("addFeatures"))
 
 #plotting
 setGeneric("csDensity",function(object, ...) standardGeneric("csDensity"))

@@ -11,8 +11,8 @@
 setMethod("initialize","CuffData",
 			function(.Object,
 					DB,
-					tables,
-					filters,
+					tables=list(mainTable = "",dataTable = "",expDiffTable = "",featureTable = "", otherTable = ""),
+					filters=list(),
 					type = c("genes","isoforms","TSS","CDS"),
 					idField,
 					... ){
@@ -25,7 +25,6 @@ setMethod("initialize","CuffData",
 						...)				
 		}
 )
-
 
 setValidity("CuffData",function(object){
 		TRUE
@@ -64,18 +63,9 @@ setMethod("dim","CuffData",
 
 setMethod("addFeatures",signature="CuffData",.addFeatures)
 
-##################
-#Subsetting
-##################
-#Example query
-#"SELECT * FROM genes WHERE gene_id in ('XLOC_000005','XLOC_000015','XLOC_000055','XLOC_000595','XLOC_005998','ucscCodingXLOC_018816')"
-
-
-
-
-##################
-#Data Retrieval
-##################
+###################
+#Accessors
+###################
 .features<-function(object){
 	dbReadTable(object@DB, object@tables$mainTable)
 }
@@ -106,13 +96,14 @@ setMethod("fpkm","CuffData",.fpkm)
 
 .fpkmMatrix<-function(object){
 	samp<-samples(object)
-	FPKMMatQuery<-"select x.*, "
+	FPKMMatQuery<-paste("select x.",object@idField,", ",sep="")
 	for (i in samp){
 		FPKMMatQuery<-paste(FPKMMatQuery,"sum(case when xd.sample_name ='",i,"' then fpkm end) as ",i,",",sep="")
 	}
 	FPKMMatQuery<-substr(FPKMMatQuery, 1, nchar(FPKMMatQuery)-1)
 	FPKMMatQuery<-paste(FPKMMatQuery," from ",object@tables$mainTable," x LEFT JOIN ",object@tables$dataTable," xd on x.",object@idField," = xd.",object@idField," group by x.",object@idField,sep="")
-	dbGetQuery(object@DB,FPKMMatQuery)
+	res<-dbGetQuery(object@DB,FPKMMatQuery)
+	data.frame(res[,-1],row.names=res[,1])
 }
 
 setMethod("fpkmMatrix","CuffData",.fpkmMatrix)
@@ -124,6 +115,20 @@ setMethod("fpkmMatrix","CuffData",.fpkmMatrix)
 }
 
 setMethod("diffData",signature(object="CuffData"),.diffData)
+
+##################
+#Setters
+##################
+
+
+##################
+#Subsetting
+##################
+#Example query
+#"SELECT * FROM genes WHERE gene_id in ('XLOC_000005','XLOC_000015','XLOC_000055','XLOC_000595','XLOC_005998','ucscCodingXLOC_018816')"
+
+
+
 
 #Useful SQL commands
 

@@ -898,10 +898,10 @@ readCufflinks<-function(dbFile="cuffData.db",
 	dbConn<-dbConnect(dbDriver(driver),dbFile)
 	return (
 			new("CuffSet",DB = dbConn,
-					genes = new("CuffData",DB = dbConn, tables = list(mainTable = "genes",dataTable = "geneData",expDiffTable = "geneExpDiffData",otherTable = "promoterDiffData"), filters = list(),type = "genes",idField = "gene_id"),
-					isoforms = new("CuffData", DB = dbConn, tables = list(mainTable = "isoforms",dataTable = "isoformData",expDiffTable = "isoformExpDiffData",otherTable = ""), filters = list(),type="isoforms",idField = "isoform_id"),
-					TSS = new("CuffData", DB = dbConn, tables = list(mainTable = "TSS",dataTable = "TSSData",expDiffTable = "TSSExpDiffData", otherTable = "splicingDiffData"), filters = list(),type = "TSS",idField = "TSS_group_id"),
-					CDS = new("CuffData", DB = dbConn, tables = list(mainTable = "CDS",dataTable = "CDSData",expDiffTable = "CDSExpDiffData", otherTable = "CDSDiffData"), filters = list(),type = "CDS",idField = "CDS_id")
+					genes = new("CuffData",DB = dbConn, tables = list(mainTable = "genes",dataTable = "geneData",expDiffTable = "geneExpDiffData",featureTable = "geneFeatures", otherTable = "promoterDiffData"), filters = list(),type = "genes",idField = "gene_id"),
+					isoforms = new("CuffData", DB = dbConn, tables = list(mainTable = "isoforms",dataTable = "isoformData",expDiffTable = "isoformExpDiffData",featureTable = "isoformFeatures", otherTable = ""), filters = list(),type="isoforms",idField = "isoform_id"),
+					TSS = new("CuffData", DB = dbConn, tables = list(mainTable = "TSS",dataTable = "TSSData",expDiffTable = "TSSExpDiffData",featureTable = "TSSFeatures", otherTable = "splicingDiffData"), filters = list(),type = "TSS",idField = "TSS_group_id"),
+					CDS = new("CuffData", DB = dbConn, tables = list(mainTable = "CDS",dataTable = "CDSData",expDiffTable = "CDSExpDiffData",featureTable = "CDSFeatures", otherTable = "CDSDiffData"), filters = list(),type = "CDS",idField = "CDS_id")
 			)
 	)	
 							
