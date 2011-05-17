@@ -1,5 +1,7 @@
 #useDynLib(cummeRbund, copyEnv_sym=copyEnv, sublist_extract)
 
+import(methods)
+
 exportClasses(CuffSet,CuffData)
 
 exportMethods(fpkm,

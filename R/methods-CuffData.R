@@ -52,6 +52,18 @@ setMethod("dim","CuffData",
 		}
 )
 
+#####################
+#Feature Table
+#####################
+
+.addFeatures<-function(object,featDF){
+	#Must have $idField as first column
+	colnames(featDF)<-make.db.names(object@DB,featDF)
+	dbWriteTable(object@DB,object@featureTable,featDF,row.names=F,overwrite=T)
+}
+
+setMethod("addFeatures",signature="CuffData",.addFeatures)
+
 ##################
 #Subsetting
 ##################

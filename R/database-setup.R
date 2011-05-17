@@ -110,10 +110,14 @@ loadGenes<-function(fpkmFile,
 		dbWriteTable(dbConn,'geneExpDiffData',diff[,diffCols],row.names=F,append=T)
 	}
 	
-	#########
+	########
 	#Handle promoters.diff
 	########
 	
+	
+	#########
+	#Handle Feature Data
+	#########
 	
 }
 	
@@ -461,10 +465,10 @@ createDB<-function(dbFname="cuffData.db",driver="SQLite") {
 	
 	schema.text<-'
 -- Creator:       MySQL Workbench 5.2.33/ExportSQLite plugin 2009.12.02
--- Author:        Loyal Goff
--- Caption:       New Model
--- Project:       Name of the project
--- Changed:       2011-05-12 13:11
+-- Author:        Loyal A. Goff
+-- Caption:       cuffData.db Model
+-- Project:       CummeRbund
+-- Changed:       2011-05-16 15:15
 -- Created:       2011-05-02 12:52
 PRAGMA foreign_keys = OFF;
 
@@ -637,6 +641,8 @@ CREATE INDEX "CDSDiffData.fk_CDSDiffData_samples2" ON "CDSDiffData"("sample_2");
 DROP TABLE IF EXISTS "CDSExpDiffData";
 CREATE TABLE "CDSExpDiffData"(
   "CDS_id" VARCHAR(45) NOT NULL,
+  "sample_1" VARCHAR(45) NOT NULL,
+  "sample_2" VARCHAR(45) NOT NULL,
   "status" VARCHAR(45),
   "value_1" FLOAT,
   "value_2" FLOAT,
@@ -645,8 +651,6 @@ CREATE TABLE "CDSExpDiffData"(
   "p_value" FLOAT,
   "q_value" FLOAT,
   "significant" VARCHAR(45),
-  "sample_1" VARCHAR(45) NOT NULL,
-  "sample_2" VARCHAR(45) NOT NULL,
   CONSTRAINT "fk_CDSExpDiffData_CDS1"
     FOREIGN KEY("CDS_id")
     REFERENCES "CDS"("CDS_id"),
@@ -686,6 +690,30 @@ CREATE TABLE "promoterDiffData"(
 CREATE INDEX "promoterDiffData.fk_promoterDiffData_genes1" ON "promoterDiffData"("gene_id");
 CREATE INDEX "promoterDiffData.fk_promoterDiffData_samples1" ON "promoterDiffData"("sample_1");
 CREATE INDEX "promoterDiffData.fk_promoterDiffData_samples2" ON "promoterDiffData"("sample_2");
+DROP TABLE IF EXISTS "geneFeatures";
+CREATE TABLE "geneFeatures"(
+  "gene_id" VARCHAR(45) NOT NULL,
+  CONSTRAINT "fk_geneFeatures_genes1"
+    FOREIGN KEY("gene_id")
+    REFERENCES "genes"("gene_id")
+);
+CREATE INDEX "geneFeatures.fk_geneFeatures_genes1" ON "geneFeatures"("gene_id");
+DROP TABLE IF EXISTS "TSSFeatures";
+CREATE TABLE "TSSFeatures"(
+  "TSS_group_id" VARCHAR(45) NOT NULL,
+  CONSTRAINT "fk_TSSFeatures_TSS1"
+    FOREIGN KEY("TSS_group_id")
+    REFERENCES "TSS"("TSS_group_id")
+);
+CREATE INDEX "TSSFeatures.fk_TSSFeatures_TSS1" ON "TSSFeatures"("TSS_group_id");
+DROP TABLE IF EXISTS "CDSFeatures";
+CREATE TABLE "CDSFeatures"(
+  "CDS_id" VARCHAR(45) NOT NULL,
+  CONSTRAINT "fk_CDSFeatures_CDS1"
+    FOREIGN KEY("CDS_id")
+    REFERENCES "CDS"("CDS_id")
+);
+CREATE INDEX "CDSFeatures.fk_CDSFeatures_CDS1" ON "CDSFeatures"("CDS_id");
 DROP TABLE IF EXISTS "geneData";
 CREATE TABLE "geneData"(
   "gene_id" VARCHAR(45) NOT NULL,
@@ -704,7 +732,6 @@ CREATE INDEX "geneData.fk_geneData_genes1" ON "geneData"("gene_id");
 CREATE INDEX "geneData.fk_geneData_samples1" ON "geneData"("sample_name");
 DROP TABLE IF EXISTS "phenoData";
 CREATE TABLE "phenoData"(
-  "phenoData_id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
   "sample_name" VARCHAR(45) NOT NULL,
   "parameter" VARCHAR(45) NOT NULL,
   "value" VARCHAR(45),
@@ -806,6 +833,14 @@ CREATE TABLE "isoformExpDiffData"(
 CREATE INDEX "isoformExpDiffData.fk_isoformExpDiffData_isoforms1" ON "isoformExpDiffData"("isoform_id");
 CREATE INDEX "isoformExpDiffData.fk_isoformExpDiffData_samples1" ON "isoformExpDiffData"("sample_1");
 CREATE INDEX "isoformExpDiffData.fk_isoformExpDiffData_samples2" ON "isoformExpDiffData"("sample_2");
+DROP TABLE IF EXISTS "isoformFeatures";
+CREATE TABLE "isoformFeatures"(
+  "isoform_id" VARCHAR(45) NOT NULL,
+  CONSTRAINT "fk_isoformFeatures_isoforms1"
+    FOREIGN KEY("isoform_id")
+    REFERENCES "isoforms"("isoform_id")
+);
+CREATE INDEX "isoformFeatures.fk_isoformFeatures_isoforms1" ON "isoformFeatures"("isoform_id");
 COMMIT;
 
 '
