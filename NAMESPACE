@@ -9,6 +9,7 @@ exportMethods(fpkm,
 			fpkmMatrix,
 			diffData,
 			features,
+			featureNames,
 			samples
 			)
 

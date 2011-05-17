@@ -53,8 +53,10 @@ setMethod("dim","CuffData",
 )
 
 ##################
-#Database connectivity
+#Subsetting
 ##################
+#Example query
+#"SELECT * FROM genes WHERE gene_id in ('XLOC_000005','XLOC_000015','XLOC_000055','XLOC_000595','XLOC_005998','ucscCodingXLOC_018816')"
 
 
 
@@ -67,6 +69,13 @@ setMethod("dim","CuffData",
 }
 
 setMethod("features","CuffData",.features)
+
+.featureNames<-function(object){
+	featureQuery<-paste("SELECT ",object@idField," FROM ",object@tables$mainTable, sep="")
+	dbGetQuery(object@DB,featureQuery)
+}
+
+setMethod("featureNames","CuffData",.featureNames)
 
 .samples<-function(object){
 	res<-dbReadTable(object@DB,'samples')
