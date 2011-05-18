@@ -5,7 +5,7 @@
 
 #TODO: I get the distinct feeling that these two should be nested environments, but I don't really know what that means.
 
-#CuffData Class
+#CuffData Class is a 'pointer' container to a group of features in a cufflinks dataset
 setClass("CuffData",
 		representation(DB = "SQLiteConnection",
 						tables = "list",
@@ -15,7 +15,7 @@ setClass("CuffData",
 						)
 		)
 
-#CuffSet Class
+#CuffSet Class is a 'pointer' container to a group of CuffData elements in a cufflinks dataset
 setClass("CuffSet",
 		representation(DB = "SQLiteConnection",
 						conditions = "data.frame",
@@ -32,3 +32,22 @@ setClass("CuffSet",
 #				CDS = new("CuffData", DB = DB=dbConnect(dbDriver("SQLite"),"cuffData.db"), tables = list(mainTable = "CDS",dataTable = "CDSData",expDiffTable = "CDSExpDiff", otherTable = "CDSDiffData"), filters = list(),type = "CDS",idField = "CDS_id")
 #				)
 )
+
+#CuffFeature is a 'data' container for all information linked to a single 'idField' (cufflinks class agnostic)
+setClass("CuffFeature",
+		representation(annotation="data.frame",
+						fpkm="data.frame",
+						diff="data.frame"
+				)
+		)
+
+#CuffGene is a 'data' container for all information linked to a single 'gene_id'
+setClass("CuffGene",
+		representation(id = "character",
+						isoforms = "CuffFeature",
+						TSS = "CuffFeature",
+						CDS = "CuffFeature"),
+		contains="CuffFeature"
+)
+
+

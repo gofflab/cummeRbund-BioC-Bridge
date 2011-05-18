@@ -12,7 +12,10 @@ exportMethods(fpkm,
 			diffData,
 			features,
 			featureNames,
-			samples
+			samples,
+			expressionPlot,
+			expressionBarplot,
+			getGene
 			)
 
 export("readCufflinks",

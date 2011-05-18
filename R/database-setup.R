@@ -720,7 +720,7 @@ CREATE TABLE "geneData"(
   "sample_name" VARCHAR(45) NOT NULL,
   "fpkm" FLOAT,
   "conf_hi" FLOAT,
-  "conf_lo" VARCHAR(45),
+  "conf_lo" FLOAT,
   CONSTRAINT "fk_geneData_genes1"
     FOREIGN KEY("gene_id")
     REFERENCES "genes"("gene_id"),

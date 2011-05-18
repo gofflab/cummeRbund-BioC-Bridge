@@ -74,7 +74,8 @@ setMethod("features","CuffData",.features)
 
 .featureNames<-function(object){
 	featureQuery<-paste("SELECT ",object@idField," FROM ",object@tables$mainTable, sep="")
-	dbGetQuery(object@DB,featureQuery)
+	res<-dbGetQuery(object@DB,featureQuery)
+	res[,1]
 }
 
 setMethod("featureNames","CuffData",.featureNames)

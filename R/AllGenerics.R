@@ -9,7 +9,6 @@
 #setGeneric("write.fpkm", function(object,...) standardGeneric("write.fpkm"))
 #
 #setGeneric("expressionPlot",function(object, ...) standardGeneric("expressionPlot"))
-#setGeneric("expressionBarplot",function(object,...) standardGeneric("expressionBarplot"))
 ##setGeneric("melt", function(data) standardGeneric("melt"))
 #setGeneric("csHeatmap",function(object,...) standardGeneric("csHeatmap"))
 #setGeneric("csDensity",function(object, ...) standardGeneric("csDensity"))
@@ -28,6 +27,7 @@ setGeneric("loadCDS",function(fpkmFile,..) standardGeneric("loadCDS"))
 
 #CuffSet generics
 setGeneric("samples",function(object) standardGeneric("samples"))
+setGeneric("getGene",function(object,...) standardGeneric("getGene"))
 
 #CuffData generics
 setGeneric("features",function(object) standardGeneric("features"))
@@ -37,7 +37,13 @@ setGeneric("fpkmMatrix",function(object) standardGeneric("fpkmMatrix"))
 setGeneric("diffData",function(object,x,y,...) standardGeneric("diffData"))
 setGeneric("addFeatures",function(object,featDF,..) standardGeneric("addFeatures"))
 
-#plotting
+#CuffData plotting
 setGeneric("csDensity",function(object, ...) standardGeneric("csDensity"))
 setGeneric("csScatter",function(object,x,y,...) standardGeneric("csScatter"))
 setGeneric("csVolcano",function(object,x,y,...) standardGeneric("csVolcano"))
+
+#CuffFeature
+
+#CuffFeature plotting
+setGeneric("expressionBarplot",function(object,...) standardGeneric("expressionBarplot"))
+setGeneric("expressionPlot",function(object, ...) standardGeneric("expressionPlot"))
