@@ -1,0 +1,247 @@
+%
+%
+%
+%\VignetteIndexEntry{An R package for visualization and analysis of Cufflinks high-throughput sequencing data}
+%\VignetteKeywords{cummeRbund,visualization,sequencing,cufflinks}
+%\VignettePackage{cummeRbund}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[10pt]{article}
+\usepackage{amsmath}
+\usepackage[authoryear,round]{natbib}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=red,
+    urlcolor=black
+}
+\usepackage{theorem}
+\usepackage{float}
+\usepackage{ifthen}
+\usepackage[OT1]{fontenc}
+
+\newcommand{\R}{{\textsf{R}}}
+\newcommand{\code}[1]{{\texttt{#1}}}
+\newcommand{\term}[1]{{\emph{#1}}}
+\newcommand{\Rpackage}[1]{\textsf{#1}}
+\newcommand{\Rfunction}[1]{\texttt{#1}}
+\newcommand{\Robject}[1]{\texttt{#1}}
+\newcommand{\Rclass}[1]{{\textit{#1}}}
+\newcommand{\Rmethod}[1]{{\textit{#1}}}
+\newcommand{\Rfunarg}[1]{{\textit{#1}}}
+
+\bibliographystyle{plainnat}
+\title{cummeRbund: Visualization and Exploration of Cufflinks High-throughput Sequencing Data}
+
+\author{Loyal A. Goff, Cole Trapnell}
+\date{1 April, 2011}
+
+\begin{document}
+<<init, echo=FALSE>>=
+options(width=65)
+@ 
+
+<<loadLib,echo=FALSE>>=
+library(cummeRbund)
+@
+
+\maketitle
+
+\tableofcontents
+
+\section{Introduction}
+	\Rpackage{cummeRbund} is a visualization package for Cufflinks high-throughput sequencing data. The base class, \Rclass{cuffSet} 
+	extends the \Rpackage{Biobase} \Rclass{eSet} class and is modeled after the \Rclass{ExpressionSet} class. In its current iteration
+	a \Rclass{cuffSet} object can store \begin{emph}either\end{emph} gene-level or transcript-level FPKM tracking output from a cufflinks analysis. This 
+	will be expanded in future development to enable concurrent analysis of both gene-level and transcript-level expression data.
+	
+	
+\section{Reading cufflinks output}
+<<read>>=
+curdir<-getwd()
+#dataDirectory <- system.file("../../extdata")
+#dataDirectory
+cuffFile <- file.path("../../extdata", "genes.fpkm_tracking")
+cuff <- readCufflinks(cuffFile)
+cuff
+@
+
+\subsection{Reading additional annotation files}
+Additional feature and sample information can be used during the creation of the cuffSet object.
+For example, a 'pData.txt' file can be created where rows correspond to samples in the cufflinks output
+and an arbitrary number of columns correspond to parameterizations of the sample data. (By default, there is a header row that
+corresponds to the name of the parameter).
+<<pData_1>>=
+phenoDataFile<-file.path("../../extdata","pData.txt")
+cuff <- readCufflinks(cuffFile,phenoDataFile=phenoDataFile)
+head(pData(cuff))
+@
+
+A 'feature data' file can be created and added in a similar manner in which case the rows correspond to features in the cufflinks output
+and columns are again feature-level parameterizations of the data.
+
+\section{The cuffSet object}
+
+\subsection{Subsetting}
+\Rclass{cuffSet} objects are subsettable in a manner similar to \Rclass{eSet} objects.  \Rclass{cuffSet} classes can be subset just as one would subset a standard matrix in R.
+The first argument subsets the rows (features) and the second argument subsets the columns (samples). Below are a few examples:\newline
+
+Create a \Rclass{cuffSet} object using only features from indices 100--200:
+<<subset_1>>=
+cuff[100:200,]
+@
+Only use samples with indices 1 \& 4.
+<<subset_2>>=
+cuff[,c(1,3)]
+@
+\Rclass{cuffSet} objects can even be subset by using feature or sample names.  Here is an example of a \Rclass{cuffSet} subset that returns all features for one particular sample: 
+<<subset_3>>=
+cuff[,"H1.hESC"]
+@
+	
+\subsection{Assay Data}
+Currently, a \Rclass{cuffSet} object stores three independent matrices in the \Rmethod{Assay Data} slot. The \term{fpkm} slot stores the FPKM values. \term{conf\_lo} and \term{conf\_hi} store the lower and upper bounds of the confidence intervals for each FPKM in \term{fpkm}.
+FPKM values can be directly accessed (get and set) by using the \Rmethod{fpkm} method.
+
+<<assay_1>>=
+head(fpkm(cuff))
+@
+Similar accessor methods are available for \term{conf\_lo} and \term{conf\_hi}.
+\subsection{Phenotypic (Sample) Data}
+The \Rmethod{phenoData} slot is an \Rclass{AnnotatedDataFrame} object. While the \Rmethod{phenoData} slot is directly accessible, the recommended
+method for getting and setting \Rclass{phenoData} values is through the \Rmethod{pData} method. This slot is only populated with \term{sample} names by default (from cufflinks header).
+
+<<pData_1>>=
+pData(cuff)
+
+pData(cuff)$selection == "polyA"
+
+@
+
+The \Rmethod{sampleNames} method can be used to retrieve the sample names from the \Rclass{cuffSet} object.
+
+<<pData_2>>=
+sampleNames(cuff)
+@
+
+\subsection{Feature Data}
+The \Rmethod{FeatureData} slot is also an \Rclass{AnnotatedDataFrame} object. By default, the \Rclass{featureData} slot is populated with the first few annotation rows
+from the cufflinks output file. Similar to \Rclass{phenoData}, \Rclass{featureData} values can be accessed via the \Rmethod{fData} method.
+
+<<fData_1>>=
+head(fData(cuff))
+@
+
+The \Rmethod{featureNames} method can be used to retrieve the feature names from the \Rclass{cuffSet} object.
+
+<<fData_2>>=
+head(featureNames(cuff))
+@
+
+\subsection{Experiment Data}
+
+\section{Plotting}
+All plotting for the \Rpackage{cummeRbund} package is done through \Rpackage{ggplot2}. As such, the returned object for
+most plots is a ggplot plot object. Using standard \Rpackage{ggplot2} syntax, one can add options, themes, or facet plots in 
+any fashion. All \term{featureData} and \term{phenoData} parameters are included within the plot data, and are accessible to the returned
+object.
+
+
+\subsection{Global statistics}
+Several plotting methods are available that allow for quality-control or global analysis of cufflinks data. For example, to assess the
+distributions of FPKM scores across samples, you can use the \Rmethod{csDensity} plot (Figure 1).
+<<global_plots_1,include=FALSE>>=
+dens<-csDensity(cuff)
+@
+
+\begin{figure}[ht]
+\begin{center}
+<<label=global_plots_dens,fig=TRUE,echo=FALSE>>=
+<<global_plots_1>>
+print(dens)
+@
+
+\end{center}
+\caption{Density plot per sample of cufflinks output FPKM values.}
+\end{figure}
+
+Boxplots can be visualized using the \Rmethod{csBoxplot} method (Figure 2).
+<<global_plots_2,include=FALSE>>=
+b<-csBoxplot(cuff)
+@
+
+\begin{figure}[ht]
+\begin{center}
+<<label=global_plots_box,fig=TRUE,echo=FALSE>>=
+<<global_plots_2>>
+print(b)
+@
+
+\end{center}
+\caption{Box plot of FPKM values from cufflinks output.}
+\end{figure}
+
+Pairwise comparisons can be made by using \Rmethod{csScatter} (Figure 3). You must specify the samples to use for the $x$ and $y$ axes:
+<<global_plots_3,include=FALSE>>=
+s<-csScatter(cuff,1,3,smooth=T)
+@
+
+\begin{figure}[ht]
+\begin{center}
+<<label=global_plots_scatter,fig=TRUE,echo=FALSE>>=
+<<global_plots_3>>
+print(s)
+@
+
+\end{center}
+\caption{Scatter plot comparing the FPKM values of two samples from cufflinks output.}
+\end{figure}
+
+\clearpage
+\subsection{Feature-level plots}
+Several methods are available for plotting feature-level data from cufflinks output. The \Rmethod{expressionPlot} method will produce
+line plots for all features contained in the \Rclass{cuffSet} object:
+
+<<feature_plots_1, include=FALSE>>=
+e1<-expressionPlot(cuff[50:80,],drawSummary=T)
+
+@
+
+\begin{figure}[ht]
+\begin{center}
+<<label=feature_plots_expressionPlot,fig=TRUE,echo=FALSE>>=
+<<feature_plots_1>>
+print(e1)
+@
+
+\end{center}
+\caption{Line plot of select features from cufflinks output.}
+\end{figure}
+
+
+Alternatively you can use \Rmethod{expressionBarplot} to make a bar plot with error bars for a given set of features.
+
+<<feature_plots_2, include=FALSE>>=
+e2<-expressionBarplot(cuff[c(24,77,493),])
+@
+
+\begin{figure}[ht]
+\begin{center}
+<<label=feature_plots_expressionBarplot,fig=TRUE,echo=FALSE>>=
+<<feature_plots_2>>
+print(e2)
+@
+
+\end{center}
+\caption{Bar plot of FPKM values with error bars.}
+\end{figure}
+
+\clearpage
+\section{Session info}
+<<session>>=
+sessionInfo()
+@
+
+\end{document}

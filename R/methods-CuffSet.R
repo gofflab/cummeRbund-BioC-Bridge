@@ -43,6 +43,21 @@ setMethod("show","CuffSet",
 		}
 )
 
+#This does not subset appropriately yet
+#TODO: Fix for multiple values of i
+#
+#Solution is to test i to determine if it is of type 'numeric' (index), list (multi-index), or 'character' (gene_ids)
+#
+#TODO: Add 'j' to select on sampleNames as well
+#
+setMethod("[",signature(x="CuffSet"),function(x, i, ...){
+			featureID<-featureNames(x@genes)[i]
+			res<-getGene(x,featureID)
+			res
+		}
+)
+
+
 setValidity("CuffSet",
 		function(object){
 		TRUE	
@@ -59,7 +74,7 @@ setValidity("CuffSet",
 
 setMethod("samples",signature(object="CuffSet"),.samples)
 
-#make CuffGene objects from a list of gene_ids
+#make CuffGene objects from a gene_ids
 .getGene<-function(object,geneId){
 	#dbQueries
 	geneAnnotationQuery<-paste("SELECT * from genes WHERE gene_id ='",geneId,"'",sep="")

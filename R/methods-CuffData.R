@@ -113,6 +113,7 @@ setMethod("fpkmMatrix","CuffData",.fpkmMatrix)
 	diffQuery<-paste("SELECT x.",object@idField,", xed.* FROM ",object@tables$mainTable," x LEFT JOIN ",object@tables$expDiffTable," xed on x.",object@idField," = xed.",object@idField," WHERE ((sample_1 = '",x,"' AND sample_2 = '",y,"') OR (sample_1 = '",y,"' AND sample_2 = '",x,"')) AND xed.ln_fold_change>",-lnFcCutoff," AND xed.ln_fold_change<",lnFcCutoff,sep="")
 	dat<-dbGetQuery(object@DB,diffQuery)
 	#diffQuery
+	dat
 }
 
 setMethod("diffData",signature(object="CuffData"),.diffData)
