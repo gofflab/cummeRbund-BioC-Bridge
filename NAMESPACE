@@ -2,7 +2,13 @@
 
 import(methods)
 
-exportClasses(CuffSet,CuffData)
+exportClasses(CuffSet,
+			CuffData,
+			CuffFeature, 
+			CuffFeatureSet, 
+			CuffGene, 
+			CuffGeneSet
+)
 
 exportMethods(fpkm,
 			csDensity,
@@ -16,7 +22,7 @@ exportMethods(fpkm,
 			expressionPlot,
 			expressionBarplot,
 			getGene
-			)
+)
 
 export("readCufflinks",
 		"loadGenes",

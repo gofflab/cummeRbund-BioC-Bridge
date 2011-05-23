@@ -51,3 +51,23 @@ setClass("CuffGene",
 )
 
 
+#CuffFeatureSet is a 'data' container for all information from a set of features
+#This allows for plotting of gene set information
+setClass("CuffFeatureSet",
+		representation(annotation="data.frame",
+				fpkm="data.frame",
+				diff="data.frame"
+			)
+)
+
+#CuffGene is a 'data' container for all information from a set of genes
+#This allows for plotting of gene set information
+setClass("CuffGeneSet",
+		representation(id="character",
+				isoforms = "CuffFeatureSet",
+				TSS = "CuffFeatureSet",
+				CDS= "CuffFeatureSet"),
+		contains = "CuffFeatureSet"
+)
+
+
