@@ -25,9 +25,18 @@ setGeneric("loadIsoforms",function(fpkmFile,..) standardGeneric("loadIsoforms"))
 setGeneric("loadTSS",function(fpkmFile,..) standardGeneric("loadTSS"))
 setGeneric("loadCDS",function(fpkmFile,..) standardGeneric("loadCDS"))
 
+##################
+#CuffSet
+#################3
+
 #CuffSet generics
 setGeneric("samples",function(object) standardGeneric("samples"))
 setGeneric("getGene",function(object,...) standardGeneric("getGene"))
+setGeneric("getGenes",function(object,...) standardGeneric("getGenes"))
+
+###############
+#CuffData
+###############
 
 #CuffData generics
 setGeneric("features",function(object) standardGeneric("features"))
@@ -42,7 +51,26 @@ setGeneric("csDensity",function(object, ...) standardGeneric("csDensity"))
 setGeneric("csScatter",function(object,x,y,...) standardGeneric("csScatter"))
 setGeneric("csVolcano",function(object,x,y,...) standardGeneric("csVolcano"))
 
+###################
+#CuffGeneSet
+####################
+
+
+
+#################
+#CuffFeatureSet
+#################
+
+
+
+
+##################
+#CuffGene
+###################
+
+##############
 #CuffFeature
+##############
 
 #CuffFeature plotting
 setGeneric("expressionBarplot",function(object,...) standardGeneric("expressionBarplot"))

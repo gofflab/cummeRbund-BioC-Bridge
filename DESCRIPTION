@@ -12,6 +12,8 @@ Collate: 	AllGenerics.R
 			database-setup.R
 			methods-CuffSet.R
 			methods-CuffData.R
+			methods-CuffGeneSet.R
+			methods-CuffFeatureSet.R
 			methods-CuffGene.R
 			methods-CuffFeature.R
 			tools.R

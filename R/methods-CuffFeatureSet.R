@@ -21,15 +21,19 @@
 #################
 #Class Methods	#
 #################
-setMethod("show","CufFFeatureSet",function(object){
-		
-		}
-)
+#setMethod("show","CufFFeatureSet",function(object){
+#		cat(class(object),"instance")
+#		}
+#)
 
 #################
 #Subsetting		#
 #################
 
+#setMethod("[","CuffFeatureSet",function(object,featureID){
+#			
+#		}
+#)
 
 #################
 #Plotting		#
