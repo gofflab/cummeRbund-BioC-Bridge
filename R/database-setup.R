@@ -868,16 +868,17 @@ populateSampleTable<-function(samples,dbConn){
 #############
 #readCufflinks
 #############
+#TODO: Add directory pointer
 readCufflinks<-function(dbFile="cuffData.db",
 						geneFPKM="genes.fpkm_tracking",
 						geneDiff="gene_exp.diff",
 						isoformFPKM="isoforms.fpkm_tracking",
 						isoformDiff="isoform_exp.diff",
-						TSSFPKM="TSS_groups.fpkm_tracking",
-						TSSDiff="TSS_group_exp.diff",
-						CDSFPKM="CDS.fpkm_tracking",
-						CDSExpDiff="CDS_exp.diff",
-						CDSDiff="CDS.diff",
+						TSSFPKM="tss_groups.fpkm_tracking",
+						TSSDiff="tss_group_exp.diff",
+						CDSFPKM="cds.fpkm_tracking",
+						CDSExpDiff="cds_exp.diff",
+						CDSDiff="cds.diff",
 						promoterFile="promoters.diff",
 						splicingFile="splicing.diff",
 						driver = "SQLite",
