@@ -33,6 +33,7 @@ setGeneric("loadCDS",function(fpkmFile,..) standardGeneric("loadCDS"))
 setGeneric("samples",function(object) standardGeneric("samples"))
 setGeneric("getGene",function(object,...) standardGeneric("getGene"))
 setGeneric("getGenes",function(object,...) standardGeneric("getGenes"))
+setGeneric("addFeatures",function(object,features,...) standardGeneric("addFeatures"))
 
 ###############
 #CuffData

@@ -67,7 +67,8 @@ setMethod("addFeatures",signature="CuffData",.addFeatures)
 #Accessors
 ###################
 .features<-function(object){
-	dbReadTable(object@DB, object@tables$mainTable)
+	featureQuery<-paste("SELECT * FROM ",object@tables$mainTable," x LEFT JOIN ",object@tables$featureTable," xf ON x.",object@idField,"=xf.",object@idField,sep="")
+	dbGetQuery(object@DB, featureQuery)
 }
 
 setMethod("features","CuffData",.features)

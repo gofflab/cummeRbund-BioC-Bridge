@@ -183,3 +183,20 @@ setMethod("getGenes",signature(object="CuffSet"),.getGenes)
 ############
 #SQL access
 ############
+
+
+#####################
+#Add FeatureData    #
+#####################
+.addFeatures<-function(object,features,level="genes"){
+	if(!is.data.frame(features)){
+		stop("features must be a data.frame")
+	}
+	colnames(features)[1]<-slot(object,level)@idField
+	colnames(features)<-make.db.names(object@DB,colnames(features),unique=T)
+	dbWriteTable(object@DB,slot(object,level)@tables$featureTable,features,row.names=F,overwrite=T)
+	indexQuery<-paste("CREATE INDEX ",slot(object,level)@idField," ON ", slot(object,level)@tables$featureTable," (",slot(object,level)@idField,")",sep="")
+	res<-dbGetQuery(object@DB,indexQuery)
+}
+
+setMethod("addFeatures",signature(object="CuffSet"),.addFeatures)
