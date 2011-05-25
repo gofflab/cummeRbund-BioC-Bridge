@@ -94,8 +94,12 @@ setMethod("featureNames","CuffData",.featureNames)
 
 setMethod("samples","CuffData",.samples)
 
-.fpkm<-function(object){
-	FPKMQuery<-paste("SELECT * FROM",object@tables$dataTable)
+.fpkm<-function(object,features=FALSE){
+	if(!features){
+		FPKMQuery<-paste("SELECT * FROM",object@tables$dataTable)
+	}else{
+		FPKMQuery<-paste("SELECT xf.*,x.sample_name,x.fpkm,x.conf_hi, x.conf_lo FROM ",object@tables$dataTable," x LEFT JOIN ",object@tables$featureTable," xf ON x.",object@idField,"=xf.",object@idField,sep="")
+	}
 	dbGetQuery(object@DB,FPKMQuery)
 }
 
@@ -115,8 +119,16 @@ setMethod("fpkm","CuffData",.fpkm)
 
 setMethod("fpkmMatrix","CuffData",.fpkmMatrix)
 
+
+#This needs a lot of work...
 .diffData<-function(object,x,y,lnFcCutoff=20){
-	diffQuery<-paste("SELECT x.",object@idField,", xed.* FROM ",object@tables$mainTable," x LEFT JOIN ",object@tables$expDiffTable," xed on x.",object@idField," = xed.",object@idField," WHERE ((sample_1 = '",x,"' AND sample_2 = '",y,"') OR (sample_1 = '",y,"' AND sample_2 = '",x,"')) AND xed.ln_fold_change>",-lnFcCutoff," AND xed.ln_fold_change<",lnFcCutoff,sep="")
+	if(missing(x) && missing(y)){
+		diffQuery<-paste("SELECT * FROM ",object@tables$expDiffTable,sep="")
+	}else if (missing(x) || missing(y)){
+		stop("You must supply both x and y or neither.")
+	}else{
+		diffQuery<-paste("SELECT x.",object@idField,", xed.* FROM ",object@tables$mainTable," x LEFT JOIN ",object@tables$expDiffTable," xed on x.",object@idField," = xed.",object@idField," WHERE ((sample_1 = '",x,"' AND sample_2 = '",y,"') OR (sample_1 = '",y,"' AND sample_2 = '",x,"')) AND xed.ln_fold_change>",-lnFcCutoff," AND xed.ln_fold_change<",lnFcCutoff,sep="")
+	}
 	dat<-dbGetQuery(object@DB,diffQuery)
 	#diffQuery
 	dat
@@ -152,9 +164,9 @@ setMethod("diffData",signature(object="CuffData"),.diffData)
 #Plotting
 ##################
 
-.density<-function(object, logMode = TRUE, pseudocount=0.0001, labels, ...){
+.density<-function(object, logMode = TRUE, pseudocount=0.0001, labels, features=F, ...){
 	if(is(object,'CuffData')) {
-		dat<-fpkm(object)
+		dat<-fpkm(object,features=features)
 	} else {
 		stop('Un-supported class of object.')
 	}
@@ -172,26 +184,6 @@ setMethod("diffData",signature(object="CuffData"),.diffData)
 }
 
 setMethod("csDensity",signature(object="CuffData"),.density)
-
-.boxplot<-function(){
-	
-}
-
-.expressionPlot<-function(){
-	
-}
-
-.barplot<-function(){
-	
-}
-
-.heatmap<-function(){
-	
-}
-
-.ggheat<-function(){
-	
-}
 
 .scatter<-function(object,x,y,logMode=TRUE,pseudocount=0.0001,labels, smooth=FALSE,...){
 	dat<-fpkmMatrix(object)
@@ -241,7 +233,7 @@ setMethod("csDensity",signature(object="CuffData"),.density)
 
 setMethod("csScatter",signature(object="CuffData"), .scatter)
 
-.volcano<-function(object,x,y){
+.volcano<-function(object,x,y,...){
 	dat<-diffData(object=object,x=x,y=y)
 	s1<-unique(dat$sample_1)
 	s2<-unique(dat$sample_2)
