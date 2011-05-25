@@ -55,10 +55,15 @@ setMethod("dim","CuffData",
 #Feature Table
 #####################
 
-.addFeatures<-function(object,featDF){
-	#Must have $idField as first column
-	colnames(featDF)<-make.db.names(object@DB,featDF)
-	dbWriteTable(object@DB,object@featureTable,featDF,row.names=F,overwrite=T)
+.addFeatures<-function(object,features,...){
+	if(!is.data.frame(features)){
+		stop("features must be a data.frame")
+	}
+	colnames(features)[1]<-object@idField
+	colnames(features)<-make.db.names(object@DB,colnames(features),unique=T)
+	dbWriteTable(object@DB,object@tables$featureTable,features,row.names=F,overwrite=T)
+	indexQuery<-paste("CREATE INDEX ",object@idField," ON ", object@tables$featureTable," (",object@idField,")",sep="")
+	res<-dbGetQuery(object@DB,indexQuery)
 }
 
 setMethod("addFeatures",signature="CuffData",.addFeatures)
