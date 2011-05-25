@@ -188,7 +188,7 @@ setMethod("getGenes",signature(object="CuffSet"),.getGenes)
 #####################
 #Add FeatureData    #
 #####################
-.addFeatures<-function(object,features,level="genes"){
+.addFeatures<-function(object,features,level="genes",...){
 	if(!is.data.frame(features)){
 		stop("features must be a data.frame")
 	}
