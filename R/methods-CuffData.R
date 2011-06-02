@@ -252,11 +252,11 @@ setMethod("csVolcano",signature(object="CuffData"), .volcano)
 	dat<-fpkm(object)
 	p <- ggplot(dat)
 	if(logMode) {
-		p<-p+geom_boxplot(aes(x=sample,y=log2(fpkm),fill=sample),size=0.3,alpha=I(1/3))
+		p<-p+geom_boxplot(aes(x=sample_name,y=log2(fpkm),fill=sample_name),size=0.3,alpha=I(1/3))
 	} else {
-		p<-p+geom_boxplot(aes(x=sample,y=fpkm,fill=sample),alpha=I(1/3),size=0.3)
+		p<-p+geom_boxplot(aes(x=sample_name,y=fpkm,fill=sample_name),alpha=I(1/3),size=0.3)
 	}
-	p
+	p<- p + opts(axis.text.x=theme_text(angle=-90, hjust=0))
 	
 }
 
