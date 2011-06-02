@@ -873,7 +873,8 @@ populateSampleTable<-function(samples,dbConn){
 #readCufflinks
 #############
 #TODO: Add directory pointer
-readCufflinks<-function(dbFile="cuffData.db",
+readCufflinks<-function(dir = getwd(),
+						dbFile="cuffData.db",
 						geneFPKM="genes.fpkm_tracking",
 						geneDiff="gene_exp.diff",
 						isoformFPKM="isoforms.fpkm_tracking",
@@ -888,7 +889,22 @@ readCufflinks<-function(dbFile="cuffData.db",
 						driver = "SQLite",
 						rebuild = FALSE,
 						...){
-				
+	
+	#Set file locations with directory
+	dbFile=cat(dir,dbFile,sep="")
+	geneFPKM=cat(dir,geneFPKM,sep="")
+	geneDiff=cat(dir,geneDiff,sep="")
+	isoformFPKM=cat(dir,isoformFPKM,sep="")
+	isoformDiff=cat(dir,isoformDiff,sep="")
+	TSSFPKM=cat(dir,TSSFPKM,sep="")
+	TSSDiff=cat(dir,TSSDiff,sep="")
+	CDSFPKM=cat(dir,CDSFPKM,sep="")
+	CDSExpDiff=cat(dir,CDSExpDiff,sep="")
+	CDSDiff=cat(dir,CDSDiff,sep="")
+	promoterFile=cat(dir,promoterFile,sep="")
+	splicingFile=cat(dir,splicingFile,sep="")
+					
+					
 	#Check to see whether dbFile exists
 	if (!file.exists(dbFile) || rebuild == TRUE){
 		#if not, create it
