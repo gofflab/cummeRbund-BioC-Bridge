@@ -11,12 +11,28 @@
 #################
 #Initialize		#
 #################
-
+setMethod("initialize","CuffFeatureSet",
+		function(.Object,
+				annotation=data.frame(),
+				fpkm=data.frame(),
+				diff=data.frame(),
+				... ){
+			.Object<-callNextMethod(.Object,
+					annotation=annotation,
+					fpkm=fpkm,
+					diff=diff,
+					...)				
+		}
+)
 
 #################
 #Validate		#
 #################
-
+#TODO: Add validity constraints
+setValidity("CuffFeatureSet",function(object){
+			TRUE
+		}
+)		
 
 #################
 #Class Methods	#

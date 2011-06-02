@@ -39,9 +39,5 @@ export("readCufflinks",
 		"makeprobs"
 		)
 
-#importFrom("Biobase", "geneNames")
-#importFrom("Biobase", "geneNames<-")
-
-#importClassesFrom("Biobase","eSet")
 #importClassesFrom("Biobase","Versioned")
 #importClassesFrom("Biobase","VersionedBiobase")

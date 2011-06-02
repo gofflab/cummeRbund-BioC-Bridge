@@ -156,20 +156,6 @@ setMethod("getGene",signature(object="CuffSet"),.getGene)
 	CDSFPKMQuery<-paste("SELECT y.* from CDS x JOIN CDSData y ON x.CDS_id = y.CDS_id ", whereString,sep="")
 	CDSDiffQuery<-paste("SELECT y.* from CDS x JOIN CDSExpDiffData y ON x.CDS_id = y.CDS_id ", whereString,sep="")
 	
-	#Test Print
-#	print(geneAnnotationQuery)
-#	print(geneFPKMQuery)
-#	print(geneDiffQuery)
-#	print(isoformAnnotationQuery)
-#	print(isoformFPKMQuery)
-#	print(isoformDiffQuery)
-#	print(TSSAnnotationQuery)
-#	print(TSSFPKMQuery)
-#	print(TSSDiffQuery)
-#	print(CDSAnnotationQuery)
-#	print(CDSFPKMQuery)
-#	print(CDSDiffQuery)
-	
 	begin<-dbSendQuery(object@DB,"BEGIN;")
 	res<-new("CuffGeneSet",
 			ids=geneIdList,

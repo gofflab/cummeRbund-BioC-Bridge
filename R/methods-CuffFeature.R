@@ -28,6 +28,7 @@ setMethod("initialize","CuffFeature",
 #################
 #Validate		#
 #################
+#TODO: Add validity constraints
 setValidity("CuffFeature",function(object){
 			TRUE
 		}
