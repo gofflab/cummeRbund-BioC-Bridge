@@ -45,7 +45,7 @@ options(width=65)
 
 <<loadLib,echo=FALSE>>=
 library(cummeRbund)
-setwd("../../extdata")
+#setwd("../../extdata")
 @
 
 \maketitle
