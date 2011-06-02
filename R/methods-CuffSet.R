@@ -185,7 +185,7 @@ setMethod("getGene",signature(object="CuffSet"),.getGene)
 setMethod("getGenes",signature(object="CuffSet"),.getGenes)
 
 #Test
-myGenes<-getGenes(a,sample(geneFeatures$gene_id,10))
+#myGenes<-getGenes(a,sample(geneFeatures$gene_id,10))
 
 ############
 #SQL access
