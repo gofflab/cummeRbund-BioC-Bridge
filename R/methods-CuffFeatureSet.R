@@ -80,6 +80,7 @@ setMethod("fpkmMatrix","CuffFeatureSet",.fpkmMatrix)
 #################
 #Plotting		#
 #################
+#Basic heatmap
 .heatmap<-function(object,logMode=TRUE,pseudocount=0.0001){
 	dat<-fpkm(object)
 	if(logMode){
@@ -90,8 +91,6 @@ setMethod("fpkmMatrix","CuffFeatureSet",.fpkmMatrix)
 	p <- p + geom_tile(aes(x=tracking_id,y=sample_name,fill=fpkm)) + scale_fill_gradient(low="white",high="red") + opts(axis.text.x=theme_text(angle=-90, hjust=0))
 	p
 }
-
-setMethod("csHeatmap",signature("CuffFeatureSet"),.heatmap)
 
 #######################
 #The following is borrowed from Malarkey and is not yet ready for prime time...
@@ -185,6 +184,9 @@ setMethod("csHeatmap",signature("CuffFeatureSet"),.heatmap)
 	
 }
 
+setMethod("csHeatmap",signature("CuffFeatureSet"),.ggheat)
+
+#Scatterplot
 .scatter<-function(object,x,y,logMode=TRUE,pseudocount=0.0001,labels, smooth=FALSE,...){
 	dat<-fpkmMatrix(object)
 	samp<-samples(object)
@@ -233,6 +235,7 @@ setMethod("csHeatmap",signature("CuffFeatureSet"),.heatmap)
 
 setMethod("csScatter",signature(object="CuffFeatureSet"), .scatter)
 
+#Volcano plot
 .volcano<-function(object,x,y,...){
 	dat<-diffData(object=object,x=x,y=y)
 	s1<-unique(dat$sample_1)
