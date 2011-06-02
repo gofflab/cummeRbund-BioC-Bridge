@@ -72,7 +72,7 @@ curdir<-getwd()
 #dataDirectory <- system.file("../../extdata")
 #dataDirectory
 #cuffFile <- file.path("../../extdata", "genes.fpkm_tracking")
-#setwd("../../extdata")
+setwd("../../extdata")
 cuff <- readCufflinks()
 cuff
 @
