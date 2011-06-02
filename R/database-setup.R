@@ -891,18 +891,18 @@ readCufflinks<-function(dir = getwd(),
 						...){
 	
 	#Set file locations with directory
-	dbFile=cat(dir,dbFile,sep="")
-	geneFPKM=cat(dir,geneFPKM,sep="")
-	geneDiff=cat(dir,geneDiff,sep="")
-	isoformFPKM=cat(dir,isoformFPKM,sep="")
-	isoformDiff=cat(dir,isoformDiff,sep="")
-	TSSFPKM=cat(dir,TSSFPKM,sep="")
-	TSSDiff=cat(dir,TSSDiff,sep="")
-	CDSFPKM=cat(dir,CDSFPKM,sep="")
-	CDSExpDiff=cat(dir,CDSExpDiff,sep="")
-	CDSDiff=cat(dir,CDSDiff,sep="")
-	promoterFile=cat(dir,promoterFile,sep="")
-	splicingFile=cat(dir,splicingFile,sep="")
+	dbFile=paste(dir,dbFile,sep="")
+	geneFPKM=paste(dir,geneFPKM,sep="")
+	geneDiff=paste(dir,geneDiff,sep="")
+	isoformFPKM=paste(dir,isoformFPKM,sep="")
+	isoformDiff=paste(dir,isoformDiff,sep="")
+	TSSFPKM=paste(dir,TSSFPKM,sep="")
+	TSSDiff=paste(dir,TSSDiff,sep="")
+	CDSFPKM=paste(dir,CDSFPKM,sep="")
+	CDSExpDiff=paste(dir,CDSExpDiff,sep="")
+	CDSDiff=paste(dir,CDSDiff,sep="")
+	promoterFile=paste(dir,promoterFile,sep="")
+	splicingFile=paste(dir,splicingFile,sep="")
 					
 					
 	#Check to see whether dbFile exists
