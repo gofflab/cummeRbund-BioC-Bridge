@@ -105,3 +105,77 @@ Boxplots can be visualized using the \Rmethod{csBoxplot} method (Figure 2).
 
 \begin{figure}[ht]
 \begin{center}
+\includegraphics{cummeRbund-manual-global_plots_box}
+
+\end{center}
+\caption{Box plot of FPKM values from cufflinks output.}
+\end{figure}
+
+Pairwise comparisons can be made by using \Rmethod{csScatter} (Figure 3). You must specify the sample names to use for the $x$ and $y$ axes:
+\begin{Schunk}
+\begin{Sinput}
+> s <- csScatter(cuff@genes, "H1_hESC", "Fibroblasts", 
++     smooth = T)
+\end{Sinput}
+\end{Schunk}
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics{cummeRbund-manual-global_plots_scatter}
+
+\end{center}
+\caption{Scatter plot comparing the FPKM values of two samples from cufflinks output.}
+\end{figure}
+
+Volcano plots are also available for the \Rclass{CuffData} objects. Again, you must specify the comparisons by sample_name.
+\begin{Schunk}
+\begin{Sinput}
+> v <- csVolcano(cuff@genes, "H1_hESC", "Fibroblasts")
+\end{Sinput}
+\end{Schunk}
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics{cummeRbund-manual-global_plots_volcano}
+
+\end{center}
+\caption{Volcano plot of ln fold change vs significance.}
+\end{figure}
+
+\clearpage
+
+\section{Creating Gene Sets}
+
+\subsection{Geneset level plots}
+
+\section{Individual Genes}
+
+\subsection{Gene-level plots}
+
+\section{Session info}
+\begin{Schunk}
+\begin{Sinput}
+> sessionInfo()
+\end{Sinput}
+\begin{Soutput}
+R version 2.12.1 (2010-12-16)
+Platform: x86_64-apple-darwin9.8.0/x86_64 (64-bit)
+
+locale:
+[1] C/en_US.UTF-8/C/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] grid      stats     graphics  grDevices utils     datasets 
+[7] methods   base     
+
+other attached packages:
+[1] cummeRbund_0.1.2 ggplot2_0.8.9    proto_0.3-8     
+[4] reshape_0.8.3    plyr_1.4         RSQLite_0.9-4   
+[7] DBI_0.2-5       
+
+loaded via a namespace (and not attached):
+[1] digest_0.4.2 tools_2.12.1
+\end{Soutput}
+\end{Schunk}
+
+\end{document}

@@ -115,7 +115,7 @@ print(b)
 \caption{Box plot of FPKM values from cufflinks output.}
 \end{figure}
 
-Pairwise comparisons can be made by using \Rmethod{csScatter} (Figure 3). You must specify the sample names to use for the $x$ and $y$ axes:
+Pairwise comparisons can be made by using \Rmethod{csScatter}. You must specify the sample names to use for the $x$ and $y$ axes:
 <<global_plots_3,include=FALSE>>=
 s<-csScatter(cuff@genes,"H1_hESC","Fibroblasts",smooth=T)
 @
