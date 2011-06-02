@@ -99,6 +99,7 @@ setMethod("samples",signature(object="CuffSet"),.samples)
 	CDSFPKMQuery<-paste("SELECT y.* from CDS x JOIN CDSData y ON x.CDS_id = y.CDS_id WHERE x.gene_id ='",geneId,"'",sep="")
 	CDSDiffQuery<-paste("SELECT y.* from CDS x JOIN CDSExpDiffData y ON x.CDS_id = y.CDS_id WHERE x.gene_id ='",geneId,"'",sep="")
 	
+	begin<-dbSendQuery(object@DB,"BEGIN;")
 	res<-new("CuffGene",
 			id=geneId,
 			annotation=dbGetQuery(object@DB,geneAnnotationQuery),
@@ -122,6 +123,7 @@ setMethod("samples",signature(object="CuffSet"),.samples)
 
 			
 		)
+	end<-dbSendQuery(object@DB,"END;")
 		
 		res
 }
@@ -130,7 +132,7 @@ setMethod("getGene",signature(object="CuffSet"),.getGene)
 	
 .getGenes<-function(object,geneIdList){
 	#Make WHERE Clause search string
-	whereString<-'WHERE x.gene_id %in% ('
+	whereString<-'WHERE x.gene_id IN ('
 	for (i in geneIdList){
 		whereString<-paste(whereString,"'",i,"',",sep="")
 	}
@@ -142,18 +144,33 @@ setMethod("getGene",signature(object="CuffSet"),.getGene)
 	geneFPKMQuery<-paste("SELECT y.* from genes x JOIN geneData y ON x.gene_id=y.gene_id ", whereString,sep="")
 	geneDiffQuery<-paste("SELECT y.* from genes x JOIN geneExpDiffData y ON x.gene_id=y.gene_id ", whereString,sep="")
 	
-	isoformAnnotationQuery<-paste("SELECT * from isoforms ", whereString,sep="")
+	isoformAnnotationQuery<-paste("SELECT * from isoforms x ", whereString,sep="")
 	isoformFPKMQuery<-paste("SELECT y.* from isoforms x JOIN isoformData y ON x.isoform_id = y.isoform_id ", whereString,sep="")
 	isoformDiffQuery<-paste("SELECT y.* from isoforms x JOIN isoformExpDiffData y ON x.isoform_id = y.isoform_id ", whereString,sep="")
 	
-	TSSAnnotationQuery<-paste("SELECT * from TSS ", whereString,sep="")
+	TSSAnnotationQuery<-paste("SELECT * from TSS x ", whereString,sep="")
 	TSSFPKMQuery<-paste("SELECT y.* from TSS x JOIN TSSData y ON x.TSS_group_id=y.TSS_group_id ", whereString,sep="")
 	TSSDiffQuery<-paste("SELECT y.* from TSS x JOIN TSSExpDiffData y ON x.TSS_group_id=y.TSS_group_id ", whereString,sep="")
 	
-	CDSAnnotationQuery<-paste("SELECT * from CDS ", whereString,sep="")
+	CDSAnnotationQuery<-paste("SELECT * from CDS x ", whereString,sep="")
 	CDSFPKMQuery<-paste("SELECT y.* from CDS x JOIN CDSData y ON x.CDS_id = y.CDS_id ", whereString,sep="")
 	CDSDiffQuery<-paste("SELECT y.* from CDS x JOIN CDSExpDiffData y ON x.CDS_id = y.CDS_id ", whereString,sep="")
-
+	
+	#Test Print
+#	print(geneAnnotationQuery)
+#	print(geneFPKMQuery)
+#	print(geneDiffQuery)
+#	print(isoformAnnotationQuery)
+#	print(isoformFPKMQuery)
+#	print(isoformDiffQuery)
+#	print(TSSAnnotationQuery)
+#	print(TSSFPKMQuery)
+#	print(TSSDiffQuery)
+#	print(CDSAnnotationQuery)
+#	print(CDSFPKMQuery)
+#	print(CDSDiffQuery)
+	
+	begin<-dbSendQuery(object@DB,"BEGIN;")
 	res<-new("CuffGeneSet",
 			ids=geneIdList,
 			annotation=dbGetQuery(object@DB,geneAnnotationQuery),
@@ -175,10 +192,14 @@ setMethod("getGene",signature(object="CuffSet"),.getGene)
 					diff=dbGetQuery(object@DB,CDSDiffQuery)
 					)
 			)
+	end<-dbSendQuery(object@DB,"END;")		
 	res
 }
 
 setMethod("getGenes",signature(object="CuffSet"),.getGenes)
+
+#Test
+myGenes<-getGenes(a,sample(geneFeatures$gene_id,10))
 
 ############
 #SQL access

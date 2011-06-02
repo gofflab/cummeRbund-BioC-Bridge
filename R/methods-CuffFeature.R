@@ -84,7 +84,7 @@ setMethod("fpkm",signature="CuffFeature",.fpkm)
 	#This does not make immediate sense with the conf_hi and conf_lo values.  Need to figure out appropriate transformation for these
 	#if(logMode)
 		#p<-p+scale_y_log2()
-	p
+	p + opts(legend.position = "none")
 	
 }
 

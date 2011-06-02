@@ -22,7 +22,7 @@
 #Class Methods	#
 #################
 setMethod("show","CuffGeneSet",function(object){
-			cat(class(object),"instance for genes",object@id,"\nShort name:\t",unique(object@annotation$gene_short_name),
+			cat(class(object),"instance for genes",object@ids,"\nShort name:\t",unique(object@annotation$gene_short_name),
 					"\nSlots:\n\t annotation\n\t fpkm\n\t diff\n\t",
 					"isoforms\t",class(object@isoforms),"instance of size",length(object@isoforms),"\n\t",
 					"TSS\t\t",class(object@TSS),"instance of size",length(object@TSS),"\n\t",

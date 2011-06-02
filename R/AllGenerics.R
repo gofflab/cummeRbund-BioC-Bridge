@@ -50,6 +50,7 @@ setGeneric("diffData",function(object,x,y,...) standardGeneric("diffData"))
 setGeneric("csDensity",function(object, ...) standardGeneric("csDensity"))
 setGeneric("csScatter",function(object,x,y,...) standardGeneric("csScatter"))
 setGeneric("csVolcano",function(object,x,y,...) standardGeneric("csVolcano"))
+setGeneric("csBoxplot",function(object,x,y,...) standardGeneric("csBoxplot"))
 
 ###################
 #CuffGeneSet
@@ -60,7 +61,7 @@ setGeneric("csVolcano",function(object,x,y,...) standardGeneric("csVolcano"))
 #################
 #CuffFeatureSet
 #################
-
+setGeneric("csHeatmap",function(object,...) standardGeneric("csHeatmap"))
 
 
 

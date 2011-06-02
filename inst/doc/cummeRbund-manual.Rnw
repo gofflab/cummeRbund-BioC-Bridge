@@ -1,0 +1,163 @@
+%
+%
+%
+%\VignetteIndexEntry{An R package for visualization and analysis of Cufflinks high-throughput sequencing data}
+%\VignetteKeywords{cummeRbund,visualization,sequencing,cufflinks}
+%\VignettePackage{cummeRbund}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[10pt]{article}
+\usepackage{amsmath}
+\usepackage[authoryear,round]{natbib}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=red,
+    urlcolor=black
+}
+\usepackage{theorem}
+\usepackage{float}
+\usepackage{ifthen}
+\usepackage[OT1]{fontenc}
+
+\newcommand{\R}{{\textsf{R}}}
+\newcommand{\code}[1]{{\texttt{#1}}}
+\newcommand{\term}[1]{{\emph{#1}}}
+\newcommand{\Rpackage}[1]{\textsf{#1}}
+\newcommand{\Rfunction}[1]{\texttt{#1}}
+\newcommand{\Robject}[1]{\texttt{#1}}
+\newcommand{\Rclass}[1]{{\textit{#1}}}
+\newcommand{\Rmethod}[1]{{\textit{#1}}}
+\newcommand{\Rfunarg}[1]{{\textit{#1}}}
+
+\bibliographystyle{plainnat}
+\title{cummeRbund: Visualization and Exploration of Cufflinks High-throughput Sequencing Data}
+
+\author{Loyal A. Goff, Cole Trapnell}
+\date{1 April, 2011}
+
+\begin{document}
+<<init, echo=FALSE>>=
+options(width=65)
+@ 
+
+<<loadLib,echo=FALSE>>=
+library(cummeRbund)
+setwd("../../extdata")
+@
+
+\maketitle
+
+\tableofcontents
+
+\section{Introduction}
+	\Rpackage{cummeRbund} is a visualization package for Cufflinks high-throughput sequencing data. The base class, \Rclass{cuffSet} 
+	is a 'pointer' to cufflinks data that are stored out-of-memory in a sqlite database.
+	
+\section{CummeRbund Classes}
+
+\subsection{CuffSet Class}
+
+\subsection{CuffData Class}
+
+\subsection{CuffFeatureSet Class}
+
+\subsection{CuffFeature Class}
+	
+\section{Reading cuffdiff output}
+<<read>>=
+curdir<-getwd()
+#dataDirectory <- system.file("../../extdata")
+#dataDirectory
+#cuffFile <- file.path("../../extdata", "genes.fpkm_tracking")
+#setwd("../../extdata")
+cuff <- readCufflinks()
+cuff
+@
+
+\subsection{Reading additional annotation files}
+
+
+\section{Global statistics}
+Several plotting methods are available that allow for quality-control or global analysis of cufflinks data. For example, to assess the
+distributions of FPKM scores across samples, you can use the \Rmethod{csDensity} plot (Figure 1).
+<<global_plots_1,include=FALSE>>=
+dens<-csDensity(cuff@genes)
+@
+
+\begin{figure}[ht]
+\begin{center}
+<<label=global_plots_dens,fig=TRUE,echo=FALSE>>=
+<<global_plots_1>>
+print(dens)
+@
+
+\end{center}
+\caption{Density plot per sample of cufflinks output FPKM values.}
+\end{figure}
+
+Boxplots can be visualized using the \Rmethod{csBoxplot} method (Figure 2).
+<<global_plots_2,include=FALSE>>=
+b<-csBoxplot(cuff@genes)
+@
+
+\begin{figure}[ht]
+\begin{center}
+<<label=global_plots_box,fig=TRUE,echo=FALSE>>=
+<<global_plots_2>>
+print(b)
+@
+
+\end{center}
+\caption{Box plot of FPKM values from cufflinks output.}
+\end{figure}
+
+Pairwise comparisons can be made by using \Rmethod{csScatter} (Figure 3). You must specify the sample names to use for the $x$ and $y$ axes:
+<<global_plots_3,include=FALSE>>=
+s<-csScatter(cuff@genes,"H1_hESC","Fibroblasts",smooth=T)
+@
+
+\begin{figure}[ht]
+\begin{center}
+<<label=global_plots_scatter,fig=TRUE,echo=FALSE>>=
+<<global_plots_3>>
+print(s)
+@
+
+\end{center}
+\caption{Scatter plot comparing the FPKM values of two samples from cufflinks output.}
+\end{figure}
+
+Volcano plots are also available for the \Rclass{CuffData} objects. Again, you must specify the comparisons by sample_name.
+<<global_plots_4,include=FALSE>>=
+v<-csVolcano(cuff@genes,"H1_hESC","Fibroblasts")
+@
+
+\begin{figure}[ht]
+\begin{center}
+<<label=global_plots_volcano,fig=TRUE,echo=FALSE>>=
+<<global_plots_4>>
+print(v)
+@
+\end{center}
+\caption{Volcano plot of ln fold change vs significance.}
+\end{figure}
+
+\clearpage
+
+\section{Creating Gene Sets}
+
+\subSection{Geneset-level plots}
+
+\section{Individual Genes}
+
+\subsection{Gene-level plots}
+
+\section{Session info}
+<<session>>=
+sessionInfo()
+@
+
+\end{document}

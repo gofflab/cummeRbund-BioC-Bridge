@@ -63,7 +63,7 @@ setClass("CuffFeatureSet",
 #CuffGene is a 'data' container for all information from a set of genes
 #This allows for plotting of gene set information
 setClass("CuffGeneSet",
-		representation(id="character",
+		representation(ids = "character",
 				isoforms = "CuffFeatureSet",
 				TSS = "CuffFeatureSet",
 				CDS= "CuffFeatureSet"),

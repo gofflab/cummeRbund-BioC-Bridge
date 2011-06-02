@@ -248,4 +248,18 @@ setMethod("csScatter",signature(object="CuffData"), .scatter)
 
 setMethod("csVolcano",signature(object="CuffData"), .volcano)
 
+.boxplot<-function(object,logMode=TRUE,main,...){
+	dat<-fpkm(object)
+	p <- ggplot(dat)
+	if(logMode) {
+		p<-p+geom_boxplot(aes(x=sample,y=log2(fpkm),fill=sample),size=0.3,alpha=I(1/3))
+	} else {
+		p<-p+geom_boxplot(aes(x=sample,y=fpkm,fill=sample),alpha=I(1/3),size=0.3)
+	}
+	p
+	
+}
+
+setMethod("csBoxplot",signature(object="cuffData"),.boxplot)
+
 
