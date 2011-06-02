@@ -248,7 +248,7 @@ setMethod("csScatter",signature(object="CuffData"), .scatter)
 
 setMethod("csVolcano",signature(object="CuffData"), .volcano)
 
-.boxplot<-function(object,logMode=TRUE,main,...){
+.boxplot<-function(object,logMode=TRUE,...){
 	dat<-fpkm(object)
 	p <- ggplot(dat)
 	if(logMode) {
