@@ -111,12 +111,12 @@ loadGenes<-function(fpkmFile,
 	}
 	
 	########
-	#Handle promoters.diff
+	#TODO: Handle promoters.diff
 	########
 	
 	
 	#########
-	#Handle Feature Data
+	#Handle Feature Data (this will actually be done on CuffData objects instead...but I may include something here as well)
 	#########
 	
 }
@@ -335,7 +335,7 @@ loadTSS<-function(fpkmFile,
 	}
 	
 	#########
-	#Handle splicing.diff
+	#TODO: Handle splicing.diff
 	########
 	
 	
@@ -446,7 +446,7 @@ loadCDS<-function(fpkmFile,
 	}
 	
 	#########
-	#Handle splicing.diff
+	#TODO: Handle splicing.diff
 	########
 	
 	
@@ -891,18 +891,18 @@ readCufflinks<-function(dir = getwd(),
 						...){
 	
 	#Set file locations with directory
-	dbFile=paste(dir,dbFile,sep="")
-	geneFPKM=paste(dir,geneFPKM,sep="")
-	geneDiff=paste(dir,geneDiff,sep="")
-	isoformFPKM=paste(dir,isoformFPKM,sep="")
-	isoformDiff=paste(dir,isoformDiff,sep="")
-	TSSFPKM=paste(dir,TSSFPKM,sep="")
-	TSSDiff=paste(dir,TSSDiff,sep="")
-	CDSFPKM=paste(dir,CDSFPKM,sep="")
-	CDSExpDiff=paste(dir,CDSExpDiff,sep="")
-	CDSDiff=paste(dir,CDSDiff,sep="")
-	promoterFile=paste(dir,promoterFile,sep="")
-	splicingFile=paste(dir,splicingFile,sep="")
+	dbFile=file.path(dir,dbFile)
+	geneFPKM=file.path(dir,geneFPKM)
+	geneDiff=file.path(dir,geneDiff)
+	isoformFPKM=file.path(dir,isoformFPKM)
+	isoformDiff=file.path(dir,isoformDiff)
+	TSSFPKM=file.path(dir,TSSFPKM)
+	TSSDiff=file.path(dir,TSSDiff)
+	CDSFPKM=file.path(dir,CDSFPKM)
+	CDSExpDiff=file.path(dir,CDSExpDiff)
+	CDSDiff=file.path(dir,CDSDiff)
+	promoterFile=file.path(dir,promoterFile)
+	splicingFile=file.path(dir,splicingFile)
 					
 					
 	#Check to see whether dbFile exists

@@ -24,6 +24,7 @@ exportMethods(fpkm,
 			expressionPlot,
 			expressionBarplot,
 			getGene,
+			getGenes,
 			addFeatures
 )
 
