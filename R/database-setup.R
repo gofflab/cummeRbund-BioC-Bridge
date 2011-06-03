@@ -95,7 +95,7 @@ loadGenes<-function(fpkmFile,
 	#Handle gene_exp.diff
 	#######
 	
-	if(!file.exists(diffFile)){
+	if(file.exists(diffFile)){
 		#Read diff file
 		write(paste("Reading ",diffFile,sep=""),stderr())
 		diffArgs$file = diffFile
@@ -213,7 +213,7 @@ loadIsoforms<-function(fpkmFile,
 	#Handle isoform_exp.diff
 	#######
 	
-	if(!file.exists(diffFile)){
+	if(file.exists(diffFile)){
 		#Read diff file
 		write(paste("Reading ",diffFile,sep=""),stderr())
 		diffArgs$file = diffFile
@@ -319,7 +319,7 @@ loadTSS<-function(fpkmFile,
 	#Handle tss_groups_exp.diff
 	#######
 	
-	if(!file.exists(diffFile)){
+	if(file.exists(diffFile)){
 		#Read diff file
 		write(paste("Reading ",diffFile,sep=""),stderr())
 		diffArgs$file = diffFile
@@ -430,7 +430,7 @@ loadCDS<-function(fpkmFile,
 	#Handle cds_groups_exp.diff
 	#######
 	
-	if(!file.exists(diffFile)){
+	if(file.exists(diffFile)){
 		#Read diff file
 		write(paste("Reading ",diffFile,sep=""),stderr())
 		diffArgs$file = diffFile
