@@ -60,25 +60,82 @@ fileDir<-("../../extdata/")
 \section{CummeRbund Classes}
 
 \subsection{CuffSet Class}
+	A pointer class to control access to the sqlite tables holding the Cufflinks data. The primary slot is @DB which contains the RSQLite connection object.
+	The additional slots (genes, isoforms, TSS, and CDS) are each instances of the \Rclass{CuffData} class and are pointers to sets of tables for each data subtype.
+	This is the default class created by \Rmethod{readCufflinks}.  By default, \Rclass{CuffData} accessor methods applied to a \Rclass{CuffSet} class will operate on the 'genes' slot.
 
 \subsection{CuffData Class}
+	The \Rclass{CuffData} class is also a pointer class to the SQL backend, but each instance is specific for a data subtype (genes, isoforms, TSS, CDS). Again, there is an @DB slot that contains the RSQLite connection object.
+	There are several accessor, setter, and plotting methods that allow for global analysis of all features within a \Rmethod{CuffData} class.Subsetting is currently being re-written, however, it is primarily done through the 'gene\_id' field.
+	Available slots for the CuffData class are: 
+	\begin{itemize}
+		\item DB: RSQLite connection object
+		\item tables: A \Rclass{list} of tables in the SQLite DB that contain the cufflinks data.
+		\item filters: A \Rclass{list} of filters for subsetting (not implemented yet).
+		\item type: A \Rclass{character} field describing the data (ie. 'genes','isoforms','TSS','CDS','other')
+		\item idField: The name of the identifying index field for this object (eg. 'gene\_id' for type='gene', or 'isoform\_id' for type='isoform')
+	\end{itemize}
+	Making the best use of either the CuffSet or CuffData classes will enable you to keep the entire dataset out of memory and significantly improve performance for large cufflinks datasets.
 
 \subsection{CuffFeatureSet Class}
+	The \Rclass{CuffFeatureSet} class is a data-storage container that holds all available data for a pre-determined list of features. Slots for FPKM data, differential regulation data, and feature-level annotation are all available. Unlike the previous classes, this class contains no connection information to the SQL database, but
+	rather contains several slots with \Rclass{data.frame} objects storing multiple-features worth of information.  There are available accessors, and plotting methods that are designed to present multiple-features worth of information (eg. heatmaps, scatterplots, etc)
+	Available slots for a \Rclass{CuffFeatureSet} object include:
+	\begin{itemize}
+		\item annotation: Holds all feature-level annotation information for all features in object.
+		\item fpkm: A data frame of FPKM data across all samples, for all features in object.
+		\item diff: A data frame of differential expression/regulation data for all features in object.
+	\end{itemize}
+	
+	A specialized sub-class of \Rclass{CuffFeatureSet} is the \Rclass{CuffGeneSet} class. This subclass adds additional slots to contain all isoforms, TSS, and CDS information for a given set of gene\_ids.  The \Rclass{CuffGeneSet} class is designed to aggregate all relevant
+	information for a set of genes into one object for easy analysis and/or manipulation.
+	The \Rclass{CuffGeneSet} object adds the following slots:
+	\begin{itemize}
+		\item ids: A 'character' list of all gene\_ids used in object.
+		\item isoforms: A \Rclass{CuffFeatureSet} object for all isoforms of genes in object.
+		\item TSS: A \Rclass{CuffFeatureSet} object for all TSS of genes in object.
+		\item CDS: A \Rclass{CuffFeatureSet} object for all CDS of genes in object.
+	\end{itemize}
 
 \subsection{CuffFeature Class}
+	The \Rclass{CuffFeature} class is designed for single-feature-level data analysis and plotting.  The methods available for this object are designed to analyze or visualize information about a specific feature.
+	This is a 'data' object, as opposed to a 'pointer' object to the database backend. There is a validity requirement that a \Rclass{CuffFeature} object only point to data from a single feature.
+	Available slots for a \Rclass{CuffFeature} object include:
+	\begin{itemize}
+		\item annotation: Holds feature-level annotation information for a given feature.
+		\item fpkm: A data frame of FPKM data across all samples for a given feature.
+		\item diff: A data frame of differential expression/regulation data for a given feature.
+	\end{itemize}
 	
+	A specialized sub-class of \Rclass{CuffFeature} is the \Rclass{CuffGene} class. This subclass adds additional slots to contain all isoform, TSS, and CDS information for a given gene.
+	The \Rclass{CuffGene} object adds the following slots:
+	\begin{itemize}
+		\item id: The common 'gene\_id' for all data in object
+		\item isoforms: A \Rclass{CuffFeature} object for all isoforms of a given gene.
+		\item TSS: A \Rclass{CuffFeature} object for all TSS of a given gene.
+		\item CDS: A \Rclass{CuffFeature} object for all CDS of a given gene.
+	\end{itemize}
+	
+Note: Future versions of cummeRbund may try to collapse the redundant functionality of the CuffFeature and CuffFeatureSet classes.
 \section{Reading cuffdiff output}
+One of the principle benefits of using cummeRbund is that data are stored in a SQLite database.  This allows for out-of-memory analysis of data, quick retrieval, and only a one-time cost to setup the tables. By default, cummeRbund assumes that all output files from cuffdiff are in the current working directory.
+To read these files, populate the 'cuffData.db' database backend, and return the \Rclass{CuffSet} pointer object, you can do the following. 
+
 <<read>>=
-#curdir<-getwd()
-#dataDirectory <- system.file("../../extdata")
-#dataDirectory
-#cuffFile <- file.path("../../extdata", "genes.fpkm_tracking")
-#setwd("../../extdata")
 cuff <- readCufflinks(dir=fileDir)
 cuff
 @
+Again, by default $dir$ is assumed to be the current working directory. Should you need to rebuild the SQLite backend for any reason, you can add the option \Rfunarg{rebuild=T} to \Rmethod{readCufflinks}.  Once the database is created, \Rmethod{readCufflinks} will default to using the SQL backend and should not need to rebuild this database.
+Each R session should begin with a call to \Rmethod{readCufflinks} so as to initialize the database connection and create an object with the appropriate RSQLite connection information. 
 
-\subsection{Reading additional annotation files}
+\subsection{Adding additional feature annotation}
+Gene- or feature-level annotation can be permanently added to the database tables for future querying. If you have a data.frame where the first column contains the 'tracking\_id' (eg. 'gene\_id' for genes, 'isoform\_id' for isoforms, etc). You can easily add feature level annotation using the \Rfunction{addFeatures()} function:
+
+<<add_features>>=
+#annot<-read.table("gene_annotation.tab",sep="\t",header=T,na.string="-")
+#addFeatures(cuff,annot,level="genes")
+@
+By default, features added to a \Rclass{CuffSet} object are assumed to be gene-level annotations, but the level can selected using the argument \Rfunarg{level}. Features added to a \Rclass{CuffData} object are assumed to be of the same type as the object@type value (e.g. gene-level features for 'genes', isoform-level features for isoforms, etc.)
 
 
 \section{Global statistics}
@@ -149,13 +206,179 @@ print(v)
 
 \clearpage
 
+\section{Accessing Data}
+Feature-level information can be accessed directly from a \Rclass{CuffData} object using the \Rmethod{fpkm}, \Rmethod{diffData}, or \Rmethod{features} methods:
+
+<<data_access_1>>=
+gene.features<-features(cuff@genes)
+head(gene.features)
+gene.fpkm<-fpkm(cuff@genes)
+head(gene.fpkm)
+isoform.fpkm<-fpkm(cuff@isoforms)
+head(isoform.fpkm)
+gene.diff<-diffData(cuff@genes)
+head(gene.diff)
+@
+
+Vectors of sample names and feature names are available by using the \Rmethod{samples} and \Rmethod{featureNames} methods:
+
+<<data_access_2>>=
+sample.names<-samples(cuff@genes)
+head(sample.names)
+gene.featurenames<-featureNames(cuff@genes)
+head(gene.featurenames)
+@
+
+To facilitate Bioconductor-like operations, an 'FPKM-matrix' can be returned easily using the \Rmethod{fpkmMatrix} method:
+<<data_access_3>>=
+gene.matrix<-fpkmMatrix(cuff@genes)
+head(gene.matrix)
+@
+
+\subsection{Writing your own SQL accessors}
+Since the cufflinks is a SQLite database backend, if you are familiar with SQL and/or RSQLite query construction, you can simply design your own SQL queries to access the data that you are after. PUT DATABASE SCHEMA HERE...
+
+\clearpage 
+
 \section{Creating Gene Sets}
+Gene Sets (stored in a \Rclass{CuffGeneSet} object) can be created using the \Rmethod{getGenes} method on a CuffSet object.
+You must first create a vector of 'gene\_ids' to identify the genes you wish to select:
+
+<<create_geneset_1>>=
+myGeneIds<-sample(features(cuff@genes)$gene_id,20)
+myGeneIds
+myGenes<-getGenes(cuff,myGeneIds)
+myGenes
+@
+The same \Rmethod{fpkm}, \Rmethod{fpkmMatrix}, \Rmethod{features}, \Rmethod{diffData}, \Rmethod{samples}, and \Rmethod{featureNames} are available for instances of the \Rmethod{CuffGeneSet} class.
+
 
 \subsection{Geneset level plots}
+There are several plotting functions available for gene-set-level visualization:
+
+<<geneset_plots_1,include=FALSE>>=
+h<-csHeatmap(myGenes,cluster='both')
+@
+
+\begin{figure}[ht]
+\begin{center}
+<<label=geneset_plots_heatmap,fig=TRUE,echo=FALSE>>=
+<<geneset_plots_1>>
+print(h)
+@
+\end{center}
+\caption{Heatmap of FPKM values for a random sample of 20 genes.}
+\end{figure}
+
+<<geneset_plots_2,include=FALSE>>=
+s<-csScatter(myGenes,"Fibroblasts","H1_hESC",smooth=T)
+@
+
+\begin{figure}[ht]
+\begin{center}
+<<label=geneset_plots_scatter,fig=TRUE,echo=FALSE>>=
+<<geneset_plots_2>>
+print(s)
+@
+\end{center}
+\caption{Scatterplot of FPKM values for a random sample of 20 genes between Fibroblasts and H1\_hESC.}
+\end{figure}
+
+
+<<geneset_plots_3,include=FALSE>>=
+v<-csVolcano(myGenes,cluster='both')
+@
+
+\begin{figure}[ht]
+\begin{center}
+<<label=geneset_plots_volcano,fig=TRUE,echo=FALSE>>=
+<<geneset_plots_3>>
+print(v)
+@
+\end{center}
+\caption{Volcano plot of FPKM vs significance values for a random sample of 20 genes between 2 conditions.}
+\end{figure}
+
+Similar plots can be made for all sub-level features of a \Rclass{CuffGeneSet} class by specifiying which slot you would like to plot (eg. \Rfunarg{@isoforms},\Rfunarg{@TSS},\Rfunarg{@CDS}).
+
+<<geneset_plots_4,include=FALSE>>=
+ih<-csHeatmap(myGenes@isoforms,cluster='both')
+@
+
+\begin{figure}[ht]
+\begin{center}
+<<label=geneset_plots_isoform_heatmap,fig=TRUE,echo=FALSE>>=
+<<geneset_plots_4>>
+print(ih)
+@
+\end{center}
+\caption{Heatmap of FPKM values of isoforms for a random sample of 20 genes.}
+\end{figure}
+
+\clearpage
 
 \section{Individual Genes}
+An individual CuffGene object can be created by using the \Rfunction{getGene} function for a given 'gene\_id'.
+<<gene_level_1>>=
+myGeneId<-"ucscCodingXLOC_009243"
+myGene<-getGene(cuff,myGeneId)
+myGene
+head(fpkm(myGene))
+head(fpkm(myGene@isoforms))
+@
 
 \subsection{Gene-level plots}
+<<gene_plots_1,include=FALSE>>=
+gl<-expressionPlot(myGene)
+@
+
+\begin{figure}[ht]
+\begin{center}
+<<label=gene_plots_line,fig=TRUE,echo=FALSE>>=
+<<gene_plots_1>>
+print(gl)
+@
+\end{center}
+\caption{Line plot of FPKM expression values for a given gene}
+\end{figure}
+
+<<gene_plots_2,include=FALSE>>=
+gb<-expressionBarplot(myGene)
+@
+
+\begin{figure}[ht]
+\begin{center}
+<<label=gene_plots_bar,fig=TRUE,echo=FALSE>>=
+<<gene_plots_2>>
+print(gb)
+@
+\end{center}
+\caption{Bar plot of FPKM expression values for a given gene}
+\end{figure}
+
+<<gene_plots_3,include=FALSE>>=
+igb<-expressionBarplot(myGene@isoforms)
+@
+
+\begin{figure}[ht]
+\begin{center}
+<<label=gene_plots_bar_isoforms,fig=TRUE,echo=FALSE>>=
+<<gene_plots_3>>
+print(igb)
+@
+\end{center}
+\caption{Bar plot of FPKM expression values for all isoforms of a given gene}
+\end{figure}
+
+\section{Miscellaneous}
+\begin{itemize}
+	\item All plotting functions return ggplot objects and the resulting objects can be manipulated/faceted/altered using standard ggplot2 methods.
+	\item There are occasional DB connectivity issues that arise.  Not entirely sure why yet.  If necessary, just \Rfunction{readCufflinks} again and this should solve connectivity issues with a new
+	RSQLite connection object.  If connectivity continues to be a problem, try \Rfunction{cuff<-readCufflinks(rebuild=T)}
+	\item I am still working on fully documenting each of the methods.  There are a good number of arguments that exist, but might be hard to find without looking at the source.
+\end{itemize}
+
+\clearpage
 
 \section{Session info}
 <<session>>=

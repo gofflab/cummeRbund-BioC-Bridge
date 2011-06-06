@@ -64,17 +64,36 @@ setMethod("samples","CuffFeatureSet",.samples)
 .fpkm<-function(object){
 	object@fpkm
 }
-setMethod("fpkm",signature="CuffFeatureSet",.fpkm)
+setMethod("fpkm",signature(object="CuffFeatureSet"),.fpkm)
+
+.featureNames<-function(object){
+	object@ids
+}
+
+setMethod("featureNames",signature(object="CuffFeatureSet"),.featureNames)
+
+.features<-function(object){
+	object@annotation
+}
+
+setMethod("features",signature(object="CuffFeatureSet"),.features)
 
 .fpkmMatrix<-function(object){
 	res<-fpkm(object)
+	colnames(res)[1]<-"tracking_id"
 	res<-res[,c(1:3)]
 	res<-melt(res)
-	res<-cast(res,gene_id~sample_name)
+	res<-cast(res,tracking_id~sample_name)
 	res<-data.frame(res[,-1],row.names=res[,1])
 }
 
-setMethod("fpkmMatrix","CuffFeatureSet",.fpkmMatrix)
+setMethod("fpkmMatrix",signature(object="CuffFeatureSet"),.fpkmMatrix)
+
+.diffData<-function(object){
+	object@diff
+}
+
+setMethod("diffData",signature(object="CuffFeatureSet"),.diffData)
 
 
 #################
@@ -229,14 +248,14 @@ setMethod("csHeatmap",signature("CuffFeatureSet"),.ggheat)
 	}
 	
 	#Add title & Return value
-	p<- p + opts(title=object@tables$mainTable)
+	#p<- p + opts(title=object@tables$mainTable)
 	p
 }
 
 setMethod("csScatter",signature(object="CuffFeatureSet"), .scatter)
 
 #Volcano plot
-.volcano<-function(object,x,y,...){
+.volcano<-function(object,x,y,xlimits=c(-20,20),...){
 	dat<-diffData(object=object,x=x,y=y)
 	s1<-unique(dat$sample_1)
 	s2<-unique(dat$sample_2)
@@ -244,8 +263,8 @@ setMethod("csScatter",signature(object="CuffFeatureSet"), .scatter)
 	p<-ggplot(dat)
 	p<- p + geom_point(aes(x=ln_fold_change,y=-log10(p_value),color=significant),size=1,alpha=I(1/3))
 	
-	#Add title and return
-	p<- p + opts(title=paste(object@tables$mainTable,": ",s2,"/",s1,sep=""))
+	#Set axis limits
+	p<- p + scale_x_continuous(limits=xlimits)
 	p
 }
 
