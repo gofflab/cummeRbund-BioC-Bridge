@@ -43,12 +43,6 @@
 options(width=65)
 @ 
 
-<<loadLib,echo=FALSE>>=
-library(cummeRbund)
-#setwd("../../extdata")
-fileDir<-("../../extdata/")
-@
-
 \maketitle
 
 \tableofcontents
@@ -121,11 +115,16 @@ Note: Future versions of cummeRbund may try to collapse the redundant functional
 One of the principle benefits of using cummeRbund is that data are stored in a SQLite database.  This allows for out-of-memory analysis of data, quick retrieval, and only a one-time cost to setup the tables. By default, cummeRbund assumes that all output files from cuffdiff are in the current working directory.
 To read these files, populate the 'cuffData.db' database backend, and return the \Rclass{CuffSet} pointer object, you can do the following. 
 
+<<loadLib>>=
+library(cummeRbund)
+fileDir<-("../../extdata/")
+@
+
 <<read>>=
 cuff <- readCufflinks(dir=fileDir)
 cuff
 @
-Again, by default $dir$ is assumed to be the current working directory. Should you need to rebuild the SQLite backend for any reason, you can add the option \Rfunarg{rebuild=T} to \Rmethod{readCufflinks}.  Once the database is created, \Rmethod{readCufflinks} will default to using the SQL backend and should not need to rebuild this database.
+Again, by default $dir$ is assumed to be the current working directory and \code{cuff<-readCufflinks()} should work if all appropriate files are in the current working directory. Should you need to rebuild the SQLite backend for any reason, you can add the option \Rfunarg{rebuild=T} to \Rmethod{readCufflinks}.  Once the database is created, \Rmethod{readCufflinks} will default to using the SQL backend and should not need to rebuild this database.
 Each R session should begin with a call to \Rmethod{readCufflinks} so as to initialize the database connection and create an object with the appropriate RSQLite connection information. 
 
 \subsection{Adding additional feature annotation}
@@ -143,6 +142,7 @@ Several plotting methods are available that allow for quality-control or global 
 distributions of FPKM scores across samples, you can use the \Rmethod{csDensity} plot (Figure 1).
 <<global_plots_1,include=FALSE>>=
 dens<-csDensity(cuff@genes)
+dens
 @
 
 \begin{figure}[ht]
@@ -159,6 +159,7 @@ print(dens)
 Boxplots can be visualized using the \Rmethod{csBoxplot} method (Figure 2).
 <<global_plots_2,include=FALSE>>=
 b<-csBoxplot(cuff@genes)
+b
 @
 
 \begin{figure}[ht]
@@ -175,6 +176,7 @@ print(b)
 Pairwise comparisons can be made by using \Rmethod{csScatter}. You must specify the sample names to use for the $x$ and $y$ axes:
 <<global_plots_3,include=FALSE>>=
 s<-csScatter(cuff@genes,"H1_hESC","Fibroblasts",smooth=T)
+s
 @
 
 \begin{figure}[ht]
@@ -191,6 +193,7 @@ print(s)
 Volcano plots are also available for the \Rclass{CuffData} objects. Again, you must specify the comparisons by sample name.
 <<global_plots_4,include=FALSE>>=
 v<-csVolcano(cuff@genes,"H1_hESC","Fibroblasts")
+v
 @
 
 \begin{figure}[ht]
@@ -258,6 +261,7 @@ There are several plotting functions available for gene-set-level visualization:
 
 <<geneset_plots_1,include=FALSE>>=
 h<-csHeatmap(myGenes,cluster='both')
+h
 @
 
 \begin{figure}[ht]
@@ -272,6 +276,7 @@ print(h)
 
 <<geneset_plots_2,include=FALSE>>=
 s<-csScatter(myGenes,"Fibroblasts","H1_hESC",smooth=T)
+s
 @
 
 \begin{figure}[ht]
@@ -287,6 +292,7 @@ print(s)
 
 <<geneset_plots_3,include=FALSE>>=
 v<-csVolcano(myGenes,cluster='both')
+v
 @
 
 \begin{figure}[ht]
@@ -303,6 +309,7 @@ Similar plots can be made for all sub-level features of a \Rclass{CuffGeneSet} c
 
 <<geneset_plots_4,include=FALSE>>=
 ih<-csHeatmap(myGenes@isoforms,cluster='both')
+ih
 @
 
 \begin{figure}[ht]
@@ -330,6 +337,7 @@ head(fpkm(myGene@isoforms))
 \subsection{Gene-level plots}
 <<gene_plots_1,include=FALSE>>=
 gl<-expressionPlot(myGene)
+gl
 @
 
 \begin{figure}[ht]
@@ -344,6 +352,7 @@ print(gl)
 
 <<gene_plots_2,include=FALSE>>=
 gb<-expressionBarplot(myGene)
+gb
 @
 
 \begin{figure}[ht]
@@ -358,6 +367,7 @@ print(gb)
 
 <<gene_plots_3,include=FALSE>>=
 igb<-expressionBarplot(myGene@isoforms)
+igb
 @
 
 \begin{figure}[ht]

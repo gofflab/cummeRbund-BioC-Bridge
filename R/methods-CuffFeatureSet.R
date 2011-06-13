@@ -45,7 +45,7 @@ setValidity("CuffFeatureSet",function(object){
 #################
 #Subsetting		#
 #################
-
+#TODO: Add subset methods to return a CuffFeature object
 #setMethod("[","CuffFeatureSet",function(object,featureID){
 #			
 #		}
@@ -61,8 +61,12 @@ setValidity("CuffFeatureSet",function(object){
 
 setMethod("samples","CuffFeatureSet",.samples)
 
-.fpkm<-function(object){
-	object@fpkm
+.fpkm<-function(object,features=FALSE){
+	if (features){
+		return (merge(object@annotation,object@fpkm))
+	}else{
+		return(object@fpkm)
+	}
 }
 setMethod("fpkm",signature(object="CuffFeatureSet"),.fpkm)
 
@@ -269,6 +273,28 @@ setMethod("csScatter",signature(object="CuffFeatureSet"), .scatter)
 }
 
 setMethod("csVolcano",signature(object="CuffFeatureSet"), .volcano)
+
+.barplot<-function(object,logMode=TRUE,pseudocount=0.0001,...){
+	dat<-fpkm(object,features=T)
+	#TODO: Test dat to ensure that there are >0 rows to plot.  If not, trap error and move on...
+	
+	colnames(dat)[1]<-"tracking_id"
+	p<-ggplot(dat,aes(x=tracking_id,y=fpkm,fill=tracking_id))
+	
+	p<- p +
+			geom_bar() +
+			geom_errorbar(aes(ymin=conf_lo,ymax=conf_hi,group=1),size=0.15) +
+			facet_wrap('sample_name') +
+			opts(axis.text.x=theme_text(hjust=0,angle=-90))
+	
+	#This does not make immediate sense with the conf_hi and conf_lo values.  Need to figure out appropriate transformation for these
+	#if(logMode)
+	#p<-p+scale_y_log2()
+	p + opts(legend.position = "none")
+	
+}
+
+setMethod("expressionBarplot",signature(object="CuffFeatureSet"),.barplot)
 
 #################
 #Misc			#
