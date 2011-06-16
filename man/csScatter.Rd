@@ -13,33 +13,41 @@ csScatter(object, x, y, ...)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{object}{
-%%     ~~Describe \code{object} here~~
+An object of class ('CuffData','CuffFeatureSet')
 }
   \item{x}{
-%%     ~~Describe \code{x} here~~
+Sample name for x axis
 }
   \item{y}{
-%%     ~~Describe \code{y} here~~
+Sample name for y axis
+}
+  \item{logMode}{
+Logical argument to log2-transform data (default: T )
+}
+  \item{pseudocount}{
+Value to add to zero FPKM values for log transformation (default: 0.0001)
+}
+  \item{smooth}{
+Logical argument to add a smooth-fit regression line
+}
+  \item{labels}{
+Not implemented yet
 }
   \item{\dots}{
-%%     ~~Describe \code{\dots} here~~
+Additional arguments to csScatter
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+ggplot object with geom_point and geom_rug layers
 }
 \references{
-%% ~put references to the literature/web site here ~
+
 }
 \author{
-%%  ~~who you are~~
+Loyal A. Goff
 }
 \note{
 %%  ~~further notes~~
@@ -51,19 +59,7 @@ csScatter(object, x, y, ...)
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
 
-## The function is currently defined as
-structure(function (object, x, y, ...) 
-standardGeneric("csScatter"), generic = structure("csScatter", package = "cummeRbund"), package = "cummeRbund", group = list(), valueClass = character(0), signature = c("object", 
-"x", "y"), default = `NULL`, skeleton = function (object, x, 
-    y, ...) 
-stop("invalid call in method dispatch to \"csScatter\" (no default method)", 
-    domain = NA)(object, x, y, ...), class = structure("standardGeneric", package = "methods"))
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
