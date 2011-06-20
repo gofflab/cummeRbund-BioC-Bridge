@@ -82,22 +82,24 @@ setMethod("samples",signature(object="CuffSet"),.samples)
 #make CuffGene objects from a gene_ids
 .getGene<-function(object,geneId){
 	
+	whereString = paste("WHERE x.gene_id ='",geneId,"' OR x.gene_short_name = '",geneId,"'",sep="")
+	
 	#dbQueries
-	geneAnnotationQuery<-paste("SELECT * from genes WHERE gene_id ='",geneId,"'",sep="")
-	geneFPKMQuery<-paste("SELECT y.* from genes x JOIN geneData y ON x.gene_id=y.gene_id WHERE x.gene_id ='",geneId,"'",sep="")
-	geneDiffQuery<-paste("SELECT y.* from genes x JOIN geneExpDiffData y ON x.gene_id=y.gene_id WHERE x.gene_id ='",geneId,"'",sep="")
+	geneAnnotationQuery<-paste("SELECT * from genes x ",whereString,sep="")
+	geneFPKMQuery<-paste("SELECT y.* from genes x JOIN geneData y ON x.gene_id=y.gene_id ",whereString,sep="")
+	geneDiffQuery<-paste("SELECT y.* from genes x JOIN geneExpDiffData y ON x.gene_id=y.gene_id ",whereString,sep="")
 	
-	isoformAnnotationQuery<-paste("SELECT * from isoforms WHERE gene_id ='",geneId,"'",sep="")
-	isoformFPKMQuery<-paste("SELECT y.* from isoforms x JOIN isoformData y ON x.isoform_id = y.isoform_id WHERE x.gene_id ='",geneId,"'",sep="")
-	isoformDiffQuery<-paste("SELECT y.* from isoforms x JOIN isoformExpDiffData y ON x.isoform_id = y.isoform_id WHERE x.gene_id ='",geneId,"'",sep="")
+	isoformAnnotationQuery<-paste("SELECT * from isoforms i JOIN genes x ON i.gene_id = x.gene_id ",whereString,sep="")
+	isoformFPKMQuery<-paste("SELECT y.* from isoforms i JOIN isoformData y ON i.isoform_id = y.isoform_id JOIN genes x ON i.gene_id = x.gene_id ",whereString,sep="")
+	isoformDiffQuery<-paste("SELECT y.* from isoforms i JOIN isoformExpDiffData y ON i.isoform_id = y.isoform_id JOIN genes x ON i.gene_id = x.gene_id ",whereString,sep="")
 	
-	TSSAnnotationQuery<-paste("SELECT * from TSS WHERE gene_id ='",geneId,"'",sep="")
-	TSSFPKMQuery<-paste("SELECT y.* from TSS x JOIN TSSData y ON x.TSS_group_id=y.TSS_group_id WHERE x.gene_id ='",geneId,"'",sep="")
-	TSSDiffQuery<-paste("SELECT y.* from TSS x JOIN TSSExpDiffData y ON x.TSS_group_id=y.TSS_group_id WHERE x.gene_id ='",geneId,"'",sep="")
+	TSSAnnotationQuery<-paste("SELECT * from TSS t JOIN genes x ON t.gene_id = x.gene_id ",whereString,sep="")
+	TSSFPKMQuery<-paste("SELECT y.* from TSS t JOIN TSSData y ON t.TSS_group_id=y.TSS_group_id JOIN genes x ON t.gene_id = x.gene_id ",whereString,sep="")
+	TSSDiffQuery<-paste("SELECT y.* from TSS t JOIN TSSExpDiffData y ON t.TSS_group_id=y.TSS_group_id JOIN genes x ON t.gene_id = x.gene_id ",whereString,sep="")
 	
-	CDSAnnotationQuery<-paste("SELECT * from CDS WHERE gene_id ='",geneId,"'",sep="")
-	CDSFPKMQuery<-paste("SELECT y.* from CDS x JOIN CDSData y ON x.CDS_id = y.CDS_id WHERE x.gene_id ='",geneId,"'",sep="")
-	CDSDiffQuery<-paste("SELECT y.* from CDS x JOIN CDSExpDiffData y ON x.CDS_id = y.CDS_id WHERE x.gene_id ='",geneId,"'",sep="")
+	CDSAnnotationQuery<-paste("SELECT * from CDS c JOIN genes x ON c.gene_id = x.gene_id ",whereString,sep="")
+	CDSFPKMQuery<-paste("SELECT y.* from CDS c JOIN CDSData y ON c.CDS_id = y.CDS_id JOIN genes x ON c.gene_id = x.gene_id ",whereString,sep="")
+	CDSDiffQuery<-paste("SELECT y.* from CDS c JOIN CDSExpDiffData y ON c.CDS_id = y.CDS_id JOIN genes x ON c.gene_id = x.gene_id ",whereString,sep="")
 	
 	begin<-dbSendQuery(object@DB,"BEGIN;")
 	res<-new("CuffGene",

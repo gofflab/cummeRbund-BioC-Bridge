@@ -132,6 +132,7 @@ setMethod("diffData",signature(object="CuffFeatureSet"),.diffData)
 	#require(ggplot2)
 	
 	m=fpkmMatrix(object)
+
 	#remove genes with no expression in any condition
 	m=m[!apply(m,1,sum)==0,]
 	
@@ -168,10 +169,13 @@ setMethod("diffData",signature(object="CuffFeatureSet"),.diffData)
 	
 	rows=dim(m)[1]
 	cols=dim(m)[2]
+	
+	
+	
 	if(logMode) {
-		melt.m=cbind(rowInd=rep(1:rows, times=cols), colInd=rep(1:cols, each=rows) ,melt(log2(m+pseudocount)))
+		melt.m=cbind(rowInd=rep(1:rows, times=cols), colInd=rep(1:cols, each=rows), melt(log2(m+pseudocount)))
 	}else{
-		melt.m=cbind(rowInd=rep(1:rows, times=cols), colInd=rep(1:cols, each=rows) ,melt(m))
+		melt.m=cbind(rowInd=rep(1:rows, times=cols), colInd=rep(1:cols, each=rows), melt(m))
 	}
 	g=ggplot(data=melt.m)
 	
