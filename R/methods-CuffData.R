@@ -121,13 +121,21 @@ setMethod("fpkmMatrix","CuffData",.fpkmMatrix)
 
 
 #This needs a lot of work...
-.diffData<-function(object,x,y,lnFcCutoff=20){
+.diffData<-function(object,x,y,features=FALSE,lnFcCutoff=20){
 	if(missing(x) && missing(y)){
-		diffQuery<-paste("SELECT * FROM ",object@tables$expDiffTable,sep="")
+		if(!features){
+			diffQuery<-paste("SELECT * FROM ",object@tables$expDiffTable,sep="")
+		}else{
+			diffQuery<-paste("SELECT * FROM ",object@tables$expDiffTable," x LEFT JOIN ",object@tables$featureTable," xf ON x.",object@idField,"=xf.",object@idField,sep="")
+		}
 	}else if (missing(x) || missing(y)){
 		stop("You must supply both x and y or neither.")
 	}else{
-		diffQuery<-paste("SELECT x.",object@idField,", xed.* FROM ",object@tables$mainTable," x LEFT JOIN ",object@tables$expDiffTable," xed on x.",object@idField," = xed.",object@idField," WHERE ((sample_1 = '",x,"' AND sample_2 = '",y,"') OR (sample_1 = '",y,"' AND sample_2 = '",x,"')) AND xed.ln_fold_change>",-lnFcCutoff," AND xed.ln_fold_change<",lnFcCutoff,sep="")
+		if(!features){
+			diffQuery<-paste("SELECT x.",object@idField,", xed.* FROM ",object@tables$mainTable," x LEFT JOIN ",object@tables$expDiffTable," xed on x.",object@idField," = xed.",object@idField," WHERE ((sample_1 = '",x,"' AND sample_2 = '",y,"') OR (sample_1 = '",y,"' AND sample_2 = '",x,"')) AND xed.ln_fold_change>",-lnFcCutoff," AND xed.ln_fold_change<",lnFcCutoff,sep="")
+		}else{
+			diffQuery<-paste("SELECT x.",object@idField,", xed.*, xf.* FROM ",object@tables$mainTable," x LEFT JOIN ",object@tables$expDiffTable," xed on x.",object@idField," = xed.",object@idField," LEFT JOIN ",object@tables$featureTable," xf ON x.",object@idField,"=xf.",object@idField," WHERE ((sample_1 = '",x,"' AND sample_2 = '",y,"') OR (sample_1 = '",y,"' AND sample_2 = '",x,"')) AND xed.ln_fold_change>",-lnFcCutoff," AND xed.ln_fold_change<",lnFcCutoff,sep="")
+		}
 	}
 	dat<-dbGetQuery(object@DB,diffQuery)
 	#diffQuery
@@ -233,8 +241,8 @@ setMethod("csDensity",signature(object="CuffData"),.density)
 
 setMethod("csScatter",signature(object="CuffData"), .scatter)
 
-.volcano<-function(object,x,y,...){
-	dat<-diffData(object=object,x=x,y=y)
+.volcano<-function(object,x,y,features=FALSE,...){
+	dat<-diffData(object=object,x=x,y=y,features=features)
 	s1<-unique(dat$sample_1)
 	s2<-unique(dat$sample_2)
 	
