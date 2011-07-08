@@ -71,7 +71,7 @@ setMethod("samples","CuffFeatureSet",.samples)
 setMethod("fpkm",signature(object="CuffFeatureSet"),.fpkm)
 
 .featureNames<-function(object){
-	object@ids
+	data.frame(tracking_id=object@annotation[,1],gene_short_name=object@annotation$gene_short_name)
 }
 
 setMethod("featureNames",signature(object="CuffFeatureSet"),.featureNames)

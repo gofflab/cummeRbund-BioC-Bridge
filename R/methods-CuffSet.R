@@ -152,6 +152,8 @@ setMethod("getGene",signature(object="CuffSet"),.getGene)
 	whereString<-paste('WHERE x.gene_id IN ',idString,' OR g.gene_short_name IN ',idString,sep="")
 	
 	#dbQueries
+	idQuery<-paste("SELECT DISTINCT gene_id from genes x ",whereStringGene,sep="")
+	
 	geneAnnotationQuery<-paste("SELECT * from genes x ", whereStringGene,sep="")
 	geneFPKMQuery<-paste("SELECT y.* from genes x JOIN geneData y ON x.gene_id=y.gene_id ", whereStringGene,sep="")
 	geneDiffQuery<-paste("SELECT y.* from genes x JOIN geneExpDiffData y ON x.gene_id=y.gene_id ", whereStringGene,sep="")
@@ -170,7 +172,8 @@ setMethod("getGene",signature(object="CuffSet"),.getGene)
 	
 	begin<-dbSendQuery(object@DB,"BEGIN;")
 	res<-new("CuffGeneSet",
-			ids=geneIdList,
+			#TODO: Fix ids so that it only displays those genes
+			ids=dbGetQuery(object@DB,idQuery),
 			annotation=dbGetQuery(object@DB,geneAnnotationQuery),
 			fpkm=dbGetQuery(object@DB,geneFPKMQuery),
 			diff=dbGetQuery(object@DB,geneDiffQuery),
