@@ -18,5 +18,5 @@ Collate: 	AllGenerics.R
 			methods-CuffFeature.R
 			tools.R
 LazyLoad: yes
-biocViews: Infrastructure, Bioinformatics, Visualization
+biocViews: HighThroughputSequencing, HighThroughputSequencingData, RNAseq, RNAseqData, GeneExpression, DifferentialExpression, Infrastructure, DataImport, DataRepresentation, Visualization, Bioinformatics, Clustering, MultipleComparisons, QualityControl
 Packaged: 2011-03-31 18:54:10 UTC; lgoff
