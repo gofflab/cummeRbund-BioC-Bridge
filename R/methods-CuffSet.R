@@ -172,7 +172,7 @@ setMethod("getGene",signature(object="CuffSet"),.getGene)
 	
 	begin<-dbSendQuery(object@DB,"BEGIN;")
 	res<-new("CuffGeneSet",
-			#TODO: Fix ids so that it only displays those genes
+			#TODO: Fix ids so that it only displays those genes in CuffGeneSet
 			ids=dbGetQuery(object@DB,idQuery),
 			annotation=dbGetQuery(object@DB,geneAnnotationQuery),
 			fpkm=dbGetQuery(object@DB,geneFPKMQuery),

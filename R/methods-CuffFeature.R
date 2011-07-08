@@ -80,7 +80,7 @@ setMethod("fpkm",signature="CuffFeature",.fpkm)
 		geom_bar() +
 		geom_errorbar(aes(ymin=conf_lo,ymax=conf_hi,group=1),size=0.15) +
 		facet_wrap('tracking_id') +
-		opts(axis.text.x=theme_text(hjust=0,angle=-90))
+		opts(title=object@annotation$gene_short_name,axis.text.x=theme_text(hjust=0,angle=-90))
 	
 	#This does not make immediate sense with the conf_hi and conf_lo values.  Need to figure out appropriate transformation for these
 	#if(logMode)
