@@ -247,10 +247,11 @@ setMethod("csScatter",signature(object="CuffData"), .scatter)
 	s2<-unique(dat$sample_2)
 	
 	p<-ggplot(dat)
-	p<- p + geom_point(aes(x=ln_fold_change,y=-log10(p_value),color=significant),size=1,alpha=I(1/3))
+	p<- p + geom_point(aes(x=ln_fold_change,y=-log10(p_value),color=significant),size=0.8)
 	
 	#Add title and return
 	p<- p + opts(title=paste(object@tables$mainTable,": ",s2,"/",s1,sep=""))
+	p<- p + scale_colour_manual(values=c("red", "steelblue"))
 	p
 }
 
@@ -265,7 +266,7 @@ setMethod("csVolcano",signature(object="CuffData"), .volcano)
 		p<-p+geom_boxplot(aes(x=sample_name,y=fpkm,fill=sample_name),alpha=I(1/3),size=0.3)
 	}
 	p<- p + opts(axis.text.x=theme_text(angle=-90, hjust=0))
-	
+	p
 }
 
 setMethod("csBoxplot",signature(object="CuffData"),.boxplot)

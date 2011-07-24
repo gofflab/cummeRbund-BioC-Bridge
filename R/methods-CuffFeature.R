@@ -86,7 +86,8 @@ setMethod("fpkm",signature="CuffFeature",.fpkm)
 	#if(logMode)
 		#p<-p+scale_y_log2()
 	p + opts(legend.position = "none")
-	
+	p <- p + scale_fill_brewer(palette="Set1")
+	p
 }
 
 setMethod("expressionBarplot",signature(object="CuffFeature"),.barplot)
