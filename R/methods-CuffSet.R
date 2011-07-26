@@ -222,3 +222,5 @@ setMethod("getGenes",signature(object="CuffSet"),.getGenes)
 }
 
 setMethod("addFeatures",signature(object="CuffSet"),.addFeatures)
+
+#TODO: Add method to purge existing feature data table to allow 'refresh' of feature level data
