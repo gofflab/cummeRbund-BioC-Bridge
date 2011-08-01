@@ -271,6 +271,12 @@ loadTSS<-function(fpkmFile,
 	write("Writing TSS table",stderr())
 	dbWriteTable(dbConn,'TSS',tssTable,row.names=F,append=T)
 	
+	if (nrow(tssTable) == 0)
+	{
+	    write("TSS FPKM tracking file was empty.",stderr())
+	    return()
+	}
+	
 	######
 	#Populate geneData table
 	######
@@ -381,6 +387,12 @@ loadCDS<-function(fpkmFile,
 	cdsTable<-full[,c(1:4,6:10)]
 	write("Writing CDS table",stderr())
 	dbWriteTable(dbConn,'CDS',cdsTable,row.names=F,append=T)
+	
+	if (nrow(cdsTable) == 0)
+	{
+	    write("CDS FPKM tracking file was empty.",stderr())
+	    return()
+	}
 	
 	######
 	#Populate geneData table
