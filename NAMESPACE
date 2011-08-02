@@ -4,6 +4,7 @@ import(methods)
 
 exportClasses(CuffSet,
 			CuffData,
+			CuffDist,
 			CuffFeature, 
 			CuffFeatureSet, 
 			CuffGene, 
@@ -11,6 +12,7 @@ exportClasses(CuffSet,
 )
 
 exportMethods(fpkm,
+			values,
 			csDensity,
 			csScatter,
 			csVolcano,

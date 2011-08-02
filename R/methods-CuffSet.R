@@ -16,6 +16,9 @@ setMethod("initialize","CuffSet",
 				isoforms,
 				TSS,
 				CDS,
+				promoters,
+				splicing,
+				relCDS,
 				...){
 			.Object<-callNextMethod(.Object,
 					DB = DB,
@@ -24,6 +27,9 @@ setMethod("initialize","CuffSet",
 					isoforms = isoforms,
 					TSS = TSS,
 					CDS = CDS,
+					promoters = promoters,
+					splicing = splicing,
+					relCDS = relCDS,
 					...)				
 		}
 )
@@ -38,7 +44,10 @@ setMethod("show","CuffSet",
 					dim(object@genes)[1],"genes\n\t",
 					dim(object@isoforms)[1],"isoforms\n\t",
 					dim(object@TSS)[1],"TSS\n\t",
-					dim(object@CDS)[1],"CDS\n"
+					dim(object@CDS)[1],"CDS\n\t",
+					dim(object@promoters)[1],"promoters\n\t",
+					dim(object@splicing)[1],"splicing\n\t",
+					dim(object@relCDS)[1],"relCDS\n"
 					)
 		}
 )

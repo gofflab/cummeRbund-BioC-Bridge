@@ -11,7 +11,7 @@
 setMethod("initialize","CuffData",
 			function(.Object,
 					DB,
-					tables=list(mainTable = "",dataTable = "",expDiffTable = "",featureTable = "", otherTable = ""),
+					tables=list(mainTable = "",dataTable = "",expDiffTable = "",featureTable = ""),
 					filters=list(),
 					type = c("genes","isoforms","TSS","CDS"),
 					idField,

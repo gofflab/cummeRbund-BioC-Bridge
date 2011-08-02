@@ -46,6 +46,9 @@ setGeneric("fpkm",function(object,...) standardGeneric("fpkm"))
 setGeneric("fpkmMatrix",function(object) standardGeneric("fpkmMatrix"))
 setGeneric("diffData",function(object,x,y,...) standardGeneric("diffData"))
 
+#CuffDist generics
+setGeneric("values",function(object,...) standardGeneric("values"))
+
 #CuffData plotting
 setGeneric("csDensity",function(object, ...) standardGeneric("csDensity"))
 setGeneric("csScatter",function(object,x,y,...) standardGeneric("csScatter"))

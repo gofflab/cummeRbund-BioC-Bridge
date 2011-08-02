@@ -2,7 +2,7 @@
 %
 %
 %\VignetteIndexEntry{An R package for visualization and analysis of Cufflinks high-throughput sequencing data}
-%\VignetteKeywords{cummeRbund,visualization,sequencing,cufflinks}
+%\VignetteKeywords{cummeRbund,visualization,sequencing,cufflinks,cuffdiff}
 %\VignettePackage{cummeRbund}
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -175,7 +175,7 @@ print(b)
 
 Pairwise comparisons can be made by using \Rmethod{csScatter}. You must specify the sample names to use for the $x$ and $y$ axes:
 <<global_plots_3,include=FALSE>>=
-s<-csScatter(cuff@genes,"H1_hESC","Fibroblasts",smooth=T)
+s<-csScatter(cuff@genes,"hESC","Fibroblast",smooth=T)
 s
 @
 
@@ -192,7 +192,7 @@ print(s)
 
 Volcano plots are also available for the \Rclass{CuffData} objects. Again, you must specify the comparisons by sample name.
 <<global_plots_4,include=FALSE>>=
-v<-csVolcano(cuff@genes,"H1_hESC","Fibroblasts")
+v<-csVolcano(cuff@genes,"hESC","Fibroblast")
 v
 @
 
@@ -275,7 +275,7 @@ print(h)
 \end{figure}
 
 <<geneset_plots_2,include=FALSE>>=
-s<-csScatter(myGenes,"Fibroblasts","H1_hESC",smooth=T)
+s<-csScatter(myGenes,"Fibroblast","hESC",smooth=T)
 s
 @
 
@@ -327,7 +327,7 @@ print(ih)
 \section{Individual Genes}
 An individual CuffGene object can be created by using the \Rfunction{getGene} function for a given 'gene\_id'.
 <<gene_level_1>>=
-myGeneId<-"ucscCodingXLOC_009243"
+myGeneId<-"PINK1"
 myGene<-getGene(cuff,myGeneId)
 myGene
 head(fpkm(myGene))
