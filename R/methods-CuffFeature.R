@@ -101,6 +101,8 @@ setMethod("fpkm",signature="CuffFeature",.fpkm)
 	p <- p + facet_wrap('tracking_id') +
     	opts(title=object@annotation$gene_short_name,axis.text.x=theme_text(hjust=0,angle=-90))
 		
+    # p <- p + ylim(min(dat$conf_lo), max(dat$conf_hi))
+	
 	p <- p + opts(legend.position = "none")
 	p <- p + scale_fill_brewer(palette="Set1")
 	p
