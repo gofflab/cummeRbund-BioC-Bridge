@@ -11,11 +11,13 @@
 #Genes
 loadGenes<-function(fpkmFile,
 		diffFile,
+		promoterFile,
 		dbConn,
 		path,
 		#Arguments to read.* methods
 		fpkmArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
 		diffArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
+		promoterArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
 		sep="\t",
 		na.string = "-",
 		header = TRUE,
@@ -113,7 +115,17 @@ loadGenes<-function(fpkmFile,
 	########
 	#TODO: Handle promoters.diff
 	########
-	
+	if(file.exists(promoterFile)){
+		#Read promoterFile
+		write(paste("Reading ",promoterFile,sep=""),stderr())
+		promoterArgs$file = promoterFile
+		promoter<-as.data.frame(do.call(read.table,promoterArgs))
+		
+		write("Writing promoterDiffData table",stderr())
+		promoterCols<-c(2,5:14)
+		dbWriteTable(dbConn,'promoterDiffData',promoter[,promoterCols],row.names=F,append=T)
+		
+	}
 	
 	#########
 	#Handle Feature Data (this will actually be done on CuffData objects instead...but I may include something here as well)
@@ -233,11 +245,13 @@ loadIsoforms<-function(fpkmFile,
 #TSS groups
 loadTSS<-function(fpkmFile,
 		diffFile,
+		splicingFile,
 		dbConn,
 		path,
 		#Arguments to read.* methods
 		fpkmArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
 		diffArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
+		splicingArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
 		sep="\t",
 		na.string = "-",
 		header = TRUE,
@@ -343,18 +357,30 @@ loadTSS<-function(fpkmFile,
 	#########
 	#TODO: Handle splicing.diff
 	########
-	
+	if(file.exists(splicingFile)){
+		#Read promoterFile
+		write(paste("Reading ",splicingFile,sep=""),stderr())
+		splicingArgs$file = splicingFile
+		splicing<-as.data.frame(do.call(read.table,splicingArgs))
+		
+		write("Writing splicingDiffData table",stderr())
+		splicingCols<-c(2,5:14)
+		dbWriteTable(dbConn,'splicingDiffData',splicing[,splicingCols],row.names=F,append=T)
+		
+	}
 	
 }
 
 #CDS
 loadCDS<-function(fpkmFile,
 		diffFile,
+		CDSDiff,
 		dbConn,
 		path,
 		#Arguments to read.* methods
 		fpkmArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
 		diffArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
+		CDSDiffArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
 		sep="\t",
 		na.string = "-",
 		header = TRUE,
@@ -458,9 +484,19 @@ loadCDS<-function(fpkmFile,
 	}
 	
 	#########
-	#TODO: Handle splicing.diff
+	#TODO: Handle CDS.diff
 	########
-	
+	if(file.exists(CDSDiff)){
+		#Read promoterFile
+		write(paste("Reading ",CDSDiff,sep=""),stderr())
+		CDSDiffArgs$file = CDSDiff
+		CDS<-as.data.frame(do.call(read.table,CDSDiffArgs))
+		
+		write("Writing CDSDiffData table",stderr())
+		CDSCols<-c(2,5:14)
+		dbWriteTable(dbConn,'CDSDiffData',CDS[,CDSCols],row.names=F,append=T)
+		
+	}
 	
 }
 
@@ -922,10 +958,10 @@ readCufflinks<-function(dir = getwd(),
 		#if not, create it
 		dbConn<-createDB(dbFile)
 		#populate DB
-		loadGenes(geneFPKM,geneDiff,dbConn)
+		loadGenes(geneFPKM,geneDiff,promoterFile,dbConn)
 		loadIsoforms(isoformFPKM,isoformDiff,dbConn)
-		loadTSS(TSSFPKM,TSSDiff,dbConn)
-		loadCDS(CDSFPKM,CDSExpDiff,dbConn)
+		loadTSS(TSSFPKM,TSSDiff,splicingFile,dbConn)
+		loadCDS(CDSFPKM,CDSExpDiff,CDSDiff,dbConn)
 		
 	}
 	dbConn<-dbConnect(dbDriver(driver),dbFile)
@@ -935,6 +971,7 @@ readCufflinks<-function(dir = getwd(),
 					isoforms = new("CuffData", DB = dbConn, tables = list(mainTable = "isoforms",dataTable = "isoformData",expDiffTable = "isoformExpDiffData",featureTable = "isoformFeatures", otherTable = ""), filters = list(),type="isoforms",idField = "isoform_id"),
 					TSS = new("CuffData", DB = dbConn, tables = list(mainTable = "TSS",dataTable = "TSSData",expDiffTable = "TSSExpDiffData",featureTable = "TSSFeatures", otherTable = "splicingDiffData"), filters = list(),type = "TSS",idField = "TSS_group_id"),
 					CDS = new("CuffData", DB = dbConn, tables = list(mainTable = "CDS",dataTable = "CDSData",expDiffTable = "CDSExpDiffData",featureTable = "CDSFeatures", otherTable = "CDSDiffData"), filters = list(),type = "CDS",idField = "CDS_id")
+					#TODO: add splicing, promoter, and relativeCDS slots
 			)
 	)	
 							
