@@ -69,23 +69,39 @@ setMethod("fpkm",signature="CuffFeature",.fpkm)
 #################
 #Plotting		#
 #################
-.barplot<-function(object,logMode=TRUE,pseudocount=0.0001,...){
+.barplot<-function(object,logMode=FALSE,pseudocount=0.0001,showErrorbars=TRUE,...){
 	dat<-fpkm(object)
 	#TODO: Test dat to ensure that there are >0 rows to plot.  If not, trap error and move on...
 	
 	colnames(dat)[1]<-"tracking_id"
-	p<-ggplot(dat,aes(x=sample_name,y=fpkm,fill=sample_name))
 	
-	p<- p +
-		geom_bar() +
-		geom_errorbar(aes(ymin=conf_lo,ymax=conf_hi,group=1),size=0.15) +
-		facet_wrap('tracking_id') +
-		opts(title=object@annotation$gene_short_name,axis.text.x=theme_text(hjust=0,angle=-90))
+	if(logMode)
+	{
+	    dat$fpkm <- dat$fpkm + pseudocount
+	    dat$conf_hi <- dat$conf_hi + pseudocount
+	    dat$conf_lo <- dat$conf_lo + pseudocount
+    }
+
+    p<-ggplot(dat,aes(x=sample_name,y=fpkm,fill=sample_name))
+    
+	#dat$fpkm<- log10(dat$fpkm+pseudocount)
+	p <- p + 
+	    geom_bar()
+	if (showErrorbars)
+	{
+	    p <- p +
+		    geom_errorbar(aes(ymin=conf_lo,ymax=conf_hi,group=1))
+	}
 	
-	#This does not make immediate sense with the conf_hi and conf_lo values.  Need to figure out appropriate transformation for these
-	#if(logMode)
-		#p<-p+scale_y_log2()
-	p + opts(legend.position = "none")
+	if (logMode)
+	{
+	    p <- p + scale_y_log10()
+    }
+	
+	p <- p + facet_wrap('tracking_id') +
+    	opts(title=object@annotation$gene_short_name,axis.text.x=theme_text(hjust=0,angle=-90))
+		
+	p <- p + opts(legend.position = "none")
 	p <- p + scale_fill_brewer(palette="Set1")
 	p
 }
@@ -93,14 +109,31 @@ setMethod("fpkm",signature="CuffFeature",.fpkm)
 setMethod("expressionBarplot",signature(object="CuffFeature"),.barplot)
 
 
-.expressionPlot<-function(object,logMode=TRUE,pseudocount=0.0001, drawSummary=FALSE, sumFun=mean_cl_boot,...){
+.expressionPlot<-function(object,logMode=FALSE,pseudocount=0.0001, drawSummary=FALSE, sumFun=mean_cl_boot, showErrorbars=T,...){
 	dat<-fpkm(object)
 	colnames(dat)[1]<-"tracking_id"
-	if(logMode){
-		dat$fpkm<-log2(dat$fpkm+pseudocount)
+	p <- ggplot(dat)
+	if(logMode)
+	{
+	    dat$fpkm <- dat$fpkm + pseudocount
+	    dat$conf_hi <- dat$conf_hi + pseudocount
+	    dat$conf_lo <- dat$conf_lo + pseudocount
+    }
+
+	#dat$fpkm<- log10(dat$fpkm+pseudocount)
+	p <- p + 
+	    geom_line(aes(x=sample_name,y=fpkm,color=tracking_id,group=tracking_id))
+	if (showErrorbars)
+	{
+	    p <- p +
+		    geom_errorbar(aes(x=sample_name, ymin=conf_lo,ymax=conf_hi, color=tracking_id, group=tracking_id))
 	}
-	p	<-	ggplot(dat) + 
-			geom_line(aes(x=sample_name,y=fpkm,color=tracking_id,group=tracking_id)) 
+	
+	if (logMode)
+	{
+	    p <- p + scale_y_log10()
+    }
+
 	
 	#drawMean
 	if(drawSummary){

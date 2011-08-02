@@ -107,7 +107,7 @@ setMethod("diffData",signature(object="CuffFeatureSet"),.diffData)
 .heatmap<-function(object,logMode=TRUE,pseudocount=0.0001){
 	dat<-fpkm(object)
 	if(logMode){
-		dat$fpkm<-log2(dat$fpkm+pseudocount)
+		dat$fpkm<- log10(dat$fpkm+pseudocount)
 	}
 	colnames(dat)[1] <- "tracking_id"
 	p<-ggplot(dat)
@@ -173,7 +173,7 @@ setMethod("diffData",signature(object="CuffFeatureSet"),.diffData)
 	
 	
 	if(logMode) {
-		melt.m=cbind(rowInd=rep(1:rows, times=cols), colInd=rep(1:cols, each=rows), melt(log2(m+pseudocount)))
+		melt.m=cbind(rowInd=rep(1:rows, times=cols), colInd=rep(1:cols, each=rows), melt( log10(m+pseudocount)))
 	}else{
 		melt.m=cbind(rowInd=rep(1:rows, times=cols), colInd=rep(1:cols, each=rows), melt(m))
 	}
@@ -214,7 +214,7 @@ setMethod("diffData",signature(object="CuffFeatureSet"),.diffData)
 setMethod("csHeatmap",signature("CuffFeatureSet"),.ggheat)
 
 #Scatterplot
-.scatter<-function(object,x,y,logMode=TRUE,pseudocount=0.0001,labels, smooth=FALSE,...){
+.scatter<-function(object,x,y,logMode=TRUE,pseudocount=0.0001,labels, smooth=FALSE,colorByStatus=FALSE,...){
 	dat<-fpkmMatrix(object)
 	samp<-samples(object)
 	
@@ -252,7 +252,7 @@ setMethod("csHeatmap",signature("CuffFeatureSet"),.ggheat)
 #	
 	#logMode
 	if(logMode){
-		p <- p + scale_y_log2() + scale_x_log2()
+		p <- p + scale_y_log10() + scale_x_log10()
 	}
 	
 	#Add title & Return value
@@ -293,7 +293,7 @@ setMethod("csVolcano",signature(object="CuffFeatureSet"), .volcano)
 	
 	#This does not make immediate sense with the conf_hi and conf_lo values.  Need to figure out appropriate transformation for these
 	#if(logMode)
-	#p<-p+scale_y_log2()
+	#p<-p+scale_y_ log10()
 	p + opts(legend.position = "none")
 	
 }

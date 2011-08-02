@@ -181,7 +181,7 @@ setMethod("diffData",signature(object="CuffData"),.diffData)
 	if(logMode) dat$fpkm<-dat$fpkm+pseudocount
 	p<-ggplot(dat)
 		if(logMode) {
-			p<-p+geom_density(aes(x=log2(fpkm),group=sample_name,color=sample_name,fill=sample_name),alpha=I(1/3))
+			p<-p+geom_density(aes(x= log10(fpkm),group=sample_name,color=sample_name,fill=sample_name),alpha=I(1/3))
 		}else{
 			p<-p+geom_density(aes(x=fpkm,group=sample_name,color=sample_name,fill=sample_name),alpha=I(1/3))
 		}
@@ -193,7 +193,7 @@ setMethod("diffData",signature(object="CuffData"),.diffData)
 
 setMethod("csDensity",signature(object="CuffData"),.density)
 
-.scatter<-function(object,x,y,logMode=TRUE,pseudocount=0.0001,labels, smooth=FALSE,...){
+.scatter<-function(object,x,y,logMode=TRUE,pseudocount=0.0001,labels,smooth=FALSE,colorByStatus=FALSE,...){
 	dat<-fpkmMatrix(object)
 	samp<-samples(object)
 	
@@ -231,7 +231,7 @@ setMethod("csDensity",signature(object="CuffData"),.density)
 #	
 	#logMode
 	if(logMode){
-		p <- p + scale_y_log2() + scale_x_log2()
+		p <- p + scale_y_log10() + scale_x_log10()
 	}
 	
 	#Add title & Return value
@@ -261,7 +261,7 @@ setMethod("csVolcano",signature(object="CuffData"), .volcano)
 	dat<-fpkm(object)
 	p <- ggplot(dat)
 	if(logMode) {
-		p<-p+geom_boxplot(aes(x=sample_name,y=log2(fpkm),fill=sample_name),size=0.3,alpha=I(1/3))
+		p<-p+geom_boxplot(aes(x=sample_name,y= log10(fpkm),fill=sample_name),size=0.3,alpha=I(1/3))
 	} else {
 		p<-p+geom_boxplot(aes(x=sample_name,y=fpkm,fill=sample_name),alpha=I(1/3),size=0.3)
 	}
