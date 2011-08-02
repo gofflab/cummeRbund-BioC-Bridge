@@ -5,65 +5,59 @@
 Volcano Plot
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+Creates a volcano plot of log fold change in expression vs -log(pval) for a pair of samples (x,y)
 }
 \usage{
-csVolcano(object, x, y, ...)
+csVolcano(object, x, y, features=F, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{object}{
-%%     ~~Describe \code{object} here~~
+An object of class CuffData, CuffFeatureSet, or CuffGeneSet
 }
   \item{x}{
-%%     ~~Describe \code{x} here~~
+Sample name from 'samples' table for comparison
 }
   \item{y}{
-%%     ~~Describe \code{y} here~~
+Sample name from 'samples' table for comparison
+}
+  \item{features}{
+Will include all fields from 'features' slot in returned ggplot object.
+Useful for further manipulations of plot object using feature-level attributes (e.g. gene_type, class_code, etc)
 }
   \item{\dots}{
-%%     ~~Describe \code{\dots} here~~
+Additional arguments
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+This creates a 'volcano' plot of fold change vs. significance for a pairwise comparison of genes or features across two different samples.
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+A ggplot2 plot object
 }
 \references{
-%% ~put references to the literature/web site here ~
+None.
 }
 \author{
-%%  ~~who you are~~
+Loyal A. Goff
 }
 \note{
-%%  ~~further notes~~
+None
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
+
 
 \seealso{
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-structure(function (object, x, y, ...) 
-standardGeneric("csVolcano"), generic = structure("csVolcano", package = "cummeRbund"), package = "cummeRbund", group = list(), valueClass = character(0), signature = c("object", 
-"x", "y"), default = `NULL`, skeleton = function (object, x, 
-    y, ...) 
-stop("invalid call in method dispatch to \"csVolcano\" (no default method)", 
-    domain = NA)(object, x, y, ...), class = structure("standardGeneric", package = "methods"))
+a<-readCufflinks() #Create CuffSet object
+genes<-a@genes #Create cuffData object for all genes
+v<-csVolcano(genes,"hESC","Fibroblast") # Volcano plot of all genes for conditions x='hESC' and y='Fibroblast'
+v #print plot
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{ cummeRbund }
+\keyword{ volcano }
+\keyword{ plotting }

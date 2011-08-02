@@ -8,62 +8,58 @@ Differential comparison data
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-diffData(object, x, y, ...)
+diffData(object, x, y, features=FALSE, lnFcCutoff=20, ...)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{object}{
-%%     ~~Describe \code{object} here~~
+An object of class ('CuffData' or 'CuffFeatureSet')
 }
   \item{x}{
-%%     ~~Describe \code{x} here~~
+  Optional, if x and y are both missing, data for all pairwise differential comparisons are returned, otherwise if x and y are sample names from the 'samples' table,
+  than only differential data pertaining to those two samples are returned.
 }
   \item{y}{
-%%     ~~Describe \code{y} here~~
+See 'x'
 }
+  \item{features}{
+A logical value that returns all feature-level data as part of data.frame when true.  object must be of class 'CuffData'.
+}
+  \item{lnFcCutoff}{
+For plotting purposes, extreme values of ln_fold_change are removed from view. This is the cutoff for where these should be trimmed.
+}
+
   \item{\dots}{
-%%     ~~Describe \code{\dots} here~~
+Additional arguments.
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+A data.frame object
 }
 \references{
-%% ~put references to the literature/web site here ~
+None
 }
 \author{
-%%  ~~who you are~~
+Loyal A. Goff
 }
 \note{
-%%  ~~further notes~~
+None
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
+
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-structure(function (object, x, y, ...) 
-standardGeneric("diffData"), generic = structure("diffData", package = "cummeRbund"), package = "cummeRbund", group = list(), valueClass = character(0), signature = c("object", 
-"x", "y"), default = `NULL`, skeleton = function (object, x, 
-    y, ...) 
-stop("invalid call in method dispatch to \"diffData\" (no default method)", 
-    domain = NA)(object, x, y, ...), class = structure("standardGeneric", package = "methods"))
+	a<-readCufflinks() #Create CuffSet object
+	diff<-diffData(a@genes) #returns a dataframe of differential expression data for all genes.
+	
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{ cummeRbund }
+\keyword{ differential expression }% __ONLY ONE__ keyword per line

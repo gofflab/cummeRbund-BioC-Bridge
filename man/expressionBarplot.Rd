@@ -1,62 +1,63 @@
 \name{expressionBarplot}
 \alias{expressionBarplot}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
 Barplot
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+A barplot of FPKM values with confidence intervals for a given gene, set of genes, or features of a gene (e.g. isoforms, TSS, CDS, etc).
 }
 \usage{
-expressionBarplot(object, ...)
+expressionBarplot(object, logMode=FALSE, pseudocount=0.0001, showErrorbars=TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{object}{
-%%     ~~Describe \code{object} here~~
+An object of class ('CuffFeatureSet','CuffGeneSet','CuffFeature','CuffGene')
+}
+  \item{logMode}{
+A logical value whether or not to draw y-axis on log10 scale. Default = FALSE.
+}
+  \item{pseudocount}{
+Numerical value added to each FPKM during log-transformation to avoid errors.
+}
+  \item{showErrorbars}{
+A logical value whether or not to draw error bars. Default = TRUE
 }
   \item{\dots}{
-%%     ~~Describe \code{\dots} here~~
+Additional arguments.
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+A ggplot2 plot object
 }
 \references{
-%% ~put references to the literature/web site here ~
+None
 }
 \author{
-%%  ~~who you are~~
+Loyal A. Goff
 }
 \note{
-%%  ~~further notes~~
+Need to implement logMode and features for this plotting method.
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
+
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-structure(function (object, ...) 
-standardGeneric("expressionBarplot"), generic = structure("expressionBarplot", package = "cummeRbund"), package = "cummeRbund", group = list(), valueClass = character(0), signature = "object", default = `NULL`, skeleton = function (object, 
-    ...) 
-stop("invalid call in method dispatch to \"expressionBarplot\" (no default method)", 
-    domain = NA)(object, ...), class = structure("standardGeneric", package = "methods"))
+	a<-readCufflinks() #Create CuffSet object
+	myGeneId<-"gene_x" 
+	myGene<-getGene(a,myGeneId) #Create CuffFeature object
+	expressionBarplot(myGene) #Barplot of myGene FPKM values
+	expressionBarplot(myGene@isoforms) #Barplot of myGene faceted by isoforms
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{ cummeRbund }
+\keyword{ plotting }
+\keyword{ barplot }
