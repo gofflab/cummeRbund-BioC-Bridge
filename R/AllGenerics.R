@@ -45,6 +45,7 @@ setGeneric("featureNames",function(object,...) standardGeneric("featureNames"))
 setGeneric("fpkm",function(object,...) standardGeneric("fpkm"))
 setGeneric("fpkmMatrix",function(object) standardGeneric("fpkmMatrix"))
 setGeneric("diffData",function(object,x,y,...) standardGeneric("diffData"))
+setGeneric("getLevels",function(object) standardGeneric("getLevels"))
 
 #CuffDist generics
 setGeneric("values",function(object,...) standardGeneric("values"))

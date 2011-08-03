@@ -100,7 +100,9 @@ setMethod("samples","CuffData",.samples)
 	}else{
 		FPKMQuery<-paste("SELECT xf.*,x.sample_name,x.fpkm,x.conf_hi, x.conf_lo FROM ",object@tables$dataTable," x LEFT JOIN ",object@tables$featureTable," xf ON x.",object@idField,"=xf.",object@idField,sep="")
 	}
-	dbGetQuery(object@DB,FPKMQuery)
+	res<-dbGetQuery(object@DB,FPKMQuery)
+	res$sample_name<-factor(res$sample_name,levels=getLevels(object))
+	res
 }
 
 setMethod("fpkm","CuffData",.fpkm)
@@ -154,7 +156,13 @@ setMethod("diffData",signature(object="CuffData"),.diffData)
 ##################
 #Example query
 #"SELECT * FROM genes WHERE gene_id in ('XLOC_000005','XLOC_000015','XLOC_000055','XLOC_000595','XLOC_005998','ucscCodingXLOC_018816')"
+.getLevels<-function(object){
+	levelsQuery<-'SELECT s.sample_name FROM samples s ORDER BY s.sample_index ASC'
+	levels<-dbGetQuery(object@DB,levelsQuery)$sample_name
+	levels
+}
 
+setMethod("getLevels",signature(object="CuffData"),.getLevels)
 
 
 

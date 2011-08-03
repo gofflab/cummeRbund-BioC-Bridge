@@ -27,7 +27,8 @@ exportMethods(fpkm,
 			expressionBarplot,
 			getGene,
 			getGenes,
-			addFeatures
+			addFeatures,
+			getLevels
 )
 
 export("readCufflinks",

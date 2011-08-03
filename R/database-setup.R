@@ -35,18 +35,36 @@ loadGenes<-function(fpkmFile,
 	
 	#TODO test dbConn connection and database structure
 	
-	idCols = c(1:10)
+	idCols = c(1:9)
 
 	#Read primary file
 	write(paste("Reading ",fpkmFile,sep=""),stderr())
 	fpkmArgs$file = fpkmFile
 	full = as.data.frame(do.call(read.table,fpkmArgs))
 	
+	########
+	#Handle Sample Names
+	########
+	
+	#Check that samples table is populated
+	write("Checking samples table...",stderr())
+	samples<-getSamplesFromColnames(full)
+	dbSamples<-dbReadTable(dbConn,"samples")
+	if (dim(dbSamples)[1]>0) {
+		if (all(samples %in% dbSamples$sample_name)){
+			write ("OK!",stderr())
+		}else{
+			stop("Sample mismatch!")
+		}
+	}else{
+		write("Populating samples table...",stderr())
+		populateSampleTable(samples,dbConn)
+	}
 	
 	######
 	#Populate genes table
 	######
-	genesTable<-full[,c(1:3,5,7:10)]
+	genesTable<-full[,c(1:3,5,7:9)]
 	write("Writing genes table",stderr())
 	dbWriteTable(dbConn,'genes',genesTable,row.names=F,append=T)
 	
@@ -71,21 +89,6 @@ loadGenes<-function(fpkmFile,
 	
 	#Adjust sample names with make.db.names
 	genemelt$sample_name <- make.db.names(dbConn,as.vector(genemelt$sample_name),unique=FALSE)
-	
-	#Check that samples table is populated
-	write("Checking samples table...",stderr())
-	samples<-getSamples(genemelt)
-	dbSamples<-dbReadTable(dbConn,"samples")
-	if (dim(dbSamples)[1]>0) {
-		if (all(samples %in% dbSamples$sample_name)){
-			write ("OK!",stderr())
-		}else{
-			stop("Sample mismatch!")
-		}
-	}else{
-		write("Populating samples table...",stderr())
-		populateSampleTable(samples,dbConn)
-	}
 	
 	#Recast
 	write("Recasting",stderr())
@@ -160,17 +163,36 @@ loadIsoforms<-function(fpkmFile,
 	
 	#TODO test dbConn connection and database structure
 	
-	idCols = c(1:10)
+	idCols = c(1:9)
 	
 	#Read primary file
 	write(paste("Reading ",fpkmFile,sep=""),stderr())
 	fpkmArgs$file = fpkmFile
 	full = as.data.frame(do.call(read.table,fpkmArgs))
 	
+	########
+	#Handle Sample Names
+	########
+	
+	#Check that samples table is populated
+	write("Checking samples table...",stderr())
+	samples<-getSamplesFromColnames(full)
+	dbSamples<-dbReadTable(dbConn,"samples")
+	if (dim(dbSamples)[1]>0) {
+		if (all(samples %in% dbSamples$sample_name)){
+			write ("OK!",stderr())
+		}else{
+			stop("Sample mismatch!")
+		}
+	}else{
+		write("Populating samples table...",stderr())
+		populateSampleTable(samples,dbConn)
+	}
+	
 	######
 	#Populate genes table
 	######
-	isoformCols<-c(1,4,6,2,3,7:10)
+	isoformCols<-c(1,4,6,2,3,7:9)
 	isoformsTable<-full[,isoformCols]
 	
 	#This is a temporary fix until p_id is added to the 'isoforms.fpkm_tracking' file
@@ -200,22 +222,6 @@ loadIsoforms<-function(fpkmFile,
 	
 	#Adjust sample names with make.db.names
 	isoformmelt$sample_name <- make.db.names(dbConn,as.vector(isoformmelt$sample_name),unique=FALSE)
-	
-	#Check that samples table is populated
-	write("Checking samples table...",stderr())
-	samples<-getSamples(isoformmelt)
-	dbSamples<-dbReadTable(dbConn,"samples")
-	if (dim(dbSamples)[1]>0) {
-		if (all(samples %in% dbSamples$sample_name)){
-			write ("OK!",stderr())
-		}else{
-			stop("Sample mismatch!")
-		}
-	}else{
-		write("Populating samples table...",stderr())
-		populateSampleTable(samples,dbConn)
-	}
-	
 	
 	#Recast
 	write("Recasting",stderr())
@@ -273,19 +279,36 @@ loadTSS<-function(fpkmFile,
 	
 	#TODO test dbConn connection and database structure
 	
-	idCols = c(1:10)
+	idCols = c(1:9)
 	
 	#Read primary file
 	write(paste("Reading ",fpkmFile,sep=""),stderr())
 	fpkmArgs$file = fpkmFile
 	full = as.data.frame(do.call(read.table,fpkmArgs))
 	
-	#TODO: Check that samples table is populated
+	########
+	#Handle Sample Names
+	########
+	
+	#Check that samples table is populated
+	write("Checking samples table...",stderr())
+	samples<-getSamplesFromColnames(full)
+	dbSamples<-dbReadTable(dbConn,"samples")
+	if (dim(dbSamples)[1]>0) {
+		if (all(samples %in% dbSamples$sample_name)){
+			write ("OK!",stderr())
+		}else{
+			stop("Sample mismatch!")
+		}
+	}else{
+		write("Populating samples table...",stderr())
+		populateSampleTable(samples,dbConn)
+	}
 	
 	######
 	#Populate genes table
 	######
-	tssTable<-full[,c(1:4,7:10)]
+	tssTable<-full[,c(1:4,7:9)]
 	write("Writing TSS table",stderr())
 	dbWriteTable(dbConn,'TSS',tssTable,row.names=F,append=T)
 	
@@ -316,22 +339,6 @@ loadTSS<-function(fpkmFile,
 	
 	#Adjust sample names with make.db.names
 	tssmelt$sample_name <- make.db.names(dbConn,as.vector(tssmelt$sample_name),unique=FALSE)
-	
-	#Check that samples table is populated
-	write("Checking samples table...",stderr())
-	samples<-getSamples(tssmelt)
-	dbSamples<-dbReadTable(dbConn,"samples")
-	if (dim(dbSamples)[1]>0) {
-		if (all(samples %in% dbSamples$sample_name)){
-			write ("OK!",stderr())
-		}else{
-			stop("Sample mismatch!")
-		}
-	}else{
-		write("Populating samples table...",stderr())
-		populateSampleTable(samples,dbConn)
-	}
-	
 	
 	#Recast
 	write("Recasting",stderr())
@@ -404,19 +411,36 @@ loadCDS<-function(fpkmFile,
 	
 	#TODO test dbConn connection and database structure
 	
-	idCols = c(1:10)
+	idCols = c(1:9)
 	
 	#Read primary file
 	write(paste("Reading ",fpkmFile,sep=""),stderr())
 	fpkmArgs$file = fpkmFile
 	full = as.data.frame(do.call(read.table,fpkmArgs))
 	
-	#TODO: Check that samples table is populated
+	########
+	#Handle Sample Names
+	########
+	
+	#Check that samples table is populated
+	write("Checking samples table...",stderr())
+	samples<-getSamplesFromColnames(full)
+	dbSamples<-dbReadTable(dbConn,"samples")
+	if (dim(dbSamples)[1]>0) {
+		if (all(samples %in% dbSamples$sample_name)){
+			write ("OK!",stderr())
+		}else{
+			stop("Sample mismatch!")
+		}
+	}else{
+		write("Populating samples table...",stderr())
+		populateSampleTable(samples,dbConn)
+	}
 	
 	######
 	#Populate genes table
 	######
-	cdsTable<-full[,c(1:4,6:10)]
+	cdsTable<-full[,c(1:4,6:9)]
 	write("Writing CDS table",stderr())
 	dbWriteTable(dbConn,'CDS',cdsTable,row.names=F,append=T)
 	
@@ -447,22 +471,6 @@ loadCDS<-function(fpkmFile,
 	
 	#Adjust sample names with make.db.names
 	cdsmelt$sample_name <- make.db.names(dbConn,as.vector(cdsmelt$sample_name),unique=FALSE)
-	
-	#Check that samples table is populated
-	write("Checking samples table...",stderr())
-	samples<-getSamples(cdsmelt)
-	dbSamples<-dbReadTable(dbConn,"samples")
-	if (dim(dbSamples)[1]>0) {
-		if (all(samples %in% dbSamples$sample_name)){
-			write ("OK!",stderr())
-		}else{
-			stop("Sample mismatch!")
-		}
-	}else{
-		write("Populating samples table...",stderr())
-		populateSampleTable(samples,dbConn)
-	}
-	
 	
 	#Recast
 	write("Recasting",stderr())
@@ -542,8 +550,7 @@ CREATE TABLE "genes"(
   "gene_short_name" VARCHAR(45),
   "locus" VARCHAR(45),
   "length" INTEGER,
-  "coverage" FLOAT,
-  "status" VARCHAR(45)
+  "coverage" FLOAT
 );
 DROP TABLE IF EXISTS "biasData";
 CREATE TABLE "biasData"(
@@ -551,7 +558,8 @@ CREATE TABLE "biasData"(
 );
 DROP TABLE IF EXISTS "samples";
 CREATE TABLE "samples"(
-  "sample_name" VARCHAR(45) PRIMARY KEY NOT NULL
+  "sample_index" INTEGER PRIMARY KEY NOT NULL,
+  "sample_name" VARCHAR(45) NOT NULL
 );
 DROP TABLE IF EXISTS "TSS";
 CREATE TABLE "TSS"(
@@ -562,7 +570,6 @@ CREATE TABLE "TSS"(
   "locus" VARCHAR(45),
   "length" INTEGER,
   "coverage" FLOAT,
-  "status" VARCHAR(45),
   CONSTRAINT "fk_TSS_genes1"
     FOREIGN KEY("gene_id")
     REFERENCES "genes"("gene_id")
@@ -595,7 +602,6 @@ CREATE TABLE "CDS"(
   "locus" VARCHAR(45),
   "length" INTEGER,
   "coverage" FLOAT,
-  "status" VARCHAR(45),
   CONSTRAINT "fk_CDS_genes1"
     FOREIGN KEY("gene_id")
     REFERENCES "genes"("gene_id"),
@@ -845,7 +851,6 @@ CREATE TABLE "isoforms"(
   "locus" VARCHAR(45),
   "length" INTEGER,
   "coverage" FLOAT,
-  "status" VARCHAR(45),
   CONSTRAINT "fk_isoforms_TSS1"
     FOREIGN KEY("TSS_group_id")
     REFERENCES "TSS"("TSS_group_id"),
@@ -928,9 +933,13 @@ getSamples<-function(fpkmDF){
 	#sample_name<-as.data.frame(sample_name)
 }
 
+getSamplesFromColnames<-function(fpkmDF){
+	samples<-gsub("_FPKM$","",colnames(fpkmDF)[grepl("_FPKM$",colnames(fpkmDF))])
+}
+
 populateSampleTable<-function(samples,dbConn){
 	samples<-make.db.names(dbConn,samples,unique=FALSE)
-	samples<-as.data.frame(samples)
+	samples<-data.frame(index=c(1:length(samples)),sample_name=samples)
 	dbWriteTable(dbConn,'samples',samples,row.names=F,append=T)
 }
 

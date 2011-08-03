@@ -91,6 +91,9 @@ setMethod("samples",signature(object="CuffSet"),.samples)
 #make CuffGene objects from a gene_ids
 .getGene<-function(object,geneId){
 	
+	#get sample_name levels
+	myLevels<-getLevels(object)
+	
 	whereString = paste("WHERE x.gene_id ='",geneId,"' OR x.gene_short_name = '",geneId,"'",sep="")
 	
 	#dbQueries
@@ -214,6 +217,18 @@ setMethod("getGenes",signature(object="CuffSet"),.getGenes)
 ############
 #SQL access
 ############
+
+
+################
+#Misc Utilities
+################
+.getLevels<-function(object){
+	levelsQuery<-'SELECT s.sample_name FROM samples s ORDER BY s.sample_index ASC'
+	levels<-dbGetQuery(object@DB,levelsQuery)$sample_name
+	levels
+}
+
+setMethod("getLevels",signature(object="CuffSet"),.getLevels)
 
 
 #####################
