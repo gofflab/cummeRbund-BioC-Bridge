@@ -114,25 +114,55 @@ setMethod("samples",signature(object="CuffSet"),.samples)
 	CDSDiffQuery<-paste("SELECT y.* from CDS c JOIN CDSExpDiffData y ON c.CDS_id = y.CDS_id JOIN genes x ON c.gene_id = x.gene_id ",whereString,sep="")
 	
 	begin<-dbSendQuery(object@DB,"BEGIN;")
+	
+	#fetch records
+	#genes
+	genes.fpkm<-dbGetQuery(object@DB,geneFPKMQuery)
+	genes.fpkm$sample_name<-factor(genes.fpkm$sample_name,levels=myLevels)
+	genes.diff<-dbGetQuery(object@DB,geneDiffQuery)
+	genes.diff$sample_1<-factor(genes.diff$sample_1,levels=myLevels)
+	genes.diff$sample_2<-factor(genes.diff$sample_2,levels=myLevels)
+	
+	#isoforms
+	isoform.fpkm<-dbGetQuery(object@DB,isoformFPKMQuery)
+	isoform.fpkm$sample_name<-factor(isoform.fpkm$sample_name,levels=myLevels)
+	isoform.diff<-dbGetQuery(object@DB,isoformDiffQuery)
+	isoform.diff$sample_1<-factor(isoform.diff$sample_1,levels=myLevels)
+	isoform.diff$sample_2<-factor(isoform.diff$sample_2,levels=myLevels)
+	
+	#CDS
+	CDS.fpkm<-dbGetQuery(object@DB,CDSFPKMQuery)
+	CDS.fpkm$sample_name<-factor(CDS.fpkm$sample_name,levels=myLevels)
+	CDS.diff<-dbGetQuery(object@DB,CDSDiffQuery)
+	CDS.diff$sample_1<-factor(CDS.diff$sample_1,levels=myLevels)
+	CDS.diff$sample_2<-factor(CDS.diff$sample_2,levels=myLevels)
+	
+	#TSS
+	TSS.fpkm<-dbGetQuery(object@DB,TSSFPKMQuery)
+	TSS.fpkm$sample_name<-factor(TSS.fpkm$sample_name,levels=myLevels)
+	TSS.diff<-dbGetQuery(object@DB,TSSDiffQuery)
+	TSS.diff$sample_1<-factor(TSS.diff$sample_1,levels=myLevels)
+	TSS.diff$sample_2<-factor(TSS.diff$sample_2,levels=myLevels)
+	
 	res<-new("CuffGene",
 			id=geneId,
 			annotation=dbGetQuery(object@DB,geneAnnotationQuery),
-			fpkm=dbGetQuery(object@DB,geneFPKMQuery),
-			diff=dbGetQuery(object@DB,geneDiffQuery),
+			fpkm=genes.fpkm,
+			diff=genes.diff,
 			isoforms=new("CuffFeature",
 					annotation=dbGetQuery(object@DB,isoformAnnotationQuery),
-					fpkm=dbGetQuery(object@DB,isoformFPKMQuery),
-					diff=dbGetQuery(object@DB,isoformDiffQuery)
+					fpkm=isoform.fpkm,
+					diff=isoform.diff
 					),
 			TSS=new("CuffFeature",
 					annotation=dbGetQuery(object@DB,TSSAnnotationQuery),
-					fpkm=dbGetQuery(object@DB,TSSFPKMQuery),
-					diff=dbGetQuery(object@DB,TSSDiffQuery)
+					fpkm=TSS.fpkm,
+					diff=TSS.diff
 			),
 			CDS=new("CuffFeature",
 					annotation=dbGetQuery(object@DB,CDSAnnotationQuery),
-					fpkm=dbGetQuery(object@DB,CDSFPKMQuery),
-					diff=dbGetQuery(object@DB,CDSDiffQuery)
+					fpkm=CDS.fpkm,
+					diff=CDS.diff
 			)
 
 			
@@ -163,6 +193,9 @@ setMethod("getGene",signature(object="CuffSet"),.getGene)
 	whereStringGene<-paste('WHERE x.gene_id IN ',idString,' OR x.gene_short_name IN ',idString,sep="")
 	whereString<-paste('WHERE x.gene_id IN ',idString,' OR g.gene_short_name IN ',idString,sep="")
 	
+	#get sample_name levels
+	myLevels<-getLevels(object)
+	
 	#dbQueries
 	idQuery<-paste("SELECT DISTINCT gene_id from genes x ",whereStringGene,sep="")
 	
@@ -183,26 +216,56 @@ setMethod("getGene",signature(object="CuffSet"),.getGene)
 	CDSDiffQuery<-paste("SELECT y.* from CDS x JOIN CDSExpDiffData y ON x.CDS_id = y.CDS_id JOIN genes g on x.gene_id=g.gene_id ", whereString,sep="")
 	
 	begin<-dbSendQuery(object@DB,"BEGIN;")
+	
+	#fetch records
+	#genes
+	genes.fpkm<-dbGetQuery(object@DB,geneFPKMQuery)
+	genes.fpkm$sample_name<-factor(genes.fpkm$sample_name,levels=myLevels)
+	genes.diff<-dbGetQuery(object@DB,geneDiffQuery)
+	genes.diff$sample_1<-factor(genes.diff$sample_1,levels=myLevels)
+	genes.diff$sample_2<-factor(genes.diff$sample_2,levels=myLevels)
+	
+	#isoforms
+	isoform.fpkm<-dbGetQuery(object@DB,isoformFPKMQuery)
+	isoform.fpkm$sample_name<-factor(isoform.fpkm$sample_name,levels=myLevels)
+	isoform.diff<-dbGetQuery(object@DB,isoformDiffQuery)
+	isoform.diff$sample_1<-factor(isoform.diff$sample_1,levels=myLevels)
+	isoform.diff$sample_2<-factor(isoform.diff$sample_2,levels=myLevels)
+	
+	#CDS
+	CDS.fpkm<-dbGetQuery(object@DB,CDSFPKMQuery)
+	CDS.fpkm$sample_name<-factor(CDS.fpkm$sample_name,levels=myLevels)
+	CDS.diff<-dbGetQuery(object@DB,CDSDiffQuery)
+	CDS.diff$sample_1<-factor(CDS.diff$sample_1,levels=myLevels)
+	CDS.diff$sample_2<-factor(CDS.diff$sample_2,levels=myLevels)
+	
+	#TSS
+	TSS.fpkm<-dbGetQuery(object@DB,TSSFPKMQuery)
+	TSS.fpkm$sample_name<-factor(TSS.fpkm$sample_name,levels=myLevels)
+	TSS.diff<-dbGetQuery(object@DB,TSSDiffQuery)
+	TSS.diff$sample_1<-factor(TSS.diff$sample_1,levels=myLevels)
+	TSS.diff$sample_2<-factor(TSS.diff$sample_2,levels=myLevels)
+	
 	res<-new("CuffGeneSet",
 			#TODO: Fix ids so that it only displays those genes in CuffGeneSet
 			ids=as.character(dbGetQuery(object@DB,idQuery)),
 			annotation=dbGetQuery(object@DB,geneAnnotationQuery),
-			fpkm=dbGetQuery(object@DB,geneFPKMQuery),
-			diff=dbGetQuery(object@DB,geneDiffQuery),
+			fpkm=genes.fpkm,
+			diff=genes.diff,
 			isoforms=new("CuffFeatureSet",
 					annotation=dbGetQuery(object@DB,isoformAnnotationQuery),
-					fpkm=dbGetQuery(object@DB,isoformFPKMQuery),
-					diff=dbGetQuery(object@DB,isoformDiffQuery)
+					fpkm=isoform.fpkm,
+					diff=isoform.diff
 					),
 			TSS=new("CuffFeatureSet",
 					annotation=dbGetQuery(object@DB,TSSAnnotationQuery),
-					fpkm=dbGetQuery(object@DB,TSSFPKMQuery),
-					diff=dbGetQuery(object@DB,TSSDiffQuery)
+					fpkm=TSS.fpkm,
+					diff=TSS.diff
 					),
 			CDS=new("CuffFeatureSet",
 					annotation=dbGetQuery(object@DB,CDSAnnotationQuery),
-					fpkm=dbGetQuery(object@DB,CDSFPKMQuery),
-					diff=dbGetQuery(object@DB,CDSDiffQuery)
+					fpkm=CDS.fpkm,
+					diff=CDS.diff
 					)
 			)
 	end<-dbSendQuery(object@DB,"END;")		

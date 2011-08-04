@@ -8,7 +8,7 @@ PRAGMA foreign_keys = OFF;
 
 -- Schema: cuffData
 BEGIN;
-DROP TABLE IF EXISITS "genes";
+DROP TABLE IF EXISTS "genes";
 CREATE TABLE "genes"(
   "gene_id" VARCHAR(45) PRIMARY KEY NOT NULL,
   "class_code" VARCHAR(45),
@@ -16,18 +16,18 @@ CREATE TABLE "genes"(
   "gene_short_name" VARCHAR(45),
   "locus" VARCHAR(45),
   "length" INTEGER,
-  "coverage" FLOAT,
-  "status" VARCHAR(45)
+  "coverage" FLOAT
 );
-DROP TABLE IF EXISITS "biasData";
+DROP TABLE IF EXISTS "biasData";
 CREATE TABLE "biasData"(
   "biasData_id" INTEGER PRIMARY KEY NOT NULL
 );
-DROP TABLE IF EXISITS "samples";
+DROP TABLE IF EXISTS "samples";
 CREATE TABLE "samples"(
-  "sample_name" VARCHAR(45) PRIMARY KEY NOT NULL
+  "sample_index" INTEGER PRIMARY KEY NOT NULL,
+  "sample_name" VARCHAR(45) NOT NULL
 );
-DROP TABLE IF EXISITS "TSS";
+DROP TABLE IF EXISTS "TSS";
 CREATE TABLE "TSS"(
   "TSS_group_id" VARCHAR(45) PRIMARY KEY NOT NULL,
   "class_code" VARCHAR(45),
@@ -36,13 +36,12 @@ CREATE TABLE "TSS"(
   "locus" VARCHAR(45),
   "length" INTEGER,
   "coverage" FLOAT,
-  "status" VARCHAR(45),
   CONSTRAINT "fk_TSS_genes1"
     FOREIGN KEY("gene_id")
     REFERENCES "genes"("gene_id")
 );
 CREATE INDEX "TSS.fk_TSS_genes1" ON "TSS"("gene_id");
-DROP TABLE IF EXISITS "TSSData";
+DROP TABLE IF EXISTS "TSSData";
 CREATE TABLE "TSSData"(
   "TSS_group_id" VARCHAR(45) NOT NULL,
   "sample_name" VARCHAR(45) NOT NULL,
@@ -59,7 +58,7 @@ CREATE TABLE "TSSData"(
 );
 CREATE INDEX "TSSData.fk_TSSData_TSS1" ON "TSSData"("TSS_group_id");
 CREATE INDEX "TSSData.fk_TSSData_samples1" ON "TSSData"("sample_name");
-DROP TABLE IF EXISITS "CDS";
+DROP TABLE IF EXISTS "CDS";
 CREATE TABLE "CDS"(
   "CDS_id" VARCHAR(45) PRIMARY KEY NOT NULL,
   "class_code" VARCHAR(45),
@@ -69,7 +68,6 @@ CREATE TABLE "CDS"(
   "locus" VARCHAR(45),
   "length" INTEGER,
   "coverage" FLOAT,
-  "status" VARCHAR(45),
   CONSTRAINT "fk_CDS_genes1"
     FOREIGN KEY("gene_id")
     REFERENCES "genes"("gene_id"),
@@ -79,7 +77,7 @@ CREATE TABLE "CDS"(
 );
 CREATE INDEX "CDS.fk_CDS_genes1" ON "CDS"("gene_id");
 CREATE INDEX "CDS.fk_CDS_TSS1" ON "CDS"("TSS_group_id");
-DROP TABLE IF EXISITS "CDSData";
+DROP TABLE IF EXISTS "CDSData";
 CREATE TABLE "CDSData"(
   "CDS_id" VARCHAR(45) NOT NULL,
   "sample_name" VARCHAR(45) NOT NULL,
@@ -96,7 +94,7 @@ CREATE TABLE "CDSData"(
 );
 CREATE INDEX "CDSData.fk_CDSData_CDS1" ON "CDSData"("CDS_id");
 CREATE INDEX "CDSData.fk_CDSData_samples1" ON "CDSData"("sample_name");
-DROP TABLE IF EXISITS "splicingDiffData";
+DROP TABLE IF EXISTS "splicingDiffData";
 CREATE TABLE "splicingDiffData"(
   "TSS_group_id" VARCHAR(45) NOT NULL,
   "gene_id" VARCHAR(45) NOT NULL,
@@ -127,7 +125,7 @@ CREATE INDEX "splicingDiffData.fk_splicingDiffData_samples1" ON "splicingDiffDat
 CREATE INDEX "splicingDiffData.fk_splicingDiffData_samples2" ON "splicingDiffData"("sample_2");
 CREATE INDEX "splicingDiffData.fk_splicingDiffData_TSS1" ON "splicingDiffData"("TSS_group_id");
 CREATE INDEX "splicingDiffData.fk_splicingDiffData_genes1" ON "splicingDiffData"("gene_id");
-DROP TABLE IF EXISITS "TSSExpDiffData";
+DROP TABLE IF EXISTS "TSSExpDiffData";
 CREATE TABLE "TSSExpDiffData"(
   "TSS_group_id" VARCHAR(45) NOT NULL,
   "sample_1" VARCHAR(45) NOT NULL,
@@ -153,7 +151,7 @@ CREATE TABLE "TSSExpDiffData"(
 CREATE INDEX "TSSExpDiffData.fk_TSSExpDiffData_TSS1" ON "TSSExpDiffData"("TSS_group_id");
 CREATE INDEX "TSSExpDiffData.fk_TSSExpDiffData_samples1" ON "TSSExpDiffData"("sample_1");
 CREATE INDEX "TSSExpDiffData.fk_TSSExpDiffData_samples2" ON "TSSExpDiffData"("sample_2");
-DROP TABLE IF EXISITS "CDSDiffData";
+DROP TABLE IF EXISTS "CDSDiffData";
 CREATE TABLE "CDSDiffData"(
   "gene_id" VARCHAR(45) NOT NULL,
   "sample_1" VARCHAR(45) NOT NULL,
@@ -179,7 +177,7 @@ CREATE TABLE "CDSDiffData"(
 CREATE INDEX "CDSDiffData.fk_CDSDiffData_samples1" ON "CDSDiffData"("sample_1");
 CREATE INDEX "CDSDiffData.fk_CDSDiffData_samples2" ON "CDSDiffData"("sample_2");
 CREATE INDEX "CDSDiffData.fk_CDSDiffData_genes1" ON "CDSDiffData"("gene_id");
-DROP TABLE IF EXISITS "CDSExpDiffData";
+DROP TABLE IF EXISTS "CDSExpDiffData";
 CREATE TABLE "CDSExpDiffData"(
   "CDS_id" VARCHAR(45) NOT NULL,
   "sample_1" VARCHAR(45) NOT NULL,
@@ -205,7 +203,7 @@ CREATE TABLE "CDSExpDiffData"(
 CREATE INDEX "CDSExpDiffData.fk_CDSExpDiffData_CDS1" ON "CDSExpDiffData"("CDS_id");
 CREATE INDEX "CDSExpDiffData.fk_CDSExpDiffData_samples1" ON "CDSExpDiffData"("sample_1");
 CREATE INDEX "CDSExpDiffData.fk_CDSExpDiffData_samples2" ON "CDSExpDiffData"("sample_2");
-DROP TABLE IF EXISITS "promoterDiffData";
+DROP TABLE IF EXISTS "promoterDiffData";
 CREATE TABLE "promoterDiffData"(
   "gene_id" VARCHAR(45) NOT NULL,
   "sample_1" VARCHAR(45) NOT NULL,
@@ -231,7 +229,7 @@ CREATE TABLE "promoterDiffData"(
 CREATE INDEX "promoterDiffData.fk_promoterDiffData_genes1" ON "promoterDiffData"("gene_id");
 CREATE INDEX "promoterDiffData.fk_promoterDiffData_samples1" ON "promoterDiffData"("sample_1");
 CREATE INDEX "promoterDiffData.fk_promoterDiffData_samples2" ON "promoterDiffData"("sample_2");
-DROP TABLE IF EXISITS "geneFeatures";
+DROP TABLE IF EXISTS "geneFeatures";
 CREATE TABLE "geneFeatures"(
   "gene_id" VARCHAR(45) NOT NULL,
   CONSTRAINT "fk_geneFeatures_genes1"
@@ -239,7 +237,7 @@ CREATE TABLE "geneFeatures"(
     REFERENCES "genes"("gene_id")
 );
 CREATE INDEX "geneFeatures.fk_geneFeatures_genes1" ON "geneFeatures"("gene_id");
-DROP TABLE IF EXISITS "TSSFeatures";
+DROP TABLE IF EXISTS "TSSFeatures";
 CREATE TABLE "TSSFeatures"(
   "TSS_group_id" VARCHAR(45) NOT NULL,
   CONSTRAINT "fk_TSSFeatures_TSS1"
@@ -247,7 +245,7 @@ CREATE TABLE "TSSFeatures"(
     REFERENCES "TSS"("TSS_group_id")
 );
 CREATE INDEX "TSSFeatures.fk_TSSFeatures_TSS1" ON "TSSFeatures"("TSS_group_id");
-DROP TABLE IF EXISITS "CDSFeatures";
+DROP TABLE IF EXISTS "CDSFeatures";
 CREATE TABLE "CDSFeatures"(
   "CDS_id" VARCHAR(45) NOT NULL,
   CONSTRAINT "fk_CDSFeatures_CDS1"
@@ -255,7 +253,7 @@ CREATE TABLE "CDSFeatures"(
     REFERENCES "CDS"("CDS_id")
 );
 CREATE INDEX "CDSFeatures.fk_CDSFeatures_CDS1" ON "CDSFeatures"("CDS_id");
-DROP TABLE IF EXISITS "geneData";
+DROP TABLE IF EXISTS "geneData";
 CREATE TABLE "geneData"(
   "gene_id" VARCHAR(45) NOT NULL,
   "sample_name" VARCHAR(45) NOT NULL,
@@ -272,7 +270,7 @@ CREATE TABLE "geneData"(
 );
 CREATE INDEX "geneData.fk_geneData_genes1" ON "geneData"("gene_id");
 CREATE INDEX "geneData.fk_geneData_samples1" ON "geneData"("sample_name");
-DROP TABLE IF EXISITS "phenoData";
+DROP TABLE IF EXISTS "phenoData";
 CREATE TABLE "phenoData"(
   "sample_name" VARCHAR(45) NOT NULL,
   "parameter" VARCHAR(45) NOT NULL,
@@ -282,7 +280,7 @@ CREATE TABLE "phenoData"(
     REFERENCES "samples"("sample_name")
 );
 CREATE INDEX "phenoData.fk_phenoData_samples" ON "phenoData"("sample_name");
-DROP TABLE IF EXISITS "geneExpDiffData";
+DROP TABLE IF EXISTS "geneExpDiffData";
 CREATE TABLE "geneExpDiffData"(
   "gene_id" VARCHAR(45) NOT NULL,
   "sample_1" VARCHAR(45) NOT NULL,
@@ -308,7 +306,7 @@ CREATE TABLE "geneExpDiffData"(
 CREATE INDEX "geneExpDiffData.fk_geneExpDiffData_genes1" ON "geneExpDiffData"("gene_id");
 CREATE INDEX "geneExpDiffData.fk_geneExpDiffData_samples1" ON "geneExpDiffData"("sample_1");
 CREATE INDEX "geneExpDiffData.fk_geneExpDiffData_samples2" ON "geneExpDiffData"("sample_2");
-DROP TABLE IF EXISITS "isoforms";
+DROP TABLE IF EXISTS "isoforms";
 CREATE TABLE "isoforms"(
   "isoform_id" VARCHAR(45) PRIMARY KEY NOT NULL,
   "gene_id" VARCHAR(45),
@@ -319,7 +317,6 @@ CREATE TABLE "isoforms"(
   "locus" VARCHAR(45),
   "length" INTEGER,
   "coverage" FLOAT,
-  "status" VARCHAR(45),
   CONSTRAINT "fk_isoforms_TSS1"
     FOREIGN KEY("TSS_group_id")
     REFERENCES "TSS"("TSS_group_id"),
@@ -333,7 +330,7 @@ CREATE TABLE "isoforms"(
 CREATE INDEX "isoforms.fk_isoforms_TSS1" ON "isoforms"("TSS_group_id");
 CREATE INDEX "isoforms.fk_isoforms_CDS1" ON "isoforms"("CDS_id");
 CREATE INDEX "isoforms.fk_isoforms_genes1" ON "isoforms"("gene_id");
-DROP TABLE IF EXISITS "isoformData";
+DROP TABLE IF EXISTS "isoformData";
 CREATE TABLE "isoformData"(
   "isoform_id" VARCHAR(45) NOT NULL,
   "sample_name" VARCHAR(45) NOT NULL,
@@ -350,7 +347,7 @@ CREATE TABLE "isoformData"(
 );
 CREATE INDEX "isoformData.fk_isoformData_samples1" ON "isoformData"("sample_name");
 CREATE INDEX "isoformData.fk_isoformData_isoforms1" ON "isoformData"("isoform_id");
-DROP TABLE IF EXISITS "isoformExpDiffData";
+DROP TABLE IF EXISTS "isoformExpDiffData";
 CREATE TABLE "isoformExpDiffData"(
   "isoform_id" VARCHAR(45) NOT NULL,
   "sample_1" VARCHAR(45) NOT NULL,
@@ -376,7 +373,7 @@ CREATE TABLE "isoformExpDiffData"(
 CREATE INDEX "isoformExpDiffData.fk_isoformExpDiffData_isoforms1" ON "isoformExpDiffData"("isoform_id");
 CREATE INDEX "isoformExpDiffData.fk_isoformExpDiffData_samples1" ON "isoformExpDiffData"("sample_1");
 CREATE INDEX "isoformExpDiffData.fk_isoformExpDiffData_samples2" ON "isoformExpDiffData"("sample_2");
-DROP TABLE IF EXISITS "isoformFeatures";
+DROP TABLE IF EXISTS "isoformFeatures";
 CREATE TABLE "isoformFeatures"(
   "isoform_id" VARCHAR(45) NOT NULL,
   CONSTRAINT "fk_isoformFeatures_isoforms1"

@@ -39,7 +39,6 @@ Loyal A. Goff
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-library(cummeRbund)
 myMat<-matrix(sample(1:50,50),10)
 probs<-makeprobs(myMat)
 
