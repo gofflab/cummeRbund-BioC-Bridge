@@ -56,16 +56,13 @@ None
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-structure(function (object, ...) 
-standardGeneric("expressionPlot"), generic = structure("expressionPlot", package = "cummeRbund"), package = "cummeRbund", group = list(), valueClass = character(0), signature = "object", default = `NULL`, skeleton = function (object, 
-    ...) 
-stop("invalid call in method dispatch to \"expressionPlot\" (no default method)", 
-    domain = NA)(object, ...), class = structure("standardGeneric", package = "methods"))
+	\dontrun{
+	a<-readCufflinks() #Create CuffSet object
+	myGeneId<-"gene_x" 
+	myGene<-getGene(a,myGeneId) #Create CuffFeature object
+	expressionPlot(myGene) #Line plot of myGene FPKM values
+	expressionPlot(myGene@isoforms) #Line plot of myGene faceted by isoforms
+	}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

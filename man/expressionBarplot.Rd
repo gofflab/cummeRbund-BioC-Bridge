@@ -50,11 +50,13 @@ Need to implement logMode and features for this plotting method.
 
 }
 \examples{
+	\dontrun{
 	a<-readCufflinks() #Create CuffSet object
 	myGeneId<-"gene_x" 
 	myGene<-getGene(a,myGeneId) #Create CuffFeature object
 	expressionBarplot(myGene) #Barplot of myGene FPKM values
 	expressionBarplot(myGene@isoforms) #Barplot of myGene faceted by isoforms
+	}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

@@ -54,10 +54,12 @@ None
 
 }
 \examples{
+	\dontrun{
 	a<-readCufflinks() #Create CuffSet object from data
 	genes<-a@genes #Create CuffData object for all 'genes'
 	d<-csDensity(genes) #Create csDensity plot
 	d #Render plot
+	}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

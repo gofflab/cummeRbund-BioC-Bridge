@@ -55,9 +55,10 @@ None
 
 }
 \examples{
+	\dontrun{
 	a<-readCufflinks() #Create CuffSet object
 	diff<-diffData(a@genes) #returns a dataframe of differential expression data for all genes.
-	
+	}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

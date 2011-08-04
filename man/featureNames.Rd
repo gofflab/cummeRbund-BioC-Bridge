@@ -13,46 +13,37 @@ featureNames(object)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{object}{
-%%     ~~Describe \code{object} here~~
+An object of class ('CuffData' or 'CuffFeatureSet')
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+None
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+A list of feature names
 }
 \references{
-%% ~put references to the literature/web site here ~
+None
 }
 \author{
-%%  ~~who you are~~
+Loyal A. Goff
 }
 \note{
-%%  ~~further notes~~
+None
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+None
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-structure(function (object) 
-standardGeneric("featureNames"), generic = structure("featureNames", package = "cummeRbund"), package = "cummeRbund", group = list(), valueClass = character(0), signature = "object", default = `NULL`, skeleton = function (object) 
-stop("invalid call in method dispatch to \"featureNames\" (no default method)", 
-    domain = NA)(object), class = structure("standardGeneric", package = "methods"))
+	\dontrun{
+	a<-readCufflinks() #Create CuffSet object
+	names<-featureNames(a@genes)
+	}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{ cummeRbund }
+\keyword{ accessor }% __ONLY ONE__ keyword per line

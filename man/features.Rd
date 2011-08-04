@@ -5,7 +5,7 @@
 Features
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+Returns a data frame of features from a CuffData, CuffFeatureSet, or CuffFeature object
 }
 \usage{
 features(object)
@@ -13,46 +13,37 @@ features(object)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{object}{
-%%     ~~Describe \code{object} here~~
+An object of class ('CuffData','CuffFeatureSet', or 'CuffFeature')
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+If features have been added to cuffData via addFeatures() then these will be presented as well.
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+A data.frame of feature-level information
 }
 \references{
-%% ~put references to the literature/web site here ~
+None
 }
 \author{
-%%  ~~who you are~~
+Loyal A. Goff
 }
 \note{
-%%  ~~further notes~~
+None
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+None
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-structure(function (object) 
-standardGeneric("features"), generic = structure("features", package = "cummeRbund"), package = "cummeRbund", group = list(), valueClass = character(0), signature = "object", default = `NULL`, skeleton = function (object) 
-stop("invalid call in method dispatch to \"features\" (no default method)", 
-    domain = NA)(object), class = structure("standardGeneric", package = "methods"))
+	\dontrun{
+	a<-readCufflinks() #Create CuffSet object
+	feature.df<-features(a@genes)
+	}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{ cummeRbund }
+\keyword{ accessor }% __ONLY ONE__ keyword per line

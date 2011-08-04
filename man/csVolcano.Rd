@@ -51,10 +51,12 @@ None
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
+\dontrun{
 a<-readCufflinks() #Create CuffSet object
 genes<-a@genes #Create cuffData object for all genes
 v<-csVolcano(genes,"hESC","Fibroblast") # Volcano plot of all genes for conditions x='hESC' and y='Fibroblast'
 v #print plot
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

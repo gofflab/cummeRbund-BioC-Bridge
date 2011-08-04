@@ -1,19 +1,22 @@
-\name{fpkmMatrix}
-\alias{fpkmMatrix}
+\name{csHeatmap}
+\alias{csHeatmap}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Retrieve FPKM values as matrix
+csHeatmap
 }
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-fpkmMatrix(object)
+csHeatmap(object, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{object}{
 %%     ~~Describe \code{object} here~~
+}
+  \item{\dots}{
+%%     ~~Describe \code{\dots} here~~
 }
 }
 \details{
@@ -42,14 +45,18 @@ fpkmMatrix(object)
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-	\dontrun{
-	a<-readCufflinks() #Create CuffSet object
-	myGeneId<-"gene_x" 
-	myGene<-getGene(a,myGeneId) #Create CuffFeature object
-	myFPKMMat<-fpkmMatrix(myGene)
-	}
+##---- Should be DIRECTLY executable !! ----
+##-- ==>  Define data, use random,
+##--	or do  help(data=index)  for the standard data sets.
+
+## The function is currently defined as
+structure(function (object, ...) 
+standardGeneric("csHeatmap"), generic = structure("csHeatmap", package = "cummeRbund"), package = "cummeRbund", group = list(), valueClass = character(0), signature = "object", default = `NULL`, skeleton = function (object, 
+    ...) 
+stop("invalid call in method dispatch to \"csHeatmap\" (no default method)", 
+    domain = NA)(object, ...), class = structure("standardGeneric", package = "methods"))
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ cummeRbund }
-\keyword{ accessor }% __ONLY ONE__ keyword per line
+\keyword{ ~kwd1 }
+\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

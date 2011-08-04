@@ -41,9 +41,12 @@ Loyal A. Goff
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-
+	\dontrun{
+	a<-readCufflinks() #Create CuffSet object
+	fpkm.values<-fpkm(a@genes)
+	}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{ cummeRbund }
+\keyword{ accessor }

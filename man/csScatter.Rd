@@ -59,10 +59,12 @@ Loyal A. Goff
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
+	\dontrun{
 	a<-readCufflinks() #Create CuffSet object
 	genes<-a@genes #Create CuffData object for all genes
 	s<-csScatter(genes,'hESC','Fibroblasts',smooth=TRUE) #Create plot object
 	s #render plot object
+	}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
