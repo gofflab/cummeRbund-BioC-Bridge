@@ -164,6 +164,11 @@ setMethod("diffData",signature(object="CuffData"),.diffData)
 
 setMethod("getLevels",signature(object="CuffData"),.getLevels)
 
+.getFeatures<-function(object,geneIdList,sampleIdList){
+	
+}
+
+setMethod("getFeatures",signature(object="CuffData"),.getFeatures)
 
 
 #Useful SQL commands
