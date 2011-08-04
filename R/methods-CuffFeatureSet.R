@@ -301,5 +301,22 @@ setMethod("csVolcano",signature(object="CuffFeatureSet"), .volcano)
 setMethod("expressionBarplot",signature(object="CuffFeatureSet"),.barplot)
 
 #################
+#Clustering			#
+#################
+#Kmeans by expression profile using JSdist?
+.cluster<-function(object,k,metric='euclidean',iter.max=100, ...){
+	m=as.data.frame(fpkmMatrix(object))
+	clusters<-kmeans(m,k,iter.max=iter.max)$cluster
+	m$ids<-rownames(m)
+	m$cluster<-clusters
+	m.melt<-melt(m,id.vars=c("ids","cluster"))
+	c<-ggplot(m.melt)
+	c<-c+geom_line(aes(x=variable,y=value,color=cluster,group=ids)) + facet_wrap('cluster',scales='free')
+	c
+}
+
+setMethod("csCluster",signature(object="CuffFeatureSet"),.cluster)
+csCluster(myGenes,10)
+#################
 #Misc			#
 #################

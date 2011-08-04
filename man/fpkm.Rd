@@ -8,7 +8,7 @@ Retrieve FPKM values
 Returns a data.frame from @FPKM slot
 }
 \usage{
-fpkm(object)
+fpkm(object, features=FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -16,14 +16,14 @@ fpkm(object)
 An object of class ('CuffData','CuffFeatureSet','CuffFeature')
 }
   \item{features}{
-A logical argument to merge the @features slot and return a data.frame with all attributes attached
+A logical argument to merge the @features slot and return a data.frame with all attributes attached.
 }
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-A data.frame
+A data.frame of FPKM-level values for a set of features.
 }
 \references{
 %% ~put references to the literature/web site here ~
