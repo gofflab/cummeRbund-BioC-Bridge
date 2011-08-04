@@ -67,7 +67,7 @@ setGeneric("csBoxplot",function(object,...) standardGeneric("csBoxplot"))
 #CuffFeatureSet
 #################
 setGeneric("csHeatmap",function(object,...) standardGeneric("csHeatmap"))
-setGeneric("csCluster",function(object,...) standardGeneric("csCluster"))
+setGeneric("csCluster",function(object, k, ...) standardGeneric("csCluster"))
 
 
 
