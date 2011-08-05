@@ -178,7 +178,7 @@ setMethod("getLevels",signature(object="CuffData"),.getLevels)
 #Plotting
 ##################
 
-.density<-function(object, logMode = TRUE, pseudocount=0.0001, labels, features=F, ...){
+.density<-function(object, logMode = TRUE, pseudocount=1, labels, features=F, ...){
 	if(is(object,'CuffData')) {
 		dat<-fpkm(object,features=features)
 	} else {
@@ -199,7 +199,7 @@ setMethod("getLevels",signature(object="CuffData"),.getLevels)
 
 setMethod("csDensity",signature(object="CuffData"),.density)
 
-.scatter<-function(object,x,y,logMode=TRUE,pseudocount=0.0001,labels,smooth=FALSE,colorByStatus=FALSE,...){
+.scatter<-function(object,x,y,logMode=TRUE,pseudocount=1,labels,smooth=FALSE,colorByStatus=FALSE,...){
 	dat<-fpkmMatrix(object)
 	samp<-samples(object)
 	

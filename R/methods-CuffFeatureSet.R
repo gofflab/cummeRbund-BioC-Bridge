@@ -109,7 +109,7 @@ setMethod("diffData",signature(object="CuffFeatureSet"),.diffData)
 #Plotting		#
 #################
 #Basic heatmap
-.heatmap<-function(object,logMode=TRUE,pseudocount=0.0001){
+.heatmap<-function(object,logMode=TRUE,pseudocount=1){
 	dat<-fpkm(object)
 	if(logMode){
 		dat$fpkm<- log10(dat$fpkm+pseudocount)
@@ -126,8 +126,8 @@ setMethod("diffData",signature(object="CuffFeatureSet"),.diffData)
 #this package work with cuffSet objects by default. 
 #There is no genericMethod yet, goal is to replace .heatmap with .ggheat for genericMethod 'csHeatmap'
 
-.ggheat<-function(object, rescaling='none', clustering='none', labCol=T, labRow=T, logMode=T, pseudocount=0.001, 
-		border=FALSE, heatscale= c(low='white',high='red'),...) {
+.ggheat<-function(object, rescaling='none', clustering='none', labCol=T, labRow=T, logMode=T, pseudocount=1.0, 
+		border=FALSE, heatscale= c(low='white',high='red'), heatMidpoint=NULL,...) {
 	## the function can be be viewed as a two step process
 	## 1. using the rehape package and other funcs the data is clustered, scaled, and reshaped
 	## using simple options or by a user supplied function
@@ -155,6 +155,11 @@ setMethod("diffData",signature(object="CuffFeatureSet"),.diffData)
 			m=t(scale(t(m),center=T))
 	}
 	
+    if(logMode) 
+    {
+      m = log10(m+pseudocount)
+    }
+	
 	## I have supplied the default cluster and euclidean distance (JSdist) - and chose to cluster after scaling
 	## if you want a different distance/cluster method-- or to cluster and then scale
 	## then you can supply a custom function 
@@ -177,11 +182,16 @@ setMethod("diffData",signature(object="CuffFeatureSet"),.diffData)
 	
 	
 	
-	if(logMode) {
-		melt.m=cbind(rowInd=rep(1:rows, times=cols), colInd=rep(1:cols, each=rows), melt( log10(m+pseudocount)))
-	}else{
-		melt.m=cbind(rowInd=rep(1:rows, times=cols), colInd=rep(1:cols, each=rows), melt(m))
-	}
+    # if(logMode) {
+    #   melt.m=cbind(rowInd=rep(1:rows, times=cols), colInd=rep(1:cols, each=rows), melt( log10(m+pseudocount)))
+    # }else{
+    #   melt.m=cbind(rowInd=rep(1:rows, times=cols), colInd=rep(1:cols, each=rows), melt(m))
+    # }
+    
+
+
+    melt.m=cbind(rowInd=rep(1:rows, times=cols), colInd=rep(1:cols, each=rows), melt(m))
+
 	g=ggplot(data=melt.m)
 	
 	## add the heat tiles with or without a white border for clarity
@@ -194,15 +204,27 @@ setMethod("diffData",signature(object="CuffFeatureSet"),.diffData)
 	## add axis labels either supplied or from the colnames rownames of the matrix
 	
 	if(labCol==T) 
+	{
 		g2=g2+scale_x_continuous(breaks=(1:cols)-0.5, labels=colnames(m))
+	}
 	if(labCol==F) 
+	{
 		g2=g2+scale_x_continuous(breaks=(1:cols)-0.5, labels=rep('',cols))
+	}
+	
 	
 	if(labRow==T) 
+	{
 		g2=g2+scale_y_continuous(breaks=(1:rows)-0.5, labels=rownames(m))	
-	if(labRow==F) 
+	}
+	if(labRow==F)
+	{ 
 		g2=g2+scale_y_continuous(breaks=(1:rows)-0.5, labels=rep('',rows))	
+	}
 	
+	# Get rid of the ticks, they get way too dense with lots of rows
+    g2 <- g2 + opts(axis.ticks = theme_blank()) 
+
 	## get rid of grey panel background and gridlines
 	
 	g2=g2+opts(panel.grid.minor=theme_line(colour=NA), panel.grid.major=theme_line(colour=NA),
@@ -210,16 +232,40 @@ setMethod("diffData",signature(object="CuffFeatureSet"),.diffData)
 	
 	##adjust x-axis labels
 	g2=g2+opts(axis.text.x=theme_text(angle=-90, hjust=0))
+
+    #write(paste(c("Length of heatscale is :", length(heatscale))), stderr())
+	
+	if (logMode)
+	{
+	   legendTitle <- expression(paste(plain(log)[10], paste(" FPKM +",bquote(.(pseudocount)))))
+	} else {
+	   legendTitle <- "FPKM"
+	}
+	
+	if (length(heatscale) == 2)
+	{
+	    g2 <- g2 + scale_fill_gradient(low=heatscale[1], mid=heatscale[2], name=legendTitle)
+	} else if (length(heatscale) == 3) {
+	    if (is.null(heatMidpoint))
+	    {
+	        heatMidpoint = (max(m) - min(m)) / 2.0
+	        #write(heatMidpoint, stderr())
+	    }
+
+	    g2 <- g2 + scale_fill_gradient2(low=heatscale[1], mid=heatscale[2], high=heatscale[3], midpoint=heatMidpoint, name=legendTitle)
+	}
+	
+	
 	
 	## finally add the fill colour ramp of your choice (default is blue to red)-- and return
-	return(g2+scale_fill_continuous("", heatscale[1], heatscale[2]))
+	return (g2)
 	
 }
 
 setMethod("csHeatmap",signature("CuffFeatureSet"),.ggheat)
 
 #Scatterplot
-.scatter<-function(object,x,y,logMode=TRUE,pseudocount=0.0001,labels, smooth=FALSE,colorByStatus=FALSE,...){
+.scatter<-function(object,x,y,logMode=TRUE,pseudocount=1,labels, smooth=FALSE,colorByStatus=FALSE,...){
 	dat<-fpkmMatrix(object)
 	samp<-samples(object)
 	
@@ -260,6 +306,15 @@ setMethod("csHeatmap",signature("CuffFeatureSet"),.ggheat)
 		p <- p + scale_y_log10() + scale_x_log10()
 	}
 	
+	if (logMode)
+    {
+        p <- p + ylab(paste(y, "FPKM +",pseudocount))
+        p <- p + xlab(paste(x, "FPKM +",pseudocount))
+    } else {
+        p <- p + ylab(paste(y, "FPKM"))
+        p <- p + xlab(paste(x, "FPKM"))
+    }
+	
 	#Add title & Return value
 	#p<- p + opts(title=object@tables$mainTable)
 	p
@@ -283,23 +338,57 @@ setMethod("csScatter",signature(object="CuffFeatureSet"), .scatter)
 
 setMethod("csVolcano",signature(object="CuffFeatureSet"), .volcano)
 
-.barplot<-function(object,logMode=TRUE,pseudocount=0.0001,...){
+.barplot<-function(object,logMode=TRUE,pseudocount=1,showErrorbars=T,...){
 	dat<-fpkm(object,features=T)
 	#TODO: Test dat to ensure that there are >0 rows to plot.  If not, trap error and move on...
 	
 	colnames(dat)[1]<-"tracking_id"
-	p<-ggplot(dat,aes(x=tracking_id,y=fpkm,fill=tracking_id))
 	
-	p<- p +
-			geom_bar() +
-			geom_errorbar(aes(ymin=conf_lo,ymax=conf_hi,group=1),size=0.15) +
-			facet_wrap('sample_name') +
-			opts(axis.text.x=theme_text(hjust=0,angle=-90))
+	if(logMode)
+	{
+	    dat$fpkm <- dat$fpkm + pseudocount
+	    dat$conf_hi <- dat$conf_hi + pseudocount
+	    dat$conf_lo <- dat$conf_lo + pseudocount
+    }
+	
+	p<-ggplot(dat,aes(x=tracking_id,y=fpkm,fill=tracking_id))
+	p <- p + 
+	    geom_bar()
+	
+	if (showErrorbars)
+	{
+	    p <- p +
+		    geom_errorbar(aes(ymin=conf_lo,ymax=conf_hi,group=1))
+	}
+	
+	if (logMode)
+	{
+	    p <- p + scale_y_log10()
+    }
+	
+	
+	p <- p + facet_wrap('tracking_id') +
+    	opts(title=object@annotation$gene_short_name,axis.text.x=theme_text(hjust=0,angle=-90))
+    	
+    # p<- p +
+    #       geom_bar() +
+    #       geom_errorbar(aes(ymin=conf_lo,ymax=conf_hi,group=1),size=0.15) +
+    #       facet_wrap('sample_name') +
+    #       opts(axis.text.x=theme_text(hjust=0,angle=-90))
 	
 	#This does not make immediate sense with the conf_hi and conf_lo values.  Need to figure out appropriate transformation for these
 	#if(logMode)
 	#p<-p+scale_y_ log10()
-	p + opts(legend.position = "none")
+	
+    if (logMode)
+    {
+        p <- p + ylab(paste("FPKM +",pseudocount))
+    } else {
+        p <- p + ylab("FPKM")
+    }
+	
+	p <- p + opts(legend.position = "none")
+	p <- p + scale_fill_brewer(palette="Set1")
 	
 }
 

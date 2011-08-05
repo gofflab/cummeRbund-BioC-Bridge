@@ -69,7 +69,7 @@ setMethod("fpkm",signature="CuffFeature",.fpkm)
 #################
 #Plotting		#
 #################
-.barplot<-function(object,logMode=FALSE,pseudocount=0.0001,showErrorbars=TRUE,...){
+.barplot<-function(object,logMode=FALSE,pseudocount=1,showErrorbars=TRUE,...){
 	dat<-fpkm(object)
 	#TODO: Test dat to ensure that there are >0 rows to plot.  If not, trap error and move on...
 	
@@ -103,7 +103,15 @@ setMethod("fpkm",signature="CuffFeature",.fpkm)
 		
     # p <- p + ylim(min(dat$conf_lo), max(dat$conf_hi))
 	
-	p <- p + opts(legend.position = "none")
+    if (logMode)
+    {
+        p <- p + ylab(paste("FPKM +",pseudocount))
+    } else {
+        p <- p + ylab("FPKM")
+    }
+	
+	
+	p <- p + opts(legend.position="none")
 	p <- p + scale_fill_brewer(palette="Set1")
 	p
 }
@@ -111,7 +119,7 @@ setMethod("fpkm",signature="CuffFeature",.fpkm)
 setMethod("expressionBarplot",signature(object="CuffFeature"),.barplot)
 
 
-.expressionPlot<-function(object,logMode=FALSE,pseudocount=0.0001, drawSummary=FALSE, sumFun=mean_cl_boot, showErrorbars=T,...){
+.expressionPlot<-function(object,logMode=FALSE,pseudocount=1, drawSummary=FALSE, sumFun=mean_cl_boot, showErrorbars=T,...){
 	dat<-fpkm(object)
 	colnames(dat)[1]<-"tracking_id"
 	p <- ggplot(dat)
@@ -141,6 +149,13 @@ setMethod("expressionBarplot",signature(object="CuffFeature"),.barplot)
 	if(drawSummary){
 		p <- p + stat_summary(aes(x=sample_name,y=fpkm,group=1),fun.data=sumFun,color="red",fill="red",alpha=0.2,size=1.1,geom="smooth")
 	}
+	
+	if (logMode)
+    {
+        p <- p + ylab(paste("FPKM +",pseudocount))
+    } else {
+        p <- p + ylab("FPKM")
+    }
 	
 	p
 }
