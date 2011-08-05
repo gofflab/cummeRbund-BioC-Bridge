@@ -29,8 +29,7 @@ exportMethods(fpkm,
 			getGene,
 			getGenes,
 			addFeatures,
-			getLevels,
-			getFeatures
+			getLevels
 )
 
 export("readCufflinks",
