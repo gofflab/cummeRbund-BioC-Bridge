@@ -40,21 +40,20 @@ setGeneric("addFeatures",function(object,...) standardGeneric("addFeatures"))
 ###############
 
 #CuffData generics
-setGeneric("features",function(object,...) standardGeneric("features"))
-setGeneric("featureNames",function(object,...) standardGeneric("featureNames"))
-setGeneric("fpkm",function(object,...) standardGeneric("fpkm"))
+setGeneric("features",function(object) standardGeneric("features"))
+setGeneric("featureNames",function(object) standardGeneric("featureNames"))
+setGeneric("fpkm",function(object, features=FALSE) standardGeneric("fpkm"))
 setGeneric("fpkmMatrix",function(object) standardGeneric("fpkmMatrix"))
-setGeneric("diffData",function(object,x,y,...) standardGeneric("diffData"))
+setGeneric("diffData",function(object, x, y, features=FALSE, lnFcCutoff=20, ...) standardGeneric("diffData"))
 setGeneric("getLevels",function(object) standardGeneric("getLevels"))
-setGeneric("getFeatures",function(object,...) standardGeneric("getFeatures"))
 
 #CuffDist generics
-setGeneric("values",function(object,...) standardGeneric("values"))
+setGeneric("distValues",function(object,...) standardGeneric("distValues"))
 
 #CuffData plotting
-setGeneric("csDensity",function(object, ...) standardGeneric("csDensity"))
-setGeneric("csScatter",function(object,x,y,...) standardGeneric("csScatter"))
-setGeneric("csVolcano",function(object,x,y,...) standardGeneric("csVolcano"))
+setGeneric("csDensity",function(object, logMode=TRUE, pseudocount=0.0001, labels, features=FALSE, ...) standardGeneric("csDensity"))
+setGeneric("csScatter",function(object, x, y, logMode=TRUE, pseudocount=0.0001, labels, smooth=FALSE, ...) standardGeneric("csScatter"))
+setGeneric("csVolcano",function(object, x, y, features=F, ...) standardGeneric("csVolcano"))
 setGeneric("csBoxplot",function(object,...) standardGeneric("csBoxplot"))
 
 ###################
@@ -80,5 +79,5 @@ setGeneric("csCluster",function(object, k, ...) standardGeneric("csCluster"))
 ##############
 
 #CuffFeature plotting
-setGeneric("expressionBarplot",function(object,...) standardGeneric("expressionBarplot"))
-setGeneric("expressionPlot",function(object, ...) standardGeneric("expressionPlot"))
+setGeneric("expressionBarplot",function(object, logMode=FALSE, pseudocount=0.0001, showErrorbars=TRUE, ...) standardGeneric("expressionBarplot"))
+setGeneric("expressionPlot",function(object, logMode=FALSE, pseudocount=0.0001, drawSummary=FALSE, sumFun=mean_cl_boot, showErrorbars=TRUE, ...) standardGeneric("expressionPlot"))
