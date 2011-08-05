@@ -30,7 +30,7 @@ setMethod("initialize","CuffFeature",
 #################
 #TODO: Add validity constraints
 setValidity("CuffFeature",function(object){
-			length(object)==1
+			TRUE #length(object)==1
 		}
 )		
 
