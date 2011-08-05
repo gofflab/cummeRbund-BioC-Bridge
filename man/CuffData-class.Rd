@@ -19,7 +19,8 @@
 
 \title{Class "CuffData"}
 \description{
-%%  ~~ A concise (1-5 lines) description of what the class is. ~~
+A 'pointer' class for all information (FPKM, annotation, differential expression) for a given feature type (genes, isoforms, TSS, CDS). The methods for this function
+communicate directly with the SQL backend to present data to the user.
 }
 \section{Objects from the Class}{
 Objects can be created by calls of the form \code{new("CuffData", DB, tables, filters, type, idField, ...)}.
@@ -53,20 +54,19 @@ Objects can be created by calls of the form \code{new("CuffData", DB, tables, fi
 	 }
 }
 \references{
-%%  ~~put references to the literature/web site here~~
+None
 }
 \author{
-%%  ~~who you are~~
+Loyal A. Goff
 }
 \note{
-%%  ~~further notes~~
+None
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
+
 
 \seealso{
-%%  ~~objects to See Also as \code{\link{~~fun~~}}, ~~~
-%%  ~~or \code{\linkS4class{CLASSNAME}} for links to other classes ~~~
+None
 }
 \examples{
 showClass("CuffData")

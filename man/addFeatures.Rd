@@ -1,53 +1,43 @@
 \name{addFeatures}
 \alias{addFeatures}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
 addFeatures
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+Adds a data.frame of features to a the SQLite backend database.
 }
 \usage{
-addFeatures(object, ...)
+addFeatures(object, features, ...)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{object}{
-%%     ~~Describe \code{object} here~~
+An object of class ('CuffSet' or 'CuffData')
+}
+  \item{features}{
+A data.frame of features to add.  1st column MUST contain ids (ie. gene_id for 'gene' features, isoform_id for 'isoform' features, etc)
 }
   \item{\dots}{
-%%     ~~Describe \code{\dots} here~~
+Additional arguments.
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+None
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+None
 }
 \references{
-%% ~put references to the literature/web site here ~
+None
 }
 \author{
-%%  ~~who you are~~
+Loyal A. Goff
 }
 \note{
-%%  ~~further notes~~
+None
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
 \examples{
 
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

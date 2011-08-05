@@ -3,15 +3,15 @@
 \docType{class}
 \alias{CuffDist-class}
 \alias{dim,CuffDist-method}
-\alias{values,CuffDist-method}
+\alias{distValues,CuffDist-method}
 
 \title{Class "CuffDist"}
 \description{
-%%  ~~ A concise (1-5 lines) description of what the class is. ~~
+A 'pointer' class to information relative to the distribution-level tests (promoters, splicing, and relative CDS usage)
 }
 \section{Objects from the Class}{
 Objects can be created by calls of the form \code{new("CuffDist", DB, table, type, testId, ...)}.
-%%  ~~ describe objects here ~~ 
+ 
 }
 \section{Slots}{
   \describe{
@@ -24,7 +24,7 @@ Objects can be created by calls of the form \code{new("CuffDist", DB, table, typ
 \section{Methods}{
   \describe{
     \item{dim}{\code{signature(x = "CuffDist")}: ... }
-    \item{values}{\code{signature(object = "CuffDist")}: ... }
+    \item{distValues}{\code{signature(object = "CuffDist")}: ... }
 	 }
 }
 \references{

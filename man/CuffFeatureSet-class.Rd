@@ -5,6 +5,7 @@
 \alias{csHeatmap,CuffFeatureSet-method}
 \alias{csScatter,CuffFeatureSet-method}
 \alias{csVolcano,CuffFeatureSet-method}
+\alias{csCluster,CuffFeatureSet-method}
 \alias{diffData,CuffFeatureSet-method}
 \alias{expressionBarplot,CuffFeatureSet-method}
 \alias{featureNames,CuffFeatureSet-method}
@@ -12,6 +13,7 @@
 \alias{fpkm,CuffFeatureSet-method}
 \alias{fpkmMatrix,CuffFeatureSet-method}
 \alias{samples,CuffFeatureSet-method}
+\alias{length,CuffFeatureSet-method}
 
 \title{Class "CuffFeatureSet"}
 \description{
@@ -33,6 +35,7 @@ Objects can be created by calls of the form \code{new("CuffFeatureSet", annotati
     \item{csHeatmap}{\code{signature(object = "CuffFeatureSet")}: ... }
     \item{csScatter}{\code{signature(object = "CuffFeatureSet")}: ... }
     \item{csVolcano}{\code{signature(object = "CuffFeatureSet")}: ... }
+    \item{csCluster}{\code{signature(object = "CuffFeatureSet")}: ... }
     \item{diffData}{\code{signature(object = "CuffFeatureSet")}: ... }
     \item{expressionBarplot}{\code{signature(object = "CuffFeatureSet")}: ... }
     \item{featureNames}{\code{signature(object = "CuffFeatureSet")}: ... }
@@ -40,6 +43,7 @@ Objects can be created by calls of the form \code{new("CuffFeatureSet", annotati
     \item{fpkm}{\code{signature(object = "CuffFeatureSet")}: ... }
     \item{fpkmMatrix}{\code{signature(object = "CuffFeatureSet")}: ... }
     \item{samples}{\code{signature(object = "CuffFeatureSet")}: ... }
+    \item{length}{\code{signature(object = "CuffFeatureSet")}: ... }
 	 }
 }
 \references{

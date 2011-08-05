@@ -4,7 +4,8 @@ Version: 0.1.3
 Author: L. Goff, C. Trapnell
 Description: Allows for persistent storage, access, and manipulation of Cufflinks high-throughput sequencing data.  In addition, provides numerous plotting functions for commonly used visualizations.
 Suggests: 
-Depends: R (>= 2.7.0), RSQLite, reshape, ggplot2, methods
+Imports: methods
+Depends: R (>= 2.7.0), RSQLite, reshape, ggplot2
 Maintainer: Loyal A. Goff <lgoff@csail.mit.edu>
 License: MIT License
 Collate: 	AllGenerics.R 

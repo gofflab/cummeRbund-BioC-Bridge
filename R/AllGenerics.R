@@ -33,7 +33,7 @@ setGeneric("loadCDS",function(fpkmFile,..) standardGeneric("loadCDS"))
 setGeneric("samples",function(object) standardGeneric("samples"))
 setGeneric("getGene",function(object,...) standardGeneric("getGene"))
 setGeneric("getGenes",function(object,...) standardGeneric("getGenes"))
-setGeneric("addFeatures",function(object,...) standardGeneric("addFeatures"))
+setGeneric("addFeatures",function(object, features, ...) standardGeneric("addFeatures"))
 
 ###############
 #CuffData
@@ -66,7 +66,7 @@ setGeneric("csBoxplot",function(object,...) standardGeneric("csBoxplot"))
 #CuffFeatureSet
 #################
 setGeneric("csHeatmap",function(object,...) standardGeneric("csHeatmap"))
-setGeneric("csCluster",function(object, k, ...) standardGeneric("csCluster"))
+setGeneric("csCluster",function(object, k, iter.max=100, ...) standardGeneric("csCluster"))
 
 
 

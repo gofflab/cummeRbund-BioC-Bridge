@@ -309,8 +309,8 @@ setMethod("expressionBarplot",signature(object="CuffFeatureSet"),.barplot)
 #Clustering		#
 #################
 #Kmeans by expression profile using JSdist?
-.cluster<-function(object,k,metric='euclidean',iter.max=100, ...){
-	m=as.data.frame(fpkmMatrix(object))
+.cluster<-function(object,k,iter.max=100, ...){
+	m<-as.data.frame(fpkmMatrix(object))
 	clusters<-kmeans(m,k,iter.max=iter.max)$cluster
 	m$ids<-rownames(m)
 	m$cluster<-factor(clusters)
