@@ -55,7 +55,7 @@ setMethod("dim","CuffDist",
 	dbGetQuery(object@DB, valueQuery)
 }
 
-setMethod("values","CuffDist",.values)
+setMethod("distValues","CuffDist",.values)
 
 ##################
 #Setters
