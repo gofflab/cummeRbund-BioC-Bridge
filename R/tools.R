@@ -36,29 +36,29 @@ makeprobs<-function(a){
 }
 
 #THIS IS NOT MINE....I MUST REMOVE IT PRIOR TO SUBMISSION (For detailed GO analysis, check out clusterProfiler and goProfiles)
-ClusterProfiles <- function(geneClusters, onto="CC", level=3, orgPackage="org.Hs.eg.db") {
-	require(goProfiles)
-	require(plyr)
-	require(ggplot2)
-	clusterProfile <- llply(geneClusters, as.data.frame(basicProfile), onto=onto, level=level, orgPackage = orgPackage)
-	clusterProfile.df <- ldply(clusterProfile, rbind)
-	colnames(clusterProfile.df) <- c("Cluster", "Description", "GOID", "Frequency")
-	clusterProfile.df <- clusterProfile.df[clusterProfile.df$Frequency !=0,]
-	clusterProfile.df$Description <- as.character(clusterProfile.df$Description) ## un-factor
-	clusterProfile.df <- ddply(clusterProfile.df, .(Description), transform, Percent = Frequency/sum(Frequency), Total = sum(Frequency))
-	
-	x <- mdply(clusterProfile.df[, c("Description", "Total")], paste, sep=" (")
-	y <- sapply(x[,3], paste, ")", sep="")
-	clusterProfile.df$Description <- y		### label GO Description with gene counts.
-	clusterProfile.df <-  clusterProfile.df[, -6] ###drop the *Total* column##
-	mtitle <- paste(onto, "Ontology Distribution", sep = " ")
-	p <- ggplot(clusterProfile.df, aes(x = Cluster, y = Description, size = Percent))
-	p <- p + geom_point(colour="steelblue") + opts(title = mtitle) + xlab("") + ylab("")
-	p <- p + opts(axis.text.x = theme_text(colour="black", size="11", vjust = 1))
-	p <- p + opts(axis.text.y = theme_text(colour="black", size="11", hjust = 1))
-	result <- list(data=clusterProfile.df, p=p)
-	return(result)
-}
+#ClusterProfiles <- function(geneClusters, onto="CC", level=3, orgPackage="org.Hs.eg.db") {
+#	require(goProfiles)
+#	require(plyr)
+#	require(ggplot2)
+#	clusterProfile <- llply(geneClusters, as.data.frame(basicProfile), onto=onto, level=level, orgPackage = orgPackage)
+#	clusterProfile.df <- ldply(clusterProfile, rbind)
+#	colnames(clusterProfile.df) <- c("Cluster", "Description", "GOID", "Frequency")
+#	clusterProfile.df <- clusterProfile.df[clusterProfile.df$Frequency !=0,]
+#	clusterProfile.df$Description <- as.character(clusterProfile.df$Description) ## un-factor
+#	clusterProfile.df <- ddply(clusterProfile.df, .(Description), transform, Percent = Frequency/sum(Frequency), Total = sum(Frequency))
+#	
+#	x <- mdply(clusterProfile.df[, c("Description", "Total")], paste, sep=" (")
+#	y <- sapply(x[,3], paste, ")", sep="")
+#	clusterProfile.df$Description <- y		### label GO Description with gene counts.
+#	clusterProfile.df <-  clusterProfile.df[, -6] ###drop the *Total* column##
+#	mtitle <- paste(onto, "Ontology Distribution", sep = " ")
+#	p <- ggplot(clusterProfile.df, aes(x = Cluster, y = Description, size = Percent))
+#	p <- p + geom_point(colour="steelblue") + opts(title = mtitle) + xlab("") + ylab("")
+#	p <- p + opts(axis.text.x = theme_text(colour="black", size="11", vjust = 1))
+#	p <- p + opts(axis.text.y = theme_text(colour="black", size="11", hjust = 1))
+#	result <- list(data=clusterProfile.df, p=p)
+#	return(result)
+#}
 
 
 

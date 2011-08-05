@@ -1,22 +1,19 @@
-\name{csHeatmap}
-\alias{csHeatmap}
+\name{getLevels}
+\alias{getLevels}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-csHeatmap
+getLevels
 }
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-csHeatmap(object, ...)
+getLevels(object)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{object}{
 %%     ~~Describe \code{object} here~~
-}
-  \item{\dots}{
-%%     ~~Describe \code{\dots} here~~
 }
 }
 \details{

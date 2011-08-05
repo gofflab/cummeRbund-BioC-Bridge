@@ -164,13 +164,6 @@ setMethod("diffData",signature(object="CuffData"),.diffData)
 
 setMethod("getLevels",signature(object="CuffData"),.getLevels)
 
-.getFeatures<-function(object,geneIdList,sampleIdList){
-	
-}
-
-setMethod("getFeatures",signature(object="CuffData"),.getFeatures)
-
-
 #Useful SQL commands
 
 #SELECT g.gene_id, g.class_code, g.nearest_ref_id, g.gene_short_name, g.locus, g.length, g.coverage, g.status, gd.sample_name, gd.fpkm, gd.conf_hi, gd.conf_lo FROM genes g LEFT JOIN geneData gd ON g.gene_id = gd.gene_id WHERE (g.gene_id = 'XLOC_000001');

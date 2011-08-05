@@ -4,7 +4,6 @@
 \docType{package}
 \title{
 cummeRbund: The finishing touch on your Tuxedo workflow. Analysis, manipulation, and visualization of Cufflinks HTS data.
-~~ package title ~~
 }
 \description{
 Allows for persistent storage, access, and manipulation of Cufflinks high-throughput sequencing data.  In addition, provides numerous plotting functions for commonly used visualizations.
@@ -73,5 +72,5 @@ Maintainer: Loyal A. Goff <lgoff@csail.mit.edu>
 ~~ \code{\link[<pkg>:<pkg>-package]{<pkg>}} ~~
 }
 \examples{
-~~ simple examples of the most important functions ~~
+
 }

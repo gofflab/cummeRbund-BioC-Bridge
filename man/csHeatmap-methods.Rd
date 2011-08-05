@@ -10,7 +10,7 @@
 \describe{
 
 \item{\code{signature(object = "CuffFeatureSet")}}{
-Creates a heatmap.
+Creates a heatmap of FPKM values across features and samples.
 }
 }}
 \keyword{methods}

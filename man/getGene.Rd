@@ -1,14 +1,14 @@
-\name{csHeatmap}
-\alias{csHeatmap}
+\name{getGene}
+\alias{getGene}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-csHeatmap
+getGene
 }
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-csHeatmap(object, ...)
+getGene(object, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

@@ -42,6 +42,11 @@ setValidity("CuffFeatureSet",function(object){
 #		}
 #)
 
+setMethod("length","CuffFeatureSet",
+		function(x){
+			dim(x@annotation)[1]
+		}
+)
 #################
 #Subsetting		#
 #################

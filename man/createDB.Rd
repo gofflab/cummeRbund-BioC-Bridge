@@ -1,22 +1,22 @@
-\name{csHeatmap}
-\alias{csHeatmap}
+\name{createDB}
+\alias{createDB}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-csHeatmap
+createDB
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+This should not be called directly by the user.
 }
 \usage{
-csHeatmap(object, ...)
+createDB(dbFname = "cuffData.db", driver = "SQLite")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{object}{
-%%     ~~Describe \code{object} here~~
+  \item{dbFname}{
+%%     ~~Describe \code{dbFname} here~~
 }
-  \item{\dots}{
-%%     ~~Describe \code{\dots} here~~
+  \item{driver}{
+%%     ~~Describe \code{driver} here~~
 }
 }
 \details{

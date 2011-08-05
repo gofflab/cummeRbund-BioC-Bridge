@@ -60,16 +60,16 @@ setMethod("show","CuffSet",
 #TODO: 	- Add 'j' to select on sampleNames as well
 #		- Add ability to search on gene_short_name(s) or featureIDs
 		
-setMethod("[",signature(x="CuffSet"),function(x, i, ...){
-			featureIDs<-featureNames(x@genes)[i]
-			if(length(featureIDs)==1){
-				res<-getGene(x,featureID)
-			}else{
-				res<-getGenes(x,featureIDs)
-			}
-			res
-		}
-)
+#setMethod("[",signature(x="CuffSet"),function(x, i, ...){
+#			featureIDs<-featureNames(x@genes)[i]
+#			if(length(featureIDs)==1){
+#				res<-getGene(x,featureID)
+#			}else{
+#				res<-getGenes(x,featureIDs)
+#			}
+#			res
+#		}
+#)
 
 
 setValidity("CuffSet",
