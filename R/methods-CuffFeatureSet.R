@@ -237,7 +237,7 @@ setMethod("diffData",signature(object="CuffFeatureSet"),.diffData)
 	
 	if (logMode)
 	{
-	   legendTitle <- expression(paste(plain(log)[10]," FPKM +",bquote(.(pseudocount)),sep=""))
+	   legendTitle <- bquote(paste(log[10]," FPKM + ",.(pseudocount),sep=""))
 	   #legendTitle <- paste(expression(plain(log)[10])," FPKM + ",pseudocount,sep="")
 	} else {
 	   legendTitle <- "FPKM"
