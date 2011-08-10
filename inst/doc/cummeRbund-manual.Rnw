@@ -117,11 +117,10 @@ To read these files, populate the 'cuffData.db' database backend, and return the
 
 <<loadLib>>=
 library(cummeRbund)
-fileDir<-("../../extdata/")
 @
-
+%%fileDir<-("../../extdata/")
 <<read>>=
-cuff <- readCufflinks(dir=fileDir)
+cuff <- readCufflinks()
 cuff
 @
 Again, by default $dir$ is assumed to be the current working directory and \code{cuff<-readCufflinks()} should work if all appropriate files are in the current working directory. Should you need to rebuild the SQLite backend for any reason, you can add the option \Rfunarg{rebuild=T} to \Rmethod{readCufflinks}.  Once the database is created, \Rmethod{readCufflinks} will default to using the SQL backend and should not need to rebuild this database.
@@ -248,9 +247,10 @@ Gene Sets (stored in a \Rclass{CuffGeneSet} object) can be created using the \Rm
 You must first create a vector of 'gene\_ids' to identify the genes you wish to select:
 
 <<create_geneset_1>>=
-myGeneIds<-sample(features(cuff@genes)$gene_id,20)
+data(sampleData)
+myGeneIds<-sampleIDs
 myGeneIds
-myGenes<-getGenes(cuff,myGeneIds)
+myGenes<-sampleGeneSet
 myGenes
 @
 The same \Rmethod{fpkm}, \Rmethod{fpkmMatrix}, \Rmethod{features}, \Rmethod{diffData}, \Rmethod{samples}, and \Rmethod{featureNames} are available for instances of the \Rmethod{CuffGeneSet} class.
@@ -308,7 +308,7 @@ print(v)
 Similar plots can be made for all sub-level features of a \Rclass{CuffGeneSet} class by specifiying which slot you would like to plot (eg. \Rfunarg{@isoforms},\Rfunarg{@TSS},\Rfunarg{@CDS}).
 
 <<geneset_plots_4,include=FALSE>>=
-ih<-csHeatmap(myGenes@isoforms,cluster='both')
+ih<-csHeatmap(myGenes@isoforms,cluster='both',labRow=F)
 ih
 @
 
@@ -320,6 +320,23 @@ print(ih)
 @
 \end{center}
 \caption{Heatmap of FPKM values of isoforms for a random sample of 20 genes.}
+\end{figure}
+
+Rudimentary k-means clustering is implemented as well.
+
+<<geneset_plots_5,include=FALSE>>=
+ic<-csCluster(myGenes,k=4)
+ic
+@
+
+\begin{figure}[ht]
+\begin{center}
+<<label=geneset_plots_cluster,fig=TRUE,echo=FALSE>>=
+<<geneset_plots_5>>
+print(ic)
+@
+\end{center}
+\caption{Basic k-means clustering of a CuffGeneSet set of 20 random genes.}
 \end{figure}
 
 \clearpage
