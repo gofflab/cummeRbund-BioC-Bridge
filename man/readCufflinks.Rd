@@ -13,83 +13,78 @@ readCufflinks(dir = getwd(), dbFile = "cuffData.db", geneFPKM = "genes.fpkm_trac
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{dir}{
-%%     ~~Describe \code{dir} here~~
+Directory in which all CuffDiff output files can be located. Defaults to current working directory.
 }
   \item{dbFile}{
-%%     ~~Describe \code{dbFile} here~~
+Name of backend database. Default is 'cuffData.db'
 }
   \item{geneFPKM}{
-%%     ~~Describe \code{geneFPKM} here~~
+genes.fpkm_tracking file
 }
   \item{geneDiff}{
-%%     ~~Describe \code{geneDiff} here~~
+gene_exp.diff file
 }
   \item{isoformFPKM}{
-%%     ~~Describe \code{isoformFPKM} here~~
+isoforms.fpkm_tracking file
 }
   \item{isoformDiff}{
-%%     ~~Describe \code{isoformDiff} here~~
+isoform_exp.diff file
 }
   \item{TSSFPKM}{
-%%     ~~Describe \code{TSSFPKM} here~~
+tss_groups.fpkm_tracking file
 }
   \item{TSSDiff}{
-%%     ~~Describe \code{TSSDiff} here~~
+tss_group_exp.diff file
 }
   \item{CDSFPKM}{
-%%     ~~Describe \code{CDSFPKM} here~~
+cds.fpkm_tracking file
 }
   \item{CDSExpDiff}{
-%%     ~~Describe \code{CDSExpDiff} here~~
+cds_exp.diff file
 }
   \item{CDSDiff}{
-%%     ~~Describe \code{CDSDiff} here~~
+cds.diff file (distribution tests on CDS)
 }
   \item{promoterFile}{
-%%     ~~Describe \code{promoterFile} here~~
+promoters.diff file (distribution tests on promoters)
 }
   \item{splicingFile}{
-%%     ~~Describe \code{splicingFile} here~~
+splicing.diff (distribution tests on isoforms)
 }
   \item{driver}{
-%%     ~~Describe \code{driver} here~~
+Driver for backend database. (Currently only "SQLite" is supported).
 }
   \item{rebuild}{
-%%     ~~Describe \code{rebuild} here~~
+A logical argument to rebuild database backend.
 }
   \item{\dots}{
-%%     ~~Describe \code{\dots} here~~
+Additional arguments to readCufflinks
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
-}
+This is the initialization function for the cummeRbund package. It creates the SQLite backend database, populates the data, and provides a connection object for all future
+interactions with the dataset. Once the initial build is complete, this function will default to using the database for all future sessions. 
+IMPORTANT:  - Each R session should begin with a call to readCufflinks to re-open the connection to the database.
+			- Should any connectivity issues to the database arise, another call to readCufflinks should create a new connection object and repair any issue.
+			- The database can always be rebuild (using rebuild=TRUE) from the original CuffDiff output files.
+}		
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+A CuffSet object.  A 'pointer' class that allows interaction with cufflinks/cuffdiff data via a SQLite database backend.
 }
 \references{
-%% ~put references to the literature/web site here ~
+None.
 }
 \author{
-%%  ~~who you are~~
+Loyal A. Goff
 }
 \note{
-%%  ~~further notes~~
+None.
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
 \examples{
-
+	\dontrun{
+	a<-readCufflinks() #Read cufflinks data and create CuffSet object 'a'
+	}
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+

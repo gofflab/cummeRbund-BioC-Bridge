@@ -1,16 +1,16 @@
 \name{featureNames}
 \alias{featureNames}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
 Feature names
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+Retrive a vector of feature names from a 'CuffData' or 'CuffFeatureSet' object
 }
 \usage{
 featureNames(object)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{object}{
 An object of class ('CuffData' or 'CuffFeatureSet')
@@ -32,18 +32,10 @@ Loyal A. Goff
 None
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-None
-}
 \examples{
-	\dontrun{
-	a<-readCufflinks() #Create CuffSet object
-	names<-featureNames(a@genes)
-	}
+data(sampleData)
+featureNames(sampleGeneSet)
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
+
 \keyword{ cummeRbund }
-\keyword{ accessor }% __ONLY ONE__ keyword per line
+\keyword{ accessor }

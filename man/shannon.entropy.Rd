@@ -23,7 +23,7 @@ None
 Returns a numeric value for the Shannon entropy of the supplied probability distribution
 }
 \references{
-%% ~put references to the literature/web site here ~
+None
 }
 \author{
 Loyal A. Goff
@@ -32,17 +32,8 @@ Loyal A. Goff
 None
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
 \examples{
 	x<-sample(1:500,50)
 	p<-x/sum(x)
 	shannon.entropy(p)
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ cummeRbund }
-\keyword{ Shannon }% __ONLY ONE__ keyword per line

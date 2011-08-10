@@ -5,49 +5,42 @@
 getGene
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+Primary accessor from a CuffSet object to retrive all related information for 1 (one) given gene, indexed by gene_id or gene_short_name.
 }
 \usage{
-getGene(object, ...)
+getGene(object, geneId, sampleIdList=NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{object}{
-%%     ~~Describe \code{object} here~~
+An object of class 'CuffSet' (Primary 'pointer' object for Cufflinks data).
 }
-  \item{\dots}{
-%%     ~~Describe \code{\dots} here~~
+  \item{geneId}{
+A character string to identify which gene for which you would like to retrieve all information.
+}
+  \item{sampleIdList}{
+A vector of sample names used to subset or re-order samples in returned object
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+None.
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+Returns a CuffGene object containing all related information for a given gene_id or gene_short_name
 }
 \references{
-%% ~put references to the literature/web site here ~
+None.
 }
 \author{
-%%  ~~who you are~~
+Loyal A. Goff
 }
 \note{
-%%  ~~further notes~~
+Right now, this does not return an error if it cannot find a gene.  (this is probably a bad thing...)
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
 \examples{
-
+	\dontrun{
+	a<-readCufflinks() #Read cufflinks data and create master CuffSet object
+	myGene<-getGene(a,"PINK1") # Retrieve all information for gene "PINK1"
+	}
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

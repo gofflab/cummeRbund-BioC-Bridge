@@ -5,7 +5,7 @@
 getLevels
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+Returns a list of samples as levels. This should not be called directly by user.
 }
 \usage{
 getLevels(object)
@@ -13,38 +13,21 @@ getLevels(object)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{object}{
-%%     ~~Describe \code{object} here~~
+An object of class 'CuffData' or 'CuffFeatureSet' or 'CuffFeature'
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+For internal usage only.
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+A vector of sample names as factors.
 }
 \references{
-%% ~put references to the literature/web site here ~
+None.
 }
 \author{
-%%  ~~who you are~~
+Loyal A. Goff
 }
 \note{
-%%  ~~further notes~~
+None.
 }
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
-\examples{
-
-}
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

@@ -2,54 +2,40 @@
 \alias{fpkmMatrix}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Retrieve FPKM values as matrix
+fpkmMatrix
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+Retrieve FPKM values as gene by condition matrix
 }
 \usage{
 fpkmMatrix(object)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{object}{
-%%     ~~Describe \code{object} here~~
+An object of class ('CuffData','CuffFeatureSet','CuffGeneSet','CuffGene',or 'CuffFeature')
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+None.
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+A feature x condition matrix of FPKM values.
 }
 \references{
-%% ~put references to the literature/web site here ~
+None.
 }
 \author{
-%%  ~~who you are~~
+Loyal A. Goff
 }
 \note{
-%%  ~~further notes~~
+None
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
 \examples{
-	\dontrun{
-	a<-readCufflinks() #Create CuffSet object
-	myGeneId<-"gene_x" 
-	myGene<-getGene(a,myGeneId) #Create CuffFeature object
-	myFPKMMat<-fpkmMatrix(myGene)
-	}
+	data(sampleData)
+	fpkmMatrix(sampleGeneSet)
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
+
 \keyword{ cummeRbund }
-\keyword{ accessor }% __ONLY ONE__ keyword per line
+\keyword{ accessor }

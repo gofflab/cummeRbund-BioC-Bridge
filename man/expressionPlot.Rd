@@ -8,9 +8,9 @@ Expression Plot
 A line plot (optionally with confidence intervals) detailing FPKM expression levels across conditions for a given gene(s) or feature(s)
 }
 \usage{
-expressionPlot(object, logMode=FALSE, pseudocount=0.0001, drawSummary=FALSE, sumFun=mean_cl_boot, showErrorbars=TRUE, ...)
+expressionPlot(object, logMode=FALSE, pseudocount=1.0, drawSummary=FALSE, sumFun=mean_cl_boot, showErrorbars=TRUE, ...)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{object}{
 An object of class ('CuffFeature' or 'CuffGene')
@@ -50,21 +50,10 @@ Loyal A. Goff
 None
 }
 
-
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
 \examples{
-	\dontrun{
-	a<-readCufflinks() #Create CuffSet object
-	myGeneId<-"gene_x" 
-	myGene<-getGene(a,myGeneId) #Create CuffFeature object
-	expressionPlot(myGene) #Line plot of myGene FPKM values
-	expressionPlot(myGene@isoforms) #Line plot of myGene faceted by isoforms
-	}
+	data(sampleData)
+	PINK1 # sample CuffFeature object
+	expressionPlot(PINK1) #Line plot of PINK1 FPKM values
+	expressionPlot(PINK1@isoforms) #Line plot of PINK1 FPKM values faceted by isoforms
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+

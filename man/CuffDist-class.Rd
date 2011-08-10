@@ -28,20 +28,19 @@ Objects can be created by calls of the form \code{new("CuffDist", DB, table, typ
 	 }
 }
 \references{
-%%  ~~put references to the literature/web site here~~
+None
 }
 \author{
-%%  ~~who you are~~
+Loyal A. Goff
 }
 \note{
-%%  ~~further notes~~
+None
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
+
 
 \seealso{
-%%  ~~objects to See Also as \code{\link{~~fun~~}}, ~~~
-%%  ~~or \code{\linkS4class{CLASSNAME}} for links to other classes ~~~
+None
 }
 \examples{
 showClass("CuffDist")

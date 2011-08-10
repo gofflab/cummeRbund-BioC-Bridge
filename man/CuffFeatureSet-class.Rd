@@ -17,11 +17,11 @@
 
 \title{Class "CuffFeatureSet"}
 \description{
-%%  ~~ A concise (1-5 lines) description of what the class is. ~~
+A 'data' container class for all FPKM, annotation, and differential expression data for a set of features (genes, isoforms, TSS, CDS).
 }
 \section{Objects from the Class}{
 Objects can be created by calls of the form \code{new("CuffFeatureSet", annotation, fpkm, diff, ...)}.
-%%  ~~ describe objects here ~~ 
+
 }
 \section{Slots}{
   \describe{
@@ -47,20 +47,20 @@ Objects can be created by calls of the form \code{new("CuffFeatureSet", annotati
 	 }
 }
 \references{
-%%  ~~put references to the literature/web site here~~
+None.
 }
 \author{
-%%  ~~who you are~~
+Loyal A. Goff
 }
 \note{
-%%  ~~further notes~~
+None.
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
+
 
 \seealso{
-%%  ~~objects to See Also as \code{\link{~~fun~~}}, ~~~
-%%  ~~or \code{\linkS4class{CLASSNAME}} for links to other classes ~~~
+\code{\linkS4class{CuffGeneSet}}
+
 }
 \examples{
 showClass("CuffFeatureSet")

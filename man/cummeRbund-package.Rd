@@ -130,9 +130,4 @@ Maintainer: Loyal A. Goff <lgoff@csail.mit.edu>
 
 
 \keyword{ package }
-\seealso{
 
-}
-\examples{
-
-}

@@ -1,25 +1,52 @@
 \name{distValues}
 \alias{distValues}
-\docType{data}
+
 \title{
 distValues
 }
 \description{
 Returns a data.frame of distribution-level test values from a CuffDist object (@promoters, @splicing, @relCDS)
 }
-\usage{data(distValues)}
-\format{
+\usage{
+distValues(object, ...)
+}
+%- maybe also 'usage' for other objects documented here.
+\arguments{
+  \item{object}{
+An object of class 'CuffDist'
+}
+  \item{\dots}{
+Additional arguments to distValues
+}
 }
 \details{
 None
 }
-\source{
-
+\value{
+Returns a data.frame of distribution-level test values.
 }
 \references{
+None
+}
+\author{
+Loyal A. Goff
+}
+\note{
+None
+}
 
+
+
+\seealso{
+None
 }
 \examples{
-
+	\dontrun{
+	a<-readCufflinks # Read cufflinks data and create CuffSet object
+	distValues(a@promoters) # returns data.frame of values from CuffDist object in slot 'promoters'
+	}
 }
-\keyword{datasets}
+% Add one or more standard keywords, see file 'KEYWORDS' in the
+% R documentation directory.
+\keyword{ cummeRbund }
+\keyword{ accessor }

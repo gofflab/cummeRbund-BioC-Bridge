@@ -8,7 +8,7 @@ Barplot
 A barplot of FPKM values with confidence intervals for a given gene, set of genes, or features of a gene (e.g. isoforms, TSS, CDS, etc).
 }
 \usage{
-expressionBarplot(object, logMode=FALSE, pseudocount=0.0001, showErrorbars=TRUE, ...)
+expressionBarplot(object, logMode=FALSE, pseudocount=1.0, showErrorbars=TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -29,7 +29,7 @@ Additional arguments.
 }
 }
 \details{
-
+None
 }
 \value{
 A ggplot2 plot object
@@ -44,22 +44,13 @@ Loyal A. Goff
 Need to implement logMode and features for this plotting method.
 }
 
-
-
-\seealso{
-
-}
 \examples{
-	\dontrun{
-	a<-readCufflinks() #Create CuffSet object
-	myGeneId<-"gene_x" 
-	myGene<-getGene(a,myGeneId) #Create CuffFeature object
-	expressionBarplot(myGene) #Barplot of myGene FPKM values
-	expressionBarplot(myGene@isoforms) #Barplot of myGene faceted by isoforms
-	}
+	data(sampleData)
+	PINK1 # sample CuffFeature object
+	expressionBarplot(PINK1) #Barplot of PINK1 FPKM values
+	expressionBarplot(PINK1@isoforms) #Barplot of PINK1 FPKM values faceted by isoforms
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
+
 \keyword{ cummeRbund }
 \keyword{ plotting }
 \keyword{ barplot }

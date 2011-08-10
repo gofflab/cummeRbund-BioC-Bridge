@@ -33,12 +33,6 @@ exportMethods(fpkm,
 )
 
 export("readCufflinks",
-#		"loadGenes",
-#		"loadIsoforms",
-#		"loadTSS",
-#		"loadCDS",
-#		"populateSampleTable",
-#		"createDB",
 		"JSdist",
 		"shannon.entropy",
 		"makeprobs"

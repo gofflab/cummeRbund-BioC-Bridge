@@ -39,5 +39,9 @@ None
 }
 
 \examples{
-
+	\dontrun{
+	features #A data.frame of features with gene_id as first column 
+	a<-readCufflinks() #Read cufflinks data and create CuffSet object
+	addFeatures(a,features) #Adds features to table in cuffData.db for use by CuffData objects.
+	}
 }

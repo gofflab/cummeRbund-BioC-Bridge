@@ -1,11 +1,11 @@
 \name{diffData}
 \alias{diffData}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
 Differential comparison data
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+An accessor method to retrieve differential expression data from a 'CuffData', 'CuffFeatureSet', or 'CuffFeature' object
 }
 \usage{
 diffData(object, x, y, features=FALSE, lnFcCutoff=20, ...)
@@ -34,7 +34,7 @@ Additional arguments.
 }
 }
 \details{
-
+None
 }
 \value{
 A data.frame object
@@ -49,18 +49,10 @@ Loyal A. Goff
 None
 }
 
-
-
-\seealso{
-
-}
 \examples{
-	\dontrun{
-	a<-readCufflinks() #Create CuffSet object
-	diff<-diffData(a@genes) #returns a dataframe of differential expression data for all genes.
-	}
+	data(sampleData)
+	diff<-diffData(sampleGeneSet) #returns a dataframe of differential expression data from sample CuffGeneSet object.
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
+
 \keyword{ cummeRbund }
 \keyword{ differential expression }% __ONLY ONE__ keyword per line

@@ -20,33 +20,26 @@ A logical argument to merge the @features slot and return a data.frame with all 
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+Returns a data.frame of FPKM values.
 }
 \value{
 A data.frame of FPKM-level values for a set of features.
 }
 \references{
-%% ~put references to the literature/web site here ~
+None
 }
 \author{
 Loyal A. Goff
 }
 \note{
-%%  ~~further notes~~
+None
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
 \examples{
-	\dontrun{
-	a<-readCufflinks() #Create CuffSet object
-	fpkm.values<-fpkm(a@genes)
-	}
+	data(sampleData)
+	fpkm(PINK1)
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
+
+
 \keyword{ cummeRbund }
 \keyword{ accessor }

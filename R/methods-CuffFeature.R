@@ -69,7 +69,7 @@ setMethod("fpkm",signature="CuffFeature",.fpkm)
 #################
 #Plotting		#
 #################
-.barplot<-function(object,logMode=FALSE,pseudocount=1,showErrorbars=TRUE,...){
+.barplot<-function(object,logMode=FALSE,pseudocount=1.0,showErrorbars=TRUE,...){
 	dat<-fpkm(object)
 	#TODO: Test dat to ensure that there are >0 rows to plot.  If not, trap error and move on...
 	
@@ -119,7 +119,7 @@ setMethod("fpkm",signature="CuffFeature",.fpkm)
 setMethod("expressionBarplot",signature(object="CuffFeature"),.barplot)
 
 
-.expressionPlot<-function(object,logMode=FALSE,pseudocount=1, drawSummary=FALSE, sumFun=mean_cl_boot, showErrorbars=T,...){
+.expressionPlot<-function(object,logMode=FALSE,pseudocount=1.0, drawSummary=FALSE, sumFun=mean_cl_boot, showErrorbars=T,...){
 	dat<-fpkm(object)
 	colnames(dat)[1]<-"tracking_id"
 	p <- ggplot(dat)
@@ -156,6 +156,8 @@ setMethod("expressionBarplot",signature(object="CuffFeature"),.barplot)
     } else {
         p <- p + ylab("FPKM")
     }
+	
+	p <- p + scale_color_brewer(palette="Set1")
 	
 	p
 }

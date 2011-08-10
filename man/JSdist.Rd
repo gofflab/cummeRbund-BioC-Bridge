@@ -1,6 +1,6 @@
 \name{JSdist}
 \alias{JSdist}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
 Jensen-Shannon distance on columns
 }
@@ -11,33 +11,28 @@ of the pairwise Jensen-Shannon distances between columns
 \usage{
 JSdist(mat)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{mat}{
 A matrix of expression probabilities (e.g. from makeprobs())
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+Returns pairwise Jensen-Shannon distance (in the form of a dist object) for a matrix of probabilities (by column)
 }
 \value{
 A dist object of pairwise J-S distances between columns.
 }
 \references{
-%% ~put references to the literature/web site here ~
+None
 }
 \author{
 Loyal A. Goff
 }
 \note{
-%%  ~~further notes~~
+None
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
 \examples{
 
 mat<-matrix(sample(1:50,50),10)
@@ -45,8 +40,7 @@ probs<-makeprobs(mat)
 js.distance<-JSdist(probs)
 
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
+
 \keyword{ Jensen-Shannon }
 \keyword{ distance }
 \keyword{ metric }

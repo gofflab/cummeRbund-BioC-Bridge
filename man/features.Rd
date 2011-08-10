@@ -32,18 +32,10 @@ Loyal A. Goff
 None
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-None
-}
 \examples{
-	\dontrun{
-	a<-readCufflinks() #Create CuffSet object
-	feature.df<-features(a@genes)
-	}
+	data(sampleData)
+	features(sampleGeneSet)
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
+
 \keyword{ cummeRbund }
-\keyword{ accessor }% __ONLY ONE__ keyword per line
+\keyword{ accessor }

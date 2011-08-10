@@ -1,6 +1,6 @@
 \name{createDB}
 \alias{createDB}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
 createDB
 }
@@ -10,44 +10,27 @@ This should not be called directly by the user.
 \usage{
 createDB(dbFname = "cuffData.db", driver = "SQLite")
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{dbFname}{
-%%     ~~Describe \code{dbFname} here~~
+File name for backend database (by default this is 'cuffData.db').  If you change this value, be sure to point to the new file with every call to 'readCufflinks'.
 }
   \item{driver}{
-%%     ~~Describe \code{driver} here~~
+DB driver for backend database (only SQLite supported at this time.)
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+Should not be called directly
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+Creates database backend file
 }
 \references{
-%% ~put references to the literature/web site here ~
+None
 }
 \author{
-%%  ~~who you are~~
+Loyal A. Goff
 }
 \note{
-%%  ~~further notes~~
+None
 }
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
-\examples{
-
-}
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

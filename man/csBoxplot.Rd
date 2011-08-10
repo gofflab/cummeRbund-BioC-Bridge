@@ -1,51 +1,48 @@
 \name{csBoxplot}
 \alias{csBoxplot}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
 csBoxplot
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+Creates a ggplot2 plot object with a geom_box layer displaying summary statistics for FPKM values across samples (x).
 }
 \usage{
-csBoxplot(object, ...)
+csBoxplot(object, logMode=T, ...)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{object}{
-%%     ~~Describe \code{object} here~~
+An object of class CuffData.
+}
+  \item{logMode}{
+A logical argument to log10 -transform FPKM values.
 }
   \item{\dots}{
-%%     ~~Describe \code{\dots} here~~
+Additional arguments to csBoxplot
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+None
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+A ggplot2 plot object with a geom_box layer.
 }
 \references{
-%% ~put references to the literature/web site here ~
+None
 }
 \author{
-%%  ~~who you are~~
+Loyal A. Goff
 }
 \note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+None
 }
 \examples{
-
+	\dontrun{
+	a<-readCufflinks #Read cufflinks data and create CuffSet object
+	genes<-a@genes #CuffData object for all genes
+	csBoxplot(genes)
+	}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

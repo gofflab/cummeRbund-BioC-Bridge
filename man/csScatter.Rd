@@ -8,7 +8,7 @@ Scatter Plot
 A scatter plot comparing the FPKM  values from two samples in a cuffdiff run.
 }
 \usage{
-csScatter(object, x, y, logMode=TRUE, pseudocount=0.0001, labels, smooth=FALSE, ...)
+csScatter(object, x, y, logMode=TRUE, pseudocount=1.0, labels, smooth=FALSE, ...)
 }
 
 \arguments{
@@ -38,26 +38,21 @@ Additional arguments to csScatter
 }
 }
 \details{
-
+None
 }
 \value{
 ggplot object with geom_point and geom_rug layers
 }
 \references{
-
+None
 }
 \author{
 Loyal A. Goff
 }
 \note{
-%%  ~~further notes~~
+None
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
 \examples{
 	\dontrun{
 	a<-readCufflinks() #Create CuffSet object
@@ -66,5 +61,3 @@ Loyal A. Goff
 	s #render plot object
 	}
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.

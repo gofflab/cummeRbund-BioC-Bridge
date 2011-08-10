@@ -109,7 +109,7 @@ setMethod("diffData",signature(object="CuffFeatureSet"),.diffData)
 #Plotting		#
 #################
 #Basic heatmap
-.heatmap<-function(object,logMode=TRUE,pseudocount=1){
+.heatmap<-function(object,logMode=TRUE,pseudocount=1.0){
 	dat<-fpkm(object)
 	if(logMode){
 		dat$fpkm<- log10(dat$fpkm+pseudocount)
@@ -127,7 +127,7 @@ setMethod("diffData",signature(object="CuffFeatureSet"),.diffData)
 #There is no genericMethod yet, goal is to replace .heatmap with .ggheat for genericMethod 'csHeatmap'
 
 .ggheat<-function(object, rescaling='none', clustering='none', labCol=T, labRow=T, logMode=T, pseudocount=1.0, 
-		border=FALSE, heatscale= c(low='white',high='red'), heatMidpoint=NULL,...) {
+		border=FALSE, heatscale= c(low='darkred',mid='orange',high='white'), heatMidpoint=NULL,...) {
 	## the function can be be viewed as a two step process
 	## 1. using the rehape package and other funcs the data is clustered, scaled, and reshaped
 	## using simple options or by a user supplied function
@@ -237,7 +237,8 @@ setMethod("diffData",signature(object="CuffFeatureSet"),.diffData)
 	
 	if (logMode)
 	{
-	   legendTitle <- expression(paste(plain(log)[10], paste(" FPKM +",bquote(.(pseudocount)))))
+	   legendTitle <- expression(paste(plain(log)[10]," FPKM +",bquote(.(pseudocount)),sep=""))
+	   #legendTitle <- paste(expression(plain(log)[10])," FPKM + ",pseudocount,sep="")
 	} else {
 	   legendTitle <- "FPKM"
 	}
@@ -265,7 +266,7 @@ setMethod("diffData",signature(object="CuffFeatureSet"),.diffData)
 setMethod("csHeatmap",signature("CuffFeatureSet"),.ggheat)
 
 #Scatterplot
-.scatter<-function(object,x,y,logMode=TRUE,pseudocount=1,labels, smooth=FALSE,colorByStatus=FALSE,...){
+.scatter<-function(object,x,y,logMode=TRUE,pseudocount=1.0,labels, smooth=FALSE,colorByStatus=FALSE,...){
 	dat<-fpkmMatrix(object)
 	samp<-samples(object)
 	
@@ -338,7 +339,7 @@ setMethod("csScatter",signature(object="CuffFeatureSet"), .scatter)
 
 setMethod("csVolcano",signature(object="CuffFeatureSet"), .volcano)
 
-.barplot<-function(object,logMode=TRUE,pseudocount=1,showErrorbars=T,...){
+.barplot<-function(object,logMode=TRUE,pseudocount=1.0,showErrorbars=T,...){
 	dat<-fpkm(object,features=T)
 	#TODO: Test dat to ensure that there are >0 rows to plot.  If not, trap error and move on...
 	
@@ -353,7 +354,7 @@ setMethod("csVolcano",signature(object="CuffFeatureSet"), .volcano)
 	
 	p<-ggplot(dat,aes(x=tracking_id,y=fpkm,fill=tracking_id))
 	p <- p + 
-	    geom_bar()
+	    geom_bar(stat='identity')
 	
 	if (showErrorbars)
 	{
@@ -367,7 +368,7 @@ setMethod("csVolcano",signature(object="CuffFeatureSet"), .volcano)
     }
 	
 	
-	p <- p + facet_wrap('tracking_id') +
+	p <- p + facet_wrap('sample_name') +
     	opts(title=object@annotation$gene_short_name,axis.text.x=theme_text(hjust=0,angle=-90))
     	
     # p<- p +
@@ -388,7 +389,8 @@ setMethod("csVolcano",signature(object="CuffFeatureSet"), .volcano)
     }
 	
 	p <- p + opts(legend.position = "none")
-	p <- p + scale_fill_brewer(palette="Set1")
+	p <- p + scale_fill_hue(c = 50, l = 70, h=c(30, 300))
+	p
 	
 }
 

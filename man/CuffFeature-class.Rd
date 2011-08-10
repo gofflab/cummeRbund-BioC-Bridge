@@ -9,11 +9,11 @@
 
 \title{Class "CuffFeature"}
 \description{
-%%  ~~ A concise (1-5 lines) description of what the class is. ~~
+A 'data' container class for all FPKM, annotation, and differential expression data for a single feature (gene, isoform, TSS, or CDS).
 }
 \section{Objects from the Class}{
 Objects can be created by calls of the form \code{new("CuffFeature", annotation, fpkm, diff, ...)}.
-%%  ~~ describe objects here ~~ 
+
 }
 \section{Slots}{
   \describe{
@@ -31,20 +31,19 @@ Objects can be created by calls of the form \code{new("CuffFeature", annotation,
 	 }
 }
 \references{
-%%  ~~put references to the literature/web site here~~
+None
 }
 \author{
-%%  ~~who you are~~
+Loyal A. Goff
 }
 \note{
-%%  ~~further notes~~
+'CuffGene' is a superclass of 'CuffFeature' that links gene information for a given gene with all isoform-, TSS-, and CDS-level data for the given gene.
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
+
 
 \seealso{
-%%  ~~objects to See Also as \code{\link{~~fun~~}}, ~~~
-%%  ~~or \code{\linkS4class{CLASSNAME}} for links to other classes ~~~
+\code{\linkS4class{CuffGene}}
 }
 \examples{
 showClass("CuffFeature")

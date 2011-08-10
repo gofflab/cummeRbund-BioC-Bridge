@@ -36,6 +36,7 @@ None
 None.
 }
 \examples{
-
+	data(sampleData)
+	csCluster(sampleGeneSet,4)
 }
 \keyword{datasets}

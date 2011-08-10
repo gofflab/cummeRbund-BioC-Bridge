@@ -8,7 +8,7 @@ Density plot of CuffData
 Creates a smoothed density plot, by sample, for log10 FPKM values from a cuffdiff run.
 }
 \usage{
-csDensity(object, logMode=TRUE, pseudocount=0.0001, labels, features=FALSE, ...)
+csDensity(object, logMode=TRUE, pseudocount=1.0, labels, features=FALSE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -49,10 +49,6 @@ None
 }
 
 
-
-\seealso{
-
-}
 \examples{
 	\dontrun{
 	a<-readCufflinks() #Create CuffSet object from data
@@ -61,8 +57,6 @@ None
 	d #Render plot
 	}
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
 \keyword{ cummeRbund }
 \keyword{ density }
 \keyword{ plotting }

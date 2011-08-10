@@ -45,11 +45,6 @@ Loyal A. Goff
 None
 }
 
-
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
 \examples{
 \dontrun{
 a<-readCufflinks() #Create CuffSet object

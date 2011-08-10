@@ -11,11 +11,11 @@
 
 \title{Class "CuffSet"}
 \description{
-%%  ~~ A concise (1-5 lines) description of what the class is. ~~
+A 'pointer' class to connect to, and retrieve data from the SQLite backend database. 
 }
 \section{Objects from the Class}{
 Objects can be created by calls of the form \code{new("CuffSet", DB, conditions, genes, isoforms, TSS, CDS, promoters, splicing, relCDS, ...)}.
-%%  ~~ describe objects here ~~ 
+Available methods are primary accessors to retrieve CuffGeneSet or CuffGene objects for manipulation.
 }
 \section{Slots}{
   \describe{
@@ -41,20 +41,18 @@ Objects can be created by calls of the form \code{new("CuffSet", DB, conditions,
 	 }
 }
 \references{
-%%  ~~put references to the literature/web site here~~
+None.
 }
 \author{
-%%  ~~who you are~~
+Loyal A. Goff
 }
 \note{
-%%  ~~further notes~~
+None.
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%%  ~~objects to See Also as \code{\link{~~fun~~}}, ~~~
-%%  ~~or \code{\linkS4class{CLASSNAME}} for links to other classes ~~~
+None.
 }
 \examples{
 showClass("CuffSet")
