@@ -409,6 +409,7 @@ print(igb)
 
 \section{Session info}
 <<session>>=
+sqliteCloseConnection(cuff@DB)
 sessionInfo()
 @
 
