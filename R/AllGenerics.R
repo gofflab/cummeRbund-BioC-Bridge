@@ -34,6 +34,7 @@ setGeneric("samples",function(object) standardGeneric("samples"))
 setGeneric("getGene",function(object,geneId,sampleIdList=NULL) standardGeneric("getGene"))
 setGeneric("getGenes",function(object,geneIdList,sampleIdList=NULL) standardGeneric("getGenes"))
 setGeneric("addFeatures",function(object, features, ...) standardGeneric("addFeatures"))
+setGeneric("findSimilar",function(object,x,n) standardGeneric("findSimilar"))
 
 ###############
 #CuffData
@@ -46,6 +47,7 @@ setGeneric("fpkm",function(object, features=FALSE) standardGeneric("fpkm"))
 setGeneric("fpkmMatrix",function(object) standardGeneric("fpkmMatrix"))
 setGeneric("diffData",function(object, x, y, features=FALSE, lnFcCutoff=20, ...) standardGeneric("diffData"))
 setGeneric("getLevels",function(object) standardGeneric("getLevels"))
+
 
 #CuffDist generics
 setGeneric("distValues",function(object,...) standardGeneric("distValues"))

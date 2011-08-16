@@ -19,6 +19,18 @@ JSdist<-function(mat){
 	as.dist(res)
 }
 
+JSdistVec<-function(p,q){
+	JSdiv<-shannon.entropy((p+q)/2)-(shannon.entropy(p)+shannon.entropy(q))*0.5
+	JSdist<-sqrt(JSdiv)
+	JSdist
+}
+
+makeprobsvec<-function(p){
+	phat<-p/sum(p)
+	phat[is.na(phat)] = 0
+	phat
+}
+
 shannon.entropy <- function(p) {
 	if (min(p) < 0 || sum(p) <=0)
 		return(Inf)

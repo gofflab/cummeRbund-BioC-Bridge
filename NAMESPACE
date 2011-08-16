@@ -1,5 +1,3 @@
-#useDynLib(cummeRbund, copyEnv_sym=copyEnv, sublist_extract)
-
 import(methods)
 
 exportClasses(CuffSet,
@@ -29,13 +27,16 @@ exportMethods(fpkm,
 			getGene,
 			getGenes,
 			addFeatures,
-			getLevels
+			getLevels,
+			findSimilar
 )
 
 export("readCufflinks",
 		"JSdist",
+		"JSdistVec",
 		"shannon.entropy",
-		"makeprobs"
+		"makeprobs",
+		"makeprobsvec"
 		)
 
 #importClassesFrom("Biobase","Versioned")

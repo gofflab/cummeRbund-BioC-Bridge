@@ -6,6 +6,7 @@
 \alias{addFeatures,CuffSet-method}
 \alias{getGene,CuffSet-method}
 \alias{getGenes,CuffSet-method}
+\alias{findSimilar,CuffSet-method}
 \alias{getLevels,CuffSet-method}
 \alias{samples,CuffSet-method}
 
@@ -34,6 +35,7 @@ Available methods are primary accessors to retrieve CuffGeneSet or CuffGene obje
   \describe{
     \item{[}{\code{signature(x = "CuffSet")}: ... }
     \item{addFeatures}{\code{signature(object = "CuffSet")}: ... }
+    \item{findSimilar}{\code{signature(object = "CuffSet")}: ... }
     \item{getGene}{\code{signature(object = "CuffSet")}: ... }
     \item{getGenes}{\code{signature(object = "CuffSet")}: ... }
     \item{getLevels}{\code{signature(object = "CuffSet")}: ... }

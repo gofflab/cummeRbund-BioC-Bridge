@@ -277,4 +277,7 @@ setMethod("csVolcano",signature(object="CuffData"), .volcano)
 
 setMethod("csBoxplot",signature(object="CuffData"),.boxplot)
 
+#############
+# Other Methods
+#############
 

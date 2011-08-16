@@ -396,6 +396,50 @@ setMethod("csVolcano",signature(object="CuffFeatureSet"), .volcano)
 
 setMethod("expressionBarplot",signature(object="CuffFeatureSet"),.barplot)
 
+.expressionPlot<-function(object,logMode=FALSE,pseudocount=1.0, drawSummary=FALSE, sumFun=mean_cl_boot, showErrorbars=T,...){
+	dat<-fpkm(object)
+	colnames(dat)[1]<-"tracking_id"
+	if(logMode)
+	{
+		dat$fpkm <- dat$fpkm + pseudocount
+		dat$conf_hi <- dat$conf_hi + pseudocount
+		dat$conf_lo <- dat$conf_lo + pseudocount
+	}
+	p <- ggplot(dat)
+	#dat$fpkm<- log10(dat$fpkm+pseudocount)
+	p <- p + 
+			geom_line(aes(x=sample_name,y=fpkm,group=tracking_id))
+	if (showErrorbars)
+	{
+		p <- p +
+				geom_errorbar(aes(x=sample_name, ymin=conf_lo,ymax=conf_hi,group=tracking_id),width=0.25)
+	}
+	
+	if (logMode)
+	{
+		p <- p + scale_y_log10()
+	}
+	
+	
+	#drawMean
+	if(drawSummary){
+		p <- p + stat_summary(aes(x=sample_name,y=fpkm,group=1),fun.data=sumFun,color="red",fill="red",alpha=0.2,size=1.1,geom="smooth")
+	}
+	
+	if (logMode)
+	{
+		p <- p + ylab(paste("FPKM +",pseudocount))
+	} else {
+		p <- p + ylab("FPKM")
+	}
+	
+	#p <- p + scale_color_brewer(palette="Set1")
+	
+	p
+}
+
+setMethod("expressionPlot",signature(object="CuffFeatureSet"),.expressionPlot)
+
 #################
 #Clustering		#
 #################

@@ -308,8 +308,25 @@ setMethod("getGene",signature(object="CuffSet"),.getGene)
 
 setMethod("getGenes",signature(object="CuffSet"),.getGenes)
 
-#Test
-#myGenes<-getGenes(a,sample(geneFeatures$gene_id,10))
+#Find similar genes
+.findSimilar<-function(object,x,n){
+	#x can be either a gene_id, gene_short_name or a vector of FPKM values (fake gene expression profile)
+	if(is.character(x)){
+		myGene<-getGene(object,x)
+		sig<-makeprobsvec(fpkmMatrix(myGene)[1,])
+	}else if(is.vector(x)){
+		sig<-makeprobsvec(x)
+	}
+	allGenes<-fpkmMatrix(object@genes)
+	allGenes<-t(makeprobs(t(allGenes)))
+	compare<-function(q){
+		JSdistVec(sig,q)
+	}
+	myDist<-apply(allGenes,MARGIN=1,compare)
+	mySimilarIds<-names(sort(myDist))[1:n]
+	mySimilarGenes<-getGenes(object,mySimilarIds)
+}
+setMethod("findSimilar",signature(object="CuffSet"),.findSimilar)
 
 ############
 #SQL access

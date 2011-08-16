@@ -8,6 +8,7 @@
 \alias{csCluster,CuffFeatureSet-method}
 \alias{diffData,CuffFeatureSet-method}
 \alias{expressionBarplot,CuffFeatureSet-method}
+\alias{expressionPlot,CuffFeatureSet-method}
 \alias{featureNames,CuffFeatureSet-method}
 \alias{features,CuffFeatureSet-method}
 \alias{fpkm,CuffFeatureSet-method}
@@ -38,6 +39,7 @@ Objects can be created by calls of the form \code{new("CuffFeatureSet", annotati
     \item{csCluster}{\code{signature(object = "CuffFeatureSet")}: ... }
     \item{diffData}{\code{signature(object = "CuffFeatureSet")}: ... }
     \item{expressionBarplot}{\code{signature(object = "CuffFeatureSet")}: ... }
+    \item{expressionPlot}{\code{signature(object = "CuffFeatureSet")}: ... }
     \item{featureNames}{\code{signature(object = "CuffFeatureSet")}: ... }
     \item{features}{\code{signature(object = "CuffFeatureSet")}: ... }
     \item{fpkm}{\code{signature(object = "CuffFeatureSet")}: ... }
