@@ -363,7 +363,7 @@ setMethod("csVolcano",signature(object="CuffFeatureSet"), .volcano)
 	if (showErrorbars)
 	{
 	    p <- p +
-		    geom_errorbar(aes(ymin=conf_lo,ymax=conf_hi,group=1))
+		    geom_errorbar(aes(ymin=conf_lo,ymax=conf_hi,group=1),width=0.5)
 	}
 	
 	if (logMode)
