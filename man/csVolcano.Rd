@@ -53,8 +53,4 @@ v<-csVolcano(genes,"hESC","Fibroblast") # Volcano plot of all genes for conditio
 v #print plot
 }
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ cummeRbund }
-\keyword{ volcano }
-\keyword{ plotting }
+

@@ -192,7 +192,11 @@ setMethod("getLevels",signature(object="CuffData"),.getLevels)
 			p<-p+geom_density(aes(x=fpkm,group=sample_name,color=sample_name,fill=sample_name),alpha=I(1/3))
 		}
 	
-	p<-p + opts(title=object@tables$mainTable)	
+	p<-p + opts(title=object@tables$mainTable)
+	
+	#Default cummeRbund colorscheme
+	p<-p + scale_fill_hue(l=50,h.start=200) + scale_color_hue(l=50,h.start=200)
+	
 	#TODO: Add label callout
 	p
 }
@@ -272,6 +276,10 @@ setMethod("csVolcano",signature(object="CuffData"), .volcano)
 		p<-p+geom_boxplot(aes(x=sample_name,y=fpkm,fill=sample_name),alpha=I(1/3),size=0.3)
 	}
 	p<- p + opts(axis.text.x=theme_text(angle=-90, hjust=0))
+	
+	#Default cummeRbund colorscheme
+	p<-p + scale_fill_hue(l=50,h.start=200)
+	
 	p
 }
 

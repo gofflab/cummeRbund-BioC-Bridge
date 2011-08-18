@@ -123,7 +123,10 @@ setMethod("fpkmMatrix",signature(object="CuffFeature"),.fpkmMatrix)
 	
 	
 	p <- p + opts(legend.position="none")
-	p <- p + scale_fill_brewer(palette="Set1")
+	
+	#Default cummeRbund colorscheme
+	p<-p + scale_fill_hue(l=50,h.start=200)
+	
 	p
 }
 
@@ -167,7 +170,8 @@ setMethod("expressionBarplot",signature(object="CuffFeature"),.barplot)
         p <- p + ylab("FPKM")
     }
 	
-	p <- p + scale_color_brewer(palette="Set1")
+	#Default cummeRbund colorscheme
+	p<-p + scale_fill_hue(l=50,h.start=200) + scale_color_hue(l=50,h.start=200)
 	
 	p
 }

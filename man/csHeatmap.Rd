@@ -69,5 +69,4 @@ None
 	csHeatmap(sampleGeneSet)
 }
 
-\keyword{cummeRbund}
 \keyword{heatmap}

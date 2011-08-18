@@ -57,6 +57,3 @@ None
 	d #Render plot
 	}
 }
-\keyword{ cummeRbund }
-\keyword{ density }
-\keyword{ plotting }

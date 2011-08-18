@@ -334,6 +334,10 @@ setMethod("csScatter",signature(object="CuffFeatureSet"), .scatter)
 	
 	#Set axis limits
 	p<- p + scale_x_continuous(limits=xlimits)
+	
+	#Default cummeRbund colorscheme
+	p<-p + scale_color_hue(l=50,h.start=200)
+	
 	p
 }
 
@@ -389,7 +393,10 @@ setMethod("csVolcano",signature(object="CuffFeatureSet"), .volcano)
     }
 	
 	p <- p + opts(legend.position = "none")
-	p <- p + scale_fill_hue(c = 50, l = 70, h=c(30, 300))
+	
+	#Default cummeRbund colorscheme
+	p<-p + scale_fill_hue(l=50,h.start=200) + scale_color_hue(l=50,h.start=200)
+	
 	p
 	
 }
@@ -452,6 +459,10 @@ setMethod("expressionPlot",signature(object="CuffFeatureSet"),.expressionPlot)
 	m.melt<-melt(m,id.vars=c("ids","cluster"))
 	c<-ggplot(m.melt)
 	c<-c+geom_line(aes(x=variable,y=value,color=cluster,group=ids)) + facet_wrap('cluster',scales='free')
+	
+	#Default cummeRbund colorscheme
+	c<-c + scale_color_hue(l=50,h.start=200)
+	
 	c
 }
 
