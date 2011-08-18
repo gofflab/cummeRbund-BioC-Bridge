@@ -47,6 +47,20 @@ options(width=65)
 
 \tableofcontents
 
+\section{Requirements}
+\begin{itemize}
+	\item Cufflinks $\ge$ v1.1.0 
+	\item R $\ge$ v2.7.0
+	\item Packages:
+	\begin{itemize}
+		\item \Rpackage{RSQLite}
+		\item \Rpackage{ggplot2}
+		\item \Rpackage{reshape}
+		\item \Rpackage{plyr}
+	\end{itemize}
+\end{itemize}
+	
+
 \section{Introduction}
 	\Rpackage{cummeRbund} is a visualization package for Cufflinks high-throughput sequencing data. The base class, \Rclass{cuffSet} 
 	is a 'pointer' to cufflinks data that are stored out-of-memory in a sqlite database.
@@ -144,16 +158,11 @@ dens<-csDensity(cuff@genes)
 dens
 @
 
-\begin{figure}[ht]
-\begin{center}
+
 <<label=global_plots_dens,fig=TRUE,echo=FALSE>>=
 <<global_plots_1>>
 print(dens)
 @
-
-\end{center}
-\caption{Density plot per sample of cufflinks output FPKM values.}
-\end{figure}
 
 Boxplots can be visualized using the \Rmethod{csBoxplot} method (Figure 2).
 <<global_plots_2,include=FALSE>>=
@@ -161,16 +170,11 @@ b<-csBoxplot(cuff@genes)
 b
 @
 
-\begin{figure}[ht]
-\begin{center}
+
 <<label=global_plots_box,fig=TRUE,echo=FALSE>>=
 <<global_plots_2>>
 print(b)
 @
-
-\end{center}
-\caption{Box plot of FPKM values from cufflinks output.}
-\end{figure}
 
 Pairwise comparisons can be made by using \Rmethod{csScatter}. You must specify the sample names to use for the $x$ and $y$ axes:
 <<global_plots_3,include=FALSE>>=
@@ -178,16 +182,10 @@ s<-csScatter(cuff@genes,"hESC","Fibroblasts",smooth=T)
 s
 @
 
-\begin{figure}[ht]
-\begin{center}
 <<label=global_plots_scatter,fig=TRUE,echo=FALSE>>=
 <<global_plots_3>>
 print(s)
 @
-
-\end{center}
-\caption{Scatter plot comparing the FPKM values of two samples from cufflinks output.}
-\end{figure}
 
 Volcano plots are also available for the \Rclass{CuffData} objects. Again, you must specify the comparisons by sample name.
 <<global_plots_4,include=FALSE>>=
@@ -195,16 +193,10 @@ v<-csVolcano(cuff@genes,"hESC","Fibroblasts")
 v
 @
 
-\begin{figure}[ht]
-\begin{center}
 <<label=global_plots_volcano,fig=TRUE,echo=FALSE>>=
 <<global_plots_4>>
 print(v)
 @
-
-\end{center}
-\caption{Volcano plot of ln fold change vs significance.}
-\end{figure}
 
 \clearpage
 
@@ -244,13 +236,13 @@ Since the cufflinks is a SQLite database backend, if you are familiar with SQL a
 
 \section{Creating Gene Sets}
 Gene Sets (stored in a \Rclass{CuffGeneSet} object) can be created using the \Rmethod{getGenes} method on a CuffSet object.
-You must first create a vector of 'gene\_ids' to identify the genes you wish to select:
+You must first create a vector of 'gene\_id' or 'gene\_short\_name' values to identify the genes you wish to select:
 
 <<create_geneset_1>>=
 data(sampleData)
 myGeneIds<-sampleIDs
 myGeneIds
-myGenes<-sampleGeneSet
+myGenes<-getGenes(cuff,myGeneIds)
 myGenes
 @
 The same \Rmethod{fpkm}, \Rmethod{fpkmMatrix}, \Rmethod{features}, \Rmethod{diffData}, \Rmethod{samples}, and \Rmethod{featureNames} are available for instances of the \Rmethod{CuffGeneSet} class.
@@ -264,46 +256,30 @@ h<-csHeatmap(myGenes,cluster='both')
 h
 @
 
-\begin{figure}[ht]
-\begin{center}
 <<label=geneset_plots_heatmap,fig=TRUE,echo=FALSE>>=
 <<geneset_plots_1>>
 print(h)
 @
-\end{center}
-\caption{Heatmap of FPKM values for a random sample of 20 genes.}
-\end{figure}
 
 <<geneset_plots_2,include=FALSE>>=
 s<-csScatter(myGenes,"Fibroblasts","hESC",smooth=T)
 s
 @
 
-\begin{figure}[ht]
-\begin{center}
 <<label=geneset_plots_scatter,fig=TRUE,echo=FALSE>>=
 <<geneset_plots_2>>
 print(s)
 @
-\end{center}
-\caption{Scatterplot of FPKM values for a random sample of 20 genes between Fibroblasts and H1\_hESC.}
-\end{figure}
-
 
 <<geneset_plots_3,include=FALSE>>=
 v<-csVolcano(myGenes,cluster='both')
 v
 @
 
-\begin{figure}[ht]
-\begin{center}
 <<label=geneset_plots_volcano,fig=TRUE,echo=FALSE>>=
 <<geneset_plots_3>>
 print(v)
 @
-\end{center}
-\caption{Volcano plot of FPKM vs significance values for a random sample of 20 genes between 2 conditions.}
-\end{figure}
 
 Similar plots can be made for all sub-level features of a \Rclass{CuffGeneSet} class by specifiying which slot you would like to plot (eg. \Rfunarg{@isoforms},\Rfunarg{@TSS},\Rfunarg{@CDS}).
 
@@ -312,15 +288,10 @@ ih<-csHeatmap(myGenes@isoforms,cluster='both',labRow=F)
 ih
 @
 
-\begin{figure}[ht]
-\begin{center}
 <<label=geneset_plots_isoform_heatmap,fig=TRUE,echo=FALSE>>=
 <<geneset_plots_4>>
 print(ih)
 @
-\end{center}
-\caption{Heatmap of FPKM values of isoforms for a random sample of 20 genes.}
-\end{figure}
 
 Rudimentary k-means clustering is implemented as well.
 
@@ -329,15 +300,10 @@ ic<-csCluster(myGenes,k=4)
 ic
 @
 
-\begin{figure}[ht]
-\begin{center}
 <<label=geneset_plots_cluster,fig=TRUE,echo=FALSE>>=
 <<geneset_plots_5>>
 print(ic)
 @
-\end{center}
-\caption{Basic k-means clustering of a CuffGeneSet set of 20 random genes.}
-\end{figure}
 
 \clearpage
 
@@ -357,45 +323,67 @@ gl<-expressionPlot(myGene)
 gl
 @
 
-\begin{figure}[ht]
-\begin{center}
 <<label=gene_plots_line,fig=TRUE,echo=FALSE>>=
 <<gene_plots_1>>
 print(gl)
 @
-\end{center}
-\caption{Line plot of FPKM expression values for a given gene}
-\end{figure}
 
 <<gene_plots_2,include=FALSE>>=
 gb<-expressionBarplot(myGene)
 gb
 @
 
-\begin{figure}[ht]
-\begin{center}
 <<label=gene_plots_bar,fig=TRUE,echo=FALSE>>=
 <<gene_plots_2>>
 print(gb)
 @
-\end{center}
-\caption{Bar plot of FPKM expression values for a given gene}
-\end{figure}
 
 <<gene_plots_3,include=FALSE>>=
 igb<-expressionBarplot(myGene@isoforms)
 igb
 @
 
-\begin{figure}[ht]
-\begin{center}
 <<label=gene_plots_bar_isoforms,fig=TRUE,echo=FALSE>>=
 <<gene_plots_3>>
 print(igb)
 @
-\end{center}
-\caption{Bar plot of FPKM expression values for all isoforms of a given gene}
-\end{figure}
+
+\clearpage
+
+\section{Data Exploration}
+The cummeRbund package is more than just a visualization tool as well.  We are working to implement several different means of data exploration from gene and condition clustering, finding features with similar expression profiles, as well as incorporating Gene Ontology analysis.
+
+\subsection{Finding similar genes}
+One common question in large-scale gene expression analyses is 'How can I find genes with similar expression profiles to gene $x$?'. We have implemented a method, \Rmethod{findSimilar} to allow you to identify a fixed number of the most similar genes to a given gene of interest.
+For example, if you wanted to find the 20 genes most similar to "PINK1", you could do the following:
+
+<<similar_1, include=FALSE>>=
+mySimilar<-findSimilar(cuff,"PINK1",n=20)
+mySimilar.expression<-expressionPlot(mySimilar,logMode=T,showErrorbars=F)
+@
+
+<<label=similar_plots_1,fig=TRUE,echo=FALSE>>=
+<<similar_1>>
+print(mySimilar.expression)
+@
+
+You are also able to provide your own expression profile in lieu of a 'gene\_id'.  The vector provided must match the order and length of \Rmethod{samples()}.
+
+<<similar_2, include=FALSE>>=
+myProfile<-c(500,0,400)
+mySimilar2<-findSimilar(cuff,myProfile,n=10)
+mySimilar2.expression<-expressionPlot(mySimilar2,logMode=T,showErrorbars=F)
+@
+
+<<label=similar_plots_2,fig=TRUE,echo=FALSE>>=
+<<similar_2>>
+print(mySimilar2.expression)
+@
+
+\Rmethod{findSimilar()} uses the Jensen-Shannon distance between the probability distributions of each gene across conditions to determine the similarity.  
+We have found this to be a more robust way to determine distance between genes using the high dynamic range of FPKM data. Future versions may allow for other dissimilarity measures to be used instead.
+
+\clearpage
 
 \section{Miscellaneous}
 \begin{itemize}
@@ -408,8 +396,11 @@ print(igb)
 \clearpage
 
 \section{Session info}
+<<label=close_connection,echo=FALSE>>=
+end<-sqliteCloseConnection(cuff@DB)
+@
+
 <<session>>=
-sqliteCloseConnection(cuff@DB)
 sessionInfo()
 @
 
