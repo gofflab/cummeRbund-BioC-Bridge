@@ -51,6 +51,3 @@ Need to implement logMode and features for this plotting method.
 	expressionBarplot(PINK1@isoforms) #Barplot of PINK1 FPKM values faceted by isoforms
 }
 
-\keyword{ cummeRbund }
-\keyword{ plotting }
-\keyword{ barplot }

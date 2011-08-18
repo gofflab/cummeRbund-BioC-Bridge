@@ -43,7 +43,4 @@ None
 	samples(a@gene)
 	}
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ cummeRbund }
-\keyword{ accessor }% __ONLY ONE__ keyword per line
+

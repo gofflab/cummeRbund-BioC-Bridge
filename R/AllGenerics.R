@@ -20,10 +20,10 @@
 #setGeneric("diffData<-",     function(object, value) standardGeneric("diffData<-"))
 
 #New for cummeRbund 0.1.2
-setGeneric("loadGenes",function(fpkmFile,..) standardGeneric("loadGenes"))
-setGeneric("loadIsoforms",function(fpkmFile,..) standardGeneric("loadIsoforms"))
-setGeneric("loadTSS",function(fpkmFile,..) standardGeneric("loadTSS"))
-setGeneric("loadCDS",function(fpkmFile,..) standardGeneric("loadCDS"))
+#setGeneric("loadGenes",function(fpkmFile,..) standardGeneric("loadGenes"))
+#setGeneric("loadIsoforms",function(fpkmFile,..) standardGeneric("loadIsoforms"))
+#setGeneric("loadTSS",function(fpkmFile,..) standardGeneric("loadTSS"))
+#setGeneric("loadCDS",function(fpkmFile,..) standardGeneric("loadCDS"))
 
 ##################
 #CuffSet

@@ -40,6 +40,3 @@ None
 	fpkm(PINK1)
 }
 
-
-\keyword{ cummeRbund }
-\keyword{ accessor }

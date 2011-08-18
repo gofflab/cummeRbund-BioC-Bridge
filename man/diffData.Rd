@@ -54,5 +54,3 @@ None
 	diff<-diffData(sampleGeneSet) #returns a dataframe of differential expression data from sample CuffGeneSet object.
 }
 
-\keyword{ cummeRbund }
-\keyword{ differential expression }% __ONLY ONE__ keyword per line

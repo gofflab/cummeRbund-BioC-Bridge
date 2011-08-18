@@ -39,7 +39,6 @@ None
 }
 \examples{
 	\dontrun{
-	library(cummeRbund)
 	a<-readCufflinks()
 	mySimilarGenes<-findSimilar(a,"PINK1",10)
 	}

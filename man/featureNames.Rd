@@ -36,6 +36,3 @@ None
 data(sampleData)
 featureNames(sampleGeneSet)
 }
-
-\keyword{ cummeRbund }
-\keyword{ accessor }

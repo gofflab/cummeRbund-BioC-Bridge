@@ -36,6 +36,3 @@ None
 	data(sampleData)
 	fpkmMatrix(sampleGeneSet)
 }
-
-\keyword{ cummeRbund }
-\keyword{ accessor }
