@@ -262,6 +262,10 @@ setMethod("csScatter",signature(object="CuffData"), .scatter)
 	#Add title and return
 	p<- p + opts(title=paste(object@tables$mainTable,": ",s2,"/",s1,sep=""))
 	p<- p + scale_colour_manual(values=c("red", "steelblue"))
+	
+	p <- p + xlab(bquote(paste(log[2],"(fold change)",sep=""))) + 
+	    ylab(bquote(paste(-log[10],"(p value)",sep="")))
+	
 	p
 }
 
