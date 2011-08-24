@@ -45,6 +45,7 @@ loadGenes<-function(fpkmFile,
 	########
 	#Handle Sample Names
 	########
+	begin<-dbSendQuery(dbConn,"BEGIN;")
 	
 	#Check that samples table is populated
 	write("Checking samples table...",stderr())
@@ -135,7 +136,7 @@ loadGenes<-function(fpkmFile,
 	#########
 	#Handle Feature Data (this will actually be done on CuffData objects instead...but I may include something here as well)
 	#########
-	
+	end<-dbSendQuery(dbConn,"END;")
 }
 	
 #Isoforms
@@ -173,6 +174,7 @@ loadIsoforms<-function(fpkmFile,
 	########
 	#Handle Sample Names
 	########
+	begin<-dbSendQuery(dbConn,"BEGIN;")
 	
 	#Check that samples table is populated
 	write("Checking samples table...",stderr())
@@ -249,7 +251,7 @@ loadIsoforms<-function(fpkmFile,
 		diffCols<-c(1,5:14)
 		dbWriteTable(dbConn,'isoformExpDiffData',diff[,diffCols],row.names=F,append=T)
 	}
-
+	end<-dbSendQuery(dbConn,"END;")
 }
 
 #TSS groups
@@ -289,6 +291,7 @@ loadTSS<-function(fpkmFile,
 	########
 	#Handle Sample Names
 	########
+	begin<-dbSendQuery(dbConn,"BEGIN;")
 	
 	#Check that samples table is populated
 	write("Checking samples table...",stderr())
@@ -381,7 +384,7 @@ loadTSS<-function(fpkmFile,
 		dbWriteTable(dbConn,'splicingDiffData',splicing[,splicingCols],row.names=F,append=T)
 		
 	}
-	
+	end<-dbSendQuery(dbConn,"END;")
 }
 
 #CDS
@@ -421,6 +424,8 @@ loadCDS<-function(fpkmFile,
 	########
 	#Handle Sample Names
 	########
+	begin<-dbSendQuery(dbConn,"BEGIN;")
+	
 	
 	#Check that samples table is populated
 	write("Checking samples table...",stderr())
@@ -513,7 +518,7 @@ loadCDS<-function(fpkmFile,
 		dbWriteTable(dbConn,'CDSDiffData',CDS[,CDSCols],row.names=F,append=T)
 		
 	}
-	
+	end<-dbSendQuery(dbConn,"END;")
 }
 
 ########################
