@@ -45,7 +45,7 @@ loadGenes<-function(fpkmFile,
 	########
 	#Handle Sample Names
 	########
-	begin<-dbSendQuery(dbConn,"BEGIN;")
+
 	
 	#Check that samples table is populated
 	write("Checking samples table...",stderr())
@@ -68,7 +68,6 @@ loadGenes<-function(fpkmFile,
 	genesTable<-full[,c(1:3,5,7:9)]
 	write("Writing genes table",stderr())
 	dbWriteTable(dbConn,'genes',genesTable,row.names=F,append=T)
-	
 	######
 	#Populate geneData table
 	######
@@ -136,7 +135,7 @@ loadGenes<-function(fpkmFile,
 	#########
 	#Handle Feature Data (this will actually be done on CuffData objects instead...but I may include something here as well)
 	#########
-	end<-dbSendQuery(dbConn,"END;")
+	
 }
 	
 #Isoforms
@@ -174,7 +173,7 @@ loadIsoforms<-function(fpkmFile,
 	########
 	#Handle Sample Names
 	########
-	begin<-dbSendQuery(dbConn,"BEGIN;")
+	
 	
 	#Check that samples table is populated
 	write("Checking samples table...",stderr())
@@ -251,7 +250,7 @@ loadIsoforms<-function(fpkmFile,
 		diffCols<-c(1,5:14)
 		dbWriteTable(dbConn,'isoformExpDiffData',diff[,diffCols],row.names=F,append=T)
 	}
-	end<-dbSendQuery(dbConn,"END;")
+	
 }
 
 #TSS groups
@@ -291,7 +290,7 @@ loadTSS<-function(fpkmFile,
 	########
 	#Handle Sample Names
 	########
-	begin<-dbSendQuery(dbConn,"BEGIN;")
+	
 	
 	#Check that samples table is populated
 	write("Checking samples table...",stderr())
@@ -384,7 +383,7 @@ loadTSS<-function(fpkmFile,
 		dbWriteTable(dbConn,'splicingDiffData',splicing[,splicingCols],row.names=F,append=T)
 		
 	}
-	end<-dbSendQuery(dbConn,"END;")
+	
 }
 
 #CDS
@@ -424,7 +423,7 @@ loadCDS<-function(fpkmFile,
 	########
 	#Handle Sample Names
 	########
-	begin<-dbSendQuery(dbConn,"BEGIN;")
+	
 	
 	
 	#Check that samples table is populated
@@ -518,7 +517,7 @@ loadCDS<-function(fpkmFile,
 		dbWriteTable(dbConn,'CDSDiffData',CDS[,CDSCols],row.names=F,append=T)
 		
 	}
-	end<-dbSendQuery(dbConn,"END;")
+	
 }
 
 ########################
@@ -989,10 +988,12 @@ readCufflinks<-function(dir = getwd(),
 		#if not, create it
 		dbConn<-createDB(dbFile)
 		#populate DB
+				
 		loadGenes(geneFPKM,geneDiff,promoterFile,dbConn)
 		loadIsoforms(isoformFPKM,isoformDiff,dbConn)
 		loadTSS(TSSFPKM,TSSDiff,splicingFile,dbConn)
 		loadCDS(CDSFPKM,CDSExpDiff,CDSDiff,dbConn)
+		
 		#load Distribution Tests
 		#loadDistTests(promoterFile,splicingFile,CDSDiff)
 		

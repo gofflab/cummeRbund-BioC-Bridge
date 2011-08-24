@@ -165,13 +165,16 @@ setMethod("expressionBarplot",signature(object="CuffFeature"),.barplot)
 	
 	if (logMode)
     {
-        p <- p + ylab(paste("FPKM +",pseudocount))
+        p <- p + ylab(paste("Log10 FPKM + ",pseudocount))
     } else {
         p <- p + ylab("FPKM")
     }
 	
 	#Default cummeRbund colorscheme
 	p<-p + scale_fill_hue(l=50,h.start=200) + scale_color_hue(l=50,h.start=200)
+	
+	#Add Title
+	p<-p + opts(title=object@annotation$gene_short_name,axis.text.x=theme_text(hjust=0,angle=-90))
 	
 	p
 }

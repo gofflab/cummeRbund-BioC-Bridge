@@ -230,7 +230,14 @@ head(gene.matrix)
 @
 
 \subsection{Writing your own SQL accessors}
-Since the cufflinks is a SQLite database backend, if you are familiar with SQL and/or RSQLite query construction, you can simply design your own SQL queries to access the data that you are after. PUT DATABASE SCHEMA HERE...
+Since the cufflinks is a SQLite database backend, if you are familiar with SQL and/or RSQLite query construction, you can simply design your own SQL queries to access the data that you are after. 
+
+\begin{figure}[h]
+\centering
+
+\includegraphics[angle=90, height=\textheight]{cuffData_schema.pdf}
+
+\end{figure}
 
 \clearpage 
 
