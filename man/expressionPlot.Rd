@@ -1,53 +1,59 @@
 \name{expressionPlot}
 \alias{expressionPlot}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
-expressionPlot
+Expression Plot
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+A line plot (optionally with confidence intervals) detailing FPKM expression levels across conditions for a given gene(s) or feature(s)
 }
 \usage{
-expressionPlot(object, ...)
+expressionPlot(object, logMode=FALSE, pseudocount=1.0, drawSummary=FALSE, sumFun=mean_cl_boot, showErrorbars=TRUE, ...)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{object}{
-%%     ~~Describe \code{object} here~~
+An object of class ('CuffFeature' or 'CuffGene')
+}
+  \item{logMode}{
+A logical value to draw y-axis (FPKM) on log-10 scale. Default = FALSE.
+}
+  \item{pseudocount}{
+A numeric value added to FPKM to avoid errors on log-10 transformation.
+}
+  \item{drawSummary}{
+A logical valuie. Draws a 'summary' line with mean FPKM values for each condition.
+}
+  \item{sumFun}{
+Function used to determine values for summary line. Default = mean_cl_boot
+}
+  \item{showErrorbars}{
+A logical value whether or not to draw error bars.
 }
   \item{\dots}{
-%%     ~~Describe \code{\dots} here~~
+Additional arguments
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+None
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+A ggplot2 plot object
 }
 \references{
-%% ~put references to the literature/web site here ~
+None
 }
 \author{
-%%  ~~who you are~~
+Loyal A. Goff
 }
 \note{
-%%  ~~further notes~~
+None
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
 \examples{
-
+	data(sampleData)
+	PINK1 # sample CuffFeature object
+	expressionPlot(PINK1) #Line plot of PINK1 FPKM values
+	expressionPlot(PINK1@isoforms) #Line plot of PINK1 FPKM values faceted by isoforms
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+

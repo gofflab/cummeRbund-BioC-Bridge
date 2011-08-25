@@ -1,19 +1,79 @@
-# TODO: Add comment
+# AllClasses.R
 # 
 # Author: lgoff
 ###############################################################################
 
-#diffData Class
-setClassUnion("DiffData",c("list","environment"))
+#TODO: I get the distinct feeling that these two should be nested environments, but I don't really know what that means.
 
-#CuffSet Class (extends eSet) - Handles "fpkm_tracking" output files from cufflinks
-setClass("cuffSet",
-		representation(diffData = "DiffData"),
-		contains = "eSet",
-		prototype = prototype(
-				diffData=list(),
-				new("VersionedBiobase",
-						versions=c(classVersion("eSet"),cuffSet="0.1")
+#CuffData Class is a 'pointer' container to a group of features in a cufflinks dataset
+setClass("CuffData",
+		representation(DB = "SQLiteConnection",
+						tables = "list",
+						filters = "list",
+						type = "character",
+						idField = "character"
+						)
+		)
+
+#CuffDist Class is a 'pointer' container to one of the distribution test data sets (promoters.diff, splicing.diff, cds.diff)
+setClass("CuffDist",
+		representation(DB = "SQLiteConnection",
+						table = "character",
+						type = "character",
+						testId = "character"
+						)
+		)
+		
+#CuffSet Class is a 'pointer' container to a group of CuffData elements in a cufflinks dataset
+setClass("CuffSet",
+		representation(DB = "SQLiteConnection",
+						conditions = "data.frame",
+						genes = "CuffData",
+						isoforms = "CuffData",
+						TSS = "CuffData",
+						CDS = "CuffData",
+						promoters = "CuffDist",
+						splicing = "CuffDist",
+						relCDS = "CuffDist"
+						)
+
+)
+
+#CuffFeature is a 'data' container for all information linked to a single 'idField' (cufflinks class agnostic)
+setClass("CuffFeature",
+		representation(annotation="data.frame",
+						fpkm="data.frame",
+						diff="data.frame"
 				)
 		)
+
+#CuffGene is a 'data' container for all information linked to a single 'gene_id'
+setClass("CuffGene",
+		representation(id = "character",
+						isoforms = "CuffFeature",
+						TSS = "CuffFeature",
+						CDS = "CuffFeature"),
+		contains="CuffFeature"
 )
+
+
+#CuffFeatureSet is a 'data' container for all information from a set of features
+#This allows for plotting of gene set information
+setClass("CuffFeatureSet",
+		representation(annotation="data.frame",
+				fpkm="data.frame",
+				diff="data.frame"
+			)
+)
+
+#CuffGene is a 'data' container for all information from a set of genes
+#This allows for plotting of gene set information
+setClass("CuffGeneSet",
+		representation(ids = "character",
+				isoforms = "CuffFeatureSet",
+				TSS = "CuffFeatureSet",
+				CDS= "CuffFeatureSet"),
+		contains = "CuffFeatureSet"
+)
+
+

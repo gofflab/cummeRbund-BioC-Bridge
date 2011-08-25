@@ -1,0 +1,73 @@
+#methods-CuffDist.R
+#
+#
+#
+#
+####################
+
+##################
+#Initialize
+##################
+setMethod("initialize","CuffDist",
+			function(.Object,
+					DB,
+					table="",
+					type = c("promoter","splicing","relCDS"),
+					testId = c("gene_id","tss_group_id"),
+					... ){
+				.Object<-callNextMethod(.Object,
+						DB = DB,
+						table = table,
+						type = type,
+						testId = testId,
+						...)				
+		}
+)
+
+setValidity("CuffDist",function(object){
+		TRUE
+		}
+)			
+
+################
+#Class Methods
+################
+setMethod("show","CuffDist",
+		function(object){
+			size<-dim(object)
+			cat(class(object), "instance with:\n\t",size[1]," ",object@type," records\n")
+		}
+)
+
+setMethod("dim","CuffDist",
+		function(x){
+			countQuery<-paste("SELECT COUNT(",x@testId,") as n FROM ",x@table)
+			nIds<-dbGetQuery(x@DB,countQuery)
+			c(nIds$n)
+		}
+)
+
+###################
+#Accessors
+###################
+.values<-function(object){
+	valueQuery<-paste("SELECT * FROM ",object@table,sep="")
+	dbGetQuery(object@DB, valueQuery)
+}
+
+setMethod("distValues","CuffDist",.values)
+
+##################
+#Setters
+##################
+
+
+##################
+#Subsetting
+##################
+
+
+##################
+#Plotting
+##################
+

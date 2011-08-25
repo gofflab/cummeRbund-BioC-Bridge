@@ -1,0 +1,1026 @@
+# TODO: Add comment
+# 
+# Author: lgoff
+###############################################################################
+#library(RSQLite)
+#library(reshape)
+#drv <- dbDriver("SQLite")
+#####################
+#File Archetype parsing
+#####################
+#Genes
+loadGenes<-function(fpkmFile,
+		diffFile,
+		promoterFile,
+		dbConn,
+		path,
+		#Arguments to read.* methods
+		fpkmArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
+		diffArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
+		promoterArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
+		sep="\t",
+		na.string = "-",
+		header = TRUE,
+		quote = "",
+		stringsAsFactors = FALSE,
+		row.names=NULL,
+		...) {
+
+	#Error Trapping
+	if (missing(fpkmFile))
+		stop("fpkmFile cannot be missing!")
+	
+	if (missing(dbConn))
+		stop("Must provide a dbConn connection")
+	
+	#TODO test dbConn connection and database structure
+	
+	idCols = c(1:9)
+
+	#Read primary file
+	write(paste("Reading ",fpkmFile,sep=""),stderr())
+	fpkmArgs$file = fpkmFile
+	full = as.data.frame(do.call(read.table,fpkmArgs))
+	
+	########
+	#Handle Sample Names
+	########
+
+	
+	#Check that samples table is populated
+	write("Checking samples table...",stderr())
+	samples<-getSamplesFromColnames(full)
+	dbSamples<-dbReadTable(dbConn,"samples")
+	if (dim(dbSamples)[1]>0) {
+		if (all(samples %in% dbSamples$sample_name)){
+			write ("OK!",stderr())
+		}else{
+			stop("Sample mismatch!")
+		}
+	}else{
+		write("Populating samples table...",stderr())
+		populateSampleTable(samples,dbConn)
+	}
+	
+	######
+	#Populate genes table
+	######
+	genesTable<-full[,c(1:3,5,7:9)]
+	write("Writing genes table",stderr())
+	dbWriteTable(dbConn,'genes',genesTable,row.names=F,append=T)
+	######
+	#Populate geneData table
+	######
+	write("Reshaping geneData table",stderr())
+	genemelt<-melt(full,id.vars=c("tracking_id"),measure.vars=-idCols,variable_name="sample_name")
+	
+	#Clean up and normalize data
+	genemelt$measurement = ""
+	
+	genemelt$measurement[grepl("_FPKM$",genemelt$sample_name)] = "fpkm"
+	genemelt$measurement[grepl("_conf_lo$",genemelt$sample_name)] = "conf_lo"
+	genemelt$measurement[grepl("_conf_hi$",genemelt$sample_name)] = "conf_hi"
+	genemelt$measurement[grepl("_status$",genemelt$sample_name)] = "status"
+
+	genemelt$sample_name<-gsub("_FPKM$","",genemelt$sample_name)
+	genemelt$sample_name<-gsub("_conf_lo$","",genemelt$sample_name)
+	genemelt$sample_name<-gsub("_conf_hi$","",genemelt$sample_name)
+	genemelt$sample_name<-gsub("_status$","",genemelt$sample_name)
+	
+	#Adjust sample names with make.db.names
+	genemelt$sample_name <- make.db.names(dbConn,as.vector(genemelt$sample_name),unique=FALSE)
+	
+	#Recast
+	write("Recasting",stderr())
+	genemelt<-cast(genemelt,...~measurement)
+	
+	#Write geneData table
+	write("Writing geneData table",stderr())
+	dbWriteTable(dbConn,'geneData',as.data.frame(genemelt[,c(1:2,5,3,4,6)]),row.names=F,append=T)
+	
+	#######
+	#Handle gene_exp.diff
+	#######
+	
+	if(file.exists(diffFile)){
+		#Read diff file
+		write(paste("Reading ",diffFile,sep=""),stderr())
+		diffArgs$file = diffFile
+		diff<-as.data.frame(do.call(read.table,diffArgs))
+		
+		#Adjust sample names with make.db.names
+		diff$sample_1<-make.db.names(dbConn,as.vector(diff$sample_1),unique=FALSE)
+		diff$sample_2<-make.db.names(dbConn,as.vector(diff$sample_2),unique=FALSE)
+		
+		write("Writing geneExpDiffData table",stderr())
+		diffCols<-c(1,5:14)
+		dbWriteTable(dbConn,'geneExpDiffData',diff[,diffCols],row.names=F,append=T)
+	}
+	
+	########
+	#TODO: Handle promoters.diff
+	########
+	if(file.exists(promoterFile)){
+		#Read promoterFile
+		write(paste("Reading ",promoterFile,sep=""),stderr())
+		promoterArgs$file = promoterFile
+		promoter<-as.data.frame(do.call(read.table,promoterArgs))
+		
+		write("Writing promoterDiffData table",stderr())
+		promoterCols<-c(2,5:14)
+		dbWriteTable(dbConn,'promoterDiffData',promoter[,promoterCols],row.names=F,append=T)
+		
+	}
+	
+	#########
+	#Handle Feature Data (this will actually be done on CuffData objects instead...but I may include something here as well)
+	#########
+	
+}
+	
+#Isoforms
+loadIsoforms<-function(fpkmFile,
+		diffFile,
+		dbConn,
+		path,
+		#Arguments to read.* methods
+		fpkmArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
+		diffArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
+		sep="\t",
+		na.string = "-",
+		header = TRUE,
+		quote = "",
+		stringsAsFactors = FALSE,
+		row.names=NULL,
+		...) {
+	
+	#Error Trapping
+	if (missing(fpkmFile))
+		stop("fpkmFile cannot be missing!")
+	
+	if (missing(dbConn))
+		stop("Must provide a dbConn connection")
+	
+	#TODO test dbConn connection and database structure
+	
+	idCols = c(1:9)
+	
+	#Read primary file
+	write(paste("Reading ",fpkmFile,sep=""),stderr())
+	fpkmArgs$file = fpkmFile
+	full = as.data.frame(do.call(read.table,fpkmArgs))
+	
+	########
+	#Handle Sample Names
+	########
+	
+	
+	#Check that samples table is populated
+	write("Checking samples table...",stderr())
+	samples<-getSamplesFromColnames(full)
+	dbSamples<-dbReadTable(dbConn,"samples")
+	if (dim(dbSamples)[1]>0) {
+		if (all(samples %in% dbSamples$sample_name)){
+			write ("OK!",stderr())
+		}else{
+			stop("Sample mismatch!")
+		}
+	}else{
+		write("Populating samples table...",stderr())
+		populateSampleTable(samples,dbConn)
+	}
+	
+	######
+	#Populate genes table
+	######
+	isoformCols<-c(1,4,6,2,3,7:9)
+	isoformsTable<-full[,isoformCols]
+	
+	#This is a temporary fix until p_id is added to the 'isoforms.fpkm_tracking' file
+	isoformsTable<-cbind(isoformsTable[,1:2],data.frame(CDS_id=rep("NA",dim(isoformsTable)[1])),isoformsTable[,-c(1:2)])
+	#print (head(isoformsTable))
+	write("Writing isoforms table",stderr())
+	dbWriteTable(dbConn,'isoforms',as.data.frame(isoformsTable),row.names=F,append=T)
+	
+	######
+	#Populate geneData table
+	######
+	write("Reshaping isoformData table",stderr())
+	isoformmelt<-melt(full,id.vars=c("tracking_id"),measure.vars=-idCols,variable_name="sample_name")
+	
+	#Clean up and normalize data
+	isoformmelt$measurement = ""
+	
+	isoformmelt$measurement[grepl("_FPKM$",isoformmelt$sample_name)] = "fpkm"
+	isoformmelt$measurement[grepl("_conf_lo$",isoformmelt$sample_name)] = "conf_lo"
+	isoformmelt$measurement[grepl("_conf_hi$",isoformmelt$sample_name)] = "conf_hi"
+	isoformmelt$measurement[grepl("_status$",isoformmelt$sample_name)] = "status"
+	
+	isoformmelt$sample_name<-gsub("_FPKM$","",isoformmelt$sample_name)
+	isoformmelt$sample_name<-gsub("_conf_lo$","",isoformmelt$sample_name)
+	isoformmelt$sample_name<-gsub("_conf_hi$","",isoformmelt$sample_name)
+	isoformmelt$sample_name<-gsub("_status$","",isoformmelt$sample_name)
+	
+	#Adjust sample names with make.db.names
+	isoformmelt$sample_name <- make.db.names(dbConn,as.vector(isoformmelt$sample_name),unique=FALSE)
+	
+	#Recast
+	write("Recasting",stderr())
+	isoformmelt<-cast(isoformmelt,...~measurement)
+	
+	#Write geneData table
+	write("Writing isoformData table",stderr())
+	dbWriteTable(dbConn,'isoformData',as.data.frame(isoformmelt[,c(1:2,5,3,4,6)]),row.names=F,append=T)
+	
+	#######
+	#Handle isoform_exp.diff
+	#######
+	
+	if(file.exists(diffFile)){
+		#Read diff file
+		write(paste("Reading ",diffFile,sep=""),stderr())
+		diffArgs$file = diffFile
+		diff<-as.data.frame(do.call(read.table,diffArgs))
+		
+		#Adjust sample names with make.db.names
+		diff$sample_1<-make.db.names(dbConn,as.vector(diff$sample_1),unique=FALSE)
+		diff$sample_2<-make.db.names(dbConn,as.vector(diff$sample_2),unique=FALSE)
+		
+		write("Writing isoformExpDiffData table",stderr())
+		diffCols<-c(1,5:14)
+		dbWriteTable(dbConn,'isoformExpDiffData',diff[,diffCols],row.names=F,append=T)
+	}
+	
+}
+
+#TSS groups
+loadTSS<-function(fpkmFile,
+		diffFile,
+		splicingFile,
+		dbConn,
+		path,
+		#Arguments to read.* methods
+		fpkmArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
+		diffArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
+		splicingArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
+		sep="\t",
+		na.string = "-",
+		header = TRUE,
+		quote = "",
+		stringsAsFactors = FALSE,
+		row.names=NULL,
+		...) {
+	
+	#Error Trapping
+	if (missing(fpkmFile))
+		stop("fpkmFile cannot be missing!")
+	
+	if (missing(dbConn))
+		stop("Must provide a dbConn connection")
+	
+	#TODO test dbConn connection and database structure
+	
+	idCols = c(1:9)
+	
+	#Read primary file
+	write(paste("Reading ",fpkmFile,sep=""),stderr())
+	fpkmArgs$file = fpkmFile
+	full = as.data.frame(do.call(read.table,fpkmArgs))
+	
+	########
+	#Handle Sample Names
+	########
+	
+	
+	#Check that samples table is populated
+	write("Checking samples table...",stderr())
+	samples<-getSamplesFromColnames(full)
+	dbSamples<-dbReadTable(dbConn,"samples")
+	if (dim(dbSamples)[1]>0) {
+		if (all(samples %in% dbSamples$sample_name)){
+			write ("OK!",stderr())
+		}else{
+			stop("Sample mismatch!")
+		}
+	}else{
+		write("Populating samples table...",stderr())
+		populateSampleTable(samples,dbConn)
+	}
+	
+	######
+	#Populate genes table
+	######
+	tssTable<-full[,c(1:4,7:9)]
+	write("Writing TSS table",stderr())
+	dbWriteTable(dbConn,'TSS',tssTable,row.names=F,append=T)
+	
+	if (nrow(tssTable) == 0)
+	{
+	    write("TSS FPKM tracking file was empty.",stderr())
+	    return()
+	}
+	
+	######
+	#Populate geneData table
+	######
+	write("Reshaping TSSData table",stderr())
+	tssmelt<-melt(full,id.vars=c("tracking_id"),measure.vars=-idCols,variable_name="sample_name")
+	
+	#Clean up and normalize data
+	tssmelt$measurement = ""
+	
+	tssmelt$measurement[grepl("_FPKM$",tssmelt$sample_name)] = "fpkm"
+	tssmelt$measurement[grepl("_conf_lo$",tssmelt$sample_name)] = "conf_lo"
+	tssmelt$measurement[grepl("_conf_hi$",tssmelt$sample_name)] = "conf_hi"
+	tssmelt$measurement[grepl("_status$",tssmelt$sample_name)] = "status"
+	
+	tssmelt$sample_name<-gsub("_FPKM$","",tssmelt$sample_name)
+	tssmelt$sample_name<-gsub("_conf_lo$","",tssmelt$sample_name)
+	tssmelt$sample_name<-gsub("_conf_hi$","",tssmelt$sample_name)
+	tssmelt$sample_name<-gsub("_status$","",tssmelt$sample_name)
+	
+	#Adjust sample names with make.db.names
+	tssmelt$sample_name <- make.db.names(dbConn,as.vector(tssmelt$sample_name),unique=FALSE)
+	
+	#Recast
+	write("Recasting",stderr())
+	tssmelt<-cast(tssmelt,...~measurement)
+	
+	#Write geneData table
+	write("Writing TSSData table",stderr())
+	dbWriteTable(dbConn,'TSSData',as.data.frame(tssmelt[,c(1:2,5,3,4,6)]),row.names=F,append=T)
+	
+	#######
+	#Handle tss_groups_exp.diff
+	#######
+	
+	if(file.exists(diffFile)){
+		#Read diff file
+		write(paste("Reading ",diffFile,sep=""),stderr())
+		diffArgs$file = diffFile
+		diff<-as.data.frame(do.call(read.table,diffArgs))
+		
+		#Adjust sample names with make.db.names
+		diff$sample_1<-make.db.names(dbConn,as.vector(diff$sample_1),unique=FALSE)
+		diff$sample_2<-make.db.names(dbConn,as.vector(diff$sample_2),unique=FALSE)
+		
+		write("Writing TSSExpDiffData table",stderr())
+		diffCols<-c(1,5:14)
+		dbWriteTable(dbConn,'TSSExpDiffData',diff[,diffCols],row.names=F,append=T)
+	}
+	
+	#########
+	#TODO: Handle splicing.diff
+	########
+	if(file.exists(splicingFile)){
+		#Read promoterFile
+		write(paste("Reading ",splicingFile,sep=""),stderr())
+		splicingArgs$file = splicingFile
+		splicing<-as.data.frame(do.call(read.table,splicingArgs))
+		
+		write("Writing splicingDiffData table",stderr())
+		splicingCols<-c(1:2,5:14)
+		dbWriteTable(dbConn,'splicingDiffData',splicing[,splicingCols],row.names=F,append=T)
+		
+	}
+	
+}
+
+#CDS
+loadCDS<-function(fpkmFile,
+		diffFile,
+		CDSDiff,
+		dbConn,
+		path,
+		#Arguments to read.* methods
+		fpkmArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
+		diffArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
+		CDSDiffArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
+		sep="\t",
+		na.string = "-",
+		header = TRUE,
+		quote = "",
+		stringsAsFactors = FALSE,
+		row.names=NULL,
+		...) {
+	
+	#Error Trapping
+	if (missing(fpkmFile))
+		stop("fpkmFile cannot be missing!")
+	
+	if (missing(dbConn))
+		stop("Must provide a dbConn connection")
+	
+	#TODO test dbConn connection and database structure
+	
+	idCols = c(1:9)
+	
+	#Read primary file
+	write(paste("Reading ",fpkmFile,sep=""),stderr())
+	fpkmArgs$file = fpkmFile
+	full = as.data.frame(do.call(read.table,fpkmArgs))
+	
+	########
+	#Handle Sample Names
+	########
+	
+	
+	
+	#Check that samples table is populated
+	write("Checking samples table...",stderr())
+	samples<-getSamplesFromColnames(full)
+	dbSamples<-dbReadTable(dbConn,"samples")
+	if (dim(dbSamples)[1]>0) {
+		if (all(samples %in% dbSamples$sample_name)){
+			write ("OK!",stderr())
+		}else{
+			stop("Sample mismatch!")
+		}
+	}else{
+		write("Populating samples table...",stderr())
+		populateSampleTable(samples,dbConn)
+	}
+	
+	######
+	#Populate genes table
+	######
+	cdsTable<-full[,c(1:4,6:9)]
+	write("Writing CDS table",stderr())
+	dbWriteTable(dbConn,'CDS',cdsTable,row.names=F,append=T)
+	
+	if (nrow(cdsTable) == 0)
+	{
+	    write("CDS FPKM tracking file was empty.",stderr())
+	    return()
+	}
+	
+	######
+	#Populate geneData table
+	######
+	write("Reshaping CDSData table",stderr())
+	cdsmelt<-melt(full,id.vars=c("tracking_id"),measure.vars=-idCols,variable_name="sample_name")
+	
+	#Clean up and normalize data
+	cdsmelt$measurement = ""
+	
+	cdsmelt$measurement[grepl("_FPKM$",cdsmelt$sample_name)] = "fpkm"
+	cdsmelt$measurement[grepl("_conf_lo$",cdsmelt$sample_name)] = "conf_lo"
+	cdsmelt$measurement[grepl("_conf_hi$",cdsmelt$sample_name)] = "conf_hi"
+	cdsmelt$measurement[grepl("_status$",cdsmelt$sample_name)] = "status"
+	
+	cdsmelt$sample_name<-gsub("_FPKM$","",cdsmelt$sample_name)
+	cdsmelt$sample_name<-gsub("_conf_lo$","",cdsmelt$sample_name)
+	cdsmelt$sample_name<-gsub("_conf_hi$","",cdsmelt$sample_name)
+	cdsmelt$sample_name<-gsub("_status$","",cdsmelt$sample_name)
+	
+	#Adjust sample names with make.db.names
+	cdsmelt$sample_name <- make.db.names(dbConn,as.vector(cdsmelt$sample_name),unique=FALSE)
+	
+	#Recast
+	write("Recasting",stderr())
+	cdsmelt<-cast(cdsmelt,...~measurement)
+	
+	#Write geneData table
+	write("Writing CDSData table",stderr())
+	dbWriteTable(dbConn,'CDSData',as.data.frame(cdsmelt[,c(1:2,5,3,4,6)]),row.names=F,append=T)
+	
+	#######
+	#Handle cds_groups_exp.diff
+	#######
+	
+	if(file.exists(diffFile)){
+		#Read diff file
+		write(paste("Reading ",diffFile,sep=""),stderr())
+		diffArgs$file = diffFile
+		diff<-as.data.frame(do.call(read.table,diffArgs))
+		
+		#Adjust sample names with make.db.names
+		diff$sample_1<-make.db.names(dbConn,as.vector(diff$sample_1),unique=FALSE)
+		diff$sample_2<-make.db.names(dbConn,as.vector(diff$sample_2),unique=FALSE)
+		
+		write("Writing CDSExpDiffData table",stderr())
+		diffCols<-c(1,5:14)
+		dbWriteTable(dbConn,'CDSExpDiffData',diff[,diffCols],row.names=F,append=T)
+	}
+	
+	#########
+	#TODO: Handle CDS.diff
+	########
+	if(file.exists(CDSDiff)){
+		#Read promoterFile
+		write(paste("Reading ",CDSDiff,sep=""),stderr())
+		CDSDiffArgs$file = CDSDiff
+		CDS<-as.data.frame(do.call(read.table,CDSDiffArgs))
+		
+		write("Writing CDSDiffData table",stderr())
+		CDSCols<-c(2,5:14)
+		dbWriteTable(dbConn,'CDSDiffData',CDS[,CDSCols],row.names=F,append=T)
+		
+	}
+	
+}
+
+########################
+#Add FeatureData
+########################
+
+
+#####################
+#Database Setup Functions
+#####################
+
+createDB<-function(dbFname="cuffData.db",driver="SQLite") {
+	#Builds sqlite db at 'dbFname' and returns a dbConnect object pointing to newly created database.
+	
+	drv<-dbDriver(driver)
+	db <- dbConnect(drv,dbname=dbFname)
+	
+	schema.text<-'
+-- Creator:       MySQL Workbench 5.2.33/ExportSQLite plugin 2009.12.02
+-- Author:        Loyal Goff
+-- Caption:       CuffData.db Model
+-- Project:       cummeRbund
+-- Changed:       2011-08-02 14:03
+-- Created:       2011-05-02 12:52
+PRAGMA foreign_keys = OFF;
+
+-- Schema: cuffData
+BEGIN;
+DROP TABLE IF EXISTS "genes";
+CREATE TABLE "genes"(
+  "gene_id" VARCHAR(45) PRIMARY KEY NOT NULL,
+  "class_code" VARCHAR(45),
+  "nearest_ref_id" VARCHAR(45),
+  "gene_short_name" VARCHAR(45),
+  "locus" VARCHAR(45),
+  "length" INTEGER,
+  "coverage" FLOAT
+);
+DROP TABLE IF EXISTS "biasData";
+CREATE TABLE "biasData"(
+  "biasData_id" INTEGER PRIMARY KEY NOT NULL
+);
+DROP TABLE IF EXISTS "samples";
+CREATE TABLE "samples"(
+  "sample_index" INTEGER PRIMARY KEY NOT NULL,
+  "sample_name" VARCHAR(45) NOT NULL
+);
+DROP TABLE IF EXISTS "TSS";
+CREATE TABLE "TSS"(
+  "TSS_group_id" VARCHAR(45) PRIMARY KEY NOT NULL,
+  "class_code" VARCHAR(45),
+  "nearest_ref_id" VARCHAR(45),
+  "gene_id" VARCHAR(45) NOT NULL,
+  "locus" VARCHAR(45),
+  "length" INTEGER,
+  "coverage" FLOAT,
+  CONSTRAINT "fk_TSS_genes1"
+    FOREIGN KEY("gene_id")
+    REFERENCES "genes"("gene_id")
+);
+CREATE INDEX "TSS.fk_TSS_genes1" ON "TSS"("gene_id");
+DROP TABLE IF EXISTS "TSSData";
+CREATE TABLE "TSSData"(
+  "TSS_group_id" VARCHAR(45) NOT NULL,
+  "sample_name" VARCHAR(45) NOT NULL,
+  "fpkm" FLOAT,
+  "conf_hi" FLOAT,
+  "conf_lo" FLOAT,
+  "quant_status" VARCHAR(45),
+  CONSTRAINT "fk_TSSData_TSS1"
+    FOREIGN KEY("TSS_group_id")
+    REFERENCES "TSS"("TSS_group_id"),
+  CONSTRAINT "fk_TSSData_samples1"
+    FOREIGN KEY("sample_name")
+    REFERENCES "samples"("sample_name")
+);
+CREATE INDEX "TSSData.fk_TSSData_TSS1" ON "TSSData"("TSS_group_id");
+CREATE INDEX "TSSData.fk_TSSData_samples1" ON "TSSData"("sample_name");
+DROP TABLE IF EXISTS "CDS";
+CREATE TABLE "CDS"(
+  "CDS_id" VARCHAR(45) PRIMARY KEY NOT NULL,
+  "class_code" VARCHAR(45),
+  "nearest_ref_id" VARCHAR(45),
+  "gene_id" VARCHAR(45),
+  "TSS_group_id" VARCHAR(45),
+  "locus" VARCHAR(45),
+  "length" INTEGER,
+  "coverage" FLOAT,
+  CONSTRAINT "fk_CDS_genes1"
+    FOREIGN KEY("gene_id")
+    REFERENCES "genes"("gene_id"),
+  CONSTRAINT "fk_CDS_TSS1"
+    FOREIGN KEY("TSS_group_id")
+    REFERENCES "TSS"("TSS_group_id")
+);
+CREATE INDEX "CDS.fk_CDS_genes1" ON "CDS"("gene_id");
+CREATE INDEX "CDS.fk_CDS_TSS1" ON "CDS"("TSS_group_id");
+DROP TABLE IF EXISTS "CDSData";
+CREATE TABLE "CDSData"(
+  "CDS_id" VARCHAR(45) NOT NULL,
+  "sample_name" VARCHAR(45) NOT NULL,
+  "fpkm" FLOAT,
+  "conf_hi" FLOAT,
+  "conf_lo" FLOAT,
+  "quant_status" VARCHAR(45),
+  CONSTRAINT "fk_CDSData_CDS1"
+    FOREIGN KEY("CDS_id")
+    REFERENCES "CDS"("CDS_id"),
+  CONSTRAINT "fk_CDSData_samples1"
+    FOREIGN KEY("sample_name")
+    REFERENCES "samples"("sample_name")
+);
+CREATE INDEX "CDSData.fk_CDSData_CDS1" ON "CDSData"("CDS_id");
+CREATE INDEX "CDSData.fk_CDSData_samples1" ON "CDSData"("sample_name");
+DROP TABLE IF EXISTS "splicingDiffData";
+CREATE TABLE "splicingDiffData"(
+  "TSS_group_id" VARCHAR(45) NOT NULL,
+  "gene_id" VARCHAR(45) NOT NULL,
+  "sample_1" VARCHAR(45) NOT NULL,
+  "sample_2" VARCHAR(45) NOT NULL,
+  "status" VARCHAR(45),
+  "value_1" FLOAT,
+  "value_2" FLOAT,
+  "JS_dist" FLOAT,
+  "test_stat" FLOAT,
+  "p_value" FLOAT,
+  "q_value" FLOAT,
+  "significant" VARCHAR(45),
+  CONSTRAINT "fk_splicingDiffData_samples1"
+    FOREIGN KEY("sample_1")
+    REFERENCES "samples"("sample_name"),
+  CONSTRAINT "fk_splicingDiffData_samples2"
+    FOREIGN KEY("sample_2")
+    REFERENCES "samples"("sample_name"),
+  CONSTRAINT "fk_splicingDiffData_TSS1"
+    FOREIGN KEY("TSS_group_id")
+    REFERENCES "TSS"("TSS_group_id"),
+  CONSTRAINT "fk_splicingDiffData_genes1"
+    FOREIGN KEY("gene_id")
+    REFERENCES "genes"("gene_id")
+);
+CREATE INDEX "splicingDiffData.fk_splicingDiffData_samples1" ON "splicingDiffData"("sample_1");
+CREATE INDEX "splicingDiffData.fk_splicingDiffData_samples2" ON "splicingDiffData"("sample_2");
+CREATE INDEX "splicingDiffData.fk_splicingDiffData_TSS1" ON "splicingDiffData"("TSS_group_id");
+CREATE INDEX "splicingDiffData.fk_splicingDiffData_genes1" ON "splicingDiffData"("gene_id");
+DROP TABLE IF EXISTS "TSSExpDiffData";
+CREATE TABLE "TSSExpDiffData"(
+  "TSS_group_id" VARCHAR(45) NOT NULL,
+  "sample_1" VARCHAR(45) NOT NULL,
+  "sample_2" VARCHAR(45) NOT NULL,
+  "status" VARCHAR(45),
+  "value_1" FLOAT,
+  "value_2" FLOAT,
+  "ln_fold_change" FLOAT,
+  "test_stat" FLOAT,
+  "p_value" FLOAT,
+  "q_value" FLOAT,
+  "significant" VARCHAR(45),
+  CONSTRAINT "fk_TSSExpDiffData_TSS1"
+    FOREIGN KEY("TSS_group_id")
+    REFERENCES "TSS"("TSS_group_id"),
+  CONSTRAINT "fk_TSSExpDiffData_samples1"
+    FOREIGN KEY("sample_1")
+    REFERENCES "samples"("sample_name"),
+  CONSTRAINT "fk_TSSExpDiffData_samples2"
+    FOREIGN KEY("sample_2")
+    REFERENCES "samples"("sample_name")
+);
+CREATE INDEX "TSSExpDiffData.fk_TSSExpDiffData_TSS1" ON "TSSExpDiffData"("TSS_group_id");
+CREATE INDEX "TSSExpDiffData.fk_TSSExpDiffData_samples1" ON "TSSExpDiffData"("sample_1");
+CREATE INDEX "TSSExpDiffData.fk_TSSExpDiffData_samples2" ON "TSSExpDiffData"("sample_2");
+DROP TABLE IF EXISTS "CDSDiffData";
+CREATE TABLE "CDSDiffData"(
+  "gene_id" VARCHAR(45) NOT NULL,
+  "sample_1" VARCHAR(45) NOT NULL,
+  "sample_2" VARCHAR(45) NOT NULL,
+  "status" VARCHAR(45),
+  "value_1" FLOAT,
+  "value_2" FLOAT,
+  "JS_dist" FLOAT,
+  "test_stat" FLOAT,
+  "p_value" FLOAT,
+  "q_value" FLOAT,
+  "significant" VARCHAR(45),
+  CONSTRAINT "fk_CDSDiffData_samples1"
+    FOREIGN KEY("sample_1")
+    REFERENCES "samples"("sample_name"),
+  CONSTRAINT "fk_CDSDiffData_samples2"
+    FOREIGN KEY("sample_2")
+    REFERENCES "samples"("sample_name"),
+  CONSTRAINT "fk_CDSDiffData_genes1"
+    FOREIGN KEY("gene_id")
+    REFERENCES "genes"("gene_id")
+);
+CREATE INDEX "CDSDiffData.fk_CDSDiffData_samples1" ON "CDSDiffData"("sample_1");
+CREATE INDEX "CDSDiffData.fk_CDSDiffData_samples2" ON "CDSDiffData"("sample_2");
+CREATE INDEX "CDSDiffData.fk_CDSDiffData_genes1" ON "CDSDiffData"("gene_id");
+DROP TABLE IF EXISTS "CDSExpDiffData";
+CREATE TABLE "CDSExpDiffData"(
+  "CDS_id" VARCHAR(45) NOT NULL,
+  "sample_1" VARCHAR(45) NOT NULL,
+  "sample_2" VARCHAR(45) NOT NULL,
+  "status" VARCHAR(45),
+  "value_1" FLOAT,
+  "value_2" FLOAT,
+  "ln_fold_change" FLOAT,
+  "test_stat" FLOAT,
+  "p_value" FLOAT,
+  "q_value" FLOAT,
+  "significant" VARCHAR(45),
+  CONSTRAINT "fk_CDSExpDiffData_CDS1"
+    FOREIGN KEY("CDS_id")
+    REFERENCES "CDS"("CDS_id"),
+  CONSTRAINT "fk_CDSExpDiffData_samples1"
+    FOREIGN KEY("sample_1")
+    REFERENCES "samples"("sample_name"),
+  CONSTRAINT "fk_CDSExpDiffData_samples2"
+    FOREIGN KEY("sample_2")
+    REFERENCES "samples"("sample_name")
+);
+CREATE INDEX "CDSExpDiffData.fk_CDSExpDiffData_CDS1" ON "CDSExpDiffData"("CDS_id");
+CREATE INDEX "CDSExpDiffData.fk_CDSExpDiffData_samples1" ON "CDSExpDiffData"("sample_1");
+CREATE INDEX "CDSExpDiffData.fk_CDSExpDiffData_samples2" ON "CDSExpDiffData"("sample_2");
+DROP TABLE IF EXISTS "promoterDiffData";
+CREATE TABLE "promoterDiffData"(
+  "gene_id" VARCHAR(45) NOT NULL,
+  "sample_1" VARCHAR(45) NOT NULL,
+  "sample_2" VARCHAR(45) NOT NULL,
+  "status" VARCHAR(45),
+  "value_1" FLOAT,
+  "value_2" FLOAT,
+  "JS_dist" FLOAT,
+  "test_stat" FLOAT,
+  "p_value" FLOAT,
+  "q_value" FLOAT,
+  "significant" VARCHAR(45),
+  CONSTRAINT "fk_promoterDiffData_genes1"
+    FOREIGN KEY("gene_id")
+    REFERENCES "genes"("gene_id"),
+  CONSTRAINT "fk_promoterDiffData_samples1"
+    FOREIGN KEY("sample_1")
+    REFERENCES "samples"("sample_name"),
+  CONSTRAINT "fk_promoterDiffData_samples2"
+    FOREIGN KEY("sample_2")
+    REFERENCES "samples"("sample_name")
+);
+CREATE INDEX "promoterDiffData.fk_promoterDiffData_genes1" ON "promoterDiffData"("gene_id");
+CREATE INDEX "promoterDiffData.fk_promoterDiffData_samples1" ON "promoterDiffData"("sample_1");
+CREATE INDEX "promoterDiffData.fk_promoterDiffData_samples2" ON "promoterDiffData"("sample_2");
+DROP TABLE IF EXISTS "geneFeatures";
+CREATE TABLE "geneFeatures"(
+  "gene_id" VARCHAR(45) NOT NULL,
+  CONSTRAINT "fk_geneFeatures_genes1"
+    FOREIGN KEY("gene_id")
+    REFERENCES "genes"("gene_id")
+);
+CREATE INDEX "geneFeatures.fk_geneFeatures_genes1" ON "geneFeatures"("gene_id");
+DROP TABLE IF EXISTS "TSSFeatures";
+CREATE TABLE "TSSFeatures"(
+  "TSS_group_id" VARCHAR(45) NOT NULL,
+  CONSTRAINT "fk_TSSFeatures_TSS1"
+    FOREIGN KEY("TSS_group_id")
+    REFERENCES "TSS"("TSS_group_id")
+);
+CREATE INDEX "TSSFeatures.fk_TSSFeatures_TSS1" ON "TSSFeatures"("TSS_group_id");
+DROP TABLE IF EXISTS "CDSFeatures";
+CREATE TABLE "CDSFeatures"(
+  "CDS_id" VARCHAR(45) NOT NULL,
+  CONSTRAINT "fk_CDSFeatures_CDS1"
+    FOREIGN KEY("CDS_id")
+    REFERENCES "CDS"("CDS_id")
+);
+CREATE INDEX "CDSFeatures.fk_CDSFeatures_CDS1" ON "CDSFeatures"("CDS_id");
+DROP TABLE IF EXISTS "geneData";
+CREATE TABLE "geneData"(
+  "gene_id" VARCHAR(45) NOT NULL,
+  "sample_name" VARCHAR(45) NOT NULL,
+  "fpkm" FLOAT,
+  "conf_hi" FLOAT,
+  "conf_lo" FLOAT,
+  "quant_status" VARCHAR(45),
+  CONSTRAINT "fk_geneData_genes1"
+    FOREIGN KEY("gene_id")
+    REFERENCES "genes"("gene_id"),
+  CONSTRAINT "fk_geneData_samples1"
+    FOREIGN KEY("sample_name")
+    REFERENCES "samples"("sample_name")
+);
+CREATE INDEX "geneData.fk_geneData_genes1" ON "geneData"("gene_id");
+CREATE INDEX "geneData.fk_geneData_samples1" ON "geneData"("sample_name");
+DROP TABLE IF EXISTS "phenoData";
+CREATE TABLE "phenoData"(
+  "sample_name" VARCHAR(45) NOT NULL,
+  "parameter" VARCHAR(45) NOT NULL,
+  "value" VARCHAR(45),
+  CONSTRAINT "fk_phenoData_samples"
+    FOREIGN KEY("sample_name")
+    REFERENCES "samples"("sample_name")
+);
+CREATE INDEX "phenoData.fk_phenoData_samples" ON "phenoData"("sample_name");
+DROP TABLE IF EXISTS "geneExpDiffData";
+CREATE TABLE "geneExpDiffData"(
+  "gene_id" VARCHAR(45) NOT NULL,
+  "sample_1" VARCHAR(45) NOT NULL,
+  "sample_2" VARCHAR(45) NOT NULL,
+  "status" VARCHAR(45),
+  "value_1" FLOAT,
+  "value_2" FLOAT,
+  "ln_fold_change" FLOAT,
+  "test_stat" FLOAT,
+  "p_value" FLOAT,
+  "q_value" FLOAT,
+  "significant" VARCHAR(45),
+  CONSTRAINT "fk_geneExpDiffData_genes1"
+    FOREIGN KEY("gene_id")
+    REFERENCES "genes"("gene_id"),
+  CONSTRAINT "fk_geneExpDiffData_samples1"
+    FOREIGN KEY("sample_1")
+    REFERENCES "samples"("sample_name"),
+  CONSTRAINT "fk_geneExpDiffData_samples2"
+    FOREIGN KEY("sample_2")
+    REFERENCES "samples"("sample_name")
+);
+CREATE INDEX "geneExpDiffData.fk_geneExpDiffData_genes1" ON "geneExpDiffData"("gene_id");
+CREATE INDEX "geneExpDiffData.fk_geneExpDiffData_samples1" ON "geneExpDiffData"("sample_1");
+CREATE INDEX "geneExpDiffData.fk_geneExpDiffData_samples2" ON "geneExpDiffData"("sample_2");
+DROP TABLE IF EXISTS "isoforms";
+CREATE TABLE "isoforms"(
+  "isoform_id" VARCHAR(45) PRIMARY KEY NOT NULL,
+  "gene_id" VARCHAR(45),
+  "CDS_id" VARCHAR(45),
+  "TSS_group_id" VARCHAR(45),
+  "class_code" VARCHAR(45),
+  "nearest_ref_id" VARCHAR(45),
+  "locus" VARCHAR(45),
+  "length" INTEGER,
+  "coverage" FLOAT,
+  CONSTRAINT "fk_isoforms_TSS1"
+    FOREIGN KEY("TSS_group_id")
+    REFERENCES "TSS"("TSS_group_id"),
+  CONSTRAINT "fk_isoforms_CDS1"
+    FOREIGN KEY("CDS_id")
+    REFERENCES "CDS"("CDS_id"),
+  CONSTRAINT "fk_isoforms_genes1"
+    FOREIGN KEY("gene_id")
+    REFERENCES "genes"("gene_id")
+);
+CREATE INDEX "isoforms.fk_isoforms_TSS1" ON "isoforms"("TSS_group_id");
+CREATE INDEX "isoforms.fk_isoforms_CDS1" ON "isoforms"("CDS_id");
+CREATE INDEX "isoforms.fk_isoforms_genes1" ON "isoforms"("gene_id");
+DROP TABLE IF EXISTS "isoformData";
+CREATE TABLE "isoformData"(
+  "isoform_id" VARCHAR(45) NOT NULL,
+  "sample_name" VARCHAR(45) NOT NULL,
+  "fpkm" FLOAT NOT NULL,
+  "conf_hi" FLOAT,
+  "conf_lo" FLOAT,
+  "quant_status" VARCHAR(45),
+  CONSTRAINT "fk_isoformData_samples1"
+    FOREIGN KEY("sample_name")
+    REFERENCES "samples"("sample_name"),
+  CONSTRAINT "fk_isoformData_isoforms1"
+    FOREIGN KEY("isoform_id")
+    REFERENCES "isoforms"("isoform_id")
+);
+CREATE INDEX "isoformData.fk_isoformData_samples1" ON "isoformData"("sample_name");
+CREATE INDEX "isoformData.fk_isoformData_isoforms1" ON "isoformData"("isoform_id");
+DROP TABLE IF EXISTS "isoformExpDiffData";
+CREATE TABLE "isoformExpDiffData"(
+  "isoform_id" VARCHAR(45) NOT NULL,
+  "sample_1" VARCHAR(45) NOT NULL,
+  "sample_2" VARCHAR(45) NOT NULL,
+  "status" VARCHAR(45),
+  "value_1" FLOAT,
+  "value_2" FLOAT,
+  "ln_fold_change" FLOAT,
+  "test_stat" FLOAT,
+  "p_value" FLOAT,
+  "q_value" FLOAT,
+  "significant" VARCHAR(45),
+  CONSTRAINT "fk_isoformExpDiffData_isoforms1"
+    FOREIGN KEY("isoform_id")
+    REFERENCES "isoforms"("isoform_id"),
+  CONSTRAINT "fk_isoformExpDiffData_samples1"
+    FOREIGN KEY("sample_1")
+    REFERENCES "samples"("sample_name"),
+  CONSTRAINT "fk_isoformExpDiffData_samples2"
+    FOREIGN KEY("sample_2")
+    REFERENCES "samples"("sample_name")
+);
+CREATE INDEX "isoformExpDiffData.fk_isoformExpDiffData_isoforms1" ON "isoformExpDiffData"("isoform_id");
+CREATE INDEX "isoformExpDiffData.fk_isoformExpDiffData_samples1" ON "isoformExpDiffData"("sample_1");
+CREATE INDEX "isoformExpDiffData.fk_isoformExpDiffData_samples2" ON "isoformExpDiffData"("sample_2");
+DROP TABLE IF EXISTS "isoformFeatures";
+CREATE TABLE "isoformFeatures"(
+  "isoform_id" VARCHAR(45) NOT NULL,
+  CONSTRAINT "fk_isoformFeatures_isoforms1"
+    FOREIGN KEY("isoform_id")
+    REFERENCES "isoforms"("isoform_id")
+);
+CREATE INDEX "isoformFeatures.fk_isoformFeatures_isoforms1" ON "isoformFeatures"("isoform_id");
+COMMIT;
+
+'
+		create.sql <- strsplit(schema.text, "\n")[[1]]
+		create.sql <- paste(collapse="\n", create.sql)
+		create.sql <- strsplit(create.sql, ";")[[1]]
+		create.sql <- create.sql[-length(create.sql)] #nothing to run here
+				
+		tmp <- sapply(create.sql,function(x) sqliteQuickSQL(db,x))
+		db
+}
+
+
+getSamples<-function(fpkmDF){
+	sample_name<-unique(fpkmDF$sample)
+	#sample_name<-as.data.frame(sample_name)
+}
+
+getSamplesFromColnames<-function(fpkmDF){
+	samples<-gsub("_FPKM$","",colnames(fpkmDF)[grepl("_FPKM$",colnames(fpkmDF))])
+}
+
+populateSampleTable<-function(samples,dbConn){
+	samples<-make.db.names(dbConn,samples,unique=FALSE)
+	samples<-data.frame(index=c(1:length(samples)),sample_name=samples)
+	dbWriteTable(dbConn,'samples',samples,row.names=F,append=T)
+}
+
+#############
+#readCufflinks
+#############
+#TODO: Add directory pointer
+readCufflinks<-function(dir = getwd(),
+						dbFile="cuffData.db",
+						geneFPKM="genes.fpkm_tracking",
+						geneDiff="gene_exp.diff",
+						isoformFPKM="isoforms.fpkm_tracking",
+						isoformDiff="isoform_exp.diff",
+						TSSFPKM="tss_groups.fpkm_tracking",
+						TSSDiff="tss_group_exp.diff",
+						CDSFPKM="cds.fpkm_tracking",
+						CDSExpDiff="cds_exp.diff",
+						CDSDiff="cds.diff",
+						promoterFile="promoters.diff",
+						splicingFile="splicing.diff",
+						driver = "SQLite",
+						rebuild = FALSE,
+						...){
+	
+	#Set file locations with directory
+	dbFile=file.path(dir,dbFile)
+	geneFPKM=file.path(dir,geneFPKM)
+	geneDiff=file.path(dir,geneDiff)
+	isoformFPKM=file.path(dir,isoformFPKM)
+	isoformDiff=file.path(dir,isoformDiff)
+	TSSFPKM=file.path(dir,TSSFPKM)
+	TSSDiff=file.path(dir,TSSDiff)
+	CDSFPKM=file.path(dir,CDSFPKM)
+	CDSExpDiff=file.path(dir,CDSExpDiff)
+	CDSDiff=file.path(dir,CDSDiff)
+	promoterFile=file.path(dir,promoterFile)
+	splicingFile=file.path(dir,splicingFile)
+					
+					
+	#Check to see whether dbFile exists
+	if (!file.exists(dbFile) || rebuild == TRUE){
+		#if not, create it
+		dbConn<-createDB(dbFile)
+		#populate DB
+				
+		loadGenes(geneFPKM,geneDiff,promoterFile,dbConn)
+		loadIsoforms(isoformFPKM,isoformDiff,dbConn)
+		loadTSS(TSSFPKM,TSSDiff,splicingFile,dbConn)
+		loadCDS(CDSFPKM,CDSExpDiff,CDSDiff,dbConn)
+		
+		#load Distribution Tests
+		#loadDistTests(promoterFile,splicingFile,CDSDiff)
+		
+	}
+	dbConn<-dbConnect(dbDriver(driver),dbFile)
+	return (
+			new("CuffSet",DB = dbConn,
+					genes = new("CuffData",DB = dbConn, tables = list(mainTable = "genes",dataTable = "geneData",expDiffTable = "geneExpDiffData",featureTable = "geneFeatures"), filters = list(),type = "genes",idField = "gene_id"),
+					isoforms = new("CuffData", DB = dbConn, tables = list(mainTable = "isoforms",dataTable = "isoformData",expDiffTable = "isoformExpDiffData",featureTable = "isoformFeatures"), filters = list(),type="isoforms",idField = "isoform_id"),
+					TSS = new("CuffData", DB = dbConn, tables = list(mainTable = "TSS",dataTable = "TSSData",expDiffTable = "TSSExpDiffData",featureTable = "TSSFeatures"), filters = list(),type = "TSS",idField = "TSS_group_id"),
+					CDS = new("CuffData", DB = dbConn, tables = list(mainTable = "CDS",dataTable = "CDSData",expDiffTable = "CDSExpDiffData",featureTable = "CDSFeatures"), filters = list(),type = "CDS",idField = "CDS_id"),
+					promoters = new("CuffDist", DB = dbConn, table = "promoterDiffData",type="promoter",testId="gene_id"),
+					splicing = new("CuffDist", DB = dbConn, table = "splicingDiffData",type="splicing",testId="TSS_group_id"),
+					relCDS = new("CuffDist", DB = dbConn, table = "CDSDiffData",type="relCDS",testId="gene_id")
+			)
+	)	
+							
+}
+
+#######
+#Unit Test
+#######
+
+#dbConn<-createDB()
+#date()
+#loadGenes("genes.fpkm_tracking","gene_exp.diff",dbConn)
+#loadIsoforms("isoforms.fpkm_tracking","isoform_exp.diff",dbConn)
+#loadTSS("tss_groups.fpkm_tracking","tss_group_exp.diff",dbConn)
+#loadCDS("cds.fpkm_tracking","cds_exp.diff",dbConn)
+#date()

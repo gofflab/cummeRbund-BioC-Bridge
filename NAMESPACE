@@ -1,34 +1,43 @@
-#useDynLib(cummeRbund, copyEnv_sym=copyEnv, sublist_extract)
+import(methods)
 
-exportClasses(cuffSet,DiffData)
+exportClasses(CuffSet,
+			CuffData,
+			CuffDist,
+			CuffFeature, 
+			CuffFeatureSet, 
+			CuffGene, 
+			CuffGeneSet
+)
 
 exportMethods(fpkm,
-			conf_lo,
-			conf_hi,
-			csBoxplot,
-			geneNames,
-			write.fpkm,
-			csmelt,
+			distValues,
 			csDensity,
-			csHist,
+			csScatter,
+			csVolcano,
 			csBoxplot,
 			csHeatmap,
-			expressionBarplot,
+			csCluster,
+			fpkmMatrix,
+			diffData,
+			features,
+			featureNames,
+			samples,
 			expressionPlot,
-			csScatter)
+			expressionBarplot,
+			getGene,
+			getGenes,
+			addFeatures,
+			getLevels,
+			findSimilar
+)
 
 export("readCufflinks",
 		"JSdist",
-		"csApply",
+		"JSdistVec",
 		"shannon.entropy",
 		"makeprobs",
-		"diffDataNew", 
-		"diffDataValidMembers"
+		"makeprobsvec"
 		)
 
-importFrom("Biobase", "geneNames")
-importFrom("Biobase", "geneNames<-")
-
-importClassesFrom("Biobase","eSet")
-importClassesFrom("Biobase","Versioned")
-importClassesFrom("Biobase","VersionedBiobase")
+#importClassesFrom("Biobase","Versioned")
+#importClassesFrom("Biobase","VersionedBiobase")

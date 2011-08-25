@@ -5,7 +5,7 @@
 Shannon entropy
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+Calculates the Shannon entropy for a probability distribution
 }
 \usage{
 shannon.entropy(p)
@@ -13,43 +13,27 @@ shannon.entropy(p)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{p}{
-%%     ~~Describe \code{p} here~~
+A vector of probabilities (must sum to ~1)
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+None
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+Returns a numeric value for the Shannon entropy of the supplied probability distribution
 }
 \references{
-%% ~put references to the literature/web site here ~
+None
 }
 \author{
-%%  ~~who you are~~
+Loyal A. Goff
 }
 \note{
-%%  ~~further notes~~
+None
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-
+	x<-sample(1:500,50)
+	p<-x/sum(x)
+	shannon.entropy(p)
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

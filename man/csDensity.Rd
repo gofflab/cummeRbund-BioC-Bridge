@@ -1,58 +1,59 @@
 \name{csDensity}
 \alias{csDensity}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
-csDensity
+Density plot of CuffData
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+Creates a smoothed density plot, by sample, for log10 FPKM values from a cuffdiff run.
 }
 \usage{
-csDensity(object, ...)
+csDensity(object, logMode=TRUE, pseudocount=1.0, labels, features=FALSE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{object}{
-%%     ~~Describe \code{object} here~~
+An object of class CuffData.
+}
+  \item{logMode}{
+A logical value of whether or not to log10-transform FPKM values.  By default this is TRUE.
+}
+  \item{pseudocount}{
+Pseudocount value added to FPKM to avoid errors in log-transformation of true zero values.
+}
+  \item{labels}{
+A list of tracking_id values or gene_short_name values used for 'callout' points on the density plot for reference. (Not implemented yet).
+}
+  \item{features}{
+Will include all fields from 'features' slot in returned ggplot object.
+Useful for further manipulations of plot object using feature-level attributes (e.g. gene_type, class_code, etc)
 }
   \item{\dots}{
-%%     ~~Describe \code{\dots} here~~
+Additional arguments
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+Creates a density plot, by sample, for log10-transformed FPKM values from a cuffdiff run.
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+A ggplot2 plot object
 }
 \references{
-%% ~put references to the literature/web site here ~
+None
 }
 \author{
-%%  ~~who you are~~
+Loyal A. Goff
 }
 \note{
-%%  ~~further notes~~
+None
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-
+	\dontrun{
+	a<-readCufflinks() #Create CuffSet object from data
+	genes<-a@genes #Create CuffData object for all 'genes'
+	d<-csDensity(genes) #Create csDensity plot
+	d #Render plot
+	}
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

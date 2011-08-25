@@ -1,4 +1,0 @@
-sample	selection	cell_line
-H1.hESC	polyA	H1
-Fibroblasts	polyA	IMR90
-iPS	polyA	iPSC

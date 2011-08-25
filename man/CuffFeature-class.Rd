@@ -1,0 +1,53 @@
+\name{CuffFeature-class}
+\Rdversion{1.1}
+\docType{class}
+\alias{CuffFeature-class}
+\alias{expressionBarplot,CuffFeature-method}
+\alias{expressionPlot,CuffFeature-method}
+\alias{fpkm,CuffFeature-method}
+\alias{fpkmMatrix,CuffFeature-method}
+\alias{length,CuffFeature-method}
+
+\title{Class "CuffFeature"}
+\description{
+A 'data' container class for all FPKM, annotation, and differential expression data for a single feature (gene, isoform, TSS, or CDS).
+}
+\section{Objects from the Class}{
+Objects can be created by calls of the form \code{new("CuffFeature", annotation, fpkm, diff, ...)}.
+
+}
+\section{Slots}{
+  \describe{
+    \item{\code{annotation}:}{Object of class \code{"data.frame"} ~~ }
+    \item{\code{fpkm}:}{Object of class \code{"data.frame"} ~~ }
+    \item{\code{diff}:}{Object of class \code{"data.frame"} ~~ }
+  }
+}
+\section{Methods}{
+  \describe{
+    \item{expressionBarplot}{\code{signature(object = "CuffFeature")}: ... }
+    \item{expressionPlot}{\code{signature(object = "CuffFeature")}: ... }
+    \item{fpkm}{\code{signature(object = "CuffFeature")}: ... }
+    \item{fpkmMatrix}{\code{signature(object="CuffFeature")}: ...}
+    \item{length}{\code{signature(x = "CuffFeature")}: ... }
+	 }
+}
+\references{
+None
+}
+\author{
+Loyal A. Goff
+}
+\note{
+'CuffGene' is a superclass of 'CuffFeature' that links gene information for a given gene with all isoform-, TSS-, and CDS-level data for the given gene.
+}
+
+
+
+\seealso{
+\code{\linkS4class{CuffGene}}
+}
+\examples{
+showClass("CuffFeature")
+}
+\keyword{classes}

@@ -1,0 +1,62 @@
+\name{CuffSet-class}
+\Rdversion{1.1}
+\docType{class}
+\alias{CuffSet-class}
+\alias{[,CuffSet-method}
+\alias{addFeatures,CuffSet-method}
+\alias{getGene,CuffSet-method}
+\alias{getGenes,CuffSet-method}
+\alias{findSimilar,CuffSet-method}
+\alias{getLevels,CuffSet-method}
+\alias{samples,CuffSet-method}
+
+\title{Class "CuffSet"}
+\description{
+A 'pointer' class to connect to, and retrieve data from the SQLite backend database. 
+}
+\section{Objects from the Class}{
+Objects can be created by calls of the form \code{new("CuffSet", DB, conditions, genes, isoforms, TSS, CDS, promoters, splicing, relCDS, ...)}.
+Available methods are primary accessors to retrieve CuffGeneSet or CuffGene objects for manipulation.
+}
+\section{Slots}{
+  \describe{
+    \item{\code{DB}:}{Object of class \code{"SQLiteConnection"} ~~ }
+    \item{\code{conditions}:}{Object of class \code{"data.frame"} ~~ }
+    \item{\code{genes}:}{Object of class \code{"CuffData"} ~~ }
+    \item{\code{isoforms}:}{Object of class \code{"CuffData"} ~~ }
+    \item{\code{TSS}:}{Object of class \code{"CuffData"} ~~ }
+    \item{\code{CDS}:}{Object of class \code{"CuffData"} ~~ }
+    \item{\code{promoters}:}{Object of class \code{"CuffDist"} ~~ }
+    \item{\code{splicing}:}{Object of class \code{"CuffDist"} ~~ }
+    \item{\code{relCDS}:}{Object of class \code{"CuffDist"} ~~ }
+  }
+}
+\section{Methods}{
+  \describe{
+    \item{[}{\code{signature(x = "CuffSet")}: ... }
+    \item{addFeatures}{\code{signature(object = "CuffSet")}: ... }
+    \item{findSimilar}{\code{signature(object = "CuffSet")}: ... }
+    \item{getGene}{\code{signature(object = "CuffSet")}: ... }
+    \item{getGenes}{\code{signature(object = "CuffSet")}: ... }
+    \item{getLevels}{\code{signature(object = "CuffSet")}: ... }
+    \item{samples}{\code{signature(object = "CuffSet")}: ... }
+	 }
+}
+\references{
+None.
+}
+\author{
+Loyal A. Goff
+}
+\note{
+None.
+}
+
+
+\seealso{
+None.
+}
+\examples{
+showClass("CuffSet")
+}
+\keyword{classes}

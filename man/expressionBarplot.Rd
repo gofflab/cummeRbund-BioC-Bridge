@@ -1,53 +1,53 @@
 \name{expressionBarplot}
 \alias{expressionBarplot}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
-expressionBarplot
+Barplot
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+A barplot of FPKM values with confidence intervals for a given gene, set of genes, or features of a gene (e.g. isoforms, TSS, CDS, etc).
 }
 \usage{
-expressionBarplot(object, ...)
+expressionBarplot(object, logMode=FALSE, pseudocount=1.0, showErrorbars=TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{object}{
-%%     ~~Describe \code{object} here~~
+An object of class ('CuffFeatureSet','CuffGeneSet','CuffFeature','CuffGene')
+}
+  \item{logMode}{
+A logical value whether or not to draw y-axis on log10 scale. Default = FALSE.
+}
+  \item{pseudocount}{
+Numerical value added to each FPKM during log-transformation to avoid errors.
+}
+  \item{showErrorbars}{
+A logical value whether or not to draw error bars. Default = TRUE
 }
   \item{\dots}{
-%%     ~~Describe \code{\dots} here~~
+Additional arguments.
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+None
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+A ggplot2 plot object
 }
 \references{
-%% ~put references to the literature/web site here ~
+None
 }
 \author{
-%%  ~~who you are~~
+Loyal A. Goff
 }
 \note{
-%%  ~~further notes~~
+Need to implement logMode and features for this plotting method.
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
 \examples{
-
+	data(sampleData)
+	PINK1 # sample CuffFeature object
+	expressionBarplot(PINK1) #Barplot of PINK1 FPKM values
+	expressionBarplot(PINK1@isoforms) #Barplot of PINK1 FPKM values faceted by isoforms
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+

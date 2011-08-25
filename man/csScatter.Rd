@@ -1,59 +1,63 @@
 \name{csScatter}
 \alias{csScatter}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
-csScatter
+Scatter Plot
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+A scatter plot comparing the FPKM  values from two samples in a cuffdiff run.
 }
 \usage{
-csScatter(object, x, y, ...)
+csScatter(object, x, y, logMode=TRUE, pseudocount=1.0, labels, smooth=FALSE, ...)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{object}{
-%%     ~~Describe \code{object} here~~
+An object of class ('CuffData','CuffFeatureSet')
 }
   \item{x}{
-%%     ~~Describe \code{x} here~~
+Sample name for x axis
 }
   \item{y}{
-%%     ~~Describe \code{y} here~~
+Sample name for y axis
+}
+  \item{logMode}{
+Logical argument to log2-transform data (default: T )
+}
+  \item{pseudocount}{
+Value to add to zero FPKM values for log transformation (default: 0.0001)
+}
+  \item{smooth}{
+Logical argument to add a smooth-fit regression line
+}
+  \item{labels}{
+A list of tracking_ids or gene_short_names that will be 'callout' points in the plot for reference. Useful for finding genes of interest in the field. Not implemented yet.
 }
   \item{\dots}{
-%%     ~~Describe \code{\dots} here~~
+Additional arguments to csScatter
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+None
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+ggplot object with geom_point and geom_rug layers
 }
 \references{
-%% ~put references to the literature/web site here ~
+None
 }
 \author{
-%%  ~~who you are~~
+Loyal A. Goff
 }
 \note{
-%%  ~~further notes~~
+None
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
 \examples{
-
+	\dontrun{
+	a<-readCufflinks() #Create CuffSet object
+	genes<-a@genes #Create CuffData object for all genes
+	s<-csScatter(genes,'hESC','Fibroblasts',smooth=TRUE) #Create plot object
+	s #render plot object
+	}
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

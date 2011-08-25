@@ -5,123 +5,86 @@
 readCufflinks
 }
 \description{
-Reads cufflinks output file(s) and stores expression information and associated annotation in a cuffSet object.
-User can supply additional phenoData and featureData files to extend the default annotation.
+This initializes the backend SQLite table and provides a DB connection for all downstream data analysis.
 }
 \usage{
-readCufflinks(fpkmFile, 
-			phenoDataFile, 
-			featureDataFile, 
-			experimentDataFile, 
-			notesFile, 
-			path, 
-			annotation, 
-			fpkmArgs = list(sep = sep, header = header, row.names = row.names, quote = quote, na.string = na.string, ...), 
-			phenoDataArgs = list(sep = sep, header = header, row.names = row.names, quote = quote, na.string = na.string, stringsAsFactors = stringsAsFactors, ...), 
-			featureDataArgs = list(sep = sep, header = header, row.names = row.names, quote = quote, na.string = na.string, stringsAsFactors = stringsAsFactors, ...), 
-			experimentDataArgs = list(sep = sep, header = header, row.names = row.names, quote = quote, na.string = na.string, stringsAsFactors = stringsAsFactors, ...), 
-			sep = "\t", 
-			na.string = "-", 
-			header = TRUE, 
-			quote = "", 
-			stringsAsFactors = FALSE, 
-			row.names = 1L, 
-			...)
+readCufflinks(dir = getwd(), dbFile = "cuffData.db", geneFPKM = "genes.fpkm_tracking", geneDiff = "gene_exp.diff", isoformFPKM = "isoforms.fpkm_tracking", isoformDiff = "isoform_exp.diff", TSSFPKM = "tss_groups.fpkm_tracking", TSSDiff = "tss_group_exp.diff", CDSFPKM = "cds.fpkm_tracking", CDSExpDiff = "cds_exp.diff", CDSDiff = "cds.diff", promoterFile = "promoters.diff", splicingFile = "splicing.diff", driver = "SQLite", rebuild = FALSE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{fpkmFile}{
-The name of an '*.fpkm_tracking' file output from a cufflinks analysis.
+  \item{dir}{
+Directory in which all CuffDiff output files can be located. Defaults to current working directory.
 }
-  \item{phenoDataFile}{
-An optional file with phenotype/parameter information for samples (conditions). (File will have header with parameter names.  First column must match sample names from fpkmFile.)
+  \item{dbFile}{
+Name of backend database. Default is 'cuffData.db'
 }
-  \item{featureDataFile}{
-An optional file with annotation/paramter information for features (genes). (File will have header with parameter names. First column must match feature names from fpkmFile.)
+  \item{geneFPKM}{
+genes.fpkm_tracking file
 }
-  \item{experimentDataFile}{
-An optional file with information about experimental conditions. (Not sure about format yet).
+  \item{geneDiff}{
+gene_exp.diff file
 }
-  \item{notesFile}{
-An optional file with misc notes that will be appended to cuffSet object.
+  \item{isoformFPKM}{
+isoforms.fpkm_tracking file
 }
-  \item{path}{
-Path to fpkmFile (Defaults to current working directory).
+  \item{isoformDiff}{
+isoform_exp.diff file
 }
-  \item{annotation}{
-%%     ~~Describe \code{annotation} here~~
+  \item{TSSFPKM}{
+tss_groups.fpkm_tracking file
 }
-  \item{fpkmArgs}{
-A list of default 'read.table' args for reading fpkmFile (e.g. list(sep = sep, header = header, row.names = row.names, quote = quote, na.string = na.string, ...))
+  \item{TSSDiff}{
+tss_group_exp.diff file
 }
-  \item{phenoDataArgs}{
-A list of 'read.table' args for reading phenoDataFile (see fpkmArgs)
+  \item{CDSFPKM}{
+cds.fpkm_tracking file
 }
-  \item{featureDataArgs}{
-A list of 'read.table' args for reading featureDataFile (see fpkmArgs)
+  \item{CDSExpDiff}{
+cds_exp.diff file
 }
-  \item{experimentDataArgs}{
-A list of 'read.table' args for reading experimentDataFile (see fpkmArgs)
+  \item{CDSDiff}{
+cds.diff file (distribution tests on CDS)
 }
-  \item{sep}{
-Field separator for input files.
+  \item{promoterFile}{
+promoters.diff file (distribution tests on promoters)
 }
-  \item{na.string}{
-Missing value string for input files.
+  \item{splicingFile}{
+splicing.diff (distribution tests on isoforms)
 }
-  \item{header}{
-T/F input files have header. (Default: T)
+  \item{driver}{
+Driver for backend database. (Currently only "SQLite" is supported).
 }
-  \item{quote}{
-T/F values are in quotations
-}
-  \item{stringsAsFactors}{
-T/F Treat strings in parameter files as factors (Default: T)
-}
-  \item{row.names}{
-Which row contains row names.
+  \item{rebuild}{
+A logical argument to rebuild database backend.
 }
   \item{\dots}{
-Pass any additional arguments.
+Additional arguments to readCufflinks
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
-}
+This is the initialization function for the cummeRbund package. It creates the SQLite backend database, populates the data, and provides a connection object for all future
+interactions with the dataset. Once the initial build is complete, this function will default to using the database for all future sessions. 
+IMPORTANT:  - Each R session should begin with a call to readCufflinks to re-open the connection to the database.
+			- Should any connectivity issues to the database arise, another call to readCufflinks should create a new connection object and repair any issue.
+			- The database can always be rebuild (using rebuild=TRUE) from the original CuffDiff output files.
+}		
 \value{
-An object of class cuffSet.
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+A CuffSet object.  A 'pointer' class that allows interaction with cufflinks/cuffdiff data via a SQLite database backend.
 }
 \references{
-%% ~put references to the literature/web site here ~
+None.
 }
 \author{
 Loyal A. Goff
 }
 \note{
-%%  ~~further notes~~
+None.
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-
+	\dontrun{
+	a<-readCufflinks() #Read cufflinks data and create CuffSet object 'a'
+	}
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ cufflinks }
-\keyword{ cuffSet }
-\keyword{ RNAseq }
-\keyword{ nextgen }
+
