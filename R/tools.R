@@ -19,6 +19,7 @@ JSdist<-function(mat){
 	as.dist(res)
 }
 
+
 JSdistVec<-function(p,q){
 	JSdiv<-shannon.entropy((p+q)/2)-(shannon.entropy(p)+shannon.entropy(q))*0.5
 	JSdist<-sqrt(JSdiv)
@@ -38,14 +39,13 @@ shannon.entropy <- function(p) {
 	-sum( log10(p.norm)*p.norm)
 }
 
-
-
 makeprobs<-function(a){
 	colSums<-apply(a,2,sum)
 	b<-t(t(a)/colSums)
 	b[is.na(b)] = 0
 	b
 }
+
 
 #THIS IS NOT MINE....I MUST REMOVE IT PRIOR TO SUBMISSION (For detailed GO analysis, check out clusterProfiler and goProfiles)
 #ClusterProfiles <- function(geneClusters, onto="CC", level=3, orgPackage="org.Hs.eg.db") {
