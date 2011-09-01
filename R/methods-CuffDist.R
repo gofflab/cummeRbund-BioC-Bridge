@@ -1,6 +1,6 @@
 #methods-CuffDist.R
 #
-#
+#Author: Loyal A. Goff
 #
 #
 ####################

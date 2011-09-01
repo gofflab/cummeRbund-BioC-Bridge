@@ -1,6 +1,6 @@
 #methods-CuffData.R
 #
-#
+#Author: Loyal A. Goff
 #
 #
 ####################
