@@ -67,7 +67,10 @@ loadGenes<-function(fpkmFile,
 	######
 	genesTable<-full[,c(1:3,5,7:9)]
 	write("Writing genes table",stderr())
-	dbWriteTable(dbConn,'genes',genesTable,row.names=F,append=T)
+	#dbWriteTable(dbConn,'genes',genesTable,row.names=F,append=T)
+	insert_SQL<-'INSERT INTO genes VALUES(:tracking_id, :class_code, :nearest_ref_id, :gene_short_name, :locus, :length, :coverage)'
+	bulk_insert(dbConn,insert_SQL,genesTable)
+	
 	######
 	#Populate geneData table
 	######
@@ -946,6 +949,13 @@ populateSampleTable<-function(samples,dbConn){
 	samples<-make.db.names(dbConn,samples,unique=FALSE)
 	samples<-data.frame(index=c(1:length(samples)),sample_name=samples)
 	dbWriteTable(dbConn,'samples',samples,row.names=F,append=T)
+}
+
+bulk_insert <- function(dbConn,sql,bound.data)
+{
+	dbBeginTransaction(dbConn)
+	dbGetPreparedQuery(dbConn, sql, bind.data = bound.data)
+	dbCommit(dbConn)
 }
 
 #############
