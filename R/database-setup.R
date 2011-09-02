@@ -99,7 +99,9 @@ loadGenes<-function(fpkmFile,
 	
 	#Write geneData table
 	write("Writing geneData table",stderr())
-	dbWriteTable(dbConn,'geneData',as.data.frame(genemelt[,c(1:2,5,3,4,6)]),row.names=F,append=T)
+	#dbWriteTable(dbConn,'geneData',as.data.frame(genemelt[,c(1:2,5,3,4,6)]),row.names=F,append=T)
+	insert_SQL<-'INSERT INTO geneData VALUES(:tracking_id,:sample_name,:fpkm,:conf_hi,:conf_lo,:quant_status)'
+	bulk_insert(dbConn,insert_SQL,genemelt[,c(1:2,5,3,4,6)])
 	
 	#######
 	#Handle gene_exp.diff
@@ -117,7 +119,9 @@ loadGenes<-function(fpkmFile,
 		
 		write("Writing geneExpDiffData table",stderr())
 		diffCols<-c(1,5:14)
-		dbWriteTable(dbConn,'geneExpDiffData',diff[,diffCols],row.names=F,append=T)
+		#dbWriteTable(dbConn,'geneExpDiffData',diff[,diffCols],row.names=F,append=T)
+		insert_SQL<-'INSERT INTO geneExpDiffData VALUES(:tracking_id,:sample_1,:sample_2,:status,:value_1,:value_2,:ln_fold_change,:test_stat,:p_value,:q_value,:significant)'
+		bulk_insert(dbConn,insert_SQL,diff[,diffCols])
 	}
 	
 	########
