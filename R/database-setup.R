@@ -543,7 +543,8 @@ createDB<-function(dbFname="cuffData.db",driver="SQLite") {
 -- Changed:       2011-08-02 14:03
 -- Created:       2011-05-02 12:52
 PRAGMA foreign_keys = OFF;
-
+PRAGMA synchronous = OFF;
+PRAGMA journal_mode = MEMORY;
 -- Schema: cuffData
 BEGIN;
 DROP TABLE IF EXISTS "genes";
