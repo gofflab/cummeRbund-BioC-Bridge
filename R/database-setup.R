@@ -95,12 +95,15 @@ loadGenes<-function(fpkmFile,
 	
 	#Recast
 	write("Recasting",stderr())
-	genemelt<-cast(genemelt,...~measurement)
+	genemelt<-as.data.frame(cast(genemelt,...~measurement))
+	
+	#debugging
+	#write(colnames(genemelt),stderr())
 	
 	#Write geneData table
 	write("Writing geneData table",stderr())
 	#dbWriteTable(dbConn,'geneData',as.data.frame(genemelt[,c(1:2,5,3,4,6)]),row.names=F,append=T)
-	insert_SQL<-'INSERT INTO geneData VALUES(:tracking_id,:sample_name,:fpkm,:conf_hi,:conf_lo,:quant_status)'
+	insert_SQL<-'INSERT INTO geneData VALUES(:tracking_id,:sample_name,:fpkm,:conf_hi,:conf_lo,:status)'
 	bulk_insert(dbConn,insert_SQL,genemelt[,c(1:2,5,3,4,6)])
 	
 	#######
@@ -119,8 +122,12 @@ loadGenes<-function(fpkmFile,
 		
 		write("Writing geneExpDiffData table",stderr())
 		diffCols<-c(1,5:14)
+		
+		#debugging
+		#write(colnames(diff[,diffCols]),stderr())
+		
 		#dbWriteTable(dbConn,'geneExpDiffData',diff[,diffCols],row.names=F,append=T)
-		insert_SQL<-'INSERT INTO geneExpDiffData VALUES(:tracking_id,:sample_1,:sample_2,:status,:value_1,:value_2,:ln_fold_change,:test_stat,:p_value,:q_value,:significant)'
+		insert_SQL<-"INSERT INTO geneExpDiffData VALUES(:test_id,:sample_1,:sample_2,:status,:value_1,:value_2,?,:test_stat,:p_value,:q_value,:significant)"
 		bulk_insert(dbConn,insert_SQL,diff[,diffCols])
 	}
 	
@@ -135,7 +142,9 @@ loadGenes<-function(fpkmFile,
 		
 		write("Writing promoterDiffData table",stderr())
 		promoterCols<-c(2,5:14)
-		dbWriteTable(dbConn,'promoterDiffData',promoter[,promoterCols],row.names=F,append=T)
+		#dbWriteTable(dbConn,'promoterDiffData',promoter[,promoterCols],row.names=F,append=T)
+		insert_SQL<-"INSERT INTO promoterDiffData VALUES(?,?,?,?,?,?,?,?,?,?,?)"
+		bulk_insert(dbConn,insert_SQL,promoter[,promoterCols])
 		
 	}
 	
@@ -207,7 +216,9 @@ loadIsoforms<-function(fpkmFile,
 	isoformsTable<-cbind(isoformsTable[,1:2],data.frame(CDS_id=rep("NA",dim(isoformsTable)[1])),isoformsTable[,-c(1:2)])
 	#print (head(isoformsTable))
 	write("Writing isoforms table",stderr())
-	dbWriteTable(dbConn,'isoforms',as.data.frame(isoformsTable),row.names=F,append=T)
+	#dbWriteTable(dbConn,'isoforms',as.data.frame(isoformsTable),row.names=F,append=T)
+	insert_SQL<-'INSERT INTO isoforms VALUES(?,?,?,?,?,?,?,?,?)'
+	bulk_insert(dbConn,insert_SQL,isoformsTable)
 	
 	######
 	#Populate geneData table
@@ -233,11 +244,13 @@ loadIsoforms<-function(fpkmFile,
 	
 	#Recast
 	write("Recasting",stderr())
-	isoformmelt<-cast(isoformmelt,...~measurement)
+	isoformmelt<-as.data.frame(cast(isoformmelt,...~measurement))
 	
 	#Write geneData table
 	write("Writing isoformData table",stderr())
-	dbWriteTable(dbConn,'isoformData',as.data.frame(isoformmelt[,c(1:2,5,3,4,6)]),row.names=F,append=T)
+	#dbWriteTable(dbConn,'isoformData',as.data.frame(isoformmelt[,c(1:2,5,3,4,6)]),row.names=F,append=T)
+	insert_SQL<-"INSERT INTO isoformData VALUES(?,?,?,?,?,?)"
+	bulk_insert(dbConn,insert_SQL,isoformmelt[,c(1:2,5,3,4,6)])
 	
 	#######
 	#Handle isoform_exp.diff
@@ -255,7 +268,9 @@ loadIsoforms<-function(fpkmFile,
 		
 		write("Writing isoformExpDiffData table",stderr())
 		diffCols<-c(1,5:14)
-		dbWriteTable(dbConn,'isoformExpDiffData',diff[,diffCols],row.names=F,append=T)
+		#dbWriteTable(dbConn,'isoformExpDiffData',diff[,diffCols],row.names=F,append=T)
+		insert_SQL<-"INSERT INTO isoformExpDiffData VALUES(?,?,?,?,?,?,?,?,?,?,?)"
+		bulk_insert(dbConn,insert_SQL,diff[,diffCols])
 	}
 	
 }
@@ -319,7 +334,9 @@ loadTSS<-function(fpkmFile,
 	######
 	tssTable<-full[,c(1:4,7:9)]
 	write("Writing TSS table",stderr())
-	dbWriteTable(dbConn,'TSS',tssTable,row.names=F,append=T)
+	#dbWriteTable(dbConn,'TSS',tssTable,row.names=F,append=T)
+	insert_SQL<-"INSERT INTO TSS VALUES(?,?,?,?,?,?,?)"
+	bulk_insert(dbConn,insert_SQL,tssTable)
 	
 	if (nrow(tssTable) == 0)
 	{
@@ -351,12 +368,13 @@ loadTSS<-function(fpkmFile,
 	
 	#Recast
 	write("Recasting",stderr())
-	tssmelt<-cast(tssmelt,...~measurement)
+	tssmelt<-as.data.frame(cast(tssmelt,...~measurement))
 	
 	#Write geneData table
 	write("Writing TSSData table",stderr())
-	dbWriteTable(dbConn,'TSSData',as.data.frame(tssmelt[,c(1:2,5,3,4,6)]),row.names=F,append=T)
-	
+	#dbWriteTable(dbConn,'TSSData',as.data.frame(tssmelt[,c(1:2,5,3,4,6)]),row.names=F,append=T)
+	insert_SQL<-"INSERT INTO TSSData VALUES(?,?,?,?,?,?)"
+	bulk_insert(dbConn,insert_SQL,tssmelt[,c(1:2,5,3,4,6)])
 	#######
 	#Handle tss_groups_exp.diff
 	#######
@@ -373,7 +391,9 @@ loadTSS<-function(fpkmFile,
 		
 		write("Writing TSSExpDiffData table",stderr())
 		diffCols<-c(1,5:14)
-		dbWriteTable(dbConn,'TSSExpDiffData',diff[,diffCols],row.names=F,append=T)
+		#dbWriteTable(dbConn,'TSSExpDiffData',diff[,diffCols],row.names=F,append=T)
+		insert_SQL<-"INSERT INTO TSSExpDiffData VALUES(?,?,?,?,?,?,?,?,?,?,?)"
+		bulk_insert(dbConn,insert_SQL,diff[,diffCols])
 	}
 	
 	#########
@@ -387,7 +407,9 @@ loadTSS<-function(fpkmFile,
 		
 		write("Writing splicingDiffData table",stderr())
 		splicingCols<-c(1:2,5:14)
-		dbWriteTable(dbConn,'splicingDiffData',splicing[,splicingCols],row.names=F,append=T)
+		#dbWriteTable(dbConn,'splicingDiffData',splicing[,splicingCols],row.names=F,append=T)
+		insert_SQL<-"INSERT INTO splicingDiffData VALUES(?,?,?,?,?,?,?,?,?,?,?,?)"
+		bulk_insert(dbConn,insert_SQL,splicing[,splicingCols])
 		
 	}
 	
@@ -453,7 +475,9 @@ loadCDS<-function(fpkmFile,
 	######
 	cdsTable<-full[,c(1:4,6:9)]
 	write("Writing CDS table",stderr())
-	dbWriteTable(dbConn,'CDS',cdsTable,row.names=F,append=T)
+	#dbWriteTable(dbConn,'CDS',cdsTable,row.names=F,append=T)
+	insert_SQL<-"INSERT INTO CDS VALUES(?,?,?,?,?,?,?,?)"
+	bulk_insert(dbConn,insert_SQL,cdsTable)
 	
 	if (nrow(cdsTable) == 0)
 	{
@@ -485,11 +509,13 @@ loadCDS<-function(fpkmFile,
 	
 	#Recast
 	write("Recasting",stderr())
-	cdsmelt<-cast(cdsmelt,...~measurement)
+	cdsmelt<-as.data.frame(cast(cdsmelt,...~measurement))
 	
 	#Write geneData table
 	write("Writing CDSData table",stderr())
-	dbWriteTable(dbConn,'CDSData',as.data.frame(cdsmelt[,c(1:2,5,3,4,6)]),row.names=F,append=T)
+	#dbWriteTable(dbConn,'CDSData',as.data.frame(cdsmelt[,c(1:2,5,3,4,6)]),row.names=F,append=T)
+	insert_SQL<-"INSERT INTO CDSData VALUES(?,?,?,?,?,?)"
+	bulk_insert(dbConn,insert_SQL,cdsmelt[,c(1:2,5,3,4,6)])
 	
 	#######
 	#Handle cds_groups_exp.diff
@@ -507,7 +533,9 @@ loadCDS<-function(fpkmFile,
 		
 		write("Writing CDSExpDiffData table",stderr())
 		diffCols<-c(1,5:14)
-		dbWriteTable(dbConn,'CDSExpDiffData',diff[,diffCols],row.names=F,append=T)
+		#dbWriteTable(dbConn,'CDSExpDiffData',diff[,diffCols],row.names=F,append=T)
+		insert_SQL<-"INSERT INTO CDSExpDiffData VALUES(?,?,?,?,?,?,?,?,?,?,?)"
+		bulk_insert(dbConn,insert_SQL,diff[,diffCols])
 	}
 	
 	#########
@@ -521,7 +549,9 @@ loadCDS<-function(fpkmFile,
 		
 		write("Writing CDSDiffData table",stderr())
 		CDSCols<-c(2,5:14)
-		dbWriteTable(dbConn,'CDSDiffData',CDS[,CDSCols],row.names=F,append=T)
+		#dbWriteTable(dbConn,'CDSDiffData',CDS[,CDSCols],row.names=F,append=T)
+		insert_SQL<-"INSERT INTO CDSDiffData VALUES(?,?,?,?,?,?,?,?,?,?,?)"
+		bulk_insert(dbConn,insert_SQL,CDS[,CDSCols])
 		
 	}
 	
