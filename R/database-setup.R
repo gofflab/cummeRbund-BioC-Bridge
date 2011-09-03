@@ -50,6 +50,7 @@ loadGenes<-function(fpkmFile,
 	#Check that samples table is populated
 	write("Checking samples table...",stderr())
 	samples<-getSamplesFromColnames(full)
+	samples<-make.db.names(dbConn,samples,unique=FALSE)
 	dbSamples<-dbReadTable(dbConn,"samples")
 	if (dim(dbSamples)[1]>0) {
 		if (all(samples %in% dbSamples$sample_name)){
@@ -194,11 +195,13 @@ loadIsoforms<-function(fpkmFile,
 	#Check that samples table is populated
 	write("Checking samples table...",stderr())
 	samples<-getSamplesFromColnames(full)
+	samples<-make.db.names(dbConn,samples,unique=FALSE)
 	dbSamples<-dbReadTable(dbConn,"samples")
 	if (dim(dbSamples)[1]>0) {
 		if (all(samples %in% dbSamples$sample_name)){
 			write ("OK!",stderr())
 		}else{
+			write(samples,sys.stderr())
 			stop("Sample mismatch!")
 		}
 	}else{
@@ -317,6 +320,7 @@ loadTSS<-function(fpkmFile,
 	#Check that samples table is populated
 	write("Checking samples table...",stderr())
 	samples<-getSamplesFromColnames(full)
+	samples<-make.db.names(dbConn,samples,unique=FALSE)
 	dbSamples<-dbReadTable(dbConn,"samples")
 	if (dim(dbSamples)[1]>0) {
 		if (all(samples %in% dbSamples$sample_name)){
@@ -458,6 +462,7 @@ loadCDS<-function(fpkmFile,
 	#Check that samples table is populated
 	write("Checking samples table...",stderr())
 	samples<-getSamplesFromColnames(full)
+	samples<-make.db.names(dbConn,samples,unique=FALSE)
 	dbSamples<-dbReadTable(dbConn,"samples")
 	if (dim(dbSamples)[1]>0) {
 		if (all(samples %in% dbSamples$sample_name)){
@@ -967,6 +972,9 @@ COMMIT;
 				
 		tmp <- sapply(create.sql,function(x) sqliteQuickSQL(db,x))
 		db
+}
+
+createIndices<-function(){
 }
 
 
