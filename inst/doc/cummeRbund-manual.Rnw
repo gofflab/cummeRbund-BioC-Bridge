@@ -134,7 +134,7 @@ library(cummeRbund)
 @
 %%fileDir<-("../../extdata/")
 <<read>>=
-cuff <- readCufflinks()
+cuff <- readCufflinks(system.file("extdata","cuffData.db", package="cummeRbund"))
 cuff
 @
 Again, by default $dir$ is assumed to be the current working directory and \code{cuff<-readCufflinks()} should work if all appropriate files are in the current working directory. Should you need to rebuild the SQLite backend for any reason, you can add the option \Rfunarg{rebuild=T} to \Rmethod{readCufflinks}.  Once the database is created, \Rmethod{readCufflinks} will default to using the SQL backend and should not need to rebuild this database.
