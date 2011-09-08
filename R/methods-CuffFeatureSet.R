@@ -467,6 +467,10 @@ setMethod("expressionPlot",signature(object="CuffFeatureSet"),.expressionPlot)
 }
 
 setMethod("csCluster",signature(object="CuffFeatureSet"),.cluster)
+
+#TODO: Add csDendro method to produce dendrograms from fpkmMatrix with argument for Dimension (samples or features)
+
+
 #################
 #Misc			#
 #################
