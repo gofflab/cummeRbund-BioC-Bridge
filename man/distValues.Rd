@@ -1,5 +1,5 @@
 \name{distValues}
-\alias{distValues}
+\alias{distValues,CuffDist-method}
 
 \title{
 distValues
@@ -8,7 +8,7 @@ distValues
 Returns a data.frame of distribution-level test values from a CuffDist object (@promoters, @splicing, @relCDS)
 }
 \usage{
-distValues(object, ...)
+\S4method{distValues}{CuffDist}(object)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -41,10 +41,8 @@ None
 None
 }
 \examples{
-	\dontrun{
-	a<-readCufflinks # Read cufflinks data and create CuffSet object
+	a<-readCufflinks(system.file("extdata", package="cummeRbund")) # Read cufflinks data and create CuffSet object
 	distValues(a@promoters) # returns data.frame of values from CuffDist object in slot 'promoters'
-	}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

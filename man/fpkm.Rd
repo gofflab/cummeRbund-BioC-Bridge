@@ -1,5 +1,5 @@
 \name{fpkm}
-\alias{fpkm}
+\alias{fpkm,CuffData-method}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Retrieve FPKM values
@@ -8,7 +8,7 @@ Retrieve FPKM values
 Returns a data.frame from @FPKM slot
 }
 \usage{
-fpkm(object, features=FALSE)
+\S4method{fpkm}{CuffData}(object, features=FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

@@ -1,5 +1,5 @@
 \name{csDensity}
-\alias{csDensity}
+\alias{csDensity,CuffData-method}
 
 \title{
 Density plot of CuffData
@@ -8,7 +8,7 @@ Density plot of CuffData
 Creates a smoothed density plot, by sample, for log10 FPKM values from a cuffdiff run.
 }
 \usage{
-csDensity(object, logMode=TRUE, pseudocount=1.0, labels, features=FALSE, ...)
+\S4method{csDensity}{CuffData}(object, logMode=TRUE, pseudocount=1.0, labels, features=FALSE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -50,10 +50,8 @@ None
 
 
 \examples{
-	\dontrun{
-	a<-readCufflinks() #Create CuffSet object from data
+	a<-readCufflinks(system.file("extdata", package="cummeRbund")) #Create CuffSet object from sample data
 	genes<-a@genes #Create CuffData object for all 'genes'
 	d<-csDensity(genes) #Create csDensity plot
 	d #Render plot
-	}
 }

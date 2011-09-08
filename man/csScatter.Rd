@@ -1,5 +1,5 @@
 \name{csScatter}
-\alias{csScatter}
+\alias{csScatter,CuffData-method}
 
 \title{
 Scatter Plot
@@ -8,7 +8,7 @@ Scatter Plot
 A scatter plot comparing the FPKM  values from two samples in a cuffdiff run.
 }
 \usage{
-csScatter(object, x, y, logMode=TRUE, pseudocount=1.0, labels, smooth=FALSE, ...)
+\S4method{csScatter}{CuffData}(object, x, y, logMode=TRUE, pseudocount=1.0, labels, smooth=FALSE, colorByStatus = FALSE, ...)
 }
 
 \arguments{
@@ -54,10 +54,8 @@ None
 }
 
 \examples{
-	\dontrun{
-	a<-readCufflinks() #Create CuffSet object
+	a<-readCufflinks(system.file("extdata", package="cummeRbund")) #Create CuffSet object from sample data
 	genes<-a@genes #Create CuffData object for all genes
 	s<-csScatter(genes,'hESC','Fibroblasts',smooth=TRUE) #Create plot object
 	s #render plot object
-	}
 }

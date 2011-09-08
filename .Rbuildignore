@@ -1,13 +1,2 @@
-extdata/cds_exp.diff
-extdata/cds.diff
-extdata/cds.fpkm_tracking
-extdata/gene_exp.diff
-extdata/genes.fpkm_tracking
-extdata/isoform_exp.diff
-extdata/isoforms.fpkm_tracking
-extdata/promoters.diff
-extdata/splicing.diff
-extdata/tss_group_exp.diff
-extdata/tss_groups.fpkm_tracking
 .svn
 .Rhistory

@@ -1,5 +1,5 @@
 \name{getGene}
-\alias{getGene}
+\alias{getGene,CuffSet-method}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 getGene
@@ -8,7 +8,7 @@ getGene
 Primary accessor from a CuffSet object to retrive all related information for 1 (one) given gene, indexed by gene_id or gene_short_name.
 }
 \usage{
-getGene(object, geneId, sampleIdList=NULL)
+\S4method{getGene}{CuffSet}(object, geneId, sampleIdList=NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -39,8 +39,6 @@ Right now, this does not return an error if it cannot find a gene.  (this is pro
 }
 
 \examples{
-	\dontrun{
-	a<-readCufflinks() #Read cufflinks data and create master CuffSet object
+	a<-readCufflinks(system.file("extdata", package="cummeRbund")) #Read cufflinks data and create master CuffSet object
 	myGene<-getGene(a,"PINK1") # Retrieve all information for gene "PINK1"
-	}
 }

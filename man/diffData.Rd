@@ -1,5 +1,5 @@
 \name{diffData}
-\alias{diffData}
+\alias{diffData,CuffData-method}
 
 \title{
 Differential comparison data
@@ -8,7 +8,7 @@ Differential comparison data
 An accessor method to retrieve differential expression data from a 'CuffData', 'CuffFeatureSet', or 'CuffFeature' object
 }
 \usage{
-diffData(object, x, y, features=FALSE, lnFcCutoff=20, ...)
+\S4method{diffData}{CuffData}(object, x, y, features=FALSE, lnFcCutoff=20)
 }
 
 \arguments{

@@ -1,5 +1,5 @@
 \name{samples}
-\alias{samples}
+\alias{samples,CuffData-method}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Get sample list from CuffData object
@@ -8,7 +8,7 @@ Get sample list from CuffData object
 Returns a list of sample names from a CuffData or CuffFeatureSet object
 }
 \usage{
-samples(object)
+\S4method{samples}{CuffData}(object)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -38,9 +38,8 @@ None
 None
 }
 \examples{
-	\dontrun{
-	a<-readCufflinks() #Create CuffSet object
-	samples(a@gene)
-	}
+
+	a<-readCufflinks(system.file("extdata", package="cummeRbund")) #Create CuffSet object
+	samples(a@genes)
 }
 

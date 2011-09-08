@@ -1,5 +1,5 @@
 \name{csVolcano}
-\alias{csVolcano}
+\alias{csVolcano,CuffData-method}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Volcano Plot
@@ -8,7 +8,7 @@ Volcano Plot
 Creates a volcano plot of log fold change in expression vs -log(pval) for a pair of samples (x,y)
 }
 \usage{
-csVolcano(object, x, y, features=F, ...)
+\S4method{csVolcano}{CuffData}(object, x, y, features=FALSE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -46,11 +46,9 @@ None
 }
 
 \examples{
-\dontrun{
-a<-readCufflinks() #Create CuffSet object
+a<-readCufflinks(system.file("extdata", package="cummeRbund")) #Create CuffSet object
 genes<-a@genes #Create cuffData object for all genes
-v<-csVolcano(genes,"hESC","Fibroblast") # Volcano plot of all genes for conditions x='hESC' and y='Fibroblast'
+v<-csVolcano(genes,"hESC","Fibroblasts") # Volcano plot of all genes for conditions x='hESC' and y='Fibroblast'
 v #print plot
-}
 }
 

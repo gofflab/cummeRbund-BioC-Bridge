@@ -1,5 +1,5 @@
 \name{featureNames}
-\alias{featureNames}
+\alias{featureNames,CuffData-method}
 
 \title{
 Feature names
@@ -8,7 +8,7 @@ Feature names
 Retrive a vector of feature names from a 'CuffData' or 'CuffFeatureSet' object
 }
 \usage{
-featureNames(object)
+\S4method{featureNames}{CuffData}(object)
 }
 
 \arguments{

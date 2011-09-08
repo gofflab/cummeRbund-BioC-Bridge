@@ -1,5 +1,5 @@
 \name{csBoxplot}
-\alias{csBoxplot}
+\alias{csBoxplot,CuffData-method}
 
 \title{
 csBoxplot
@@ -8,7 +8,7 @@ csBoxplot
 Creates a ggplot2 plot object with a geom_box layer displaying summary statistics for FPKM values across samples (x).
 }
 \usage{
-csBoxplot(object, logMode=T, ...)
+\S4method{csBoxplot}{CuffData}(object, logMode=TRUE, ...)
 }
 
 \arguments{
@@ -38,13 +38,8 @@ Loyal A. Goff
 None
 }
 \examples{
-	\dontrun{
-	a<-readCufflinks #Read cufflinks data and create CuffSet object
+	a<-readCufflinks(system.file("extdata", package="cummeRbund")) #Read cufflinks data and create CuffSet object
 	genes<-a@genes #CuffData object for all genes
 	csBoxplot(genes)
-	}
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+

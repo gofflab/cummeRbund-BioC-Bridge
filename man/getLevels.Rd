@@ -1,5 +1,5 @@
 \name{getLevels}
-\alias{getLevels}
+\alias{getLevels,CuffData-method}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 getLevels
@@ -8,7 +8,7 @@ getLevels
 Returns a list of samples as levels. This should not be called directly by user.
 }
 \usage{
-getLevels(object)
+\S4method{getLevels}{CuffData}(object)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

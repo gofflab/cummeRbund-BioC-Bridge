@@ -1,5 +1,5 @@
 \name{features}
-\alias{features}
+\alias{features,CuffData-method}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Features
@@ -8,7 +8,7 @@ Features
 Returns a data frame of features from a CuffData, CuffFeatureSet, or CuffFeature object
 }
 \usage{
-features(object)
+\S4method{features}{CuffData}(object)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

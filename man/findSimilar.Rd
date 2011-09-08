@@ -1,5 +1,5 @@
 \name{findSimilar}
-\alias{findSimilar}
+\alias{findSimilar,CuffSet-method}
 
 \title{
 findSimilar
@@ -8,7 +8,7 @@ findSimilar
 Returns a CuffGeneSet containing n genes with the most similar expression profiles to gene/profile x.
 }
 \usage{
-findSimilar(object, x, n)
+\S4method{findSimilar}{CuffSet}(object, x, n)
 }
 
 \arguments{
@@ -38,8 +38,6 @@ Loyal A. Goff
 None
 }
 \examples{
-	\dontrun{
-	a<-readCufflinks()
+	a<-readCufflinks(system.file("extdata", package="cummeRbund"))
 	mySimilarGenes<-findSimilar(a,"PINK1",10)
-	}
 }

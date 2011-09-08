@@ -83,8 +83,8 @@ None.
 
 
 \examples{
-	\dontrun{
-	a<-readCufflinks() #Read cufflinks data and create CuffSet object 'a'
-	}
+
+	a<-readCufflinks(system.file("extdata", package="cummeRbund")) #Read cufflinks data in sample directory and creates CuffSet object 'a'
+
 }
 

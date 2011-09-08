@@ -1,5 +1,5 @@
 \name{expressionBarplot}
-\alias{expressionBarplot}
+\alias{expressionBarplot,CuffFeatureSet-method}
 
 \title{
 Barplot
@@ -8,7 +8,7 @@ Barplot
 A barplot of FPKM values with confidence intervals for a given gene, set of genes, or features of a gene (e.g. isoforms, TSS, CDS, etc).
 }
 \usage{
-expressionBarplot(object, logMode=FALSE, pseudocount=1.0, showErrorbars=TRUE, ...)
+\S4method{expressionBarplot}{CuffFeatureSet}(object, logMode=TRUE, pseudocount=1.0, showErrorbars=TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

@@ -1,5 +1,5 @@
 \name{fpkmMatrix}
-\alias{fpkmMatrix}
+\alias{fpkmMatrix,CuffData-method}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 fpkmMatrix
@@ -8,7 +8,7 @@ fpkmMatrix
 Retrieve FPKM values as gene by condition matrix
 }
 \usage{
-fpkmMatrix(object)
+\S4method{fpkmMatrix}{CuffData}(object)
 }
 
 \arguments{
