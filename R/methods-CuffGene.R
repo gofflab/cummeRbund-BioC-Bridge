@@ -35,6 +35,17 @@ setMethod("show","CuffGene",function(object){
 #Subsetting		#
 #################
 
+#################
+#Accessors
+#################
+#annotation
+
+#isoforms
+
+#TSS
+
+#CDS
+
 
 #################
 #Plotting		#
