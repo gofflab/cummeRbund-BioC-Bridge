@@ -104,6 +104,13 @@ setMethod("fpkmMatrix",signature(object="CuffFeatureSet"),.fpkmMatrix)
 
 setMethod("diffData",signature(object="CuffFeatureSet"),.diffData)
 
+#setMethod("diff","CuffFeatureSet",function(object){
+#			return(object@diff)
+#		})
+
+setMethod("annotation","CuffFeatureSet",function(object){
+			return(object@annotation)
+		})
 
 #################
 #Plotting		#

@@ -88,6 +88,43 @@ setValidity("CuffSet",
 
 setMethod("samples",signature(object="CuffSet"),.samples)
 
+setMethod("DB","CuffSet",function(object){
+		return(object@DB)
+		})
+
+setMethod("conditions","CuffSet",function(object){
+		return(object@conditions)
+		})
+
+setMethod("genes","CuffSet",function(object){
+		return(object@genes)
+		})
+
+setMethod("isoforms","CuffSet",function(object){
+		return(object@isoforms)
+		})
+
+setMethod("TSS","CuffSet",function(object){
+		return(object@TSS)
+		})
+
+setMethod("CDS","CuffSet",function(object){
+		return(object@CDS)
+		})
+
+setMethod("promoters","CuffSet",function(object){
+		return(object@promoters)
+		})
+
+setMethod("splicing","CuffSet",function(object){
+		return(object@splicing)
+		})
+
+setMethod("relCDS","CuffSet",function(object){
+		return(object@relCDS)
+		})
+
+
 #make CuffGene objects from a gene_ids
 .getGene<-function(object,geneId,sampleIdList=NULL){
 	

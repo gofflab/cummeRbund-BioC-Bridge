@@ -10,6 +10,14 @@
 
 #CuffSet generics
 setGeneric("samples",function(object) standardGeneric("samples"))
+setGeneric("conditions",function(object) standardGeneric("conditions"))
+setGeneric("genes",function(object) standardGeneric("genes"))
+setGeneric("isoforms",function(object) standardGeneric("isoforms"))
+setGeneric("TSS",function(object) standardGeneric("TSS"))
+setGeneric("CDS",function(object) standardGeneric("CDS"))
+setGeneric("promoters",function(object) standardGeneric("promoters"))
+setGeneric("splicing",function(object) standardGeneric("splicing"))
+setGeneric("relCDS",function(object) standardGeneric("relCDS"))
 setGeneric("getGene",function(object,geneId,sampleIdList=NULL) standardGeneric("getGene"))
 setGeneric("getGenes",function(object,geneIdList,sampleIdList=NULL) standardGeneric("getGenes"))
 setGeneric("addFeatures",function(object, features, ...) standardGeneric("addFeatures"))
@@ -23,6 +31,9 @@ setGeneric("findSimilar",function(object,x,n) standardGeneric("findSimilar"))
 setGeneric("features",function(object) standardGeneric("features"))
 setGeneric("featureNames",function(object) standardGeneric("featureNames"))
 setGeneric("fpkm",function(object, features=FALSE) standardGeneric("fpkm"))
+setGeneric("filters",function(object) standardGeneric("filters"))
+setGeneric("idField",function(object) standardGeneric("idField"))
+setGeneric("tables",function(object) standardGeneric("tables"))
 setGeneric("fpkmMatrix",function(object) standardGeneric("fpkmMatrix"))
 setGeneric("diffData",function(object, x, y, features=FALSE, lnFcCutoff=20, ...) standardGeneric("diffData"))
 setGeneric("getLevels",function(object) standardGeneric("getLevels"))
@@ -30,6 +41,10 @@ setGeneric("getLevels",function(object) standardGeneric("getLevels"))
 
 #CuffDist generics
 setGeneric("distValues",function(object,...) standardGeneric("distValues"))
+setGeneric("DB",function(object,...) standardGeneric("DB"))
+#setGeneric("table",function(object,...) standardGeneric("table"))
+setGeneric("type",function(object,...) standardGeneric("type"))
+setGeneric("testId",function(object,...) standardGeneric("testId"))
 
 #CuffData plotting
 setGeneric("csDensity",function(object, logMode=TRUE, pseudocount=1.0, labels, features=FALSE, ...) standardGeneric("csDensity"))
@@ -48,6 +63,8 @@ setGeneric("csBoxplot",function(object, logMode=T, ...) standardGeneric("csBoxpl
 #################
 setGeneric("csHeatmap",function(object,rescaling='none', clustering='none', labCol=T, labRow=T, logMode=T, pseudocount=1.0, border=FALSE, heatscale= c(low='darkred',mid='orange',high='white'), heatMidpoint=NULL, ...) standardGeneric("csHeatmap"))
 setGeneric("csCluster",function(object, k, iter.max=100, ...) standardGeneric("csCluster"))
+#setGeneric("diff",function(object) standardGeneric("diff"))
+setGeneric("annotation",function(object) standardGeneric("annotation"))
 
 ##################
 #CuffGene

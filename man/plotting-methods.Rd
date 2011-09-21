@@ -32,8 +32,5 @@
 
 \arguments{
 	\item{object}{}
-	
-	\item{}
-	
 
 }

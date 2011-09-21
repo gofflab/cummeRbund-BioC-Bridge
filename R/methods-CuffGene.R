@@ -38,13 +38,19 @@ setMethod("show","CuffGene",function(object){
 #################
 #Accessors
 #################
-#annotation
-
 #isoforms
-
+setMethod("isoforms","CuffGene",function(object){
+		return(object@isoforms)	
+		})
 #TSS
+setMethod("TSS","CuffGene",function(object){
+		return(object@TSS)
+		})
 
 #CDS
+setMethod("CDS","CuffGene",function(object){
+		return(object@CDS)
+		})
 
 
 #################

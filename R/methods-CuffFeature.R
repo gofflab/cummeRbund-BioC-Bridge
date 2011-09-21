@@ -72,6 +72,14 @@ setMethod("fpkm",signature="CuffFeature",.fpkm)
 
 setMethod("fpkmMatrix",signature(object="CuffFeature"),.fpkmMatrix)
 
+#setMethod("diff","CuffFeature",function(object){
+#		return(object@diff)
+#		})
+
+setMethod("annotation","CuffFeature",function(object){
+		return(object@annotation)
+		})
+
 #################
 #Setters		#
 #################

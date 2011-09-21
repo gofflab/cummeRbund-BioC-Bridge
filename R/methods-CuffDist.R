@@ -57,6 +57,22 @@ setMethod("dim","CuffDist",
 
 setMethod("distValues","CuffDist",.values)
 
+setMethod("DB","CuffDist",function(object){
+		return(object@DB)
+		})
+
+#setMethod("table","CuffDist",function(object){
+#		return(object@table)
+#		})
+
+setMethod("type","CuffDist",function(object){
+		return(object@type)
+		})
+
+setMethod("testId","CuffDist",function(object){
+		return(object@testId)
+		})
+
 ##################
 #Setters
 ##################

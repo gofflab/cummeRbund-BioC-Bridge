@@ -32,6 +32,24 @@ setMethod("show","CuffGeneSet",function(object){
 )
 
 #################
+#Accessors
+#################
+#isoforms
+setMethod("isoforms","CuffGeneSet",function(object){
+			return(object@isoforms)	
+		})
+#TSS
+setMethod("TSS","CuffGeneSet",function(object){
+			return(object@TSS)
+		})
+
+#CDS
+setMethod("CDS","CuffGeneSet",function(object){
+			return(object@CDS)
+		})
+
+
+#################
 #Subsetting		#
 #################
 

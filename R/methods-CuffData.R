@@ -146,6 +146,26 @@ setMethod("fpkmMatrix","CuffData",.fpkmMatrix)
 
 setMethod("diffData",signature(object="CuffData"),.diffData)
 
+setMethod("DB","CuffData",function(object){
+		return(object@DB)
+		})
+
+setMethod("tables","CuffData",function(object){
+		return(object@tables)
+		})
+
+setMethod("filters","CuffData",function(object){
+		return(object@filters)
+		})
+
+setMethod("type","CuffData",function(object){
+		return(object@type)
+		})
+
+setMethod("idField","CuffData",function(object){
+		return(object@idField)
+		})
+
 ##################
 #Setters
 ##################
