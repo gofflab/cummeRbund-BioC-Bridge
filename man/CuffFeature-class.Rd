@@ -2,8 +2,6 @@
 \Rdversion{1.1}
 \docType{class}
 \alias{CuffFeature-class}
-\alias{expressionBarplot,CuffFeature-method}
-\alias{expressionPlot,CuffFeature-method}
 \alias{fpkm,CuffFeature-method}
 \alias{fpkmMatrix,CuffFeature-method}
 \alias{length,CuffFeature-method}
@@ -25,8 +23,6 @@ Objects can be created by calls of the form \code{new("CuffFeature", annotation,
 }
 \section{Methods}{
   \describe{
-    \item{expressionBarplot}{\code{signature(object = "CuffFeature")}: ... }
-    \item{expressionPlot}{\code{signature(object = "CuffFeature")}: ... }
     \item{fpkm}{\code{signature(object = "CuffFeature")}: ... }
     \item{fpkmMatrix}{\code{signature(object="CuffFeature")}: ...}
     \item{length}{\code{signature(x = "CuffFeature")}: ... }

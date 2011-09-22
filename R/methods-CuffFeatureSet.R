@@ -454,6 +454,10 @@ setMethod("expressionBarplot",signature(object="CuffFeatureSet"),.barplot)
 
 setMethod("expressionPlot",signature(object="CuffFeatureSet"),.expressionPlot)
 
+#TODO: Add csDensity plot for CuffFeatureSet objects
+
+#TODO: Add ecdf plot for CuffFeatureSet and CuffData objects
+
 #################
 #Clustering		#
 #################

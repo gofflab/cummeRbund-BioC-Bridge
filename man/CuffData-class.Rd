@@ -3,10 +3,6 @@
 \docType{class}
 \alias{CuffData-class}
 \alias{addFeatures,CuffData-method}
-\alias{csBoxplot,CuffData-method}
-\alias{csDensity,CuffData-method}
-\alias{csScatter,CuffData-method}
-\alias{csVolcano,CuffData-method}
 \alias{diffData,CuffData-method}
 \alias{dim,CuffData-method}
 \alias{featureNames,CuffData-method}
@@ -38,10 +34,6 @@ Objects can be created by calls of the form \code{new("CuffData", DB, tables, fi
 \section{Methods}{
   \describe{
     \item{addFeatures}{\code{signature(object = "CuffData")}: ... }
-    \item{csBoxplot}{\code{signature(object = "CuffData")}: ... }
-    \item{csDensity}{\code{signature(object = "CuffData")}: ... }
-    \item{csScatter}{\code{signature(object = "CuffData")}: ... }
-    \item{csVolcano}{\code{signature(object = "CuffData")}: ... }
     \item{diffData}{\code{signature(object = "CuffData")}: ... }
     \item{dim}{\code{signature(x = "CuffData")}: ... }
     \item{featureNames}{\code{signature(object = "CuffData")}: ... }

@@ -10,7 +10,7 @@
 \alias{csScatter,CuffFeatureSet-method}
 \alias{csVolcano,CuffFeatureSet-method}
 \alias{csHeatmap,CuffFeatureSet-method}
-\alias{csCluster,CufFeatureSet-method}
+\alias{csCluster,CuffFeatureSet-method}
 \alias{expressionBarplot,CuffFeatureSet-method}
 \alias{expressionPlot,CuffFeatureSet-method}
 
@@ -33,10 +33,9 @@
 
 \S4method{csVolcano}{CuffData}(object, x, y, features=FALSE, ...)
 
-\S4method{csHeatmap}{CuffFeatureSet}(object, rescaling='none', clustering='none', labCol=T, labRow=T, logMode=T, pseudocount=1.0, 
-		border=FALSE, heatscale= c(low='darkred',mid='orange',high='white'), heatMidpoint=NULL,...)
+\S4method{csHeatmap}{CuffFeatureSet}(object, rescaling='none', clustering='none', labCol=T, labRow=T, logMode=T, pseudocount=1.0, border=FALSE, heatscale= c(low='darkred',mid='orange',high='white'), heatMidpoint=NULL,...)
 
-\S4method{csCluster}{(object,k,iter.max=100,...)}
+\S4method{csCluster}{CuffFeatureSet}(object,k,iter.max=100,...)
 
 \S4method{expressionPlot}{CuffFeature}(object, logMode=FALSE, pseudocount=1.0, drawSummary=FALSE, sumFun=mean_cl_boot, showErrorbars=TRUE, ...)
 
@@ -46,12 +45,9 @@
 
 \arguments{
 	\item{object}{An object of class CuffData, CuffFeature, or CuffFeatureSet}
-<<<<<<< .mine
 	
 	\item{x}{A character argument for the first condition (sample) in a pairwise comparison}
-	
-=======
->>>>>>> .r2723
+
 	\item{y}{A character argument for the second condition (sample) in a pairwise comparison}
 	
 	\item{logMode}{Logical argument whether or not to log10 transform FPKM values}
@@ -72,6 +68,16 @@
 	
 	\item{clustering}{One of c('none','row','column','both') or a function that returns a dist object.  This argument indicates which dimensions of a heatmap are clustered.  If you pass
 	a function that returns a 'dist' object, this function will be used to reorder rows and columns.  By default clustering uses the Jensen-Shannon distance as a similarity metric.}
+	
+	\item{labRow}{Logical argument whether or not to draw labels for Row}
+	
+	\item{labCol}{See labRow}
+	
+	\item{drawSummary}{Logical argument whether or not to draw a summary line (using sumFun) for all features in FeatureSet or GeneSet}
+	
+	\item{sumFun}{Function used to plot summary line}
+	
+	\item{showErrorbars}{Logical argument whether or not to draw error bars on expression plot [default: TRUE]}
 	
 	\item{border}{Logical argument whether or not to draw a border around heatmap}
 	
