@@ -1,5 +1,8 @@
 \name{addFeatures}
+
 \alias{addFeatures}
+\alias{addFeatures,CuffSet-method}
+\alias{addFeatures,CuffData-method}
 
 \title{
 addFeatures
@@ -8,7 +11,8 @@ addFeatures
 Adds a data.frame of features to a the SQLite backend database.
 }
 \usage{
-addFeatures(object, features, ...)
+\S4method{addFeatures}{CuffSet}(object, features, level="genes", ...)
+
 }
 
 \arguments{
@@ -18,6 +22,11 @@ An object of class ('CuffSet' or 'CuffData')
   \item{features}{
 A data.frame of features to add.  1st column MUST contain ids (ie. gene_id for 'gene' features, isoform_id for 'isoform' features, etc)
 }
+
+  \item{level}{
+One of c('genes','isoforms','TSS','CDS') to indicate which type of featurs you are being added, and to what data-level.
+  }
+
   \item{\dots}{
 Additional arguments.
 }
@@ -39,9 +48,5 @@ None
 }
 
 \examples{
-	\dontrun{
-	features #A data.frame of features with gene_id as first column 
-	a<-readCufflinks() #Read cufflinks data and create CuffSet object
-	addFeatures(a,features) #Adds features to table in cuffData.db for use by CuffData objects.
-	}
+	#None yet.
 }

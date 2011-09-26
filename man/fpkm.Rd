@@ -1,24 +1,32 @@
-\name{fpkm}
+\name{fpkm-methods}
+\docType{methods}
+\alias{fpkm}
+\alias{fpkm-methods}
 \alias{fpkm,CuffData-method}
-%- Also NEED an '\alias' for EACH other topic documented here.
+\alias{fpkm,CuffFeature-method}
+\alias{fpkm,CuffFeatureSet-method}
 \title{
 Retrieve FPKM values
 }
 \description{
 Returns a data.frame from @FPKM slot
 }
-\usage{
-\S4method{fpkm}{CuffData}(object, features=FALSE)
+\section{Methods}{
+\describe{
+
+\item{\code{signature(object = "CuffData")}}{
+%%  ~~describe this method here~~
 }
-%- maybe also 'usage' for other objects documented here.
-\arguments{
-  \item{object}{
-An object of class ('CuffData','CuffFeatureSet','CuffFeature')
+
+\item{\code{signature(object = "CuffFeature")}}{
+%%  ~~describe this method here~~
 }
-  \item{features}{
-A logical argument to merge the @features slot and return a data.frame with all attributes attached.
+
+\item{\code{signature(object = "CuffFeatureSet")}}{
+%%  ~~describe this method here~~
 }
-}
+}}
+
 \details{
 Returns a data.frame of FPKM values.
 }
@@ -39,4 +47,3 @@ None
 	data(sampleData)
 	fpkm(PINK1)
 }
-

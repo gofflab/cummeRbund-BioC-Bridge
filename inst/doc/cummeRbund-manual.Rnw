@@ -154,7 +154,7 @@ By default, features added to a \Rclass{CuffSet} object are assumed to be gene-l
 Several plotting methods are available that allow for quality-control or global analysis of cufflinks data. For example, to assess the
 distributions of FPKM scores across samples, you can use the \Rmethod{csDensity} plot (Figure 1).
 <<global_plots_1,include=FALSE>>=
-dens<-csDensity(cuff@genes)
+dens<-csDensity(genes(cuff))
 dens
 @
 
@@ -166,7 +166,7 @@ print(dens)
 
 Boxplots can be visualized using the \Rmethod{csBoxplot} method (Figure 2).
 <<global_plots_2,include=FALSE>>=
-b<-csBoxplot(cuff@genes)
+b<-csBoxplot(genes(cuff))
 b
 @
 
@@ -178,7 +178,7 @@ print(b)
 
 Pairwise comparisons can be made by using \Rmethod{csScatter}. You must specify the sample names to use for the $x$ and $y$ axes:
 <<global_plots_3,include=FALSE>>=
-s<-csScatter(cuff@genes,"hESC","Fibroblasts",smooth=T)
+s<-csScatter(genes(cuff),"hESC","Fibroblasts",smooth=T)
 s
 @
 
@@ -189,7 +189,7 @@ print(s)
 
 Volcano plots are also available for the \Rclass{CuffData} objects. Again, you must specify the comparisons by sample name.
 <<global_plots_4,include=FALSE>>=
-v<-csVolcano(cuff@genes,"hESC","Fibroblasts")
+v<-csVolcano(genes(cuff),"hESC","Fibroblasts")
 v
 @
 
@@ -204,28 +204,28 @@ print(v)
 Feature-level information can be accessed directly from a \Rclass{CuffData} object using the \Rmethod{fpkm}, \Rmethod{diffData}, or \Rmethod{features} methods:
 
 <<data_access_1>>=
-gene.features<-features(cuff@genes)
+gene.features<-features(genes(cuff))
 head(gene.features)
-gene.fpkm<-fpkm(cuff@genes)
+gene.fpkm<-fpkm(genes(cuff))
 head(gene.fpkm)
-isoform.fpkm<-fpkm(cuff@isoforms)
+isoform.fpkm<-fpkm(isoforms(cuff))
 head(isoform.fpkm)
-gene.diff<-diffData(cuff@genes)
+gene.diff<-diffData(genes(cuff))
 head(gene.diff)
 @
 
 Vectors of sample names and feature names are available by using the \Rmethod{samples} and \Rmethod{featureNames} methods:
 
 <<data_access_2>>=
-sample.names<-samples(cuff@genes)
+sample.names<-samples(genes(cuff))
 head(sample.names)
-gene.featurenames<-featureNames(cuff@genes)
+gene.featurenames<-featureNames(genes(cuff))
 head(gene.featurenames)
 @
 
 To facilitate Bioconductor-like operations, an 'FPKM-matrix' can be returned easily using the \Rmethod{fpkmMatrix} method:
 <<data_access_3>>=
-gene.matrix<-fpkmMatrix(cuff@genes)
+gene.matrix<-fpkmMatrix(genes(cuff))
 head(gene.matrix)
 @
 
@@ -291,7 +291,7 @@ print(v)
 Similar plots can be made for all sub-level features of a \Rclass{CuffGeneSet} class by specifiying which slot you would like to plot (eg. \Rfunarg{@isoforms},\Rfunarg{@TSS},\Rfunarg{@CDS}).
 
 <<geneset_plots_4,include=FALSE>>=
-ih<-csHeatmap(myGenes@isoforms,cluster='both',labRow=F)
+ih<-csHeatmap(isoforms(myGenes),cluster='both',labRow=F)
 ih
 @
 
@@ -321,7 +321,7 @@ myGeneId<-"PINK1"
 myGene<-getGene(cuff,myGeneId)
 myGene
 head(fpkm(myGene))
-head(fpkm(myGene@isoforms))
+head(fpkm(isoforms(myGene)))
 @
 
 \subsection{Gene-level plots}
@@ -346,7 +346,7 @@ print(gb)
 @
 
 <<gene_plots_3,include=FALSE>>=
-igb<-expressionBarplot(myGene@isoforms)
+igb<-expressionBarplot(isoforms(myGene))
 igb
 @
 

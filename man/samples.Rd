@@ -1,4 +1,6 @@
 \name{samples}
+\alias{samples}
+\alias{samples,CuffSet-method}
 \alias{samples,CuffData-method}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{

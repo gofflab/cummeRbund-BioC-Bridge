@@ -2,13 +2,24 @@
 \Rdversion{1.1}
 \docType{class}
 \alias{CuffSet-class}
+%Accessors
+\alias{genes}
+\alias{isoforms}
+\alias{TSS}
+\alias{CDS}
+\alias{promoters}
+\alias{splicing}
+\alias{relCDS}
+
+\alias{genes,CuffSet-method}
+\alias{isoforms,CuffSet-method}
+\alias{TSS,CuffSet-method}
+\alias{CDS,CuffSet-method}
+\alias{promoters,CuffSet-method}
+\alias{splicing,CuffSet-method}
+\alias{relCDS,CuffSet-method}
+
 \alias{[,CuffSet-method}
-\alias{addFeatures,CuffSet-method}
-\alias{getGene,CuffSet-method}
-\alias{getGenes,CuffSet-method}
-\alias{findSimilar,CuffSet-method}
-\alias{getLevels,CuffSet-method}
-\alias{samples,CuffSet-method}
 
 \title{Class "CuffSet"}
 \description{
@@ -34,14 +45,21 @@ Available methods are primary accessors to retrieve CuffGeneSet or CuffGene obje
 \section{Methods}{
   \describe{
     \item{[}{\code{signature(x = "CuffSet")}: ... }
-    \item{addFeatures}{\code{signature(object = "CuffSet")}: ... }
-    \item{findSimilar}{\code{signature(object = "CuffSet")}: ... }
-    \item{getGene}{\code{signature(object = "CuffSet")}: ... }
-    \item{getGenes}{\code{signature(object = "CuffSet")}: ... }
-    \item{getLevels}{\code{signature(object = "CuffSet")}: ... }
-    \item{samples}{\code{signature(object = "CuffSet")}: ... }
 	 }
 }
+
+\section{Accessors}{
+	\describe{
+		\item{genes}{\code{signature(object = "CuffSet")}: Access @genes slot }
+		\item{isoforms}{\code{signature(object = "CuffSet")}: Access @isoforms slot }
+		\item{TSS}{\code{signature(object = "CuffSet")}: Access @TSS slot }
+		\item{CDS}{\code{signature(object = "CuffSet")}: Access @CDS slot }
+		\item{promoters}{\code{signature(object = "CuffSet")}: Access @promoters slot }
+		\item{splicing}{\code{signature(object = "CuffSet")}: Access @splicing slot }
+		\item{relCDS}{\code{signature(object = "CuffSet")}: Access @relCDS slot }
+	}
+}
+
 \references{
 None.
 }

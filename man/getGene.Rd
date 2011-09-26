@@ -1,6 +1,7 @@
 \name{getGene}
+\alias{getGene}
 \alias{getGene,CuffSet-method}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
 getGene
 }
@@ -10,7 +11,7 @@ Primary accessor from a CuffSet object to retrive all related information for 1 
 \usage{
 \S4method{getGene}{CuffSet}(object, geneId, sampleIdList=NULL)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{object}{
 An object of class 'CuffSet' (Primary 'pointer' object for Cufflinks data).

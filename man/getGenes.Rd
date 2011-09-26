@@ -1,4 +1,5 @@
 \name{getGenes}
+\alias{getGenes}
 \alias{getGenes,CuffSet-method}
 
 \title{

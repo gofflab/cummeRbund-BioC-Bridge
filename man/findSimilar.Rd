@@ -1,4 +1,5 @@
 \name{findSimilar}
+\alias{findSimilar}
 \alias{findSimilar,CuffSet-method}
 
 \title{

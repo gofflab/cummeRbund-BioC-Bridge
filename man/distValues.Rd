@@ -1,4 +1,5 @@
 \name{distValues}
+\alias{distValues}
 \alias{distValues,CuffDist-method}
 
 \title{

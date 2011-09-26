@@ -1,4 +1,5 @@
 \name{diffData}
+\alias{diffData}
 \alias{diffData,CuffData-method}
 
 \title{

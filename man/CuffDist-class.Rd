@@ -3,7 +3,6 @@
 \docType{class}
 \alias{CuffDist-class}
 \alias{dim,CuffDist-method}
-\alias{distValues,CuffDist-method}
 
 \title{Class "CuffDist"}
 \description{
@@ -24,7 +23,6 @@ Objects can be created by calls of the form \code{new("CuffDist", DB, table, typ
 \section{Methods}{
   \describe{
     \item{dim}{\code{signature(x = "CuffDist")}: ... }
-    \item{distValues}{\code{signature(object = "CuffDist")}: ... }
 	 }
 }
 \references{

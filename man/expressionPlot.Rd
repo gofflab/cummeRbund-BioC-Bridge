@@ -1,5 +1,8 @@
 \name{expressionPlot}
+
+\alias{expressionPlot}
 \alias{expressionPlot,CuffFeature-method}
+\alias{expressionPlot,CuffFeatureSet-method}
 
 \title{
 Expression Plot

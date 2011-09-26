@@ -1,4 +1,6 @@
 \name{getLevels}
+\alias{getLevels}
+\alias{getLevels,CuffSet-method}
 \alias{getLevels,CuffData-method}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{

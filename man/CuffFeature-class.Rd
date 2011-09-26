@@ -2,7 +2,7 @@
 \Rdversion{1.1}
 \docType{class}
 \alias{CuffFeature-class}
-\alias{fpkm,CuffFeature-method}
+\alias{annotation,CuffFeature-method}
 \alias{fpkmMatrix,CuffFeature-method}
 \alias{length,CuffFeature-method}
 
@@ -23,10 +23,15 @@ Objects can be created by calls of the form \code{new("CuffFeature", annotation,
 }
 \section{Methods}{
   \describe{
-    \item{fpkm}{\code{signature(object = "CuffFeature")}: ... }
     \item{fpkmMatrix}{\code{signature(object="CuffFeature")}: ...}
     \item{length}{\code{signature(x = "CuffFeature")}: ... }
 	 }
+}
+
+\section{Accessors}{
+	\describe{
+		\item{annotation}{\code{signature(object="CuffFeature")}: Access @annotation slot}
+	}
 }
 \references{
 None

@@ -2,6 +2,10 @@
 \Rdversion{1.1}
 \docType{class}
 \alias{CuffGene-class}
+\alias{genes,CuffGene-method}
+\alias{isoforms,CuffGene-method}
+\alias{TSS,CuffGene-method}
+\alias{CDS,CuffGene-method}
 
 \title{Class "CuffGene"}
 \description{
@@ -27,6 +31,15 @@ Class \code{"\linkS4class{CuffFeature}"}, directly.
 }
 \section{Methods}{
 No methods defined with class "CuffGene" in the signature.
+}
+
+\section{Accessors}{
+	\describe{
+		\item{genes}{\code{signature(object = "CuffGene")}: Access @genes slot }
+		\item{isoforms}{\code{signature(object = "CuffGene")}: Access @isoforms slot }
+		\item{TSS}{\code{signature(object = "CuffGene")}: Access @TSS slot }
+		\item{CDS}{\code{signature(object = "CuffGene")}: Access @CDS slot }
+	}
 }
 \references{
 None.

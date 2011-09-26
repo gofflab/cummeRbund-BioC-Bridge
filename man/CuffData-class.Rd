@@ -2,16 +2,8 @@
 \Rdversion{1.1}
 \docType{class}
 \alias{CuffData-class}
-\alias{addFeatures,CuffData-method}
-\alias{diffData,CuffData-method}
 \alias{dim,CuffData-method}
-\alias{featureNames,CuffData-method}
-\alias{features,CuffData-method}
-\alias{fpkm,CuffData-method}
-\alias{fpkmMatrix,CuffData-method}
 \alias{getFeatures,CuffData-method}
-\alias{getLevels,CuffData-method}
-\alias{samples,CuffData-method}
 
 \title{Class "CuffData"}
 \description{
@@ -33,16 +25,8 @@ Objects can be created by calls of the form \code{new("CuffData", DB, tables, fi
 }
 \section{Methods}{
   \describe{
-    \item{addFeatures}{\code{signature(object = "CuffData")}: ... }
-    \item{diffData}{\code{signature(object = "CuffData")}: ... }
     \item{dim}{\code{signature(x = "CuffData")}: ... }
-    \item{featureNames}{\code{signature(object = "CuffData")}: ... }
-    \item{features}{\code{signature(object = "CuffData")}: ... }
-    \item{fpkm}{\code{signature(object = "CuffData")}: ... }
-    \item{fpkmMatrix}{\code{signature(object = "CuffData")}: ... }
     \item{getFeatures}{\code{signature(object = "CuffData")}: ... }
-    \item{getLevels}{\code{signature(object = "CuffData")}: ... }
-    \item{samples}{\code{signature(object = "CuffData")}: ... }
 	 }
 }
 \references{

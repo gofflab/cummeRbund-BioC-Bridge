@@ -1,4 +1,6 @@
 \name{expressionBarplot}
+\alias{expressionBarplot}
+\alias{expressionBarplot,CuffFeature-method}
 \alias{expressionBarplot,CuffFeatureSet-method}
 
 \title{

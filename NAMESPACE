@@ -9,7 +9,16 @@ exportClasses(CuffSet,
 			CuffGeneSet
 )
 
-exportMethods(fpkm,
+exportMethods(
+			annotation,
+			genes,
+			isoforms,
+			TSS,
+			CDS,
+			promoters,
+			splicing,
+			relCDS,
+			fpkm,
 			distValues,
 			csDensity,
 			csScatter,
