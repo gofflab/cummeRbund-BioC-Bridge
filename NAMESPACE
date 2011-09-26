@@ -1,0 +1,52 @@
+import(methods)
+
+exportClasses(CuffSet,
+			CuffData,
+			CuffDist,
+			CuffFeature, 
+			CuffFeatureSet, 
+			CuffGene, 
+			CuffGeneSet
+)
+
+exportMethods(
+			annotation,
+			genes,
+			isoforms,
+			TSS,
+			CDS,
+			promoters,
+			splicing,
+			relCDS,
+			fpkm,
+			distValues,
+			csDensity,
+			csScatter,
+			csVolcano,
+			csBoxplot,
+			csHeatmap,
+			csCluster,
+			fpkmMatrix,
+			diffData,
+			features,
+			featureNames,
+			samples,
+			expressionPlot,
+			expressionBarplot,
+			getGene,
+			getGenes,
+			addFeatures,
+			getLevels,
+			findSimilar
+)
+
+export("readCufflinks",
+		"JSdist",
+		"JSdistVec",
+		"shannon.entropy",
+		"makeprobs",
+		"makeprobsvec"
+		)
+
+#importClassesFrom("Biobase","Versioned")
+#importClassesFrom("Biobase","VersionedBiobase")
