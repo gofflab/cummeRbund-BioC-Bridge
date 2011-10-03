@@ -1345,7 +1345,9 @@ createIndices<-function(dbFname="cuffData.db",driver="SQLite"){
 	db <- dbConnect(drv,dbname=dbFname)
 	
 	index.text<-
-'CREATE INDEX "TSS.fk_TSS_genes1" ON "TSS"("gene_id");
+'CREATE INDEX "genes.gsn_index" ON "genes"("gene_short_name");
+CREATE INDEX "genes.cc_index" ON "genes"("class_code");
+CREATE INDEX "TSS.fk_TSS_genes1" ON "TSS"("gene_id");
 CREATE INDEX "TSSData.fk_TSSData_TSS1" ON "TSSData"("TSS_group_id");
 CREATE INDEX "TSSData.fk_TSSData_samples1" ON "TSSData"("sample_name");
 CREATE INDEX "CDS.fk_CDS_genes1" ON "CDS"("gene_id");
@@ -1359,12 +1361,14 @@ CREATE INDEX "splicingDiffData.fk_splicingDiffData_genes1" ON "splicingDiffData"
 CREATE INDEX "TSSExpDiffData.fk_TSSExpDiffData_TSS1" ON "TSSExpDiffData"("TSS_group_id");
 CREATE INDEX "TSSExpDiffData.fk_TSSExpDiffData_samples1" ON "TSSExpDiffData"("sample_1");
 CREATE INDEX "TSSExpDiffData.fk_TSSExpDiffData_samples2" ON "TSSExpDiffData"("sample_2");
+CREATE INDEX "TSSExpDiffData.TSSExpDiffData_sig_index" ON "TSSExpDiffData"("test_stat","p_value","q_value","significant");
 CREATE INDEX "CDSDiffData.fk_CDSDiffData_samples1" ON "CDSDiffData"("sample_1");
 CREATE INDEX "CDSDiffData.fk_CDSDiffData_samples2" ON "CDSDiffData"("sample_2");
 CREATE INDEX "CDSDiffData.fk_CDSDiffData_genes1" ON "CDSDiffData"("gene_id");
 CREATE INDEX "CDSExpDiffData.fk_CDSExpDiffData_CDS1" ON "CDSExpDiffData"("CDS_id");
 CREATE INDEX "CDSExpDiffData.fk_CDSExpDiffData_samples1" ON "CDSExpDiffData"("sample_1");
 CREATE INDEX "CDSExpDiffData.fk_CDSExpDiffData_samples2" ON "CDSExpDiffData"("sample_2");
+CREATE INDEX "CDSExpDiffData.CDSExpDiffData_sig_index" ON "CDSExpDiffData"("test_stat","p_value","q_value","significant");
 CREATE INDEX "promoterDiffData.fk_promoterDiffData_genes1" ON "promoterDiffData"("gene_id");
 CREATE INDEX "promoterDiffData.fk_promoterDiffData_samples1" ON "promoterDiffData"("sample_1");
 CREATE INDEX "promoterDiffData.fk_promoterDiffData_samples2" ON "promoterDiffData"("sample_2");
@@ -1377,6 +1381,8 @@ CREATE INDEX "phenoData.fk_phenoData_samples" ON "phenoData"("sample_name");
 CREATE INDEX "geneExpDiffData.fk_geneExpDiffData_genes1" ON "geneExpDiffData"("gene_id");
 CREATE INDEX "geneExpDiffData.fk_geneExpDiffData_samples1" ON "geneExpDiffData"("sample_1");
 CREATE INDEX "geneExpDiffData.fk_geneExpDiffData_samples2" ON "geneExpDiffData"("sample_2");
+CREATE INDEX "geneExpDiffData.geneExpDiff_status_index" ON "geneExpDiffData"("status");
+CREATE INDEX "geneExpDiffData.geneExpDiff_sig_index" ON "geneExpDiffData"("significant","p_value","q_value","test_stat");
 CREATE INDEX "isoforms.fk_isoforms_TSS1" ON "isoforms"("TSS_group_id");
 CREATE INDEX "isoforms.fk_isoforms_CDS1" ON "isoforms"("CDS_id");
 CREATE INDEX "isoforms.fk_isoforms_genes1" ON "isoforms"("gene_id");
@@ -1385,8 +1391,8 @@ CREATE INDEX "isoformData.fk_isoformData_isoforms1" ON "isoformData"("isoform_id
 CREATE INDEX "isoformExpDiffData.fk_isoformExpDiffData_isoforms1" ON "isoformExpDiffData"("isoform_id");
 CREATE INDEX "isoformExpDiffData.fk_isoformExpDiffData_samples1" ON "isoformExpDiffData"("sample_1");
 CREATE INDEX "isoformExpDiffData.fk_isoformExpDiffData_samples2" ON "isoformExpDiffData"("sample_2");
+CREATE INDEX "isoformExpDiffData.isoformExpDiffData_sig_index" ON "isoformExpDiffData"("test_stat","p_value","q_value","significant");
 CREATE INDEX "isoformFeatures.fk_isoformFeatures_isoforms1" ON "isoformFeatures"("isoform_id");
-
 '
 	create.sql <- strsplit(index.text,"\n")[[1]]
 	create.sal <- paste(collapse="\n", create.sql)

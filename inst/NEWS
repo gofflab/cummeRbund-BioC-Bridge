@@ -1,2 +1,9 @@
+v0.99.5
+	- Significant speed improvements to readCufflinks()
+		- Tables written first then indexed.
+	
+v0.99.4
+	- Second beta release and submission to Bioconductor
+
 v0.1.3 Release 2011-08-18:
-	- First release of cummeRbund and submission to Bioconductor for review and hosting.
+	- First Beta release of cummeRbund and submission to Bioconductor for review and hosting.
