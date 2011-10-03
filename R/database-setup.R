@@ -1396,9 +1396,6 @@ CREATE INDEX "isoformExpDiffData.isoformExpDiffData_sig_index" ON "isoformExpDif
 CREATE INDEX "isoformFeatures.fk_isoformFeatures_isoforms1" ON "isoformFeatures"("isoform_id");
 '
 	create.sql <- strsplit(index.text,"\n")[[1]]
-	create.sal <- paste(collapse="\n", create.sql)
-	create.sql <- strsplit(create.sql, ";")[[1]]
-	create.sql <- create.sql[-length(create.sql)]
 	
 	tmp <- sapply(create.sql,function(x) sqliteQuickSQL(db,x))
 
