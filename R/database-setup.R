@@ -1345,7 +1345,8 @@ createIndices<-function(dbFname="cuffData.db",driver="SQLite"){
 	db <- dbConnect(drv,dbname=dbFname)
 	
 	index.text<-
-'CREATE INDEX "genes.gsn_index" ON "genes"("gene_short_name");
+'CREATE INDEX "genes.gene_id_index" ON "genes"("gene_id");
+CREATE INDEX "genes.gsn_index" ON "genes"("gene_short_name");
 CREATE INDEX "genes.cc_index" ON "genes"("class_code");
 CREATE INDEX "TSS.fk_TSS_genes1" ON "TSS"("gene_id");
 CREATE INDEX "TSSData.fk_TSSData_TSS1" ON "TSSData"("TSS_group_id");
