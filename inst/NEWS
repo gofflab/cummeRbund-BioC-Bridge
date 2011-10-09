@@ -1,6 +1,7 @@
 v0.99.5
-	- Significant speed improvements to readCufflinks()
+	- Significant speed improvements to readCufflinks() for large cuffdiff datasets.
 		- Tables written first then indexed.
+	- Added slot accessor methods to avoid using slots directly.
 	
 v0.99.4
 	- Second beta release and submission to Bioconductor

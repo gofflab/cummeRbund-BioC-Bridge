@@ -68,12 +68,12 @@ options(width=65)
 \section{CummeRbund Classes}
 
 \subsection{CuffSet Class}
-	A pointer class to control access to the sqlite tables holding the Cufflinks data. The primary slot is @DB which contains the RSQLite connection object.
-	The additional slots (genes, isoforms, TSS, and CDS) are each instances of the \Rclass{CuffData} class and are pointers to sets of tables for each data subtype.
+	A pointer class to control access to the sqlite tables holding the Cufflinks data. The primary slot is DB which contains the RSQLite connection object. This can be accessed using the \Rmethod{DB()} accessor.
+	The additional slots (genes, isoforms, TSS, and CDS) are each instances of the \Rclass{CuffData} class and are pointers to sets of tables for each data subtype. They can be accessed with similar accessor wrappers.
 	This is the default class created by \Rmethod{readCufflinks}.  By default, \Rclass{CuffData} accessor methods applied to a \Rclass{CuffSet} class will operate on the 'genes' slot.
 
 \subsection{CuffData Class}
-	The \Rclass{CuffData} class is also a pointer class to the SQL backend, but each instance is specific for a data subtype (genes, isoforms, TSS, CDS). Again, there is an @DB slot that contains the RSQLite connection object.
+	The \Rclass{CuffData} class is also a pointer class to the SQL backend, but each instance is specific for a data subtype (genes, isoforms, TSS, CDS). Again, there is an DB slot (accessible using \Rmethod{DB()}) that contains the RSQLite connection object.
 	There are several accessor, setter, and plotting methods that allow for global analysis of all features within a \Rmethod{CuffData} class.Subsetting is currently being re-written, however, it is primarily done through the 'gene\_id' field.
 	Available slots for the CuffData class are: 
 	\begin{itemize}
@@ -147,7 +147,7 @@ Gene- or feature-level annotation can be permanently added to the database table
 #annot<-read.table("gene_annotation.tab",sep="\t",header=T,na.string="-")
 #addFeatures(cuff,annot,level="genes")
 @
-By default, features added to a \Rclass{CuffSet} object are assumed to be gene-level annotations, but the level can selected using the argument \Rfunarg{level}. Features added to a \Rclass{CuffData} object are assumed to be of the same type as the object@type value (e.g. gene-level features for 'genes', isoform-level features for isoforms, etc.)
+By default, features added to a \Rclass{CuffSet} object are assumed to be gene-level annotations, but the level can selected using the argument \Rfunarg{level}. Features added to a \Rclass{CuffData} object are assumed to be of the same type as the 'type' value for that given object (e.g. gene-level features for 'genes', isoform-level features for isoforms, etc.)
 
 
 \section{Global statistics}
@@ -288,7 +288,7 @@ v
 print(v)
 @
 
-Similar plots can be made for all sub-level features of a \Rclass{CuffGeneSet} class by specifiying which slot you would like to plot (eg. \Rfunarg{@isoforms},\Rfunarg{@TSS},\Rfunarg{@CDS}).
+Similar plots can be made for all sub-level features of a \Rclass{CuffGeneSet} class by specifying which slot you would like to plot (eg. \Rfunarg{isoforms(myGenes)},\Rfunarg{TSS(myGenes)},\Rfunarg{CDS(myGenes)}).
 
 <<geneset_plots_4,include=FALSE>>=
 ih<-csHeatmap(isoforms(myGenes),cluster='both',labRow=F)
@@ -404,7 +404,7 @@ We have found this to be a more robust way to determine distance between genes u
 
 \section{Session info}
 <<label=close_connection,echo=FALSE>>=
-end<-sqliteCloseConnection(cuff@DB)
+end<-sqliteCloseConnection(DB(cuff)
 @
 
 <<session>>=
