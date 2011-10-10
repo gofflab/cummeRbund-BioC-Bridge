@@ -404,7 +404,7 @@ We have found this to be a more robust way to determine distance between genes u
 
 \section{Session info}
 <<label=close_connection,echo=FALSE>>=
-end<-sqliteCloseConnection(DB(cuff)
+end<-sqliteCloseConnection(cuff@DB)
 @
 
 <<session>>=
