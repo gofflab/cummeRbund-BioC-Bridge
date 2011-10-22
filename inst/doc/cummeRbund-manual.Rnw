@@ -49,7 +49,7 @@ options(width=65)
 
 \section{Requirements}
 \begin{itemize}
-	\item Cufflinks $\ge$ v1.1.0 
+	\item Cufflinks $\ge$ v1.1.0 (Note: as of the release of this package, the current version of cufflinks is 1.3.3.  While this package will work with >v1.1, we recommend updating your cufflinks prior to using cummeRbund)
 	\item R $\ge$ v2.7.0
 	\item Packages:
 	\begin{itemize}
@@ -398,6 +398,15 @@ We have found this to be a more robust way to determine distance between genes u
 	\item There are occasional DB connectivity issues that arise.  Not entirely sure why yet.  If necessary, just \Rfunction{readCufflinks} again and this should solve connectivity issues with a new
 	RSQLite connection object.  If connectivity continues to be a problem, try \Rfunction{cuff<-readCufflinks(rebuild=T)}
 	\item I am still working on fully documenting each of the methods.  There are a good number of arguments that exist, but might be hard to find without looking at the source.
+\end{itemize}
+
+\clearpage
+
+\section{Known Issues}
+\begin{itemize}
+	\item You must have at least one p\_id field (see cufflinks manual) in your cuffdiff reference gtf file. Otherwise no results will be populated for the CDS.diff files and nothing will be available for cummeRbund to parse. This is described in more detail in the cuffdiff section of the cufflinks user guide.
+	\item Large cuffdiff runs (e.g. $\ge$10 conditions) produce very large results files.  These will take some time to parse and populate the cuffData.db sqlite database.  While this is only a one time cost, the process can take a while. We are working on making the table writes and indexing significantly faster.
+	\item Cuffdiff does not 'require' that gene\_ids, isoform\_ids, TSS\_group\_ids, or CDS\_ids be unique in your reference gtf file. In fact, duplicate IDs will be aggregated by cummeRbund in the indexing phase and will produce undesireable effects. Please ensure that all of your IDs are unique prior to running cuffdiff (see cuffmerge for help) to avoid this issue.
 \end{itemize}
 
 \clearpage
