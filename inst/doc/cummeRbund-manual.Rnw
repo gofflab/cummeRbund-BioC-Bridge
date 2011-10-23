@@ -125,7 +125,48 @@ options(width=65)
 	\end{itemize}
 	
 Note: Future versions of cummeRbund may try to collapse the redundant functionality of the CuffFeature and CuffFeatureSet classes.
+
 \section{Reading cuffdiff output}
+\Rpackage{cummeRbund} was designed to process the multi-file output format for a 'cuffdiff' differential expression analysis.  In this type of analysis, a user will use a reference .gtf file (either known annotation or a .gtf file created from a cufflinks assembly or merge of assemblies) and quantitate the expression values and differential regulation of the annotation(s) in the .gtf file across two or more SAM/BAM files.
+By design, cuffdiff produces a number of output files that contain test results for changes in expression at the level of transcripts, primary transcripts, and genes. It also tracks changes in the relative abundance of transcripts sharing a common transcription start site, and in the relative abundances of the primary transcripts of each gene. Tracking the former allows one to see changes in splicing, and the latter lets one see changes in relative promoter use within a gene. \\
+
+Note: Cuffdiff requires that transcripts in the input GTF be annotated with certain attributes in order to look for changes in primary transcript expression, splicing, coding output, and promoter use. \\
+
+These attributes are:
+\begin{itemize}
+	\item tss\_id: The ID of this transcript's inferred start site. Determines which primary transcript this processed transcript is believed to come from. Cuffcompare appends this attribute to every transcript reported in the .combined.gtf file.
+	\item p\_id	The ID of the coding sequence this transcript contains. This attribute is attached by Cuffcompare to the .combined.gtf records only when it is run with a reference annotation that include CDS records. Further, differential CDS analysis is only performed when all isoforms of a gene have p\_id attributes, because neither Cufflinks nor Cuffcompare attempt to assign an open reading frame to transcripts.
+\end{itemize}
+
+cuffdiff calculates the FPKM of each transcript, primary transcript, and gene in each sample. Primary transcript and gene FPKMs are computed by summing the FPKMs of transcripts in each primary transcript group or gene group. The results are output in FPKM tracking files, the structure of which can be found in the cufflinks manual.\\
+
+There are four FPKM tracking files:
+\begin{itemize}
+	\item \emph{isoforms.fpkm\_tracking}	Transcript FPKMs
+	\item \emph{genes.fpkm\_tracking}	Gene FPKMs. Tracks the summed FPKM of transcripts sharing each gene\_id
+	\item \emph{cds.fpkm\_tracking}	Coding sequence FPKMs. Tracks the summed FPKM of transcripts sharing each p\_id, independent of tss\_id
+	\item \emph{tss\_groups.fpkm\_tracking}	Primary transcript FPKMs. Tracks the summed FPKM of transcripts sharing each tss\_id
+\end{itemize}
+
+cuffdiff also performs differential expression tests between supplied conditions. This tab delimited file lists the results of differential expression testing between samples for spliced transcripts, primary transcripts, genes, and coding sequences. For detailed file structure see cufflinks manual. \\
+
+Four .diff files are created:
+\begin{itemize}
+	\item \emph{isoform\_exp.diff}	Transcript differential FPKM.
+	\item \emph{gene\_exp.diff}	Gene differential FPKM. Tests difference sin the summed FPKM of transcripts sharing each gene\_id
+	\item \emph{tss\_group\_exp.diff}	Primary transcript differential FPKM. Tests differences in the summed FPKM of transcripts sharing each tss\_id
+	\item \emph{cds\_exp.diff}	Coding sequence differential FPKM. Tests differences in the summed FPKM of transcripts sharing each p\_id independent of tss\_id
+\end{itemize}
+
+In addition, cuffdiff also performs differential splicing, CDS usage, and promoter usage tests for each gene across conditions:
+
+\begin{itemize}
+	\item \emph{splicing.diff}	Differential splicing tests.
+	\item \emph{CDS.diff}	Differential coding output.
+	\item \emph{promoters.diff}	Differential promoter use.
+\end{itemize}
+
+All of these output files are related to each other through their various tracking\_ids, but parsing through individual files to query for important result information requires both a good deal of patience and a strong grasp of command-line text manipulation. Enter cummeRbund, an R solution to aggregate, organize, and help visualize this multi-layered dataset. \\
 One of the principle benefits of using cummeRbund is that data are stored in a SQLite database.  This allows for out-of-memory analysis of data, quick retrieval, and only a one-time cost to setup the tables. By default, cummeRbund assumes that all output files from cuffdiff are in the current working directory.
 To read these files, populate the 'cuffData.db' database backend, and return the \Rclass{CuffSet} pointer object, you can do the following. 
 
