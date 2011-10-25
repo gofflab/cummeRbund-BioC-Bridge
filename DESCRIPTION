@@ -1,6 +1,6 @@
 Package: cummeRbund
 Title: cummeRbund: The finishing touch on your Tuxedo workflow. Analysis, exploration, manipulation, and visualization of Cufflinks HTS data.
-Version: 0.99.5
+Version: 1.1.0
 Date: 2011-08-18
 Author: L. Goff, C. Trapnell
 Description: Allows for persistent storage, access, exploration, and manipulation of Cufflinks high-throughput sequencing data.  In addition, provides numerous plotting functions for commonly used visualizations.
