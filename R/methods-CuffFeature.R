@@ -76,6 +76,12 @@ setMethod("fpkmMatrix",signature(object="CuffFeature"),.fpkmMatrix)
 #		return(object@diff)
 #		})
 
+.diffData<-function(object){
+	object@diff
+}
+
+setMethod("diffData",signature(object="CuffFeatureSet"),.diffData)
+
 setMethod("annotation","CuffFeature",function(object){
 		return(object@annotation)
 		})

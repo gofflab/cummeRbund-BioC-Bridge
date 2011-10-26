@@ -3,6 +3,7 @@
 \docType{class}
 \alias{CuffFeature-class}
 \alias{annotation,CuffFeature-method}
+\alias{diffData,CuffFeature-method}
 \alias{fpkmMatrix,CuffFeature-method}
 \alias{length,CuffFeature-method}
 
@@ -31,6 +32,7 @@ Objects can be created by calls of the form \code{new("CuffFeature", annotation,
 \section{Accessors}{
 	\describe{
 		\item{annotation}{\code{signature(object="CuffFeature")}: Access @annotation slot}
+		\item{diffData}{\code{signature(object="CuffFeature")}: Access @diff slot}
 	}
 }
 \references{
