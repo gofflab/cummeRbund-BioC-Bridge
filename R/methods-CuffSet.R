@@ -345,6 +345,29 @@ setMethod("getGene",signature(object="CuffSet"),.getGene)
 
 setMethod("getGenes",signature(object="CuffSet"),.getGenes)
 
+#getSig() returns a list vectors of significant features by pairwise comparisons
+.getSig<-function(object,x,y,level="genes"){
+	mySamp<-samples(slot(object,level))
+	sigGenes<-list()
+	
+	for (ihat in c(1:(length(mySamp)-1))){
+		for(jhat in c((ihat+1):length(mySamp))){
+			i<-mySamp[ihat]
+			j<-mySamp[jhat]
+			testName<-paste(i,j,sep="vs")
+			queryString<-paste("('",i,"','",j,"')",sep="")
+			sql<-paste("SELECT ",slot(object,level)@idField," from ", slot(object,level)@tables$expDiffTable," WHERE sample_1 IN ",queryString," AND sample_2 IN ",queryString, " AND significant='yes'",sep="")
+			sig<-dbGetQuery(object@DB,sql)
+			sigGenes[[testName]]<-sig[,1]
+		}
+	}
+	sigGenes
+	#TODO: Add conditional return for if x & y are not null, to just return that test...
+}
+
+setMethod("getSig",signature(object="CuffSet"),.getSig)
+
+
 #Find similar genes
 .findSimilar<-function(object,x,n){
 	#x can be either a gene_id, gene_short_name or a vector of FPKM values (fake gene expression profile)

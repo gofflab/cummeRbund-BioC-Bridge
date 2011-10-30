@@ -35,6 +35,7 @@ exportMethods(
 			expressionBarplot,
 			getGene,
 			getGenes,
+			getSig,
 			addFeatures,
 			getLevels,
 			findSimilar
