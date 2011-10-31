@@ -290,29 +290,41 @@ setMethod("getGene",signature(object="CuffSet"),.getGene)
 	
 	#fetch records
 	#genes
+	write("Getting gene information:",stderr())
+	write("\tFPKM",stderr())
 	genes.fpkm<-dbGetQuery(object@DB,geneFPKMQuery)
 	genes.fpkm$sample_name<-factor(genes.fpkm$sample_name,levels=myLevels)
+	write("\tDifferential Expression Data",stderr())
 	genes.diff<-dbGetQuery(object@DB,geneDiffQuery)
 	genes.diff$sample_1<-factor(genes.diff$sample_1,levels=myLevels)
 	genes.diff$sample_2<-factor(genes.diff$sample_2,levels=myLevels)
 	
 	#isoforms
+	write("Getting isoforms information:",stderr())
+	write("\tFPKM",stderr())
 	isoform.fpkm<-dbGetQuery(object@DB,isoformFPKMQuery)
 	isoform.fpkm$sample_name<-factor(isoform.fpkm$sample_name,levels=myLevels)
+	write("\tDifferential Expression Data",stderr())
 	isoform.diff<-dbGetQuery(object@DB,isoformDiffQuery)
 	isoform.diff$sample_1<-factor(isoform.diff$sample_1,levels=myLevels)
 	isoform.diff$sample_2<-factor(isoform.diff$sample_2,levels=myLevels)
 	
 	#CDS
+	write("Getting CDS information:",stderr())
+	write("\tFPKM",stderr())
 	CDS.fpkm<-dbGetQuery(object@DB,CDSFPKMQuery)
 	CDS.fpkm$sample_name<-factor(CDS.fpkm$sample_name,levels=myLevels)
+	write("\tDifferential Expression Data",stderr())
 	CDS.diff<-dbGetQuery(object@DB,CDSDiffQuery)
 	CDS.diff$sample_1<-factor(CDS.diff$sample_1,levels=myLevels)
 	CDS.diff$sample_2<-factor(CDS.diff$sample_2,levels=myLevels)
 	
 	#TSS
+	write("Getting TSS information:",stderr())
+	write("\tFPKM",stderr())
 	TSS.fpkm<-dbGetQuery(object@DB,TSSFPKMQuery)
 	TSS.fpkm$sample_name<-factor(TSS.fpkm$sample_name,levels=myLevels)
+	write("\tDifferential Expression Data",stderr())
 	TSS.diff<-dbGetQuery(object@DB,TSSDiffQuery)
 	TSS.diff$sample_1<-factor(TSS.diff$sample_1,levels=myLevels)
 	TSS.diff$sample_2<-factor(TSS.diff$sample_2,levels=myLevels)
