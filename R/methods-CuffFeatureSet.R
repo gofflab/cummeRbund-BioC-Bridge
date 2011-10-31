@@ -37,7 +37,7 @@ setValidity("CuffFeatureSet",function(object){
 #################
 #Class Methods	#
 #################
-setMethod("show","CufFFeatureSet",function(object){
+setMethod("show","CuffFeatureSet",function(object){
 		cat(class(object),"instance")
 		}
 )
