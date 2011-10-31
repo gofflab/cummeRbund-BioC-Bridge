@@ -38,7 +38,10 @@ setValidity("CuffFeatureSet",function(object){
 #Class Methods	#
 #################
 setMethod("show","CuffFeatureSet",function(object){
-		cat(class(object),"instance")
+		cat(class(object),"instance\n\tSlots:\n\t
+			\tannotation\n\t
+			\tfpkm\n\t
+			\tdiff\n\t")
 		}
 )
 
