@@ -379,6 +379,8 @@ setMethod("getGenes",signature(object="CuffSet"),.getGenes)
 		return(cast(tmp,value~...,length))
 	}else{
 		return(sigGenes)
+	}
+
 }
 
 setMethod("getSig",signature(object="CuffSet"),.getSig)

@@ -66,23 +66,23 @@ makeprobs<-function(a){
 #}
 
 #Union of a list of vectors
-union2 <- function(...) {
-	
-	args <- list(...) 
-	nargs <- length(args) 
-	if(nargs <= 1) {
-		
-		if(nargs == 1 && is.list(args[[1]])) {
-			do.call("union2", args[[1]])
-		} else {
-			stop("cannot evaluate intersection fewer than 2 arguments")
-		}
-	} else if(nargs == 2) {
-		union(args[[1]], args[[2]])
-	} else {
-		union(args[[1]], union2(args[-1]))
-	} 
-}
+#union2 <- function(...) {
+#	
+#	args <- list(...) 
+#	nargs <- length(args) 
+#	if(nargs <= 1) {
+#		
+#		if(nargs == 1 && is.list(args[[1]])) {
+#			do.call("union2", args[[1]])
+#		} else {
+#			stop("cannot evaluate intersection fewer than 2 arguments")
+#		}
+#	} else if(nargs == 2) {
+#		union(args[[1]], args[[2]])
+#	} else {
+#		union(args[[1]], union2(args[-1]))
+#	} 
+#}
 
 
 #THIS IS NOT MINE....I MUST REMOVE IT PRIOR TO SUBMISSION (For detailed GO analysis, check out clusterProfiler and goProfiles)
@@ -109,6 +109,3 @@ union2 <- function(...) {
 #	result <- list(data=clusterProfile.df, p=p)
 #	return(result)
 #}
-
-
-
