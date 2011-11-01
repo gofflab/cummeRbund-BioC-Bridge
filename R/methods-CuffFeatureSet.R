@@ -358,6 +358,9 @@ setMethod("csVolcano",signature(object="CuffFeatureSet"), .volcano)
 	#TODO: Test dat to ensure that there are >0 rows to plot.  If not, trap error and move on...
 	
 	colnames(dat)[1]<-"tracking_id"
+	tracking_ids<-dat$tracking_id
+	gene_short_names<-dat$gene_short_name
+	dodge <- position_dodge(width=0.9) 
 	
 	if(logMode)
 	{
@@ -366,14 +369,14 @@ setMethod("csVolcano",signature(object="CuffFeatureSet"), .volcano)
 	    dat$conf_lo <- dat$conf_lo + pseudocount
     }
 	
-	p<-ggplot(dat,aes(x=tracking_id,y=fpkm,fill=tracking_id))
+	p<-ggplot(dat,aes(x=tracking_id,y=fpkm,fill=sample_name))
 	p <- p + 
-	    geom_bar(stat='identity')
+	    geom_bar(aes(group=1),position=dodge,stat='identity')
 	
 	if (showErrorbars)
 	{
 	    p <- p +
-		    geom_errorbar(aes(ymin=conf_lo,ymax=conf_hi,group=1),width=0.5)
+		    geom_errorbar(aes(ymin=conf_lo,ymax=conf_hi,group=1),position=dodge,width=0.5)
 	}
 	
 	if (logMode)
@@ -382,8 +385,7 @@ setMethod("csVolcano",signature(object="CuffFeatureSet"), .volcano)
     }
 	
 	
-	p <- p + facet_wrap('sample_name') +
-    	opts(title=object@annotation$gene_short_name,axis.text.x=theme_text(hjust=0,angle=-90))
+	p <- p + scale_x_discrete("",breaks=tracking_ids,labels=gene_short_names) + opts(title=deparse(substitute(object)),axis.text.x=theme_text(hjust=0,angle=-90))
     	
     # p<- p +
     #       geom_bar() +
@@ -402,7 +404,7 @@ setMethod("csVolcano",signature(object="CuffFeatureSet"), .volcano)
         p <- p + ylab("FPKM")
     }
 	
-	p <- p + opts(legend.position = "none")
+	#p <- p + opts(legend.position = "none")
 	
 	#Default cummeRbund colorscheme
 	p<-p + scale_fill_hue(l=50,h.start=200) + scale_color_hue(l=50,h.start=200)

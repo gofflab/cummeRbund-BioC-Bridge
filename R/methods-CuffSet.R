@@ -274,15 +274,15 @@ setMethod("getGene",signature(object="CuffSet"),.getGene)
 	geneFPKMQuery<-paste("SELECT y.* from genes x JOIN geneData y ON x.gene_id=y.gene_id ", whereStringGeneFPKM,sep="")
 	geneDiffQuery<-paste("SELECT y.* from genes x JOIN geneExpDiffData y ON x.gene_id=y.gene_id ", whereStringGeneDiff,sep="")
 	
-	isoformAnnotationQuery<-paste("SELECT * from isoforms x JOIN genes g on x.gene_id=g.gene_id ", whereString,sep="")
+	isoformAnnotationQuery<-paste("SELECT x.* from isoforms x LEFT JOIN isoformFeatures xf ON x.isoform_id=xf.isoform_id JOIN genes g on x.gene_id=g.gene_id ", whereString,sep="")
 	isoformFPKMQuery<-paste("SELECT y.* from isoforms x JOIN isoformData y ON x.isoform_id = y.isoform_id JOIN genes g on x.gene_id=g.gene_id ", whereStringFPKM,sep="")
 	isoformDiffQuery<-paste("SELECT y.* from isoforms x JOIN isoformExpDiffData y ON x.isoform_id = y.isoform_id JOIN genes g on x.gene_id=g.gene_id ", whereStringDiff,sep="")
 	
-	TSSAnnotationQuery<-paste("SELECT * from TSS x JOIN genes g on x.gene_id=g.gene_id ", whereString,sep="")
+	TSSAnnotationQuery<-paste("SELECT x.* from TSS x LEFT JOIN TSSFeatures xf ON x.TSS_group_id=xf.TSS_group_id JOIN genes g on x.gene_id=g.gene_id ", whereString,sep="")
 	TSSFPKMQuery<-paste("SELECT y.* from TSS x JOIN TSSData y ON x.TSS_group_id=y.TSS_group_id JOIN genes g on x.gene_id=g.gene_id ", whereStringFPKM,sep="")
 	TSSDiffQuery<-paste("SELECT y.* from TSS x JOIN TSSExpDiffData y ON x.TSS_group_id=y.TSS_group_id JOIN genes g on x.gene_id=g.gene_id ", whereStringDiff,sep="")
 	
-	CDSAnnotationQuery<-paste("SELECT * from CDS x JOIN genes g on x.gene_id=g.gene_id ", whereString,sep="")
+	CDSAnnotationQuery<-paste("SELECT x.* from CDS x LEFT JOIN CDSFeatures xf ON x.CDS_id=xf.CDS_id JOIN genes g on x.gene_id=g.gene_id ", whereString,sep="")
 	CDSFPKMQuery<-paste("SELECT y.* from CDS x JOIN CDSData y ON x.CDS_id = y.CDS_id JOIN genes g on x.gene_id=g.gene_id ", whereStringFPKM,sep="")
 	CDSDiffQuery<-paste("SELECT y.* from CDS x JOIN CDSExpDiffData y ON x.CDS_id = y.CDS_id JOIN genes g on x.gene_id=g.gene_id ", whereStringDiff,sep="")
 	
@@ -358,7 +358,7 @@ setMethod("getGene",signature(object="CuffSet"),.getGene)
 setMethod("getGenes",signature(object="CuffSet"),.getGenes)
 
 #getSig() returns a list vectors of significant features by pairwise comparisons
-.getSig<-function(object,x,y,level="genes"){
+.getSig<-function(object,x,y,level="genes",testTable=FALSE){
 	mySamp<-samples(slot(object,level))
 	sigGenes<-list()
 	
@@ -373,8 +373,12 @@ setMethod("getGenes",signature(object="CuffSet"),.getGenes)
 			sigGenes[[testName]]<-sig[,1]
 		}
 	}
-	sigGenes
 	#TODO: Add conditional return for if x & y are not null, to just return that test...
+	if(testTable){
+		tmp<-melt(sigGenes)
+		return(cast(tmp,value~...,length))
+	}else{
+		return(sigGenes)
 }
 
 setMethod("getSig",signature(object="CuffSet"),.getSig)
