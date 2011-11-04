@@ -45,7 +45,7 @@ setGeneric("distValues",function(object,...) standardGeneric("distValues"))
 setGeneric("DB",function(object,...) standardGeneric("DB"))
 #setGeneric("table",function(object,...) standardGeneric("table"))
 setGeneric("type",function(object,...) standardGeneric("type"))
-setGeneric("testId",function(object,...) standardGeneric("testId"))
+#setGeneric("testId",function(object,...) standardGeneric("testId"))
 
 #CuffData plotting
 setGeneric("csDensity",function(object, logMode=TRUE, pseudocount=1.0, labels, features=FALSE, ...) standardGeneric("csDensity"))

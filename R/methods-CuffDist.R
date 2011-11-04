@@ -13,13 +13,13 @@ setMethod("initialize","CuffDist",
 					DB,
 					table="",
 					type = c("promoter","splicing","relCDS"),
-					testId = c("gene_id","tss_group_id"),
+					idField = c("gene_id","tss_group_id"),
 					... ){
 				.Object<-callNextMethod(.Object,
 						DB = DB,
 						table = table,
 						type = type,
-						testId = testId,
+						idField = idField,
 						...)				
 		}
 )
@@ -41,7 +41,7 @@ setMethod("show","CuffDist",
 
 setMethod("dim","CuffDist",
 		function(x){
-			countQuery<-paste("SELECT COUNT(",x@testId,") as n FROM ",x@table)
+			countQuery<-paste("SELECT COUNT(",x@idField,") as n FROM ",x@table)
 			nIds<-dbGetQuery(x@DB,countQuery)
 			c(nIds$n)
 		}
@@ -69,9 +69,17 @@ setMethod("type","CuffDist",function(object){
 		return(object@type)
 		})
 
-setMethod("testId","CuffDist",function(object){
-		return(object@testId)
+setMethod("idField","CuffDist",function(object){
+		return(object@idField)
 		})
+
+.samples<-function(object){
+	res<-dbReadTable(object@DB,'samples')
+	res<-res$sample_name
+	res
+}
+
+setMethod("samples","CuffDist",.samples)
 
 ##################
 #Setters

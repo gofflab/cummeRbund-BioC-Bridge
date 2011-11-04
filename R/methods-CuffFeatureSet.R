@@ -21,7 +21,7 @@ setMethod("initialize","CuffFeatureSet",
 					annotation=annotation,
 					fpkm=fpkm,
 					diff=diff,
-					...)				
+					...)
 		}
 )
 
@@ -31,6 +31,7 @@ setMethod("initialize","CuffFeatureSet",
 #TODO: Add validity constraints
 setValidity("CuffFeatureSet",function(object){
 			TRUE
+			#Add test for genes with no expression
 		}
 )		
 
@@ -97,12 +98,13 @@ setMethod("features",signature(object="CuffFeatureSet"),.features)
 	res<-melt(res)
 	res<-cast(res,tracking_id~sample_name)
 	res<-data.frame(res[,-1],row.names=res[,1])
+	res
 }
 
 setMethod("fpkmMatrix",signature(object="CuffFeatureSet"),.fpkmMatrix)
 
 .diffData<-function(object){
-	object@diff
+	return(object@diff)
 }
 
 setMethod("diffData",signature(object="CuffFeatureSet"),.diffData)
@@ -266,6 +268,7 @@ setMethod("annotation","CuffFeatureSet",function(object){
 	    g2 <- g2 + scale_fill_gradient2(low=heatscale[1], mid=heatscale[2], high=heatscale[3], midpoint=heatMidpoint, name=legendTitle)
 	}
 	
+	#g2<-g2+scale_x_discrete("",breaks=tracking_ids,labels=gene_short_names)
 	
 	
 	## finally add the fill colour ramp of your choice (default is blue to red)-- and return
@@ -466,23 +469,44 @@ setMethod("expressionPlot",signature(object="CuffFeatureSet"),.expressionPlot)
 #################
 #Clustering		#
 #################
-#Kmeans by expression profile using JSdist?
-.cluster<-function(object,k,iter.max=100, ...){
+#Kmeans by expression profile using JSdist
+#TODO:Make this function return an object of type CuffClusterSet
+.cluster<-function(object, k, pseudocount=1, ...){
+	library(cluster)
 	m<-as.data.frame(fpkmMatrix(object))
-	clusters<-kmeans(m,k,iter.max=iter.max)$cluster
+	m<-m[rowSums(m)>0,]
+	n<-JSdist(makeprobs(t(m)))
+	clusters<-pam(n,k)
+	clusters$fpkm<-m
+	m<-m+pseudocount
 	m$ids<-rownames(m)
-	m$cluster<-factor(clusters)
+	m$cluster<-factor(clusters$clustering)
 	m.melt<-melt(m,id.vars=c("ids","cluster"))
 	c<-ggplot(m.melt)
-	c<-c+geom_line(aes(x=variable,y=value,color=cluster,group=ids)) + facet_wrap('cluster',scales='free')
+	c<-c+geom_line(aes(x=variable,y=value,color=cluster,group=ids)) + facet_wrap('cluster',scales='free')+scale_y_log10()
 	
 	#Default cummeRbund colorscheme
 	c<-c + scale_color_hue(l=50,h.start=200)
-	
 	c
 }
 
 setMethod("csCluster",signature(object="CuffFeatureSet"),.cluster)
+
+##Takes as first argument the object returned from csCluster (a modified 'cluster' list)
+#.clusterPlot<-function(clusters, pseudocount=1, ...){
+#	m<-clusters$fpkm
+#	m<-m+pseudocount
+#	m$ids<-rownames(m)
+#	m$cluster<-factor(clusters$clustering)
+#	m.melt<-melt(m,id.vars=c("ids","cluster"))
+#	c<-ggplot(m.melt)
+#	c<-c+geom_line(aes(x=variable,y=value,color=cluster,group=ids)) + facet_wrap('cluster',scales='free')+scale_y_log10()
+#	
+#	#Default cummeRbund colorscheme
+#	c<-c + scale_color_hue(l=50,h.start=200)
+#	c
+#}
+
 
 #TODO: Add csDendro method to produce dendrograms from fpkmMatrix with argument for Dimension (samples or features)
 

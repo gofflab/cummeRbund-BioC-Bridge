@@ -7,6 +7,7 @@ Description: Allows for persistent storage, access, exploration, and manipulatio
 Suggests: 
 Imports: methods
 Depends: R (>= 2.7.0), RSQLite, reshape, ggplot2
+Suggests: cluster
 Maintainer: Loyal A. Goff <lgoff@csail.mit.edu>
 License: Artistic-2.0
 Collate: 	AllGenerics.R 
@@ -19,6 +20,7 @@ Collate: 	AllGenerics.R
 			methods-CuffFeatureSet.R
 			methods-CuffGene.R
 			methods-CuffFeature.R
+			methods-CuffClusterSet.R
 			tools.R
 LazyLoad: yes
 biocViews: HighThroughputSequencing, HighThroughputSequencingData, RNAseq, RNAseqData, GeneExpression, DifferentialExpression, Infrastructure, DataImport, DataRepresentation, Visualization, Bioinformatics, Clustering, MultipleComparisons, QualityControl

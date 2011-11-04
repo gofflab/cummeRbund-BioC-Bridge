@@ -1487,9 +1487,9 @@ readCufflinks<-function(dir = getwd(),
 					isoforms = new("CuffData", DB = dbConn, tables = list(mainTable = "isoforms",dataTable = "isoformData",expDiffTable = "isoformExpDiffData",featureTable = "isoformFeatures"), filters = list(),type="isoforms",idField = "isoform_id"),
 					TSS = new("CuffData", DB = dbConn, tables = list(mainTable = "TSS",dataTable = "TSSData",expDiffTable = "TSSExpDiffData",featureTable = "TSSFeatures"), filters = list(),type = "TSS",idField = "TSS_group_id"),
 					CDS = new("CuffData", DB = dbConn, tables = list(mainTable = "CDS",dataTable = "CDSData",expDiffTable = "CDSExpDiffData",featureTable = "CDSFeatures"), filters = list(),type = "CDS",idField = "CDS_id"),
-					promoters = new("CuffDist", DB = dbConn, table = "promoterDiffData",type="promoter",testId="gene_id"),
-					splicing = new("CuffDist", DB = dbConn, table = "splicingDiffData",type="splicing",testId="TSS_group_id"),
-					relCDS = new("CuffDist", DB = dbConn, table = "CDSDiffData",type="relCDS",testId="gene_id")
+					promoters = new("CuffDist", DB = dbConn, table = "promoterDiffData",type="promoter",idField="gene_id"),
+					splicing = new("CuffDist", DB = dbConn, table = "splicingDiffData",type="splicing",idField="TSS_group_id"),
+					relCDS = new("CuffDist", DB = dbConn, table = "CDSDiffData",type="relCDS",idField="gene_id")
 			)
 	)	
 							

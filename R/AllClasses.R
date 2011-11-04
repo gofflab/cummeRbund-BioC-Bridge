@@ -20,7 +20,7 @@ setClass("CuffDist",
 		representation(DB = "SQLiteConnection",
 						table = "character",
 						type = "character",
-						testId = "character"
+						idField = "character"
 						)
 		)
 		
@@ -52,7 +52,10 @@ setClass("CuffGene",
 		representation(id = "character",
 						isoforms = "CuffFeature",
 						TSS = "CuffFeature",
-						CDS = "CuffFeature"),
+						CDS = "CuffFeature",
+						promoters = "CuffFeature",
+						splicing = "CuffFeature",
+						relCDS = "CuffFeature"),
 		contains="CuffFeature"
 )
 
@@ -72,14 +75,18 @@ setClass("CuffGeneSet",
 		representation(ids = "character",
 				isoforms = "CuffFeatureSet",
 				TSS = "CuffFeatureSet",
-				CDS= "CuffFeatureSet"),
+				CDS= "CuffFeatureSet",
+				promoters= "CuffFeatureSet",
+				splicing= "CuffFeatureSet",
+				relCDS= "CuffFeatureSet"),
 		contains = "CuffFeatureSet"
 )
 
 #CuffCluster is an object returned by csCluster that contains clustering information and plotting methods for a CuffFeatureSet (not implemented yet)
-setClass("CuffCluster",
-		representation(cluster.id = "numeric",
+setClass("CuffClusterSet",
+		representation(clustering = "numeric",
 					  input = "CuffFeatureSet",
 					  k = "numeric",
-					  method = "character")
+					  method = "character"),
+		contains = "CuffFeatureSet"
 )
