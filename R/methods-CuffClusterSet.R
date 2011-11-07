@@ -17,6 +17,12 @@
 #Validate		#
 #################
 #TODO: Add validity constraints
+setValidity("CuffClusterSet",function(object){
+			TRUE
+			#Add test for genes with no expression
+		}
+)		
+
 
 
 #################
@@ -35,10 +41,12 @@
 #################
 #Accessors
 ##################
+#clustering
 
 #################
 #Plotting		#
 #################
+#plot cluster images
 
 
 #################

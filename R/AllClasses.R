@@ -84,9 +84,7 @@ setClass("CuffGeneSet",
 
 #CuffCluster is an object returned by csCluster that contains clustering information and plotting methods for a CuffFeatureSet (not implemented yet)
 setClass("CuffClusterSet",
-		representation(clustering = "numeric",
-					  input = "CuffFeatureSet",
-					  k = "numeric",
-					  method = "character"),
+		representation(clustering = "list"
+					 ),
 		contains = "CuffFeatureSet"
 )

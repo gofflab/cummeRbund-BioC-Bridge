@@ -1,5 +1,7 @@
 import(methods)
 
+importFrom(graphics, plot)
+
 exportClasses(CuffSet,
 			CuffData,
 			CuffDist,
@@ -26,6 +28,7 @@ exportMethods(
 			csBoxplot,
 			csHeatmap,
 			csCluster,
+			csClusterPlot,
 			fpkmMatrix,
 			diffData,
 			features,

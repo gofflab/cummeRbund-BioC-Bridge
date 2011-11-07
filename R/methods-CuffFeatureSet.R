@@ -471,26 +471,49 @@ setMethod("expressionPlot",signature(object="CuffFeatureSet"),.expressionPlot)
 #################
 #Kmeans by expression profile using JSdist
 #TODO:Make this function return an object of type CuffClusterSet
+#.cluster<-function(object, k, pseudocount=1, ...){
+#	library(cluster)
+#	m<-as.data.frame(fpkmMatrix(object))
+#	m<-m[rowSums(m)>0,]
+#	n<-JSdist(makeprobs(t(m)))
+#	clusters<-pam(n,k)
+#	clusters$fpkm<-m
+#	m<-m+pseudocount
+#	m$ids<-rownames(m)
+#	m$cluster<-factor(clusters$clustering)
+#	m.melt<-melt(m,id.vars=c("ids","cluster"))
+#	c<-ggplot(m.melt)
+#	c<-c+geom_line(aes(x=variable,y=value,color=cluster,group=ids)) + facet_wrap('cluster',scales='free')+scale_y_log10()
+#	
+#	#Default cummeRbund colorscheme
+#	c<-c + scale_color_hue(l=50,h.start=200)
+#	c
+#}
+
 .cluster<-function(object, k, pseudocount=1, ...){
 	library(cluster)
 	m<-as.data.frame(fpkmMatrix(object))
 	m<-m[rowSums(m)>0,]
 	n<-JSdist(makeprobs(t(m)))
 	clusters<-pam(n,k)
+	class(clusters)<-"list"
 	clusters$fpkm<-m
-	m<-m+pseudocount
-	m$ids<-rownames(m)
-	m$cluster<-factor(clusters$clustering)
+	clusters
+}
+
+setMethod("csCluster",signature(object="CuffFeatureSet"),.cluster)
+
+csClusterPlot<-function(clustering,pseudocount=1.0){
+	m<-clustering$fpkm+pseudocount
+	m$ids<-rownames(clustering$fpkm)
+	m$cluster<-factor(clustering$clustering)
 	m.melt<-melt(m,id.vars=c("ids","cluster"))
 	c<-ggplot(m.melt)
 	c<-c+geom_line(aes(x=variable,y=value,color=cluster,group=ids)) + facet_wrap('cluster',scales='free')+scale_y_log10()
 	
-	#Default cummeRbund colorscheme
 	c<-c + scale_color_hue(l=50,h.start=200)
 	c
 }
-
-setMethod("csCluster",signature(object="CuffFeatureSet"),.cluster)
 
 ##Takes as first argument the object returned from csCluster (a modified 'cluster' list)
 #.clusterPlot<-function(clusters, pseudocount=1, ...){
