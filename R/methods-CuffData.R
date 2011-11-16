@@ -223,7 +223,7 @@ setMethod("getLevels",signature(object="CuffData"),.getLevels)
 
 setMethod("csDensity",signature(object="CuffData"),.density)
 
-.scatter<-function(object,x,y,logMode=TRUE,pseudocount=1.0,labels,smooth=FALSE,colorByStatus=FALSE,...){
+.scatter<-function(object,x,y,logMode=TRUE,pseudocount=1.0,labels,smooth=FALSE,colorByStatus=FALSE, drawRug=TRUE, ...){
 	dat<-fpkmMatrix(object)
 	samp<-samples(object)
 	
@@ -242,7 +242,20 @@ setMethod("csDensity",signature(object="CuffData"),.density)
 	#make plot object
 	p<-ggplot(dat)
 	p<- p + aes_string(x=x,y=y)
-	p<- p + geom_point(size=1.2,alpha=I(1/3)) + geom_abline(intercept=0,slope=1,linetype=2) + geom_rug(size=0.5,alpha=0.01)
+	
+	#Right now, this does nothing, because 'significant' is not returned from fpkmMatrix object so I don't have this as a feature to draw
+	if(colorByStatus){
+		p<- p + geom_point(size=1.2,alpha=I(1/3))
+	}else{
+		p<- p + geom_point(size=1.2,alpha=I(1/3))
+	}
+	#Add symmetry line
+	p<- p + geom_abline(intercept=0,slope=1,linetype=2) 
+	
+	#Add rug
+	if(drawRug){
+		p<- p + geom_rug(size=0.5,alpha=0.01)
+	}
 	
 	#add smoother
 	if(smooth){
