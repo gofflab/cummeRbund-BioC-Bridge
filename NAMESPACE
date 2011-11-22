@@ -1,6 +1,6 @@
 import(methods)
 
-importFrom(graphics, plot)
+#importFrom(graphics, plot)
 
 exportClasses(CuffSet,
 			CuffData,

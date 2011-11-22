@@ -143,10 +143,13 @@ loadGenes<-function(fpkmFile,
 		
 		write("Writing promoterDiffData table",stderr())
 		promoterCols<-c(2,5:14)
-		#dbWriteTable(dbConn,'promoterDiffData',promoter[,promoterCols],row.names=F,append=T)
-		insert_SQL<-"INSERT INTO promoterDiffData VALUES(?,?,?,?,?,?,?,?,?,?,?)"
-		bulk_insert(dbConn,insert_SQL,promoter[,promoterCols])
-		
+		if(dim(promoter)[1]>0){
+			#dbWriteTable(dbConn,'promoterDiffData',promoter[,promoterCols],row.names=F,append=T)
+			insert_SQL<-"INSERT INTO promoterDiffData VALUES(?,?,?,?,?,?,?,?,?,?,?)"
+			bulk_insert(dbConn,insert_SQL,promoter[,promoterCols])
+		}else{
+			write(paste("No records found in", promoterFile),stderr())
+		}
 	}
 	
 	#########
@@ -269,11 +272,15 @@ loadIsoforms<-function(fpkmFile,
 		diff$sample_1<-make.db.names(dbConn,as.vector(diff$sample_1),unique=FALSE)
 		diff$sample_2<-make.db.names(dbConn,as.vector(diff$sample_2),unique=FALSE)
 		
-		write("Writing isoformExpDiffData table",stderr())
-		diffCols<-c(1,5:14)
-		#dbWriteTable(dbConn,'isoformExpDiffData',diff[,diffCols],row.names=F,append=T)
-		insert_SQL<-"INSERT INTO isoformExpDiffData VALUES(?,?,?,?,?,?,?,?,?,?,?)"
-		bulk_insert(dbConn,insert_SQL,diff[,diffCols])
+		if(dim(diff)[1]>0){
+			write("Writing isoformExpDiffData table",stderr())
+			diffCols<-c(1,5:14)
+			#dbWriteTable(dbConn,'isoformExpDiffData',diff[,diffCols],row.names=F,append=T)
+			insert_SQL<-"INSERT INTO isoformExpDiffData VALUES(?,?,?,?,?,?,?,?,?,?,?)"
+			bulk_insert(dbConn,insert_SQL,diff[,diffCols])
+		}else{
+			write(pate("No records found in",diffFile),stderr())
+		}
 	}
 	
 }
@@ -393,11 +400,15 @@ loadTSS<-function(fpkmFile,
 		diff$sample_1<-make.db.names(dbConn,as.vector(diff$sample_1),unique=FALSE)
 		diff$sample_2<-make.db.names(dbConn,as.vector(diff$sample_2),unique=FALSE)
 		
-		write("Writing TSSExpDiffData table",stderr())
-		diffCols<-c(1,5:14)
-		#dbWriteTable(dbConn,'TSSExpDiffData',diff[,diffCols],row.names=F,append=T)
-		insert_SQL<-"INSERT INTO TSSExpDiffData VALUES(?,?,?,?,?,?,?,?,?,?,?)"
-		bulk_insert(dbConn,insert_SQL,diff[,diffCols])
+		if(dim(diff)[1]>0){
+			write("Writing TSSExpDiffData table",stderr())
+			diffCols<-c(1,5:14)
+			#dbWriteTable(dbConn,'TSSExpDiffData',diff[,diffCols],row.names=F,append=T)
+			insert_SQL<-"INSERT INTO TSSExpDiffData VALUES(?,?,?,?,?,?,?,?,?,?,?)"
+			bulk_insert(dbConn,insert_SQL,diff[,diffCols])
+		}else{
+			write(paste("No records found in",diffFile),stderr())
+		}
 	}
 	
 	#########
@@ -409,12 +420,15 @@ loadTSS<-function(fpkmFile,
 		splicingArgs$file = splicingFile
 		splicing<-as.data.frame(do.call(read.table,splicingArgs))
 		
-		write("Writing splicingDiffData table",stderr())
-		splicingCols<-c(1:2,5:14)
-		#dbWriteTable(dbConn,'splicingDiffData',splicing[,splicingCols],row.names=F,append=T)
-		insert_SQL<-"INSERT INTO splicingDiffData VALUES(?,?,?,?,?,?,?,?,?,?,?,?)"
-		bulk_insert(dbConn,insert_SQL,splicing[,splicingCols])
-		
+		if(dim(splicing)[1]>0){
+			write("Writing splicingDiffData table",stderr())
+			splicingCols<-c(1:2,5:14)
+			#dbWriteTable(dbConn,'splicingDiffData',splicing[,splicingCols],row.names=F,append=T)
+			insert_SQL<-"INSERT INTO splicingDiffData VALUES(?,?,?,?,?,?,?,?,?,?,?,?)"
+			bulk_insert(dbConn,insert_SQL,splicing[,splicingCols])
+		}else{
+			write(paste("No records found in",splicingFile),stderr())
+		}
 	}
 	
 }
@@ -536,11 +550,15 @@ loadCDS<-function(fpkmFile,
 		diff$sample_1<-make.db.names(dbConn,as.vector(diff$sample_1),unique=FALSE)
 		diff$sample_2<-make.db.names(dbConn,as.vector(diff$sample_2),unique=FALSE)
 		
-		write("Writing CDSExpDiffData table",stderr())
-		diffCols<-c(1,5:14)
-		#dbWriteTable(dbConn,'CDSExpDiffData',diff[,diffCols],row.names=F,append=T)
-		insert_SQL<-"INSERT INTO CDSExpDiffData VALUES(?,?,?,?,?,?,?,?,?,?,?)"
-		bulk_insert(dbConn,insert_SQL,diff[,diffCols])
+		if(dim(diff)[1]>0){
+			write("Writing CDSExpDiffData table",stderr())
+			diffCols<-c(1,5:14)
+			#dbWriteTable(dbConn,'CDSExpDiffData',diff[,diffCols],row.names=F,append=T)
+			insert_SQL<-"INSERT INTO CDSExpDiffData VALUES(?,?,?,?,?,?,?,?,?,?,?)"
+			bulk_insert(dbConn,insert_SQL,diff[,diffCols])
+		}else{
+			write(paste("No records found in",diffFile),stderr())
+		}
 	}
 	
 	#########
@@ -551,13 +569,15 @@ loadCDS<-function(fpkmFile,
 		write(paste("Reading ",CDSDiff,sep=""),stderr())
 		CDSDiffArgs$file = CDSDiff
 		CDS<-as.data.frame(do.call(read.table,CDSDiffArgs))
-		
-		write("Writing CDSDiffData table",stderr())
-		CDSCols<-c(2,5:14)
-		#dbWriteTable(dbConn,'CDSDiffData',CDS[,CDSCols],row.names=F,append=T)
-		insert_SQL<-"INSERT INTO CDSDiffData VALUES(?,?,?,?,?,?,?,?,?,?,?)"
-		bulk_insert(dbConn,insert_SQL,CDS[,CDSCols])
-		
+		if(dim(CDS)[1]>0){
+			write("Writing CDSDiffData table",stderr())
+			CDSCols<-c(2,5:14)
+			#dbWriteTable(dbConn,'CDSDiffData',CDS[,CDSCols],row.names=F,append=T)
+			insert_SQL<-"INSERT INTO CDSDiffData VALUES(?,?,?,?,?,?,?,?,?,?,?)"
+			bulk_insert(dbConn,insert_SQL,CDS[,CDSCols])
+		}else{
+			write(paste("No records found in",CDSDiff),stderr())
+		}
 	}
 	
 }

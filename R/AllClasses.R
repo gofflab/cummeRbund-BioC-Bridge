@@ -81,10 +81,3 @@ setClass("CuffGeneSet",
 				relCDS= "CuffFeatureSet"),
 		contains = "CuffFeatureSet"
 )
-
-#CuffCluster is an object returned by csCluster that contains clustering information and plotting methods for a CuffFeatureSet (not implemented yet)
-setClass("CuffClusterSet",
-		representation(clustering = "list"
-					 ),
-		contains = "CuffFeatureSet"
-)

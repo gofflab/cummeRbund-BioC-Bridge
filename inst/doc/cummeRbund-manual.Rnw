@@ -345,12 +345,14 @@ Rudimentary k-means clustering is implemented as well.
 
 <<geneset_plots_5,include=FALSE>>=
 ic<-csCluster(myGenes,k=4)
-ic
+head(ic$cluster)
+icp<-csClusterPlot(ic)
+icp
 @
 
 <<label=geneset_plots_cluster,fig=TRUE,echo=FALSE>>=
 <<geneset_plots_5>>
-print(ic)
+print(icp)
 @
 
 \clearpage

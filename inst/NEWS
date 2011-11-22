@@ -1,3 +1,20 @@
+v1.1.1
+	Bugfixes:
+		- fixed issue in which there was no graceful error handling of missing CDS or TSS data in cuffdiff output.
+		- Fixed issue in which distribution test data (promoters, splicing, relCDS) were not appropriately added to objects on creation.
+		
+	New Features:	
+		- added getSig method to CuffSet class for rapid retrieval of significant features from all pairwise tests (as a list of IDs). 
+		By default the level is 'genes' but any feature level can be queried.
+	
+	Notes:
+		- Changed the default orientation of expressionBarplot() for CuffFeatureSet objects.
+		- Changed output of csCluster to a list format that includes clustering information. As a result, I created the function csClusterPlot
+		to replace the default drawing behavior of csCluster previously.  This allows for stable cluster analysis.
+
+v1.0.0
+	- Official public release. No changes from v0.99.5
+
 v0.99.5
 	- Significant speed improvements to readCufflinks() for large cuffdiff datasets.
 		- Tables written first then indexed.
