@@ -7,6 +7,7 @@ v1.1.1
 	New Features:	
 		- added getSig method to CuffSet class for rapid retrieval of significant features from all pairwise tests (as a list of IDs). 
 		By default the level is 'genes' but any feature level can be queried.
+		- csCluster now uses Jensen-Shannon distance by default (as opposed to Euclidean)
 	
 	Notes:
 		- Changed the default orientation of expressionBarplot() for CuffFeatureSet objects.
