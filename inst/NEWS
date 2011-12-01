@@ -2,6 +2,7 @@ v1.1.1
 	Bugfixes:
 		- fixed issue in which there was no graceful error handling of missing CDS or TSS data in cuffdiff output.
 		- Fixed issue in which distribution test data (promoters, splicing, relCDS) were not appropriately added to objects on creation.
+		- Fixed bug that would sometimes cause csBoxplot() to throw an error when log-transforming fpkm data. Also added pseudocount argument.
 		
 	New Features:	
 		- added getSig method to CuffSet class for rapid retrieval of significant features from all pairwise tests (as a list of IDs). 
