@@ -338,9 +338,20 @@ setMethod("csScatter",signature(object="CuffFeatureSet"), .scatter)
 
 #Volcano plot
 .volcano<-function(object,x,y,xlimits=c(-20,20),...){
+	samp<-samples(object)
+	
+	#check to make sure x and y are in samples
+	if (!all(c(x,y) %in% samp)){
+		stop("One or more values of 'x' or 'y' are not valid sample names!")
+	}
 	dat<-diffData(object=object,x=x,y=y)
+	
 	s1<-unique(dat$sample_1)
 	s2<-unique(dat$sample_2)
+	
+	#subset dat for samples of interest
+	mySamples<-c(x,y)
+	dat<-dat[(dat$sample_1 %in% mySamples & dat$sample_2 %in% mySamples),]
 	
 	p<-ggplot(dat)
 	p<- p + geom_point(aes(x=ln_fold_change,y=-log10(p_value),color=significant),alpha=I(1/3))

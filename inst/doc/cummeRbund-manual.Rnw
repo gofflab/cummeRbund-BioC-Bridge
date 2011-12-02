@@ -320,7 +320,7 @@ print(s)
 @
 
 <<geneset_plots_3,include=FALSE>>=
-v<-csVolcano(myGenes,cluster='both')
+v<-csVolcano(myGenes)
 v
 @
 
