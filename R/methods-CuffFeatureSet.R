@@ -346,15 +346,18 @@ setMethod("csScatter",signature(object="CuffFeatureSet"), .scatter)
 	}
 	dat<-diffData(object=object,x=x,y=y)
 	
-	s1<-unique(dat$sample_1)
-	s2<-unique(dat$sample_2)
-	
 	#subset dat for samples of interest
 	mySamples<-c(x,y)
 	dat<-dat[(dat$sample_1 %in% mySamples & dat$sample_2 %in% mySamples),]
 	
+	#Labels
+	s1<-unique(dat$sample_1)
+	s2<-unique(dat$sample_2)
+	
 	p<-ggplot(dat)
 	p<- p + geom_point(aes(x=ln_fold_change,y=-log10(p_value),color=significant),alpha=I(1/3))
+	
+	p<- p + opts(title=paste(object@tables$mainTable,": ",s2,"/",s1,sep=""))
 	
 	#Set axis limits
 	p<- p + scale_x_continuous(limits=xlimits)

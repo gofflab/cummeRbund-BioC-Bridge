@@ -294,12 +294,12 @@ setMethod("csScatter",signature(object="CuffData"), .scatter)
 	}
 	
 	dat<-diffData(object=object,features=features)
-	s1<-unique(dat$sample_1)
-	s2<-unique(dat$sample_2)
 	
 	#subset dat for samples of interest
 	mySamples<-c(x,y)
 	dat<-dat[(dat$sample_1 %in% mySamples & dat$sample_2 %in% mySamples),]
+	s1<-unique(dat$sample_1)
+	s2<-unique(dat$sample_2)
 	
 	p<-ggplot(dat)
 	p<- p + geom_point(aes(x=ln_fold_change,y=-log10(p_value),color=significant),size=0.8)
