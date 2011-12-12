@@ -1515,6 +1515,59 @@ readCufflinks<-function(dir = getwd(),
 							
 }
 
+############
+# Handle GTF file
+############
+loadGTF<-function(gtfFile,dbConn) {
+	
+	#Error Trapping
+	if (missing(gtfFile))
+		stop("GTF file cannot be missing!")
+	
+	if (missing(dbConn))
+		stop("Must provide a dbConn connection")
+	
+	gtf<-read.table(gtfFile,sep="\t",header=F)
+	
+	
+	attributes<-melt(strsplit(as.character(gtf$V9),"; "))
+	colnames(attributes)<-c("attribute","featureID")
+	attributes<-paste(attributes$attribute,attributes$featureID)
+	attributes<-strsplit(as.character(attributes)," ")
+	attributes<-as.data.frame(do.call("rbind",attributes))
+	
+	colnames(attributes)<-c("attribute","value","featureID")
+	attributes<-attributes[,c(3,1,2)]
+	
+	#Grab only gene_ID and transcript_ID to add to features table
+	id.attributes<-attributes[attributes$attribute %in% c("gene_id","transcript_id"),]
+	id.attributes$featureID<-as.numeric(as.character(id.attributes$featureID))
+	id.attributes<-cast(id.attributes,...~attribute)
+	
+	#Main features table
+	features<-gtf[,c(1:8)]
+	colnames(features)<-c("seqname","source","type","start","end","score","strand","frame")
+	features$featureID<-as.numeric(as.character(rownames(features)))
+	
+	#Merge features and id.attributes
+	features<-merge(features,id.attributes,by.x='featureID',by.y='featureID')
+	features<-features[,c(1,10:11,2:9)]
+	
+	#strip gene_id and transcript_id from attributes
+	attributes<-attributes[!(attributes$attribute %in% c("gene_id","transcript_id")),]
+	
+	#Write features table
+	write("Writing features table",stderr())
+	#dbWriteTable(dbConn,'geneData',as.data.frame(genemelt[,c(1:2,5,3,4,6)]),row.names=F,append=T)
+	dbWriteTable(dbConn,'features',as.data.frame(features),append=F)
+	
+	#Write features table
+	write("Writing feature attributes table",stderr())
+	dbWriteTable(dbConn,'attributes',as.data.frame(attributes),append=F)
+	
+}
+	
+
 #######
 #Unit Test
 #######
