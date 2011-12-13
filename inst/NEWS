@@ -4,6 +4,7 @@ v1.1.1
 		- Fixed issue in which distribution test data (promoters, splicing, relCDS) were not appropriately added to objects on creation.
 		- Fixed bug that would sometimes cause csBoxplot() to throw an error when log-transforming fpkm data. Also added pseudocount argument.
 		- Fixed bug that would cause diffData() to return a filtered subset of results by default.
+		- Adjusted indexing of tables to improve performance on large datasets.
 		
 	New Features:	
 		- added getSig method to CuffSet class for rapid retrieval of significant features from all pairwise tests (as a list of IDs). 
