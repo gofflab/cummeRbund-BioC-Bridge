@@ -1370,6 +1370,8 @@ CREATE INDEX "genes.cc_index" ON "genes"("class_code");
 CREATE INDEX "TSS.fk_TSS_genes1" ON "TSS"("gene_id");
 CREATE INDEX "TSSData.fk_TSSData_TSS1" ON "TSSData"("TSS_group_id");
 CREATE INDEX "TSSData.fk_TSSData_samples1" ON "TSSData"("sample_name");
+CREATE INDEX "TSS.PRIMARY" ON "TSS"("TSS_group_id");
+CREATE INDEX "CDS.PRIMARY" ON "CDS"("CDS_id");
 CREATE INDEX "CDS.fk_CDS_genes1" ON "CDS"("gene_id");
 CREATE INDEX "CDS.fk_CDS_TSS1" ON "CDS"("TSS_group_id");
 CREATE INDEX "CDSData.fk_CDSData_CDS1" ON "CDSData"("CDS_id");
@@ -1403,6 +1405,7 @@ CREATE INDEX "geneExpDiffData.fk_geneExpDiffData_samples1" ON "geneExpDiffData"(
 CREATE INDEX "geneExpDiffData.fk_geneExpDiffData_samples2" ON "geneExpDiffData"("sample_2");
 CREATE INDEX "geneExpDiffData.geneExpDiff_status_index" ON "geneExpDiffData"("status");
 CREATE INDEX "geneExpDiffData.geneExpDiff_sig_index" ON "geneExpDiffData"("significant","p_value","q_value","test_stat");
+CREATE INDEX "isoforms.PRIMARY" ON "isoforms"("isoform_id");
 CREATE INDEX "isoforms.fk_isoforms_TSS1" ON "isoforms"("TSS_group_id");
 CREATE INDEX "isoforms.fk_isoforms_CDS1" ON "isoforms"("CDS_id");
 CREATE INDEX "isoforms.fk_isoforms_genes1" ON "isoforms"("gene_id");
@@ -1413,6 +1416,8 @@ CREATE INDEX "isoformExpDiffData.fk_isoformExpDiffData_samples1" ON "isoformExpD
 CREATE INDEX "isoformExpDiffData.fk_isoformExpDiffData_samples2" ON "isoformExpDiffData"("sample_2");
 CREATE INDEX "isoformExpDiffData.isoformExpDiffData_sig_index" ON "isoformExpDiffData"("test_stat","p_value","q_value","significant");
 CREATE INDEX "isoformFeatures.fk_isoformFeatures_isoforms1" ON "isoformFeatures"("isoform_id");
+CREATE INDEX "samples.PRIMARY" ON "samples"("sample_index");
+
 '
 	create.sql <- strsplit(index.text,"\n")[[1]]
 	

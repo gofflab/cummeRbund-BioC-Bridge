@@ -261,11 +261,21 @@ setMethod("getGene",signature(object="CuffSet"),.getGene)
 	idString<-paste(idString,")",sep="")
 	
 	whereStringGene<-paste('WHERE (x.gene_id IN ',idString,' OR x.gene_short_name IN ',idString,')',sep="")
-	whereStringGeneFPKM<-paste('WHERE (x.gene_id IN ',idString,' OR x.gene_short_name IN ',idString,') AND y.sample_name IN ',sampleString,sep="")
-	whereStringGeneDiff<-paste('WHERE (x.gene_id IN ',idString,' OR x.gene_short_name IN ',idString,') AND (y.sample_1 IN ',sampleString,' AND y.sample_2 IN ',sampleString,')',sep="")
+	whereStringGeneFPKM<-paste('WHERE (x.gene_id IN ',idString,' OR x.gene_short_name IN ',idString,')',sep="")
+	whereStringGeneDiff<-paste('WHERE (x.gene_id IN ',idString,' OR x.gene_short_name IN ',idString,')',sep="")
 	whereString<-paste('WHERE (x.gene_id IN ',idString,' OR g.gene_short_name IN ',idString,')',sep="")
-	whereStringFPKM<-paste('WHERE (x.gene_id IN ',idString,' OR g.gene_short_name IN ',idString,') AND y.sample_name IN ',sampleString,sep="")
-	whereStringDiff<-paste('WHERE (x.gene_id IN ',idString,' OR g.gene_short_name IN ',idString,') AND (y.sample_1 IN ',sampleString,' AND y.sample_2 IN ',sampleString,')',sep="")
+	whereStringFPKM<-paste('WHERE (x.gene_id IN ',idString,' OR g.gene_short_name IN ',idString,')',sep="")
+	whereStringDiff<-paste('WHERE (x.gene_id IN ',idString,' OR g.gene_short_name IN ',idString,')',sep="")
+	
+	if(!is.null(sampleIdList)){
+		whereStringGene<-whereStringGene
+		whereStringGeneFPKM<-paste(whereStringGeneFPKM,' AND y.sample_name IN ',sampleString,sep="")
+		whereStringGeneDiff<-paste(whereStringGeneDiff,' AND (y.sample_1 IN ',sampleString,' AND y.sample_2 IN ',sampleString,')',sep="")
+		whereString<-whereString
+		whereStringFPKM<-paste(whereStringFPKM, ' AND y.sample_name IN ',sampleString,sep="")
+		whereStringDiff<-paste(whereStringDiff,' AND (y.sample_1 IN ',sampleString,' AND y.sample_2 IN ',sampleString,')',sep="")
+		
+	}
 	
 	#dbQueries
 	idQuery<-paste("SELECT DISTINCT gene_id from genes x ",whereStringGene,sep="")
