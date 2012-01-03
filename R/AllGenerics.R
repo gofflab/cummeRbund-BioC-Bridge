@@ -41,7 +41,7 @@ setGeneric("getLevels",function(object) standardGeneric("getLevels"))
 
 
 #CuffDist generics
-setGeneric("distValues",function(object,...) standardGeneric("distValues"))
+setGeneric("distValues",function(object, x, y,...) standardGeneric("distValues"))
 setGeneric("DB",function(object,...) standardGeneric("DB"))
 #setGeneric("table",function(object,...) standardGeneric("table"))
 setGeneric("type",function(object,...) standardGeneric("type"))

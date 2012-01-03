@@ -123,9 +123,16 @@ setMethod("annotation","CuffFeature",function(object){
 	    p <- p + scale_y_log10()
     }
 	
-	p <- p + facet_wrap('tracking_id') +
-    	opts(title=object@annotation$gene_short_name,axis.text.x=theme_text(hjust=0,angle=-90))
+    p <- p + facet_wrap('tracking_id') +
+          opts(title=object@annotation$gene_short_name,axis.text.x=theme_text(hjust=0,angle=-90))
 		
+    # p <- p + facet_wrap('tracking_id')
+    #     # gene_labels <- object@annotation$gene_short_name
+    #     # gene_labels[is.na(object@annotation$gene_short_name)] = dat[is.na(object@annotation$gene_short_name),1]
+    #     # print("gene_labels:")
+    #     # print(str(gene_labels))
+    #     # p <- p + opts(title=gene_labels,axis.text.x=theme_text(hjust=0,angle=-90))   
+	
     # p <- p + ylim(min(dat$conf_lo), max(dat$conf_hi))
 	
     if (logMode)

@@ -376,7 +376,11 @@ setMethod("csVolcano",signature(object="CuffFeatureSet"), .volcano)
 	
 	colnames(dat)[1]<-"tracking_id"
 	tracking_ids<-dat$tracking_id
-	gene_short_names<-dat$gene_short_name
+	gene_labels<-dat$gene_short_name
+	print(gene_labels)
+	gene_labels[is.na(gene_labels)] = tracking_ids[is.na(gene_labels)]
+	print(gene_labels)
+	
 	dodge <- position_dodge(width=0.9) 
 	
 	if(logMode)
@@ -401,8 +405,9 @@ setMethod("csVolcano",signature(object="CuffFeatureSet"), .volcano)
 	    p <- p + scale_y_log10()
     }
 	
-	
-	p <- p + scale_x_discrete("",breaks=tracking_ids,labels=gene_short_names) + opts(title=deparse(substitute(object)),axis.text.x=theme_text(hjust=0,angle=-90))
+	#gene_labels = dat$gene_short_name
+	p <- p + scale_x_discrete("",breaks=tracking_ids,labels=gene_labels) + 
+	    opts(title=deparse(substitute(object)),axis.text.x=theme_text(hjust=0,angle=-90))
     	
     # p<- p +
     #       geom_bar() +

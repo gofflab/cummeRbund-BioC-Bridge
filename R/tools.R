@@ -5,20 +5,25 @@
 
 JSdist<-function(mat){
 	res<-matrix(0,ncol=dim(mat)[2],nrow=dim(mat)[2])
+	
+	col_js <- matrix(0,ncol=dim(mat)[2],nrow=1)
+	for(i in 1:dim(mat)[2]){
+	    col_js[,i] <- shannon.entropy(mat[,i])
+    }
+    #print(col_js)
 	colnames(res)<-colnames(mat)
 	rownames(res)<-colnames(mat)
 	for(i in 1:dim(mat)[2]){
 		for(j in i:dim(mat)[2]){
 			a<-mat[,i]
 			b<-mat[,j]
-			JSdiv<-shannon.entropy((a+b)/2)-(shannon.entropy(a)+shannon.entropy(b))*0.5
+			JSdiv<-shannon.entropy((a+b)/2)-(col_js[,i]+col_js[,j])*0.5
 			res[i,j] = sqrt(JSdiv)
 			res[j,i] = sqrt(JSdiv)
 		}
 	}
 	as.dist(res)
 }
-
 
 JSdistVec<-function(p,q){
 	JSdiv<-shannon.entropy((p+q)/2)-(shannon.entropy(p)+shannon.entropy(q))*0.5
