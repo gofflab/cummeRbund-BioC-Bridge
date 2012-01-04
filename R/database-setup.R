@@ -1358,7 +1358,7 @@ COMMIT;
 }
 
 
-createIndices<-function(dbFname="cuffData.db",driver="SQLite"){
+createIndices<-function(dbFname="cuffData.db",driver="SQLite",verbose=T){
 	
 	drv<-dbDriver(driver)
 	db <- dbConnect(drv,dbname=dbFname)
@@ -1416,13 +1416,15 @@ CREATE INDEX "isoformExpDiffData.fk_isoformExpDiffData_samples1" ON "isoformExpD
 CREATE INDEX "isoformExpDiffData.fk_isoformExpDiffData_samples2" ON "isoformExpDiffData"("sample_2");
 CREATE INDEX "isoformExpDiffData.isoformExpDiffData_sig_index" ON "isoformExpDiffData"("test_stat","p_value","q_value","significant");
 CREATE INDEX "isoformFeatures.fk_isoformFeatures_isoforms1" ON "isoformFeatures"("isoform_id");
-CREATE INDEX "samples.PRIMARY" ON "samples"("sample_index");
-
 '
 	create.sql <- strsplit(index.text,"\n")[[1]]
 	
-	tmp <- sapply(create.sql,function(x) sqliteQuickSQL(db,x))
-
+	tmp <- sapply(create.sql,function(x){
+			if (verbose){
+						write(paste(x,sep=""),stderr())
+					}
+			sqliteQuickSQL(db,x)
+	})
 }
 
 

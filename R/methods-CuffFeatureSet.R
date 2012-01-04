@@ -357,7 +357,7 @@ setMethod("csScatter",signature(object="CuffFeatureSet"), .scatter)
 	p<-ggplot(dat)
 	p<- p + geom_point(aes(x=ln_fold_change,y=-log10(p_value),color=significant),alpha=I(1/3))
 	
-	p<- p + opts(title=paste(object@tables$mainTable,": ",s2,"/",s1,sep=""))
+	p<- p + opts(title=paste(s2,"/",s1,sep=""))
 	
 	#Set axis limits
 	p<- p + scale_x_continuous(limits=xlimits)
