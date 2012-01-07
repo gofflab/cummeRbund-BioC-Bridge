@@ -64,7 +64,7 @@ setGeneric("csBoxplot",function(object, logMode=T, ...) standardGeneric("csBoxpl
 #################
 setGeneric("csHeatmap",function(object,rescaling='none', clustering='none', labCol=T, labRow=T, logMode=T, pseudocount=1.0, border=FALSE, heatscale= c(low='darkred',mid='orange',high='white'), heatMidpoint=NULL, ...) standardGeneric("csHeatmap"))
 setGeneric("csCluster",function(object, k, iter.max=100, ...) standardGeneric("csCluster"))
-setGeneric("csClusterPlot",function(clustering, pseudocount=1.0) standardGeneric("csClusterPlot"))
+#setGeneric("csClusterPlot",function(clustering, pseudocount=1.0) standardGeneric("csClusterPlot"))
 #setGeneric("diff",function(object) standardGeneric("diff"))
 setGeneric("annotation",function(object) standardGeneric("annotation"))
 

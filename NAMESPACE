@@ -28,7 +28,6 @@ exportMethods(
 			csBoxplot,
 			csHeatmap,
 			csCluster,
-			csClusterPlot,
 			fpkmMatrix,
 			diffData,
 			features,
@@ -49,7 +48,8 @@ export("readCufflinks",
 		"JSdistVec",
 		"shannon.entropy",
 		"makeprobs",
-		"makeprobsvec"
+		"makeprobsvec",
+		"csClusterPlot"
 		)
 
 #importClassesFrom("Biobase","Versioned")
