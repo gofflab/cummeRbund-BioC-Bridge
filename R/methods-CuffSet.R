@@ -445,7 +445,7 @@ setMethod("getGenes",signature(object="CuffSet"),.getGenes)
 	}
 	#TODO: Add conditional return for if x & y are not null, to just return that test...
 	if(testTable){
-		tmp<-melt(sigGenes)
+		tmp<-reshape2::melt(sigGenes)
 		return(cast(tmp,value~...,length))
 	}else{
 		return(sigGenes)
