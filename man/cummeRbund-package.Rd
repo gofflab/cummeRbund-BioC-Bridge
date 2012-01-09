@@ -15,7 +15,7 @@ Allows for persistent storage, access, and manipulation of Cufflinks high-throug
 Package: \tab cummeRbund\cr
 Version: \tab 0.1.3\cr
 Suggests: \tab \cr
-Depends: \tab R (>= 2.7.0), RSQLite, reshape, ggplot2, methods\cr
+Depends: \tab R (>= 2.7.0), RSQLite, reshape2, ggplot2, methods\cr
 License: \tab MIT License\cr
 Collate: \tab AllGenerics.R
 AllClasses.R

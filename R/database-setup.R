@@ -2,9 +2,8 @@
 # 
 # Author: lgoff
 ###############################################################################
-#library(RSQLite)
-#library(reshape)
-#drv <- dbDriver("SQLite")
+
+
 #####################
 #File Archetype parsing
 #####################

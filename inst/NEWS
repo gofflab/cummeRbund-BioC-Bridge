@@ -14,6 +14,7 @@ v1.1.1
 		- Enforced requirement in csVolcano for x and y arguments (as sample names).
 	
 	Notes:
+		- Changed dependency 'reshape' to 'reshape2'
 		- Changed the default orientation of expressionBarplot() for CuffFeatureSet objects.
 		- Changed output of csCluster to a list format that includes clustering information. As a result, I created the function csClusterPlot
 		to replace the previous default drawing behavior of csCluster.  This allows for stable cluster analysis.

@@ -55,7 +55,7 @@ options(width=65)
 	\begin{itemize}
 		\item \Rpackage{RSQLite}
 		\item \Rpackage{ggplot2}
-		\item \Rpackage{reshape}
+		\item \Rpackage{reshape2}
 		\item \Rpackage{plyr}
 	\end{itemize}
 \end{itemize}

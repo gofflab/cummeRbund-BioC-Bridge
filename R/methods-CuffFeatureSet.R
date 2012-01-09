@@ -144,9 +144,7 @@ setMethod("annotation","CuffFeatureSet",function(object){
 	## 1. using the rehape package and other funcs the data is clustered, scaled, and reshaped
 	## using simple options or by a user supplied function
 	## 2. with the now resahped data the plot, the chosen labels and plot style are built
-	
-	#require(reshape)
-	#require(ggplot2)
+
 	
 	m=fpkmMatrix(object)
 
