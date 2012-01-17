@@ -520,14 +520,16 @@ setMethod("expressionPlot",signature(object="CuffFeatureSet"),.expressionPlot)
 
 setMethod("csCluster",signature(object="CuffFeatureSet"),.cluster)
 
-csClusterPlot<-function(clustering,pseudocount=1.0){
+csClusterPlot<-function(clustering,pseudocount=1.0,drawSummary=TRUE, sumFun=mean_cl_boot){
 	m<-clustering$fpkm+pseudocount
 	m$ids<-rownames(clustering$fpkm)
 	m$cluster<-factor(clustering$clustering)
 	m.melt<-melt(m,id.vars=c("ids","cluster"))
 	c<-ggplot(m.melt)
 	c<-c+geom_line(aes(x=variable,y=value,color=cluster,group=ids)) + facet_wrap('cluster',scales='free')+scale_y_log10()
-	
+	if(drawSummary){
+		c <- c + stat_summary(aes(x=variable,y=value,group=1),fun.data=sumFun,color="black",fill="black",alpha=0.2,size=1.1,geom="smooth")
+	}
 	c<-c + scale_color_hue(l=50,h.start=200)
 	c
 }

@@ -212,7 +212,7 @@ loadIsoforms<-function(fpkmFile,
 	}
 	
 	######
-	#Populate genes table
+	#Populate isoforms table
 	######
 	isoformCols<-c(1,4,6,2,3,7:9)
 	isoformsTable<-full[,isoformCols]
@@ -226,7 +226,7 @@ loadIsoforms<-function(fpkmFile,
 	bulk_insert(dbConn,insert_SQL,isoformsTable)
 	
 	######
-	#Populate geneData table
+	#Populate isoformData table
 	######
 	write("Reshaping isoformData table",stderr())
 	isoformmelt<-melt(full,id.vars=c("tracking_id"),measure.vars=-idCols,variable_name="sample_name")
@@ -278,7 +278,7 @@ loadIsoforms<-function(fpkmFile,
 			insert_SQL<-"INSERT INTO isoformExpDiffData VALUES(?,?,?,?,?,?,?,?,?,?,?)"
 			bulk_insert(dbConn,insert_SQL,diff[,diffCols])
 		}else{
-			write(pate("No records found in",diffFile),stderr())
+			write(paste("No records found in",diffFile),stderr())
 		}
 	}
 	
@@ -345,46 +345,46 @@ loadTSS<-function(fpkmFile,
 	tssTable<-full[,c(1:4,7:9)]
 	write("Writing TSS table",stderr())
 	#dbWriteTable(dbConn,'TSS',tssTable,row.names=F,append=T)
-	insert_SQL<-"INSERT INTO TSS VALUES(?,?,?,?,?,?,?)"
-	bulk_insert(dbConn,insert_SQL,tssTable)
-	
-	if (nrow(tssTable) == 0)
-	{
-	    write("TSS FPKM tracking file was empty.",stderr())
-	    return()
+	if (nrow(tssTable)>0){
+		insert_SQL<-"INSERT INTO TSS VALUES(?,?,?,?,?,?,?)"
+		bulk_insert(dbConn,insert_SQL,tssTable)
+		
+		######
+		#Populate geneData table
+		######
+		write("Reshaping TSSData table",stderr())
+		tssmelt<-melt(full,id.vars=c("tracking_id"),measure.vars=-idCols,variable_name="sample_name")
+		
+		#Clean up and normalize data
+		tssmelt$measurement = ""
+		
+		tssmelt$measurement[grepl("_FPKM$",tssmelt$sample_name)] = "fpkm"
+		tssmelt$measurement[grepl("_conf_lo$",tssmelt$sample_name)] = "conf_lo"
+		tssmelt$measurement[grepl("_conf_hi$",tssmelt$sample_name)] = "conf_hi"
+		tssmelt$measurement[grepl("_status$",tssmelt$sample_name)] = "status"
+		
+		tssmelt$sample_name<-gsub("_FPKM$","",tssmelt$sample_name)
+		tssmelt$sample_name<-gsub("_conf_lo$","",tssmelt$sample_name)
+		tssmelt$sample_name<-gsub("_conf_hi$","",tssmelt$sample_name)
+		tssmelt$sample_name<-gsub("_status$","",tssmelt$sample_name)
+		
+		#Adjust sample names with make.db.names
+		tssmelt$sample_name <- make.db.names(dbConn,as.vector(tssmelt$sample_name),unique=FALSE)
+		
+		#Recast
+		write("Recasting",stderr())
+		tssmelt<-as.data.frame(cast(tssmelt,...~measurement))
+		
+		#Write geneData table
+		write("Writing TSSData table",stderr())
+		#dbWriteTable(dbConn,'TSSData',as.data.frame(tssmelt[,c(1:2,5,3,4,6)]),row.names=F,append=T)
+
+		insert_SQL<-"INSERT INTO TSSData VALUES(?,?,?,?,?,?)"
+		bulk_insert(dbConn,insert_SQL,tssmelt[,c(1:2,5,3,4,6)])
+	}else{
+		write(paste("No records found in",fpkmFile),stderr())
+		write("TSS FPKM tracking file was empty.",stderr())
 	}
-	
-	######
-	#Populate geneData table
-	######
-	write("Reshaping TSSData table",stderr())
-	tssmelt<-melt(full,id.vars=c("tracking_id"),measure.vars=-idCols,variable_name="sample_name")
-	
-	#Clean up and normalize data
-	tssmelt$measurement = ""
-	
-	tssmelt$measurement[grepl("_FPKM$",tssmelt$sample_name)] = "fpkm"
-	tssmelt$measurement[grepl("_conf_lo$",tssmelt$sample_name)] = "conf_lo"
-	tssmelt$measurement[grepl("_conf_hi$",tssmelt$sample_name)] = "conf_hi"
-	tssmelt$measurement[grepl("_status$",tssmelt$sample_name)] = "status"
-	
-	tssmelt$sample_name<-gsub("_FPKM$","",tssmelt$sample_name)
-	tssmelt$sample_name<-gsub("_conf_lo$","",tssmelt$sample_name)
-	tssmelt$sample_name<-gsub("_conf_hi$","",tssmelt$sample_name)
-	tssmelt$sample_name<-gsub("_status$","",tssmelt$sample_name)
-	
-	#Adjust sample names with make.db.names
-	tssmelt$sample_name <- make.db.names(dbConn,as.vector(tssmelt$sample_name),unique=FALSE)
-	
-	#Recast
-	write("Recasting",stderr())
-	tssmelt<-as.data.frame(cast(tssmelt,...~measurement))
-	
-	#Write geneData table
-	write("Writing TSSData table",stderr())
-	#dbWriteTable(dbConn,'TSSData',as.data.frame(tssmelt[,c(1:2,5,3,4,6)]),row.names=F,append=T)
-	insert_SQL<-"INSERT INTO TSSData VALUES(?,?,?,?,?,?)"
-	bulk_insert(dbConn,insert_SQL,tssmelt[,c(1:2,5,3,4,6)])
 	#######
 	#Handle tss_groups_exp.diff
 	#######
@@ -395,11 +395,11 @@ loadTSS<-function(fpkmFile,
 		diffArgs$file = diffFile
 		diff<-as.data.frame(do.call(read.table,diffArgs))
 		
-		#Adjust sample names with make.db.names
-		diff$sample_1<-make.db.names(dbConn,as.vector(diff$sample_1),unique=FALSE)
-		diff$sample_2<-make.db.names(dbConn,as.vector(diff$sample_2),unique=FALSE)
-		
 		if(dim(diff)[1]>0){
+			#Adjust sample names with make.db.names
+			diff$sample_1<-make.db.names(dbConn,as.vector(diff$sample_1),unique=FALSE)
+			diff$sample_2<-make.db.names(dbConn,as.vector(diff$sample_2),unique=FALSE)
+
 			write("Writing TSSExpDiffData table",stderr())
 			diffCols<-c(1,5:14)
 			#dbWriteTable(dbConn,'TSSExpDiffData',diff[,diffCols],row.names=F,append=T)

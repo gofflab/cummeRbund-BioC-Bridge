@@ -80,7 +80,7 @@ setMethod("fpkmMatrix",signature(object="CuffFeature"),.fpkmMatrix)
 	object@diff
 }
 
-setMethod("diffData",signature(object="CuffFeatureSet"),.diffData)
+setMethod("diffData",signature(object="CuffFeature"),.diffData)
 
 setMethod("annotation","CuffFeature",function(object){
 		return(object@annotation)
