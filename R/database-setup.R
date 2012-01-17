@@ -494,46 +494,47 @@ loadCDS<-function(fpkmFile,
 	cdsTable<-full[,c(1:4,6:9)]
 	write("Writing CDS table",stderr())
 	#dbWriteTable(dbConn,'CDS',cdsTable,row.names=F,append=T)
-	insert_SQL<-"INSERT INTO CDS VALUES(?,?,?,?,?,?,?,?)"
-	bulk_insert(dbConn,insert_SQL,cdsTable)
+	if (nrow(tssTable)>0){
+		insert_SQL<-"INSERT INTO CDS VALUES(?,?,?,?,?,?,?,?)"
+		bulk_insert(dbConn,insert_SQL,cdsTable)
+		
+		######
+		#Populate geneData table
+		######
+		write("Reshaping CDSData table",stderr())
+		cdsmelt<-melt(full,id.vars=c("tracking_id"),measure.vars=-idCols,variable_name="sample_name")
+		
+		#Clean up and normalize data
+		cdsmelt$measurement = ""
+		
+		cdsmelt$measurement[grepl("_FPKM$",cdsmelt$sample_name)] = "fpkm"
+		cdsmelt$measurement[grepl("_conf_lo$",cdsmelt$sample_name)] = "conf_lo"
+		cdsmelt$measurement[grepl("_conf_hi$",cdsmelt$sample_name)] = "conf_hi"
+		cdsmelt$measurement[grepl("_status$",cdsmelt$sample_name)] = "status"
+		
+		cdsmelt$sample_name<-gsub("_FPKM$","",cdsmelt$sample_name)
+		cdsmelt$sample_name<-gsub("_conf_lo$","",cdsmelt$sample_name)
+		cdsmelt$sample_name<-gsub("_conf_hi$","",cdsmelt$sample_name)
+		cdsmelt$sample_name<-gsub("_status$","",cdsmelt$sample_name)
+		
+		#Adjust sample names with make.db.names
+		cdsmelt$sample_name <- make.db.names(dbConn,as.vector(cdsmelt$sample_name),unique=FALSE)
+		
+		#Recast
+		write("Recasting",stderr())
+		cdsmelt<-as.data.frame(cast(cdsmelt,...~measurement))
+		
+		#Write geneData table
+		write("Writing CDSData table",stderr())
+		#dbWriteTable(dbConn,'CDSData',as.data.frame(cdsmelt[,c(1:2,5,3,4,6)]),row.names=F,append=T)
+		insert_SQL<-"INSERT INTO CDSData VALUES(?,?,?,?,?,?)"
+		bulk_insert(dbConn,insert_SQL,cdsmelt[,c(1:2,5,3,4,6)])
 	
-	if (nrow(cdsTable) == 0)
-	{
-	    write("CDS FPKM tracking file was empty.",stderr())
-	    return()
+	}else {
+		write(paste("No records found in",fpkmFile),stderr())
+		write("CDS FPKM tracking file was empty.",stderr())
 	}
 	
-	######
-	#Populate geneData table
-	######
-	write("Reshaping CDSData table",stderr())
-	cdsmelt<-melt(full,id.vars=c("tracking_id"),measure.vars=-idCols,variable_name="sample_name")
-	
-	#Clean up and normalize data
-	cdsmelt$measurement = ""
-	
-	cdsmelt$measurement[grepl("_FPKM$",cdsmelt$sample_name)] = "fpkm"
-	cdsmelt$measurement[grepl("_conf_lo$",cdsmelt$sample_name)] = "conf_lo"
-	cdsmelt$measurement[grepl("_conf_hi$",cdsmelt$sample_name)] = "conf_hi"
-	cdsmelt$measurement[grepl("_status$",cdsmelt$sample_name)] = "status"
-	
-	cdsmelt$sample_name<-gsub("_FPKM$","",cdsmelt$sample_name)
-	cdsmelt$sample_name<-gsub("_conf_lo$","",cdsmelt$sample_name)
-	cdsmelt$sample_name<-gsub("_conf_hi$","",cdsmelt$sample_name)
-	cdsmelt$sample_name<-gsub("_status$","",cdsmelt$sample_name)
-	
-	#Adjust sample names with make.db.names
-	cdsmelt$sample_name <- make.db.names(dbConn,as.vector(cdsmelt$sample_name),unique=FALSE)
-	
-	#Recast
-	write("Recasting",stderr())
-	cdsmelt<-as.data.frame(cast(cdsmelt,...~measurement))
-	
-	#Write geneData table
-	write("Writing CDSData table",stderr())
-	#dbWriteTable(dbConn,'CDSData',as.data.frame(cdsmelt[,c(1:2,5,3,4,6)]),row.names=F,append=T)
-	insert_SQL<-"INSERT INTO CDSData VALUES(?,?,?,?,?,?)"
-	bulk_insert(dbConn,insert_SQL,cdsmelt[,c(1:2,5,3,4,6)])
 	
 	#######
 	#Handle cds_groups_exp.diff
