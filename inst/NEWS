@@ -5,6 +5,7 @@ v1.1.1
 		- Fixed bug that would sometimes cause csBoxplot() to throw an error when log-transforming fpkm data. Also added pseudocount argument.
 		- Fixed bug that would cause diffData() to return a filtered subset of results by default.
 		- Adjusted indexing of tables to improve performance on large datasets.
+		- Fixed bug that caused diffData method to not be registered with CuffFeature and CuffGene objects.
 		
 	New Features:	
 		- added getSig method to CuffSet class for rapid retrieval of significant features from all pairwise tests (as a list of IDs). 

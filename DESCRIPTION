@@ -1,5 +1,5 @@
 Package: cummeRbund
-Title: The finishing touch on your Tuxedo workflow.  Analysis, exploration, manipulation, and visualization of Cufflinks HTS data.
+Title: Analysis, exploration, manipulation, and visualization of Cufflinks high-throughput sequencing data.
 Version: 1.1.1
 Date: 2011-08-18
 Author: L. Goff, C. Trapnell
