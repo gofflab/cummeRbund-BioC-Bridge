@@ -546,11 +546,11 @@ loadCDS<-function(fpkmFile,
 		diffArgs$file = diffFile
 		diff<-as.data.frame(do.call(read.table,diffArgs))
 		
-		#Adjust sample names with make.db.names
-		diff$sample_1<-make.db.names(dbConn,as.vector(diff$sample_1),unique=FALSE)
-		diff$sample_2<-make.db.names(dbConn,as.vector(diff$sample_2),unique=FALSE)
-		
 		if(dim(diff)[1]>0){
+			#Adjust sample names with make.db.names
+			diff$sample_1<-make.db.names(dbConn,as.vector(diff$sample_1),unique=FALSE)
+			diff$sample_2<-make.db.names(dbConn,as.vector(diff$sample_2),unique=FALSE)
+			
 			write("Writing CDSExpDiffData table",stderr())
 			diffCols<-c(1,5:14)
 			#dbWriteTable(dbConn,'CDSExpDiffData',diff[,diffCols],row.names=F,append=T)
