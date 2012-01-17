@@ -494,7 +494,7 @@ loadCDS<-function(fpkmFile,
 	cdsTable<-full[,c(1:4,6:9)]
 	write("Writing CDS table",stderr())
 	#dbWriteTable(dbConn,'CDS',cdsTable,row.names=F,append=T)
-	if (nrow(tssTable)>0){
+	if (nrow(cdsTable)>0){
 		insert_SQL<-"INSERT INTO CDS VALUES(?,?,?,?,?,?,?,?)"
 		bulk_insert(dbConn,insert_SQL,cdsTable)
 		
