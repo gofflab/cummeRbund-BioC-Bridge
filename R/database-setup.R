@@ -1358,7 +1358,7 @@ COMMIT;
 }
 
 
-createIndices<-function(dbFname="cuffData.db",driver="SQLite",verbose=T){
+createIndices<-function(dbFname="cuffData.db",driver="SQLite",verbose=F){
 	
 	drv<-dbDriver(driver)
 	db <- dbConnect(drv,dbname=dbFname)
