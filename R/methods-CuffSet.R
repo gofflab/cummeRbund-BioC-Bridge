@@ -296,7 +296,7 @@ setMethod("getGene",signature(object="CuffSet"),.getGene)
 	CDSFPKMQuery<-paste("SELECT y.* from CDS x JOIN CDSData y ON x.CDS_id = y.CDS_id JOIN genes g on x.gene_id=g.gene_id ", whereStringFPKM,sep="")
 	CDSDiffQuery<-paste("SELECT y.* from CDS x JOIN CDSExpDiffData y ON x.CDS_id = y.CDS_id JOIN genes g on x.gene_id=g.gene_id ", whereStringDiff,sep="")
 	
-	promotersDistQuery<-paste("SELECT x.* FROM promoterDiffData x LEFT JOIN genes g ON x.gene_id=g.gene_id ", whereString,sep="")
+	promotersDistQuery<-paste("SELECT x.* FROM promoterDiffData x LEFT JOIN genes g ON g.gene_id=g.gene_id ", whereString,sep="")
 	splicingDistQuery<-paste("SELECT x.* FROM splicingDiffData x LEFT JOIN genes g ON x.gene_id=g.gene_id ", whereString,sep="")
 	CDSDistQuery<-paste("SELECT x.* FROM CDSDiffData x LEFT JOIN genes g ON x.gene_id=g.gene_id ", whereString,sep="")
 	
