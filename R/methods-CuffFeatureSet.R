@@ -373,11 +373,14 @@ setMethod("csVolcano",signature(object="CuffFeatureSet"), .volcano)
 	#TODO: Test dat to ensure that there are >0 rows to plot.  If not, trap error and move on...
 	
 	colnames(dat)[1]<-"tracking_id"
-	tracking_ids<-dat$tracking_id
-	gene_labels<-dat$gene_short_name
-	print(gene_labels)
+	#tracking_ids<-dat$tracking_id
+	obj_features <- features(object)
+	tracking_ids <- obj_features[,1]
+	
+	gene_labels<-obj_features$gene_short_name
+	#print(gene_labels)
 	gene_labels[is.na(gene_labels)] = tracking_ids[is.na(gene_labels)]
-	print(gene_labels)
+	#print(gene_labels)
 	
 	dodge <- position_dodge(width=0.9) 
 	
