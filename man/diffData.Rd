@@ -9,7 +9,7 @@ Differential comparison data
 An accessor method to retrieve differential expression data from a 'CuffData', 'CuffFeatureSet', or 'CuffFeature' object
 }
 \usage{
-\S4method{diffData}{CuffData}(object, x, y, features=FALSE, lnFcCutoff=20)
+\S4method{diffData}{CuffData}(object, x, y, features=FALSE)
 }
 
 \arguments{
@@ -25,9 +25,6 @@ See 'x'
 }
   \item{features}{
 A logical value that returns all feature-level data as part of data.frame when true.  object must be of class 'CuffData'.
-}
-  \item{lnFcCutoff}{
-For plotting purposes, extreme values of ln_fold_change are removed from view. This is the cutoff for where these should be trimmed.
 }
 
   \item{\dots}{

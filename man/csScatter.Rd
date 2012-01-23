@@ -10,7 +10,7 @@ Scatter Plot
 A scatter plot comparing the FPKM  values from two samples in a cuffdiff run.
 }
 \usage{
-\S4method{csScatter}{CuffData}(object, x, y, logMode=TRUE, pseudocount=1.0, labels, smooth=FALSE, colorByStatus = FALSE, ...)
+\S4method{csScatter}{CuffData}(object, x, y, logMode=TRUE, pseudocount=1.0, labels, smooth=FALSE, colorByStatus = FALSE, drawRug=TRUE, ...)
 }
 
 \arguments{
@@ -37,6 +37,9 @@ A list of tracking_ids or gene_short_names that will be 'callout' points in the 
 }
   \item{colorByStatus}{
 A logical argument whether or not to color the points by 'significant' Y or N. [Default = FALSE]
+}
+  \item{drawRug}{
+A logical argument whether or not to draw the rug for x and y axes [Default = TRUE]
 }
   \item{\dots}{
 Additional arguments to csScatter

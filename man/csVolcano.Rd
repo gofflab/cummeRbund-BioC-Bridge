@@ -10,7 +10,7 @@ Volcano Plot
 Creates a volcano plot of log fold change in expression vs -log(pval) for a pair of samples (x,y)
 }
 \usage{
-\S4method{csVolcano}{CuffData}(object, x, y, features=FALSE, ...)
+\S4method{csVolcano}{CuffData}(object, x, y, features=FALSE, xlimits = c(-20, 20), ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -26,6 +26,9 @@ Sample name from 'samples' table for comparison
   \item{features}{
 Will include all fields from 'features' slot in returned ggplot object.
 Useful for further manipulations of plot object using feature-level attributes (e.g. gene_type, class_code, etc)
+}
+  \item{xlimits}{
+Set boundaries for x limits to avoid infinity plotting errors. [Default c(-20,20)]
 }
   \item{\dots}{
 Additional arguments

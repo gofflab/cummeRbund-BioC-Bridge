@@ -19,7 +19,8 @@ v1.1.1
 		- Changed the default orientation of expressionBarplot() for CuffFeatureSet objects.
 		- Changed output of csCluster to a list format that includes clustering information. As a result, I created the function csClusterPlot
 		to replace the previous default drawing behavior of csCluster.  This allows for stable cluster analysis.
-
+		- For consistency, the 'testId' slot for CuffDist objects was renamed to 'idField'.  This brings the CuffDist class in line with the CuffData class.
+		- CuffGene and CuffGeneSet now include slots for promoter, splicing, and relCDS distribution test results.
 v1.0.0
 	- Official public release. No changes from v0.99.5
 

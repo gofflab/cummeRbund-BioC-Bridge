@@ -52,6 +52,18 @@ setMethod("CDS","CuffGene",function(object){
 		return(object@CDS)
 		})
 
+#promoters
+setMethod("promoters","CuffGene",function(object){
+			return(object@promoters)
+		})
+#splicing
+setMethod("splicing","CuffGene",function(object){
+			return(object@splicing)
+		})
+#relCDS
+setMethod("relCDS","CuffGene",function(object){
+			return(object@relCDS)
+		})
 
 #################
 #Plotting		#

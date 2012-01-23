@@ -9,7 +9,7 @@ csBoxplot
 Creates a ggplot2 plot object with a geom_box layer displaying summary statistics for FPKM values across samples (x).
 }
 \usage{
-\S4method{csBoxplot}{CuffData}(object, logMode=TRUE, ...)
+\S4method{csBoxplot}{CuffData}(object, logMode=TRUE, pseudocount=0.0001, ...)
 }
 
 \arguments{
@@ -18,6 +18,9 @@ An object of class CuffData.
 }
   \item{logMode}{
 A logical argument to log10 -transform FPKM values.
+}
+  \item{pseudocount}{
+Value added to FPKM to avoid log-transform issues. 
 }
   \item{\dots}{
 Additional arguments to csBoxplot

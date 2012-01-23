@@ -342,7 +342,7 @@ setMethod("csScatter",signature(object="CuffFeatureSet"), .scatter)
 	if (!all(c(x,y) %in% samp)){
 		stop("One or more values of 'x' or 'y' are not valid sample names!")
 	}
-	dat<-diffData(object=object,x=x,y=y)
+	dat<-diffData(object=object)
 	
 	#subset dat for samples of interest
 	mySamples<-c(x,y)
@@ -515,7 +515,7 @@ setMethod("expressionPlot",signature(object="CuffFeatureSet"),.expressionPlot)
 	m<-as.data.frame(fpkmMatrix(object))
 	m<-m[rowSums(m)>0,]
 	n<-JSdist(makeprobs(t(m)))
-	clusters<-pam(n,k)
+	clusters<-pam(n,k, ...)
 	class(clusters)<-"list"
 	clusters$fpkm<-m
 	clusters
