@@ -36,7 +36,7 @@
 \title{cummeRbund: Visualization and Exploration of Cufflinks High-throughput Sequencing Data}
 
 \author{Loyal A. Goff, Cole Trapnell}
-\date{1 April, 2011}
+\date{23 January, 2012}
 
 \begin{document}
 <<init, echo=FALSE>>=
@@ -85,6 +85,18 @@ options(width=65)
 	\end{itemize}
 	Making the best use of either the CuffSet or CuffData classes will enable you to keep the entire dataset out of memory and significantly improve performance for large cufflinks datasets.
 
+\subsection{CuffDist Class}
+	The \Rclass{CuffDist} class is an pointer class that contains the results of the various 'distribution tests' performed by cuffdiff.  These include differential promoter usage, differential splicing, and differential CDS usage.  These are independent tests from the differential analysis of gene-, isoform-, TSS-, and CDS-level features and therefore
+	have their own container type to distinguish them as such.  The 'promoters', 'relCDS', and 'splicing' slots of a \Rclass{CuffSet} class are all \Rclass{CuffDist} instances.
+	
+	Available slots for the CuffDist class are:
+	\begin{itemize}
+	\item DB: RSQLite connection object
+		\item tables: A \Rclass{list} of tables in the SQLite DB that contain the distribution test data.
+		\item type: A \Rclass{character} field describing the data (ie. 'promoters','relCDS','splicing')
+		\item idField: The name of the identifying index field for this object (eg. 'TSS\_group\_id' for type='promoters', or 'CDS\_id' for type='relCDS', etc.)
+	\end{itemize}
+
 \subsection{CuffFeatureSet Class}
 	The \Rclass{CuffFeatureSet} class is a data-storage container that holds all available data for a pre-determined list of features. Slots for FPKM data, differential regulation data, and feature-level annotation are all available. Unlike the previous classes, this class contains no connection information to the SQL database, but
 	rather contains several slots with \Rclass{data.frame} objects storing multiple-features worth of information.  There are available accessors, and plotting methods that are designed to present multiple-features worth of information (eg. heatmaps, scatterplots, etc)
@@ -124,13 +136,11 @@ options(width=65)
 		\item CDS: A \Rclass{CuffFeature} object for all CDS of a given gene.
 	\end{itemize}
 	
-Note: Future versions of cummeRbund may try to collapse the redundant functionality of the CuffFeature and CuffFeatureSet classes.
-
 \section{Reading cuffdiff output}
 \Rpackage{cummeRbund} was designed to process the multi-file output format for a 'cuffdiff' differential expression analysis.  In this type of analysis, a user will use a reference .gtf file (either known annotation or a .gtf file created from a cufflinks assembly or merge of assemblies) and quantitate the expression values and differential regulation of the annotation(s) in the .gtf file across two or more SAM/BAM files.
 By design, cuffdiff produces a number of output files that contain test results for changes in expression at the level of transcripts, primary transcripts, and genes. It also tracks changes in the relative abundance of transcripts sharing a common transcription start site, and in the relative abundances of the primary transcripts of each gene. Tracking the former allows one to see changes in splicing, and the latter lets one see changes in relative promoter use within a gene. \\
 
-Note: Cuffdiff requires that transcripts in the input GTF be annotated with certain attributes in order to look for changes in primary transcript expression, splicing, coding output, and promoter use. \\
+Note:Early versions of Cuffdiff required that transcripts in the input GTF be annotated with certain attributes in order to look for changes in primary transcript expression, splicing, coding output, and promoter use. This is no longer the case with >=v1.1.1 of \Rpackage{cummeRbund}, however we still recommend the use of both the following attributes in your GTF file to enable all downstream features of \Rpackage{cummeRbund}. \\
 
 These attributes are:
 \begin{itemize}
@@ -293,11 +303,14 @@ myGeneIds
 myGenes<-getGenes(cuff,myGeneIds)
 myGenes
 @
-The same \Rmethod{fpkm}, \Rmethod{fpkmMatrix}, \Rmethod{features}, \Rmethod{diffData}, \Rmethod{samples}, and \Rmethod{featureNames} are available for instances of the \Rmethod{CuffGeneSet} class.
+The same \Rmethod{fpkm}, \Rmethod{fpkmMatrix}, \Rmethod{features}, \Rmethod{diffData}, \Rmethod{samples}, and \Rmethod{featureNames} are available for instances of the \Rmethod{CuffGeneSet} class, but additional accessor methods are available for the \Rmethod{promoters},\Rmethod{relCDS}, and \Rmethod{splicing} slot data as well.
 
 
 \subsection{Geneset level plots}
 There are several plotting functions available for gene-set-level visualization:
+
+The \Rmethod{csHeatmap()} function is a plotting wrapper that takes as input either a CuffGeneSet or a CuffFeatureSet object (essentially a collection of genes and/or features) and produces a heatmap of FPKM expression values.  The 'cluster' argument can be used to re-order either 'row', 'column', or 'both' dimensions of this matrix.
+By default, the Jensen-Shannon distance is used as the clustering metric, however, any function that produces a \Rclass{dist} object can be passed to the 'cluster' argument as well.
 
 <<geneset_plots_1,include=FALSE>>=
 h<-csHeatmap(myGenes,cluster='both')
@@ -308,7 +321,7 @@ h
 <<geneset_plots_1>>
 print(h)
 @
-
+The \Rmethod{csScatter()} method can be used to produce scatter plot comparisons between any two conditions.
 <<geneset_plots_2,include=FALSE>>=
 s<-csScatter(myGenes,"Fibroblasts","hESC",smooth=T)
 s
@@ -319,6 +332,7 @@ s
 print(s)
 @
 
+The volcano plot is a useful visualization to compare fold change between any two conditions and significance (-log P-values).
 <<geneset_plots_3,include=FALSE>>=
 v<-csVolcano(myGenes,"Fibroblasts","hESC")
 v
@@ -341,24 +355,10 @@ ih
 print(ih)
 @
 
-Rudimentary k-means clustering is implemented as well.
-
-<<geneset_plots_5,include=FALSE>>=
-ic<-csCluster(myGenes,k=4)
-head(ic$cluster)
-icp<-csClusterPlot(ic)
-icp
-@
-
-<<label=geneset_plots_cluster,fig=TRUE,echo=FALSE>>=
-<<geneset_plots_5>>
-print(icp)
-@
-
 \clearpage
 
 \section{Individual Genes}
-An individual CuffGene object can be created by using the \Rfunction{getGene} function for a given 'gene\_id'.
+An individual CuffGene object can be created by using the \Rfunction{getGene} function for a given 'gene\_id' or 'gene\_short\_name'.
 <<gene_level_1>>=
 myGeneId<-"PINK1"
 myGene<-getGene(cuff,myGeneId)
@@ -403,8 +403,47 @@ print(igb)
 \section{Data Exploration}
 The cummeRbund package is more than just a visualization tool as well.  We are working to implement several different means of data exploration from gene and condition clustering, finding features with similar expression profiles, as well as incorporating Gene Ontology analysis.
 
+\subsection{Creating gene sets from significantly regulated genes}
+One of the primary roles of a cuffdiff analysis is to conduct significance tests on each feature (genes, isoforms, TSS, and CDS) for appropriate pairwise comparisons of conditions. The results of these tests (after multiple testing correction of course) can be used to determine which genes are differentially regulated. 
+\Rpackage{cummeRbund} makes accessing the results of these significance tests simple via \Rmethod{getSig()}. This function takes a CuffSet object and will scan at various feature levels ('genes' by default) to produce a \Rclass{list} of feature ID sets for each viable pairwise comparison.
+
+<<get_sig_1>>=
+mySigGenes<-getSig(cuff,level='genes')
+names(mySigGenes)
+head(mySigGenes[[1]])
+@
+The values returned for each level of this list can be used as an argument to getGenes, to create a \Rclass{CuffGeneSet} object of significantly regulated genes (or features).
+
+Alternatively, you can use the logical argument 'testTable' to return a test-table of 'significant features' x 'pairwise tests'.
+
+<<get_sig_2>>=
+mySigTable<-getSig(cuff,level='genes',testTable=TRUE)
+head(mySigTable,20)
+@
+
+\subsection{Partitioning}
+K-means clustering is a useful tool that can be helpful in identifying clusters of genes with similar expression profiles. In fact, these profiles are learned from the data during the clustering. 
+\Rmethod{csCluster()} uses the \Rmethod{pam()} method from the \Rpackage{clustering} package to perform the partitioning around medoids. In this case however, the distance metric used by default is the
+Jensen-Shannon distance instead of the default Euclidean distance. Prior to performing this particular partitioning, the user must choose the number of clusters (K) into which the expression profiles should be divided. 
+
+<<geneset_plots_5,include=FALSE>>=
+ic<-csCluster(myGenes,k=4)
+head(ic$cluster)
+icp<-csClusterPlot(ic)
+icp
+@
+As of v1.1.1 of \Rpackage{cummeRbund}, the output of csCluster is a modified \Rclass{pam} object. This replaces the default plotting behavior of the original csCluster plot to allow for further analysis of the clustering results. The original plotting behavior has been recapitulated
+in the \Rmethod{csClusterPlot()} method.
+
+<<label=geneset_plots_cluster,fig=TRUE,echo=FALSE>>=
+<<geneset_plots_5>>
+print(icp)
+@
+
+\clearpage
+
 \subsection{Finding similar genes}
-One common question in large-scale gene expression analyses is 'How can I find genes with similar expression profiles to gene $x$?'. We have implemented a method, \Rmethod{findSimilar} to allow you to identify a fixed number of the most similar genes to a given gene of interest.
+Another common question in large-scale gene expression analyses is 'How can I find genes with similar expression profiles to gene $x$?'. We have implemented a method, \Rmethod{findSimilar} to allow you to identify a fixed number of the most similar genes to a given gene of interest.
 For example, if you wanted to find the 20 genes most similar to "PINK1", you could do the following:
 
 <<similar_1, include=FALSE>>=
@@ -430,7 +469,7 @@ mySimilar2.expression<-expressionPlot(mySimilar2,logMode=T,showErrorbars=F)
 print(mySimilar2.expression)
 @
 
-\Rmethod{findSimilar()} uses the Jensen-Shannon distance between the probability distributions of each gene across conditions to determine the similarity.  
+\Rmethod{findSimilar()} also uses the Jensen-Shannon distance between the probability distributions of each gene across conditions to determine the similarity.  
 We have found this to be a more robust way to determine distance between genes using the high dynamic range of FPKM data. Future versions may allow for other dissimilarity measures to be used instead.
 
 \clearpage
@@ -447,7 +486,6 @@ We have found this to be a more robust way to determine distance between genes u
 
 \section{Known Issues}
 \begin{itemize}
-	\item You must have at least one p\_id field (see cufflinks manual) in your cuffdiff reference gtf file. Otherwise no results will be populated for the CDS.diff files and nothing will be available for cummeRbund to parse. This is described in more detail in the cuffdiff section of the cufflinks user guide.
 	\item Large cuffdiff runs (e.g. $\ge$10 conditions) produce very large results files.  These will take some time to parse and populate the cuffData.db sqlite database.  While this is only a one time cost, the process can take a while. We are working on making the table writes and indexing significantly faster.
 	\item Cuffdiff does not 'require' that gene\_ids, isoform\_ids, TSS\_group\_ids, or CDS\_ids be unique in your reference gtf file. In fact, duplicate IDs will be aggregated by cummeRbund in the indexing phase and will produce undesireable effects. Please ensure that all of your IDs are unique prior to running cuffdiff (see cuffmerge for help) to avoid this issue.
 \end{itemize}

@@ -516,6 +516,7 @@ setMethod("expressionPlot",signature(object="CuffFeatureSet"),.expressionPlot)
 	m<-m[rowSums(m)>0,]
 	n<-JSdist(makeprobs(t(m)))
 	clusters<-pam(n,k, ...)
+	#clsuters<-pamk(n,krange=2:20)
 	class(clusters)<-"list"
 	clusters$fpkm<-m
 	clusters
