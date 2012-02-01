@@ -1,4 +1,5 @@
 v1.1.3
+	-Fixed bug in getGenes that may have resulted in long query lag for retrieving promoter diffData.
 	
 
 v1.1.1
