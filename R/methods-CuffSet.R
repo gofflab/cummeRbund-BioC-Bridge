@@ -431,6 +431,13 @@ setMethod("getGenes",signature(object="CuffSet"),.getGenes)
 		diffTable<-slot(object,level)@tables$expDiffTable
 	}
 	
+	#Restrict samples to those provided as x and y
+	if(!is.null(x) && !is.null(y)){
+		mySamp<-c(x,y)
+		if(!all(mySamp %in% samples(slot(object,level)))){
+			stop("One or more values of 'x' or 'y' are not valid sample names!")
+		}
+	}
 	
 	for (ihat in c(1:(length(mySamp)-1))){
 		for(jhat in c((ihat+1):length(mySamp))){
