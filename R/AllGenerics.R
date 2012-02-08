@@ -35,7 +35,7 @@ setGeneric("fpkm",function(object, features=FALSE) standardGeneric("fpkm"))
 setGeneric("filters",function(object) standardGeneric("filters"))
 setGeneric("idField",function(object) standardGeneric("idField"))
 setGeneric("tables",function(object) standardGeneric("tables"))
-setGeneric("fpkmMatrix",function(object) standardGeneric("fpkmMatrix"))
+setGeneric("fpkmMatrix",function(object,...) standardGeneric("fpkmMatrix"))
 setGeneric("diffData",function(object, x, y, features=FALSE, lnFcCutoff=20, ...) standardGeneric("diffData"))
 setGeneric("getLevels",function(object) standardGeneric("getLevels"))
 

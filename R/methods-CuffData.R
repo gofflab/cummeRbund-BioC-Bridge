@@ -98,7 +98,8 @@ setMethod("samples","CuffData",.samples)
 	if(!features){
 		FPKMQuery<-paste("SELECT * FROM",object@tables$dataTable)
 	}else{
-		FPKMQuery<-paste("SELECT xf.*,x.sample_name,x.fpkm,x.conf_hi, x.conf_lo FROM ",object@tables$dataTable," x LEFT JOIN ",object@tables$featureTable," xf ON x.",object@idField,"=xf.",object@idField,sep="")
+		FPKMQuery<-paste("SELECT xf.*,xm.*,x.sample_name,x.fpkm,x.conf_hi,x.conf_lo FROM ",object@tables$dataTable," x LEFT JOIN ",object@tables$featureTable," xf ON x.",object@idField,"=xf.",object@idField," LEFT JOIN ",object@tables$mainTable," xm ON x.",object@idField,"=xm.",object@idField,sep="")
+		print(FPKMQuery)
 	}
 	res<-dbGetQuery(object@DB,FPKMQuery)
 	res$sample_name<-factor(res$sample_name,levels=getLevels(object))

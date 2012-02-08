@@ -91,10 +91,16 @@ setMethod("featureNames",signature(object="CuffFeatureSet"),.featureNames)
 
 setMethod("features",signature(object="CuffFeatureSet"),.features)
 
-.fpkmMatrix<-function(object){
-	res<-fpkm(object)
-	colnames(res)[1]<-"tracking_id"
-	res<-res[,c(1:3)]
+.fpkmMatrix<-function(object,fullnames=FALSE){
+	if(fullnames){
+		res<-fpkm(object,features=TRUE)
+		res$tracking_id<-paste(res$gene_short_name,res[,1],sep="|")
+	}else{
+		res<-fpkm(object)
+		colnames(res)[1]<-"tracking_id"	
+	}
+	selectedRows<-c('tracking_id','sample_name','fpkm')
+	res<-res[,selectedRows]
 	res<-melt(res)
 	res<-cast(res,tracking_id~sample_name)
 	res<-data.frame(res[,-1],row.names=res[,1])
@@ -146,7 +152,7 @@ setMethod("annotation","CuffFeatureSet",function(object){
 	## 2. with the now resahped data the plot, the chosen labels and plot style are built
 
 	
-	m=fpkmMatrix(object)
+	m=fpkmMatrix(object,fullnames=T)
 
 	#remove genes with no expression in any condition
 	m=m[!apply(m,1,sum)==0,]

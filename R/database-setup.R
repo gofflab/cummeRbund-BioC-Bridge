@@ -214,7 +214,7 @@ loadIsoforms<-function(fpkmFile,
 	######
 	#Populate isoforms table
 	######
-	isoformCols<-c(1,4,6,2,3,7:9)
+	isoformCols<-c(1,4,5,6,2,3,7:9)
 	isoformsTable<-full[,isoformCols]
 	
 	#This is a temporary fix until p_id is added to the 'isoforms.fpkm_tracking' file
@@ -222,7 +222,7 @@ loadIsoforms<-function(fpkmFile,
 	#print (head(isoformsTable))
 	write("Writing isoforms table",stderr())
 	#dbWriteTable(dbConn,'isoforms',as.data.frame(isoformsTable),row.names=F,append=T)
-	insert_SQL<-'INSERT INTO isoforms VALUES(?,?,?,?,?,?,?,?,?)'
+	insert_SQL<-'INSERT INTO isoforms VALUES(?,?,?,?,?,?,?,?,?,?)'
 	bulk_insert(dbConn,insert_SQL,isoformsTable)
 	
 	######
@@ -342,11 +342,11 @@ loadTSS<-function(fpkmFile,
 	######
 	#Populate genes table
 	######
-	tssTable<-full[,c(1:4,7:9)]
+	tssTable<-full[,c(1:5,7:9)]
 	write("Writing TSS table",stderr())
 	#dbWriteTable(dbConn,'TSS',tssTable,row.names=F,append=T)
 	if (nrow(tssTable)>0){
-		insert_SQL<-"INSERT INTO TSS VALUES(?,?,?,?,?,?,?)"
+		insert_SQL<-"INSERT INTO TSS VALUES(?,?,?,?,?,?,?,?)"
 		bulk_insert(dbConn,insert_SQL,tssTable)
 		
 		######
@@ -491,11 +491,11 @@ loadCDS<-function(fpkmFile,
 	######
 	#Populate genes table
 	######
-	cdsTable<-full[,c(1:4,6:9)]
+	cdsTable<-full[,c(1:5,6:9)]
 	write("Writing CDS table",stderr())
 	#dbWriteTable(dbConn,'CDS',cdsTable,row.names=F,append=T)
 	if (nrow(cdsTable)>0){
-		insert_SQL<-"INSERT INTO CDS VALUES(?,?,?,?,?,?,?,?)"
+		insert_SQL<-"INSERT INTO CDS VALUES(?,?,?,?,?,?,?,?,?)"
 		bulk_insert(dbConn,insert_SQL,cdsTable)
 		
 		######
@@ -635,6 +635,7 @@ CREATE TABLE "TSS"(
   "class_code" VARCHAR(45),
   "nearest_ref_id" VARCHAR(45),
   "gene_id" VARCHAR(45) NOT NULL,
+  "gene_short_name" VARCHAR(45),
   "locus" VARCHAR(45),
   "length" INTEGER,
   "coverage" FLOAT,
@@ -643,6 +644,7 @@ CREATE TABLE "TSS"(
     REFERENCES "genes"("gene_id")
 );
 CREATE INDEX "TSS.fk_TSS_genes1" ON "TSS"("gene_id");
+CREATE INDEX "TSS.fk_TSS_genes2" ON "TSS"("gene_short_name");
 DROP TABLE IF EXISTS "TSSData";
 CREATE TABLE "TSSData"(
   "TSS_group_id" VARCHAR(45) NOT NULL,
@@ -666,6 +668,7 @@ CREATE TABLE "CDS"(
   "class_code" VARCHAR(45),
   "nearest_ref_id" VARCHAR(45),
   "gene_id" VARCHAR(45),
+  "gene_short_name" VARCHAR(45),
   "TSS_group_id" VARCHAR(45),
   "locus" VARCHAR(45),
   "length" INTEGER,
@@ -678,6 +681,7 @@ CREATE TABLE "CDS"(
     REFERENCES "TSS"("TSS_group_id")
 );
 CREATE INDEX "CDS.fk_CDS_genes1" ON "CDS"("gene_id");
+CREATE INDEX "CDS.fk_CDS_genes2" ON "CDS"("gene_short_name");
 CREATE INDEX "CDS.fk_CDS_TSS1" ON "CDS"("TSS_group_id");
 DROP TABLE IF EXISTS "CDSData";
 CREATE TABLE "CDSData"(
@@ -913,6 +917,7 @@ CREATE TABLE "isoforms"(
   "isoform_id" VARCHAR(45) PRIMARY KEY NOT NULL,
   "gene_id" VARCHAR(45),
   "CDS_id" VARCHAR(45),
+  "gene_short_name" VARCHAR(45),
   "TSS_group_id" VARCHAR(45),
   "class_code" VARCHAR(45),
   "nearest_ref_id" VARCHAR(45),
@@ -932,6 +937,7 @@ CREATE TABLE "isoforms"(
 CREATE INDEX "isoforms.fk_isoforms_TSS1" ON "isoforms"("TSS_group_id");
 CREATE INDEX "isoforms.fk_isoforms_CDS1" ON "isoforms"("CDS_id");
 CREATE INDEX "isoforms.fk_isoforms_genes1" ON "isoforms"("gene_id");
+CREATE INDEX "isoforms.fk_isoforms_genes2" ON "isoforms"("gene_short_name");
 DROP TABLE IF EXISTS "isoformData";
 CREATE TABLE "isoformData"(
   "isoform_id" VARCHAR(45) NOT NULL,
@@ -1038,6 +1044,7 @@ CREATE TABLE "TSS"(
   "class_code" VARCHAR(45),
   "nearest_ref_id" VARCHAR(45),
   "gene_id" VARCHAR(45) NOT NULL,
+  "gene_short_name" VARCHAR(45),
   "locus" VARCHAR(45),
   "length" INTEGER,
   "coverage" FLOAT,
@@ -1066,6 +1073,7 @@ CREATE TABLE "CDS"(
   "class_code" VARCHAR(45),
   "nearest_ref_id" VARCHAR(45),
   "gene_id" VARCHAR(45),
+  "gene_short_name" VARCHAR(45),
   "TSS_group_id" VARCHAR(45),
   "locus" VARCHAR(45),
   "length" INTEGER,
@@ -1284,6 +1292,7 @@ CREATE TABLE "isoforms"(
   "isoform_id" VARCHAR(45) PRIMARY KEY NOT NULL,
   "gene_id" VARCHAR(45),
   "CDS_id" VARCHAR(45),
+  "gene_short_name" VARCHAR(45),
   "TSS_group_id" VARCHAR(45),
   "class_code" VARCHAR(45),
   "nearest_ref_id" VARCHAR(45),
@@ -1368,11 +1377,13 @@ createIndices<-function(dbFname="cuffData.db",driver="SQLite",verbose=F){
 CREATE INDEX "genes.gsn_index" ON "genes"("gene_short_name");
 CREATE INDEX "genes.cc_index" ON "genes"("class_code");
 CREATE INDEX "TSS.fk_TSS_genes1" ON "TSS"("gene_id");
+CREATE INDEX "TSS.fk_TSS_genes2" ON "TSS"("gene_short_name");
 CREATE INDEX "TSSData.fk_TSSData_TSS1" ON "TSSData"("TSS_group_id");
 CREATE INDEX "TSSData.fk_TSSData_samples1" ON "TSSData"("sample_name");
 CREATE INDEX "TSS.PRIMARY" ON "TSS"("TSS_group_id");
 CREATE INDEX "CDS.PRIMARY" ON "CDS"("CDS_id");
 CREATE INDEX "CDS.fk_CDS_genes1" ON "CDS"("gene_id");
+CREATE INDEX "CDS.fk_CDS_genes2" ON "CDS"("gene_short_name");
 CREATE INDEX "CDS.fk_CDS_TSS1" ON "CDS"("TSS_group_id");
 CREATE INDEX "CDSData.fk_CDSData_CDS1" ON "CDSData"("CDS_id");
 CREATE INDEX "CDSData.fk_CDSData_samples1" ON "CDSData"("sample_name");
@@ -1409,6 +1420,7 @@ CREATE INDEX "isoforms.PRIMARY" ON "isoforms"("isoform_id");
 CREATE INDEX "isoforms.fk_isoforms_TSS1" ON "isoforms"("TSS_group_id");
 CREATE INDEX "isoforms.fk_isoforms_CDS1" ON "isoforms"("CDS_id");
 CREATE INDEX "isoforms.fk_isoforms_genes1" ON "isoforms"("gene_id");
+CREATE INDEX "isoforms.fk_isoforms_genes2" ON "isoforms"("gene_short_name");
 CREATE INDEX "isoformData.fk_isoformData_samples1" ON "isoformData"("sample_name");
 CREATE INDEX "isoformData.fk_isoformData_isoforms1" ON "isoformData"("isoform_id");
 CREATE INDEX "isoformExpDiffData.fk_isoformExpDiffData_isoforms1" ON "isoformExpDiffData"("isoform_id");
