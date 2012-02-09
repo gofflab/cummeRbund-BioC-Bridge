@@ -432,7 +432,7 @@ setMethod("getGenes",signature(object="CuffSet"),.getGenes)
 	}
 	
 	#Restrict samples to those provided as x and y
-	if(!is.null(x) && !is.null(y)){
+	if(!missing(x) && !missing(y)){
 		mySamp<-c(x,y)
 		if(!all(mySamp %in% samples(slot(object,level)))){
 			stop("One or more values of 'x' or 'y' are not valid sample names!")
