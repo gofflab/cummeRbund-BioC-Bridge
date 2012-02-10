@@ -486,14 +486,17 @@ setMethod("getGenes",signature(object="CuffSet"),.getGenes)
 			queryString<-paste("('",i,"','",j,"')",sep="")
 			sql<-paste("SELECT ",slot(object,level)@idField,",p_value,q_value from ", diffTable," WHERE sample_1 IN ",queryString," AND sample_2 IN ",queryString, " AND STATUS='OK'",sep="")
 			sig<-dbGetQuery(object@DB,sql)
+			
+			#recalculate q-values for all tests in single pairwise comparison
 			if(!missing(x) && !(missing(y))) {
 				sig$q_value<-p.adjust(sig$p_value,method="BH")
 			}
+			#Filter on alpha
 			sig<-sig[sig$q_value<=alpha,]
 			sigGenes[[testName]]<-sig[,1]
 		}
 	}
-	#TODO: Add conditional return for if x & y are not null, to just return that test...
+
 	if(testTable){
 		tmp<-reshape2:::melt.list(sigGenes)
 		return(cast(tmp,value~...,length))
