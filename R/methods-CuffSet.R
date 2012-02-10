@@ -422,6 +422,7 @@ setMethod("getGenes",signature(object="CuffSet"),.getGenes)
 
 
 #getSig() returns a list vectors of significant features by pairwise comparisons
+#Depricated in favor of .getSig2
 .getSig<-function(object,x,y,level="genes",testTable=FALSE){
 	mySamp<-samples(slot(object,level))
 	sigGenes<-list()
@@ -460,7 +461,49 @@ setMethod("getGenes",signature(object="CuffSet"),.getGenes)
 
 }
 
-setMethod("getSig",signature(object="CuffSet"),.getSig)
+.getSig2<-function(object,x,y,level="genes",testTable=FALSE,alpha=0.05){
+	mySamp<-samples(slot(object,level))
+	sigGenes<-list()
+	if(level %in% c('promoters','splicing','relCDS')){
+		diffTable<-slot(object,level)@table
+	}else{
+		diffTable<-slot(object,level)@tables$expDiffTable
+	}
+	
+	#Restrict samples to those provided as x and y
+	if(!missing(x) && !missing(y)){
+		mySamp<-c(x,y)
+		if(!all(mySamp %in% samples(slot(object,level)))){
+			stop("One or more values of 'x' or 'y' are not valid sample names!")
+		}
+	}
+	
+	for (ihat in c(1:(length(mySamp)-1))){
+		for(jhat in c((ihat+1):length(mySamp))){
+			i<-mySamp[ihat]
+			j<-mySamp[jhat]
+			testName<-paste(i,j,sep="vs")
+			queryString<-paste("('",i,"','",j,"')",sep="")
+			sql<-paste("SELECT ",slot(object,level)@idField,",p_value,q_value from ", diffTable," WHERE sample_1 IN ",queryString," AND sample_2 IN ",queryString, " AND STATUS='OK'",sep="")
+			sig<-dbGetQuery(object@DB,sql)
+			if(!missing(x) && !(missing(y))) {
+				sig$q_value<-p.adjust(sig$p_value,method="BH")
+			}
+			sig<-sig[sig$q_value<=alpha,]
+			sigGenes[[testName]]<-sig[,1]
+		}
+	}
+	#TODO: Add conditional return for if x & y are not null, to just return that test...
+	if(testTable){
+		tmp<-reshape2:::melt.list(sigGenes)
+		return(cast(tmp,value~...,length))
+	}else{
+		return(sigGenes)
+	}
+	
+}
+
+setMethod("getSig",signature(object="CuffSet"),.getSig2)
 
 
 #Find similar genes

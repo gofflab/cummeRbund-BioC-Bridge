@@ -1,6 +1,8 @@
 v1.1.3 
 	New Features:
-		- Added ability in getSig to limit retrieval of significant genes to two provided conditions (arguments x & y). (reduces time for function call if you have a specific comparison in mind a priori)
+		- Added ability in getSig() to limit retrieval of significant genes to two provided conditions (arguments x & y). (reduces time for function call if you have a specific comparison in mind a priori)
+		- When you specify x & y with getSig(), q-values are recalculated from just those selected tests to reduce impact of multiple testing correction.
+		- You can now specify an 'alpha' for getSig() [ 0.05 by default to match cuffdiff default ] by which to filter the resulting significance calls.
 	
 	Bugfixes:
 		- Fixed bug in getGenes that may have resulted in long query lag for retrieving promoter diffData.
@@ -8,6 +10,7 @@ v1.1.3
 		- Replaced all instances of 'ln_fold_change' with the actual 'log2_fold_change'.  Values were previously log2 fold change but database headers were not updated to reflect this.
 	
 	Notes:
+		- ***The structure of the underlying database has changed in this version.  As a consequence, you must rebuild you cuffData.db file to use new version. readCufflinks(rebuild=T)***
 		- Updated vignette
 		- A 'fullnames' logical argument was added to fpkmMatrix. If True, rownames for fpkmMatrix will be a concatenation of gene_short_name and tracking_id.
 		This has the added benefit of making row labels in csHeatmap easier to read, as well as preserving uniqueness. 

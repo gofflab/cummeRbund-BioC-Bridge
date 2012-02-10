@@ -20,7 +20,7 @@ setGeneric("splicing",function(object) standardGeneric("splicing"))
 setGeneric("relCDS",function(object) standardGeneric("relCDS"))
 setGeneric("getGene",function(object,geneId,sampleIdList=NULL) standardGeneric("getGene"))
 setGeneric("getGenes",function(object,geneIdList,sampleIdList=NULL) standardGeneric("getGenes"))
-setGeneric("getSig", function(object,x,y,level="genes",testTable=FALSE) standardGeneric("getSig"))
+setGeneric("getSig", function(object,x,y,level="genes",testTable=FALSE,alpha=0.05) standardGeneric("getSig"))
 setGeneric("addFeatures",function(object, features, ...) standardGeneric("addFeatures"))
 setGeneric("findSimilar",function(object,x,n) standardGeneric("findSimilar"))
 
