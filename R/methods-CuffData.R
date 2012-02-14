@@ -349,7 +349,7 @@ setMethod("csBoxplot",signature(object="CuffData"),.boxplot)
 	
 	#res<-as.dist(res)
 	res<-as.dendro(hclust(res))
-	plot(res,title=paste("All",title=deparse(substitute(object)))
+	plot(res,title=paste("All",title=deparse(substitute(object))))
 	res
 }
 

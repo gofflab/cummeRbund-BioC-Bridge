@@ -133,7 +133,11 @@ setMethod("annotation","CuffFeature",function(object){
     }
 	
 	if (showStatus){
-		p<-p+geom_text(aes(x=sample_name,y=0,label=quant_status,color=quant_status),vjust=1.5)
+		if(logMode){
+			p<-p+geom_text(aes(x=sample_name,y=1,label=quant_status,color=quant_status),vjust=1.5)
+		}else{
+			p<-p+geom_text(aes(x=sample_name,y=0,label=quant_status,color=quant_status),vjust=1.5)
+		}
 	}
 	
 	p <- p + opts(legend.position="none")
