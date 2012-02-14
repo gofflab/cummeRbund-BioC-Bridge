@@ -8,9 +8,15 @@ v1.1.3
 			  where p is is the density of expression (probability vector of log(FPKM+1)) of a given gene across all conditions, 
 			  and q is the unit vector for that condition (ie. perfect expression in that particular condition)
 			* specificity = 1.0 if the feature is expressed exclusively in that condition
+		- Created csDendro() method: This method returns a object of class 'dendrogram' (and plots using grid) of JS distances between conditions for all genes in a CuffData, CuffGeneSet, or CuffFeatureSet object.
+			* Useful for identifying relationships between conditions for subsets of features
+		- New visual indication in several plot types that indicates the quantification status ('quant_stat' field) of a particular gene:condition. This information is useful to indicate whether or not
+		to trust the expression values for a given gene under a specific condition, and may provide insight into outlier expression values.
+			* This feature can be disabled by setting showStatus=F.
+		
 	
 	Bugfixes:
-		- Fixed bug in getGenes that may have resulted in long query lag for retrieving promoter diffData.
+		- Fixed bug in getGenes that may have resulted in long query lag for retrieving promoter diffData. As a result all calls to getGenes should be significanly faster.
 		- CuffData fpkm argument 'features' now returns appropriate data.frame (includes previously un-reported data fields).
 		- Replaced all instances of 'ln_fold_change' with the actual 'log2_fold_change'.  Values were previously log2 fold change but database headers were not updated to reflect this.
 	
@@ -19,7 +25,7 @@ v1.1.3
 		- Updated vignette
 		- A 'fullnames' logical argument was added to fpkmMatrix. If True, rownames for fpkmMatrix will be a concatenation of gene_short_name and tracking_id.
 		This has the added benefit of making row labels in csHeatmap easier to read, as well as preserving uniqueness. 
-		- Slight speed improvements to JSdist (noticeable when using csCluster).
+		- Slight speed improvements to JSdist (noticeable when using csCluster on large feature sets).
 	
 v1.1.1
 	Bugfixes:

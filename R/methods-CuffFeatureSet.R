@@ -374,8 +374,10 @@ setMethod("csScatter",signature(object="CuffFeatureSet"), .scatter)
 
 setMethod("csVolcano",signature(object="CuffFeatureSet"), .volcano)
 
-.barplot<-function(object,logMode=TRUE,pseudocount=1.0,showErrorbars=TRUE,...){
+.barplot<-function(object,logMode=TRUE,pseudocount=1.0,showErrorbars=TRUE,showStatus=TRUE,...){
 	dat<-fpkm(object,features=T)
+	dat$warning<-""
+	dat$warning[dat$quant_status!="OK"]<-"!"
 	#TODO: Test dat to ensure that there are >0 rows to plot.  If not, trap error and move on...
 	
 	colnames(dat)[1]<-"tracking_id"
@@ -400,7 +402,7 @@ setMethod("csVolcano",signature(object="CuffFeatureSet"), .volcano)
 	p<-ggplot(dat,aes(x=tracking_id,y=fpkm,fill=sample_name))
 	p <- p + 
 	    geom_bar(aes(group=1),position=dodge,stat='identity')
-	
+
 	if (showErrorbars)
 	{
 	    p <- p +
@@ -410,11 +412,18 @@ setMethod("csVolcano",signature(object="CuffFeatureSet"), .volcano)
 	if (logMode)
 	{
 	    p <- p + scale_y_log10()
+		status_pos = 1
     }
-	
+	if(showStatus){
+		if(logMode){
+			p <- p + geom_text(aes(x=tracking_id,y=1,label=warning,group=1),position=dodge,stat='identity',color='red',vjust=1.5)
+		}else{
+			p <- p + geom_text(aes(x=tracking_id,y=0,label=warning,group=1),position=dodge,color='red',stat='identity',vjust=1.5)
+		}
+	}
 	#gene_labels = dat$gene_short_name
 	p <- p + scale_x_discrete("",breaks=tracking_ids,labels=gene_labels) + 
-	    opts(title=deparse(substitute(object)),axis.text.x=theme_text(hjust=0,angle=-90))
+	    opts(axis.text.x=theme_text(hjust=0,angle=-90))
     	
     # p<- p +
     #       geom_bar() +
@@ -444,7 +453,7 @@ setMethod("csVolcano",signature(object="CuffFeatureSet"), .volcano)
 
 setMethod("expressionBarplot",signature(object="CuffFeatureSet"),.barplot)
 
-.expressionPlot<-function(object,logMode=FALSE,pseudocount=1.0, drawSummary=FALSE, sumFun=mean_cl_boot, showErrorbars=TRUE,...){
+.expressionPlot<-function(object,logMode=FALSE,pseudocount=1.0, drawSummary=FALSE, sumFun=mean_cl_boot, showErrorbars=TRUE,showStatus=TRUE,...){
 	dat<-fpkm(object)
 	colnames(dat)[1]<-"tracking_id"
 	if(logMode)
@@ -463,11 +472,14 @@ setMethod("expressionBarplot",signature(object="CuffFeatureSet"),.barplot)
 				geom_errorbar(aes(x=sample_name, ymin=conf_lo,ymax=conf_hi,group=tracking_id),width=0.25)
 	}
 	
+	if(showStatus){
+		p <- p+ geom_point(aes(x=sample_name,y=fpkm,shape=quant_status,color=quant_status))
+	}
+	
 	if (logMode)
 	{
 		p <- p + scale_y_log10()
 	}
-	
 	
 	#drawMean
 	if(drawSummary){
@@ -544,6 +556,23 @@ csClusterPlot<-function(clustering,pseudocount=1.0,drawSummary=TRUE, sumFun=mean
 	c
 }
 
+.dendro<-function(object,logMode=T,pseudocount=1){
+	fpkmMat<-fpkmMatrix(object)
+	if(logMode){
+		fpkmMat<-log10(fpkmMat+pseudocount)
+	}
+	res<-JSdist(makeprobs(fpkmMat))
+	#colnames(res)<-colnames(fpkmMat)
+	
+	#res<-as.dist(res)
+	res<-as.dendro(hclust(res))
+	plot(res)
+	res
+}
+
+setMethod("csDendro",signature(object="CuffFeatureSet"),.dendro)
+
+
 ##Takes as first argument the object returned from csCluster (a modified 'cluster' list)
 #.clusterPlot<-function(clusters, pseudocount=1, ...){
 #	m<-clusters$fpkm
@@ -570,10 +599,10 @@ csClusterPlot<-function(clustering,pseudocount=1.0,drawSummary=TRUE, sumFun=mean
 	d<-diag(length(sampleNames))
 }
 
-.specificity<-function(object,logMode=T){
+.specificity<-function(object,logMode=T,pseudocount=1){
 	fpkms<-fpkmMatrix(object)
 	if(logMode){
-		fpkms<-log10(fpkms+1)
+		fpkms<-log10(fpkms+pseudocount)
 	}
 	fpkms<-t(makeprobs(t(fpkms)))
 	d<-diag(ncol(fpkms))

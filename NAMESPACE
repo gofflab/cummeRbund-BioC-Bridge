@@ -28,6 +28,7 @@ exportMethods(
 			csBoxplot,
 			csHeatmap,
 			csCluster,
+			csDendro,
 			csSpecificity,
 			fpkmMatrix,
 			diffData,

@@ -94,7 +94,7 @@ setMethod("annotation","CuffFeature",function(object){
 #################
 #Plotting		#
 #################
-.barplot<-function(object,logMode=FALSE,pseudocount=1.0,showErrorbars=TRUE,...){
+.barplot<-function(object,logMode=FALSE,pseudocount=1.0,showErrorbars=TRUE,showStatus=TRUE,...){
 	dat<-fpkm(object)
 	#TODO: Test dat to ensure that there are >0 rows to plot.  If not, trap error and move on...
 	
@@ -109,7 +109,6 @@ setMethod("annotation","CuffFeature",function(object){
 
     p<-ggplot(dat,aes(x=sample_name,y=fpkm,fill=sample_name))
     
-	#dat$fpkm<- log10(dat$fpkm+pseudocount)
 	p <- p + 
 	    geom_bar()
 	if (showErrorbars)
@@ -125,15 +124,6 @@ setMethod("annotation","CuffFeature",function(object){
 	
     p <- p + facet_wrap('tracking_id') +
           opts(title=object@annotation$gene_short_name,axis.text.x=theme_text(hjust=0,angle=-90))
-		
-    # p <- p + facet_wrap('tracking_id')
-    #     # gene_labels <- object@annotation$gene_short_name
-    #     # gene_labels[is.na(object@annotation$gene_short_name)] = dat[is.na(object@annotation$gene_short_name),1]
-    #     # print("gene_labels:")
-    #     # print(str(gene_labels))
-    #     # p <- p + opts(title=gene_labels,axis.text.x=theme_text(hjust=0,angle=-90))   
-	
-    # p <- p + ylim(min(dat$conf_lo), max(dat$conf_hi))
 	
     if (logMode)
     {
@@ -142,6 +132,9 @@ setMethod("annotation","CuffFeature",function(object){
         p <- p + ylab("FPKM")
     }
 	
+	if (showStatus){
+		p<-p+geom_text(aes(x=sample_name,y=0,label=quant_status,color=quant_status),vjust=1.5)
+	}
 	
 	p <- p + opts(legend.position="none")
 	
@@ -154,7 +147,7 @@ setMethod("annotation","CuffFeature",function(object){
 setMethod("expressionBarplot",signature(object="CuffFeature"),.barplot)
 
 
-.expressionPlot<-function(object,logMode=FALSE,pseudocount=1.0, drawSummary=FALSE, sumFun=mean_cl_boot, showErrorbars=TRUE,...){
+.expressionPlot<-function(object,logMode=FALSE,pseudocount=1.0, drawSummary=FALSE, sumFun=mean_cl_boot, showErrorbars=TRUE,showStatus=TRUE,...){
 	dat<-fpkm(object)
 	colnames(dat)[1]<-"tracking_id"
 	if(logMode)
@@ -170,14 +163,17 @@ setMethod("expressionBarplot",signature(object="CuffFeature"),.barplot)
 	if (showErrorbars)
 	{
 	    p <- p +
-		    geom_errorbar(aes(x=sample_name, ymin=conf_lo,ymax=conf_hi, color=tracking_id, group=tracking_id),width=0.25)
+		    geom_errorbar(aes(x=sample_name, ymin=conf_lo,ymax=conf_hi, color=tracking_id,group=tracking_id),width=0.25)
 	}
 	
 	if (logMode)
 	{
 	    p <- p + scale_y_log10()
     }
-
+	
+	if(showStatus){
+		p <- p + geom_point(aes(x=sample_name,y=fpkm,shape=quant_status))
+	}
 	
 	#drawMean
 	if(drawSummary){

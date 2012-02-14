@@ -339,13 +339,29 @@ setMethod("csVolcano",signature(object="CuffData"), .volcano)
 
 setMethod("csBoxplot",signature(object="CuffData"),.boxplot)
 
+.dendro<-function(object,logMode=T,pseudocount=1){
+	fpkmMat<-fpkmMatrix(object)
+	if(logMode){
+		fpkmMat<-log10(fpkmMat+pseudocount)
+	}
+	res<-JSdist(makeprobs(fpkmMat))
+	#colnames(res)<-colnames(fpkmMat)
+	
+	#res<-as.dist(res)
+	res<-as.dendro(hclust(res))
+	plot(res,title=paste("All",title=deparse(substitute(object)))
+	res
+}
+
+setMethod("csDendro",signature(object="CuffData"),.dendro)
+
 #############
 # Other Methods
 #############
-.specificity<-function(object,logMode=T){
+.specificity<-function(object,logMode=T,pseudocount=1){
 	fpkms<-fpkmMatrix(object)
 	if(logMode){
-		fpkms<-log10(fpkms+1)
+		fpkms<-log10(fpkms+pseudocount)
 	}
 	fpkms<-t(makeprobs(t(fpkms)))
 	d<-diag(ncol(fpkms))
