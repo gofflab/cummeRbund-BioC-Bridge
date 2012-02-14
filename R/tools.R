@@ -9,7 +9,7 @@ JSdist<-function(mat){
 #	col_js <- matrix(0,ncol=dim(mat)[2],nrow=1)
 #	for(i in 1:dim(mat)[2]){
 #	    col_js[,i] <- shannon.entropy(mat[,i])
-#    }
+#   }
 	col_js<-apply(mat,MARGIN=2,shannon.entropy)
     #print(col_js)
 	colnames(res)<-colnames(mat)
@@ -18,7 +18,7 @@ JSdist<-function(mat){
 		for(j in i:dim(mat)[2]){
 			a<-mat[,i]
 			b<-mat[,j]
-			JSdiv<-shannon.entropy((a+b)/2)-(col_js[,i]+col_js[,j])*0.5
+			JSdiv<-shannon.entropy((a+b)/2)-(col_js[i]+col_js[j])*0.5
 			res[i,j] = sqrt(JSdiv)
 			res[j,i] = sqrt(JSdiv)
 		}
