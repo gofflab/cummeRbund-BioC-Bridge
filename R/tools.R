@@ -6,10 +6,11 @@
 JSdist<-function(mat){
 	res<-matrix(0,ncol=dim(mat)[2],nrow=dim(mat)[2])
 	
-	col_js <- matrix(0,ncol=dim(mat)[2],nrow=1)
-	for(i in 1:dim(mat)[2]){
-	    col_js[,i] <- shannon.entropy(mat[,i])
-    }
+#	col_js <- matrix(0,ncol=dim(mat)[2],nrow=1)
+#	for(i in 1:dim(mat)[2]){
+#	    col_js[,i] <- shannon.entropy(mat[,i])
+#    }
+	col_js<-apply(mat,MARGIN=2,shannon.entropy)
     #print(col_js)
 	colnames(res)<-colnames(mat)
 	rownames(res)<-colnames(mat)
@@ -29,6 +30,15 @@ JSdistVec<-function(p,q){
 	JSdiv<-shannon.entropy((p+q)/2)-(shannon.entropy(p)+shannon.entropy(q))*0.5
 	JSdist<-sqrt(JSdiv)
 	JSdist
+}
+
+JSdistFromP<-function(mat,q){
+	#row_js<-apply(mat,MARGIN=1,shannon.entropy)
+	res<-apply(mat,MARGIN=1,function(p) {
+				JSdistVec(p,q)
+			}
+	)
+	res
 }
 
 makeprobsvec<-function(p){

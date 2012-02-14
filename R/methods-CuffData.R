@@ -342,4 +342,19 @@ setMethod("csBoxplot",signature(object="CuffData"),.boxplot)
 #############
 # Other Methods
 #############
+.specificity<-function(object,logMode=T){
+	fpkms<-fpkmMatrix(object)
+	if(logMode){
+		fpkms<-log10(fpkms+1)
+	}
+	fpkms<-t(makeprobs(t(fpkms)))
+	d<-diag(ncol(fpkms))
+	res<-apply(d,MARGIN=1,function(q){
+				JSdistFromP(fpkms,q)
+			})
+	colnames(res)<-colnames(fpkms)
+	1-res
+}
+
+setMethod("csSpecificity",signature(object="CuffData"),.specificity)
 

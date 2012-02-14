@@ -566,3 +566,22 @@ csClusterPlot<-function(clustering,pseudocount=1.0,drawSummary=TRUE, sumFun=mean
 #################
 #Misc			#
 #################
+.makeIdentityMatrix<-function(sampleNames){
+	d<-diag(length(sampleNames))
+}
+
+.specificity<-function(object,logMode=T){
+	fpkms<-fpkmMatrix(object)
+	if(logMode){
+		fpkms<-log10(fpkms+1)
+	}
+	fpkms<-t(makeprobs(t(fpkms)))
+	d<-diag(ncol(fpkms))
+	res<-apply(d,MARGIN=1,function(q){
+				JSdistFromP(fpkms,q)
+			})
+	colnames(res)<-colnames(fpkms)
+	1-res
+}
+
+setMethod("csSpecificity",signature(object="CuffFeatureSet"),.specificity)
