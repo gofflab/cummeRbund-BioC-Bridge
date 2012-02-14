@@ -375,6 +375,11 @@ setMethod("csScatter",signature(object="CuffFeatureSet"), .scatter)
 setMethod("csVolcano",signature(object="CuffFeatureSet"), .volcano)
 
 .barplot<-function(object,logMode=TRUE,pseudocount=1.0,showErrorbars=TRUE,showStatus=TRUE,...){
+	quant_types<-c("OK","FAIL","LOWDATA","HIDATA","TOOSHORT")
+	quant_types<-factor(quant_types,levels=quant_types)
+	quant_colors<-c("black","red","blue","orange","green")
+	names(quant_colors)<-quant_types
+	
 	dat<-fpkm(object,features=T)
 	dat$warning<-""
 	dat$warning[dat$quant_status!="OK"]<-"!"
@@ -416,9 +421,9 @@ setMethod("csVolcano",signature(object="CuffFeatureSet"), .volcano)
     }
 	if(showStatus){
 		if(logMode){
-			p <- p + geom_text(aes(x=tracking_id,y=1,label=warning,group=1),position=dodge,stat='identity',color='red',vjust=1.5)
+			p <- p + geom_text(aes(x=tracking_id,y=1,label=warning,group=1),position=dodge,stat='identity',color='red',vjust=1.5,size=3)
 		}else{
-			p <- p + geom_text(aes(x=tracking_id,y=0,label=warning,group=1),position=dodge,color='red',stat='identity',vjust=1.5)
+			p <- p + geom_text(aes(x=tracking_id,y=0,label=warning,group=1),position=dodge,color='red',stat='identity',vjust=1.5,size=3)
 		}
 	}
 	#gene_labels = dat$gene_short_name
@@ -447,6 +452,9 @@ setMethod("csVolcano",signature(object="CuffFeatureSet"), .volcano)
 	#Default cummeRbund colorscheme
 	p<-p + scale_fill_hue(l=50,h.start=200) + scale_color_hue(l=50,h.start=200)
 	
+	#Recolor quant flags
+	p<- p+ scale_colour_manual(name='quant_status',values=quant_colors)
+	
 	p
 	
 }
@@ -454,6 +462,11 @@ setMethod("csVolcano",signature(object="CuffFeatureSet"), .volcano)
 setMethod("expressionBarplot",signature(object="CuffFeatureSet"),.barplot)
 
 .expressionPlot<-function(object,logMode=FALSE,pseudocount=1.0, drawSummary=FALSE, sumFun=mean_cl_boot, showErrorbars=TRUE,showStatus=TRUE,...){
+	quant_types<-c("OK","FAIL","LOWDATA","HIDATA","TOOSHORT")
+	quant_types<-factor(quant_types,levels=quant_types)
+	quant_colors<-c("black","red","blue","orange","green")
+	names(quant_colors)<-quant_types
+	
 	dat<-fpkm(object)
 	colnames(dat)[1]<-"tracking_id"
 	if(logMode)
@@ -493,7 +506,8 @@ setMethod("expressionBarplot",signature(object="CuffFeatureSet"),.barplot)
 		p <- p + ylab("FPKM")
 	}
 	
-	#p <- p + scale_color_brewer(palette="Set1")
+	#Recolor quant flags
+	p<- p+ scale_colour_manual(name='quant_status',values=quant_colors)
 	
 	p
 }

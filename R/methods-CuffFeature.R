@@ -95,6 +95,11 @@ setMethod("annotation","CuffFeature",function(object){
 #Plotting		#
 #################
 .barplot<-function(object,logMode=FALSE,pseudocount=1.0,showErrorbars=TRUE,showStatus=TRUE,...){
+	quant_types<-c("OK","FAIL","LOWDATA","HIDATA","TOOSHORT")
+	quant_types<-factor(quant_types,levels=quant_types)
+	quant_colors<-c("black","red","blue","orange","green")
+	names(quant_colors)<-quant_types
+	
 	dat<-fpkm(object)
 	#TODO: Test dat to ensure that there are >0 rows to plot.  If not, trap error and move on...
 	
@@ -134,9 +139,9 @@ setMethod("annotation","CuffFeature",function(object){
 	
 	if (showStatus){
 		if(logMode){
-			p<-p+geom_text(aes(x=sample_name,y=1,label=quant_status,color=quant_status),vjust=1.5)
+			p<-p+geom_text(aes(x=sample_name,y=1,label=quant_status,color=quant_status),vjust=1.5,size=3)
 		}else{
-			p<-p+geom_text(aes(x=sample_name,y=0,label=quant_status,color=quant_status),vjust=1.5)
+			p<-p+geom_text(aes(x=sample_name,y=0,label=quant_status,color=quant_status),vjust=1.5,size=3)
 		}
 	}
 	
@@ -145,6 +150,9 @@ setMethod("annotation","CuffFeature",function(object){
 	#Default cummeRbund colorscheme
 	p<-p + scale_fill_hue(l=50,h.start=200)
 	
+	#Recolor quant flags
+	p<- p+ scale_colour_manual(name='quant_status',values=quant_colors)
+	
 	p
 }
 
@@ -152,6 +160,12 @@ setMethod("expressionBarplot",signature(object="CuffFeature"),.barplot)
 
 
 .expressionPlot<-function(object,logMode=FALSE,pseudocount=1.0, drawSummary=FALSE, sumFun=mean_cl_boot, showErrorbars=TRUE,showStatus=TRUE,...){
+	#Coloring scheme for quant flags
+	quant_types<-c("OK","FAIL","LOWDATA","HIDATA","TOOSHORT")
+	quant_types<-factor(quant_types,levels=quant_types)
+	quant_colors<-c("black","red","blue","orange","green")
+	names(quant_colors)<-quant_types
+	
 	dat<-fpkm(object)
 	colnames(dat)[1]<-"tracking_id"
 	if(logMode)
@@ -167,7 +181,7 @@ setMethod("expressionBarplot",signature(object="CuffFeature"),.barplot)
 	if (showErrorbars)
 	{
 	    p <- p +
-		    geom_errorbar(aes(x=sample_name, ymin=conf_lo,ymax=conf_hi, color=tracking_id,group=tracking_id),width=0.25)
+		    geom_errorbar(aes(x=sample_name, ymin=conf_lo,ymax=conf_hi,color=tracking_id,group=tracking_id),width=0.25)
 	}
 	
 	if (logMode)
@@ -196,6 +210,10 @@ setMethod("expressionBarplot",signature(object="CuffFeature"),.barplot)
 	
 	#Add Title
 	p<-p + opts(title=object@annotation$gene_short_name,axis.text.x=theme_text(hjust=0,angle=-90))
+	
+	#Recolor quant flags
+	#for some reason this doesn't work (ggplot2 problem)
+	#p<- p+ scale_colour_manual(name='quant_status',values=quant_colors)
 	
 	p
 }
