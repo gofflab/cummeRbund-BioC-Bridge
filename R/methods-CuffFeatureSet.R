@@ -602,8 +602,26 @@ setMethod("csDendro",signature(object="CuffFeatureSet"),.dendro)
 #	c
 #}
 
+.density<-function(object, logMode = TRUE, pseudocount=1.0, labels, features=FALSE, ...){
+	dat<-fpkm(object,features=features)
+	if(logMode) dat$fpkm<-dat$fpkm+pseudocount
+	p<-ggplot(dat)
+	if(logMode) {
+		p<-p+geom_density(aes(x= log10(fpkm),group=sample_name,color=sample_name,fill=sample_name),alpha=I(1/3))
+	}else{
+		p<-p+geom_density(aes(x=fpkm,group=sample_name,color=sample_name,fill=sample_name),alpha=I(1/3))
+	}
+	
+	#p<-p + opts(title=object@tables$mainTable)
+	
+	#Default cummeRbund colorscheme
+	p<-p + scale_fill_hue(l=50,h.start=200) + scale_color_hue(l=50,h.start=200)
+	
+	#TODO: Add label callout
+	p
+}
 
-#TODO: Add csDendro method to produce dendrograms from fpkmMatrix with argument for Dimension (samples or features)
+setMethod("csDensity",signature(object="CuffFeatureSet"),.density)
 
 
 #################
