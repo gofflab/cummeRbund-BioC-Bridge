@@ -40,6 +40,7 @@ exportMethods(
 			getGene,
 			getGenes,
 			getSig,
+			getSigTable,
 			addFeatures,
 			getLevels,
 			findSimilar

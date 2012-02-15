@@ -579,7 +579,7 @@ csClusterPlot<-function(clustering,pseudocount=1.0,drawSummary=TRUE, sumFun=mean
 	#colnames(res)<-colnames(fpkmMat)
 	
 	#res<-as.dist(res)
-	res<-as.dendro(hclust(res))
+	res<-as.dendrogram(hclust(res))
 	plot(res)
 	res
 }
@@ -613,8 +613,8 @@ setMethod("csDendro",signature(object="CuffFeatureSet"),.dendro)
 	d<-diag(length(sampleNames))
 }
 
-.specificity<-function(object,logMode=T,pseudocount=1){
-	fpkms<-fpkmMatrix(object)
+.specificity<-function(object,logMode=T,pseudocount=1,relative=FALSE,...){
+	fpkms<-fpkmMatrix(object,...)
 	if(logMode){
 		fpkms<-log10(fpkms+pseudocount)
 	}
@@ -623,7 +623,11 @@ setMethod("csDendro",signature(object="CuffFeatureSet"),.dendro)
 	res<-apply(d,MARGIN=1,function(q){
 				JSdistFromP(fpkms,q)
 			})
-	colnames(res)<-colnames(fpkms)
+	colnames(res)<-paste(colnames(fpkms),"_spec",sep="")
+	
+	if(relative){
+		res<-res/max(res)
+	}
 	1-res
 }
 

@@ -321,6 +321,18 @@ h
 <<geneset_plots_1>>
 print(h)
 @
+
+If you prefer barplots over heatmaps for genesets (although this is not necessarily recommended for large gene sets). You can use the \Rmethod{expressionBarplot()} method on a \Rclass{CuffFeatureSet} or a \Rclass{CuffGeneSet} object.
+<<geneset_plots_1.5,include=FALSE>>=
+b<-expressionBarplot(myGenes)
+b
+@
+
+<<label=geneset_plots_barplot,fig=TRUE,echo=FALSE>>=
+<<geneset_plots_1.5>>
+print(b)
+@
+
 The \Rmethod{csScatter()} method can be used to produce scatter plot comparisons between any two conditions.
 <<geneset_plots_2,include=FALSE>>=
 s<-csScatter(myGenes,"Fibroblasts","hESC",smooth=T)
@@ -353,6 +365,17 @@ ih
 <<label=geneset_plots_isoform_heatmap,fig=TRUE,echo=FALSE>>=
 <<geneset_plots_4>>
 print(ih)
+@
+
+Dendrograms can provide insight into the relationships between conditions for various genesets (e.g. significant genes used to draw relationships between conditions). As of v1.1.3 the method \Rmethod{csDendro()}
+can be used to plot a dendrogram based on Jensen-Shannon distances between conditions for a given \Rclass{CuffFeatureSet} or \Rclass{CuffGeneSet}.
+<<label=geneset_plots_5,include=FALSE>>=
+den<-csDendro(myGenes)
+@
+
+<<label=geneset_plots_dendro,fig=TRUE,echo=FALSE>>=
+<<geneset_plots_5>>
+plot(den)
 @
 
 \clearpage
@@ -404,20 +427,30 @@ print(igb)
 The cummeRbund package is more than just a visualization tool as well.  We are working to implement several different means of data exploration from gene and condition clustering, finding features with similar expression profiles, as well as incorporating Gene Ontology analysis.
 
 \subsection{Creating gene sets from significantly regulated genes}
-One of the primary roles of a cuffdiff analysis is to conduct significance tests on each feature (genes, isoforms, TSS, and CDS) for appropriate pairwise comparisons of conditions. The results of these tests (after multiple testing correction of course) can be used to determine which genes are differentially regulated. 
-\Rpackage{cummeRbund} makes accessing the results of these significance tests simple via \Rmethod{getSig()}. This function takes a CuffSet object and will scan at various feature levels ('genes' by default) to produce a \Rclass{list} of feature ID sets for each viable pairwise comparison.
+One of the primary roles of a differential expression analysis is to conduct significance tests on each feature (genes, isoforms, TSS, and CDS) for appropriate pairwise comparisons of conditions. The results of these tests (after multiple testing correction of course) can be used to determine which genes are differentially regulated. 
+\Rpackage{cummeRbund} makes accessing the results of these significance tests simple via \Rmethod{getSig()}. This function takes a CuffSet object and will scan at various feature levels ('genes' by default) to produce a \Rclass{vector} of feature IDs.
+By default \Rmethod{getSig()} outputs a vector of tracking IDs corresponding to all \emph{genes} that reject the null hypothesis in any condition tested. The default feature type can be changed by adjusting the 'level' argument to \Rmethod{getSig()}. In addition, a alpha value can be provided on which to filter the resulting list
+(the default is $0.05$ to match the default of cuffdiff). 
 
 <<get_sig_1>>=
-mySigGenes<-getSig(cuff,level='genes')
-names(mySigGenes)
-head(mySigGenes[[1]])
+mySigGenes<-getSig(cuff,alpha=0.05,level='genes')
+head(mySigGenes)
+length(mySigGenes)
+@
+By default \Rmethod{getSig()} outputs a vector of tracking IDs corresponding to all \emph{genes} that reject the null hypothesis in any condition tested. The default feature type can be changed by adjusting the 'level' argument to \Rmethod{getSig()}. In addition, a alpha value can be provided on which to filter the resulting list
+(the default is $0.05$ to match the default of cuffdiff). Significance results for specific pairwise comparisons can be retrieved as well by specifying the two conditions as 'x' and 'y'. In this case, p-values are adjusted to reduce the impact of multiple-testing correction when only one set of tests is being conducted.
+
+<<get_sig_2>>=
+hESC_vs_iPS.sigIsoforms<-getSig(cuff,x='hESC',y='iPS',alpha=0.05,level='isoforms')
+head(hESC_vs_iPS.sigIsoforms)
+length(hESC_vs_iPS.sigIsoforms)
 @
 The values returned for each level of this list can be used as an argument to getGenes, to create a \Rclass{CuffGeneSet} object of significantly regulated genes (or features).
 
-Alternatively, you can use the logical argument 'testTable' to return a test-table of 'significant features' x 'pairwise tests'.
+Alternatively, you can use the \Rmethod{getSigTable()} method to return a full test-table of 'significant features' x 'pairwise tests' for all comparisons. Only features in which the null hypothesis can be rejected in at least one test are reported.
 
-<<get_sig_2>>=
-mySigTable<-getSig(cuff,level='genes',testTable=TRUE)
+<<get_sig_3>>=
+mySigTable<-getSigTable(cuff,alpha=0.01,level='genes')
 head(mySigTable,20)
 @
 
@@ -439,6 +472,25 @@ in the \Rmethod{csClusterPlot()} method.
 <<geneset_plots_5>>
 print(icp)
 @
+
+\clearpage
+
+\subsection{Specificity}
+In some cases, a researcher may be interested in identifying features that are 'condition-specific'. Or, more likely, producing an ordered list of genes based on their specificity for a given condition. 
+We define a specificity score (S) as the following:
+\begin{equation}
+S_{g,i}=1-JSD(p_g,\hat{q_i})
+\end{equation}
+
+Where $JSD$ is the Jensen-Shannon distance, $p_g$ is the expression profile of a given gene $g$ expressed as a density (probability) of $log_{10} FPKM+1$, and $\hat{q_i}$ is the unit vector of 'perfect expression' in a particular condition $i$. 
+
+We have created a method, \Rmethod{csSpecificity()} that outputs a matrix (with identical shape to that produced by \Rmethod{fpkmMatrix()}) of specificity scores (S) across all conditions for all features in a \Rclass{CuffFeatureSet} or \Rclass{CuffGeneSet}.
+<<label=specificity_1>>=
+myGenes.spec<-csSpecificity(myGenes)
+head(myGenes.spec)
+@
+$S=1.0$ if the feature is expressed exclusively in that condition.
+The \Rmethod{findSimilar()} method outlined below is another method that can be used to identify genes based on specificity but has the added feature that you can determine similarity to a more complex $q$ expression profile.
 
 \clearpage
 
@@ -476,6 +528,8 @@ We have found this to be a more robust way to determine distance between genes u
 
 \section{Miscellaneous}
 \begin{itemize}
+	\item As of v1.1.3 we attempt to provide a new visual queue in most plots that will indicate the quantification status for a particular feature in each given condition. We have enabled this feature by default for most
+	plots to suggest a measure of reliability for each feature in a particular condition. In most cases, this feature can be disabled by setting 'showStatus=FALSE'.
 	\item All plotting functions return ggplot objects and the resulting objects can be manipulated/faceted/altered using standard ggplot2 methods.
 	\item There are occasional DB connectivity issues that arise.  Not entirely sure why yet.  If necessary, just \Rfunction{readCufflinks} again and this should solve connectivity issues with a new
 	RSQLite connection object.  If connectivity continues to be a problem, try \Rfunction{cuff<-readCufflinks(rebuild=T)}

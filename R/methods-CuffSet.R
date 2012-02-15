@@ -423,9 +423,93 @@ setMethod("getGenes",signature(object="CuffSet"),.getGenes)
 
 #getSig() returns a list vectors of significant features by pairwise comparisons
 #Depricated in favor of .getSig2
-.getSig<-function(object,x,y,level="genes",testTable=FALSE){
+#.getSig<-function(object,x,y,level="genes",testTable=FALSE){
+#	mySamp<-samples(slot(object,level))
+#	sigGenes<-list()
+#	if(level %in% c('promoters','splicing','relCDS')){
+#		diffTable<-slot(object,level)@table
+#	}else{
+#		diffTable<-slot(object,level)@tables$expDiffTable
+#	}
+#	
+#	#Restrict samples to those provided as x and y
+#	if(!missing(x) && !missing(y)){
+#		mySamp<-c(x,y)
+#		if(!all(mySamp %in% samples(slot(object,level)))){
+#			stop("One or more values of 'x' or 'y' are not valid sample names!")
+#		}
+#	}
+#	
+#	for (ihat in c(1:(length(mySamp)-1))){
+#		for(jhat in c((ihat+1):length(mySamp))){
+#			i<-mySamp[ihat]
+#			j<-mySamp[jhat]
+#			testName<-paste(i,j,sep="vs")
+#			queryString<-paste("('",i,"','",j,"')",sep="")
+#			sql<-paste("SELECT ",slot(object,level)@idField," from ", diffTable," WHERE sample_1 IN ",queryString," AND sample_2 IN ",queryString, " AND significant='yes'",sep="")
+#			sig<-dbGetQuery(object@DB,sql)
+#			sigGenes[[testName]]<-sig[,1]
+#		}
+#	}
+#	#TODO: Add conditional return for if x & y are not null, to just return that test...
+#	if(testTable){
+#		tmp<-reshape2:::melt.list(sigGenes)
+#		return(cast(tmp,value~...,length))
+#	}else{
+#		return(sigGenes)
+#	}
+#
+#}
+
+#Depricated in favor of .getSig
+#.getSig2<-function(object,x,y,level="genes",testTable=FALSE,alpha=0.05){
+#	mySamp<-samples(slot(object,level))
+#	sigGenes<-list()
+#	if(level %in% c('promoters','splicing','relCDS')){
+#		diffTable<-slot(object,level)@table
+#	}else{
+#		diffTable<-slot(object,level)@tables$expDiffTable
+#	}
+#	
+#	#Restrict samples to those provided as x and y
+#	if(!missing(x) && !missing(y)){
+#		mySamp<-c(x,y)
+#		if(!all(mySamp %in% samples(slot(object,level)))){
+#			stop("One or more values of 'x' or 'y' are not valid sample names!")
+#		}
+#	}
+#	
+#	for (ihat in c(1:(length(mySamp)-1))){
+#		for(jhat in c((ihat+1):length(mySamp))){
+#			i<-mySamp[ihat]
+#			j<-mySamp[jhat]
+#			testName<-paste(i,j,sep="vs")
+#			queryString<-paste("('",i,"','",j,"')",sep="")
+#			sql<-paste("SELECT ",slot(object,level)@idField,",p_value,q_value from ", diffTable," WHERE sample_1 IN ",queryString," AND sample_2 IN ",queryString, " AND STATUS='OK'",sep="")
+#			sig<-dbGetQuery(object@DB,sql)
+#			
+#			#recalculate q-values for all tests in single pairwise comparison
+#			if(!missing(x) && !(missing(y))) {
+#				sig$q_value<-p.adjust(sig$p_value,method="BH")
+#			}
+#			#Filter on alpha
+#			sig<-sig[sig$q_value<=alpha,]
+#			sigGenes[[testName]]<-sig[,1]
+#		}
+#	}
+#
+#	if(testTable){
+#		tmp<-reshape2:::melt.list(sigGenes)
+#		return(cast(tmp,value~...,length))
+#	}else{
+#		return(sigGenes)
+#	}
+#	
+#}
+
+.getSig<-function(object,x,y,alpha=0.05,level='genes'){
 	mySamp<-samples(slot(object,level))
-	sigGenes<-list()
+	
 	if(level %in% c('promoters','splicing','relCDS')){
 		diffTable<-slot(object,level)@table
 	}else{
@@ -440,74 +524,49 @@ setMethod("getGenes",signature(object="CuffSet"),.getGenes)
 		}
 	}
 	
-	for (ihat in c(1:(length(mySamp)-1))){
-		for(jhat in c((ihat+1):length(mySamp))){
-			i<-mySamp[ihat]
-			j<-mySamp[jhat]
-			testName<-paste(i,j,sep="vs")
-			queryString<-paste("('",i,"','",j,"')",sep="")
-			sql<-paste("SELECT ",slot(object,level)@idField," from ", diffTable," WHERE sample_1 IN ",queryString," AND sample_2 IN ",queryString, " AND significant='yes'",sep="")
-			sig<-dbGetQuery(object@DB,sql)
-			sigGenes[[testName]]<-sig[,1]
-		}
-	}
-	#TODO: Add conditional return for if x & y are not null, to just return that test...
-	if(testTable){
-		tmp<-reshape2:::melt.list(sigGenes)
-		return(cast(tmp,value~...,length))
-	}else{
-		return(sigGenes)
-	}
-
+	queryString<-paste("(",paste(mySamp,collapse="','",sep=""),")",sep="'")
+	sql<-paste("SELECT ",slot(object,level)@idField,",p_value from ", diffTable," WHERE sample_1 IN ",queryString," AND sample_2 IN ",queryString, " AND STATUS='OK'",sep="")
+	#print(sql)
+	sig<-dbGetQuery(object@DB,sql)
+	sig$q_value<-p.adjust(sig$p_value,method="BH")
+	sig<-sig[sig$q_value<=alpha,]
+	sigGenes<-unique(sig[[slot(object,level)@idField]])
+	sigGenes
 }
 
-.getSig2<-function(object,x,y,level="genes",testTable=FALSE,alpha=0.05){
-	mySamp<-samples(slot(object,level))
-	sigGenes<-list()
+setMethod("getSig",signature(object="CuffSet"),.getSig)
+
+
+.getSigTable<-function(object,alpha=0.05,level='genes'){
+	
 	if(level %in% c('promoters','splicing','relCDS')){
 		diffTable<-slot(object,level)@table
 	}else{
 		diffTable<-slot(object,level)@tables$expDiffTable
 	}
 	
-	#Restrict samples to those provided as x and y
-	if(!missing(x) && !missing(y)){
-		mySamp<-c(x,y)
-		if(!all(mySamp %in% samples(slot(object,level)))){
-			stop("One or more values of 'x' or 'y' are not valid sample names!")
-		}
-	}
+	sql<-paste("SELECT ",slot(object,level)@idField,", sample_1, sample_2, p_value from ", diffTable," WHERE status='OK';")
+	sig<-dbGetQuery(object@DB,sql)
+	sig$q_value<-p.adjust(sig$p_value,method='BH')
+	sig$testName<-paste(sig$sample_1,"vs",sig$sample_2,sep="")
 	
-	for (ihat in c(1:(length(mySamp)-1))){
-		for(jhat in c((ihat+1):length(mySamp))){
-			i<-mySamp[ihat]
-			j<-mySamp[jhat]
-			testName<-paste(i,j,sep="vs")
-			queryString<-paste("('",i,"','",j,"')",sep="")
-			sql<-paste("SELECT ",slot(object,level)@idField,",p_value,q_value from ", diffTable," WHERE sample_1 IN ",queryString," AND sample_2 IN ",queryString, " AND STATUS='OK'",sep="")
-			sig<-dbGetQuery(object@DB,sql)
-			
-			#recalculate q-values for all tests in single pairwise comparison
-			if(!missing(x) && !(missing(y))) {
-				sig$q_value<-p.adjust(sig$p_value,method="BH")
-			}
-			#Filter on alpha
-			sig<-sig[sig$q_value<=alpha,]
-			sigGenes[[testName]]<-sig[,1]
-		}
-	}
-
-	if(testTable){
-		tmp<-reshape2:::melt.list(sigGenes)
-		return(cast(tmp,value~...,length))
-	}else{
-		return(sigGenes)
-	}
+	#filter on alpha and clean table
+	sig$testResult<-0
+	sig$testResult[sig$q_value<=alpha]<-1
 	
+	fieldsNeeded<-c('gene_id','testName','testResult')
+	sig<-sig[,fieldsNeeded]
+	
+	#recast
+	sig.table<-cast(sig,gene_id~testName,value='testResult')
+	
+	#remove genes that do not reject null in any test
+	sig.table<-sig.table[rowSums(sig.table,na.rm=T)>0,]
+	
+	sig.table
 }
 
-setMethod("getSig",signature(object="CuffSet"),.getSig2)
-
+setMethod("getSigTable",signature(object="CuffSet"),.getSigTable)
 
 #Find similar genes
 .findSimilar<-function(object,x,n){

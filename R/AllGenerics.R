@@ -20,7 +20,8 @@ setGeneric("splicing",function(object) standardGeneric("splicing"))
 setGeneric("relCDS",function(object) standardGeneric("relCDS"))
 setGeneric("getGene",function(object,geneId,sampleIdList=NULL) standardGeneric("getGene"))
 setGeneric("getGenes",function(object,geneIdList,sampleIdList=NULL) standardGeneric("getGenes"))
-setGeneric("getSig", function(object,x,y,level="genes",testTable=FALSE,alpha=0.05) standardGeneric("getSig"))
+setGeneric("getSig", function(object,x,y,alpha=0.05,level="genes") standardGeneric("getSig"))
+setGeneric("getSigTable", function(object,alpha=0.05,level='genes') standardGeneric("getSigTable"))
 setGeneric("addFeatures",function(object, features, ...) standardGeneric("addFeatures"))
 setGeneric("findSimilar",function(object,x,n) standardGeneric("findSimilar"))
 
@@ -67,7 +68,7 @@ setGeneric("csCluster",function(object, k, iter.max=100, ...) standardGeneric("c
 #setGeneric("csClusterPlot",function(clustering, pseudocount=1.0) standardGeneric("csClusterPlot"))
 #setGeneric("diff",function(object) standardGeneric("diff"))
 setGeneric("annotation",function(object) standardGeneric("annotation"))
-setGeneric("csSpecificity",function(object,logMode=T,pseudocount=1) standardGeneric("csSpecificity"))
+setGeneric("csSpecificity",function(object,logMode=T,pseudocount=1,...) standardGeneric("csSpecificity"))
 setGeneric("csDendro",function(object,logMode=T,pseudocount=1) standardGeneric("csDendro"))
 
 ##################

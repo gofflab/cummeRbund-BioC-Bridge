@@ -76,7 +76,7 @@ loadGenes<-function(fpkmFile,
 	######
 	write("Reshaping geneData table",stderr())
 	genemelt<-melt(full,id.vars=c("tracking_id"),measure.vars=-idCols,variable_name="sample_name")
-	
+	colnames(genemelt)[colnames(genemelt)=='variable']<-'sample_name'
 	#Clean up and normalize data
 	genemelt$measurement = ""
 	
@@ -230,7 +230,7 @@ loadIsoforms<-function(fpkmFile,
 	######
 	write("Reshaping isoformData table",stderr())
 	isoformmelt<-melt(full,id.vars=c("tracking_id"),measure.vars=-idCols,variable_name="sample_name")
-	
+	colnames(isoformmelt)[colnames(isoformmelt)=='variable']<-'sample_name'
 	#Clean up and normalize data
 	isoformmelt$measurement = ""
 	
@@ -354,7 +354,7 @@ loadTSS<-function(fpkmFile,
 		######
 		write("Reshaping TSSData table",stderr())
 		tssmelt<-melt(full,id.vars=c("tracking_id"),measure.vars=-idCols,variable_name="sample_name")
-		
+		colnames(tssmelt)[colnames(tssmelt)=='variable']<-'sample_name'
 		#Clean up and normalize data
 		tssmelt$measurement = ""
 		
@@ -503,7 +503,7 @@ loadCDS<-function(fpkmFile,
 		######
 		write("Reshaping CDSData table",stderr())
 		cdsmelt<-melt(full,id.vars=c("tracking_id"),measure.vars=-idCols,variable_name="sample_name")
-		
+		colnames(cdsmelt)[colnames(cdsmelt)=='variable']<-'sample_name'
 		#Clean up and normalize data
 		cdsmelt$measurement = ""
 		
