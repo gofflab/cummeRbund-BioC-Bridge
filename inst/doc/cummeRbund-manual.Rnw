@@ -281,7 +281,7 @@ head(gene.matrix)
 @
 
 \subsection{Writing your own SQL accessors}
-Since the cufflinks is a SQLite database backend, if you are familiar with SQL and/or RSQLite query construction, you can simply design your own SQL queries to access the data that you are after. 
+Since the cuffData.db is a SQLite database backend, if you are familiar with SQL and/or RSQLite query construction, you can simply design your own SQL queries to access the data that you are after. 
 
 \begin{figure}[h]
 \centering
