@@ -11,7 +11,7 @@ Expression Plot
 A line plot (optionally with confidence intervals) detailing FPKM expression levels across conditions for a given gene(s) or feature(s)
 }
 \usage{
-\S4method{expressionPlot}{CuffFeature}(object, logMode=FALSE, pseudocount=1.0, drawSummary=FALSE, sumFun=mean_cl_boot, showErrorbars=TRUE, ...)
+\S4method{expressionPlot}{CuffFeature}(object, logMode=FALSE, pseudocount=1.0, drawSummary=FALSE, sumFun=mean_cl_boot, showErrorbars=TRUE, showStatus=TRUE, ...)
 }
 
 \arguments{
@@ -32,6 +32,9 @@ Function used to determine values for summary line. Default = mean_cl_boot
 }
   \item{showErrorbars}{
 A logical value whether or not to draw error bars.
+}
+  \item{showStatus}{
+A logical value whether or not to draw visual queues for quantification status of a given gene:condition. Default = TRUE
 }
   \item{\dots}{
 Additional arguments

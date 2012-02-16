@@ -417,6 +417,54 @@ setMethod("getGene",signature(object="CuffSet"),.getGene)
 
 setMethod("getGenes",signature(object="CuffSet"),.getGenes)
 
+
+#.getFeatures<-function(object,featureIdList,sampleIdList=NULL,level='isoforms'){
+#	#Sample subsetting
+#	if(!is.null(sampleIdList)){
+#		if(.checkSamples(object@DB,sampleIdList)){
+#			myLevels<-sampleIdList
+#		}else{
+#			stop("Sample does not exist!")
+#		}
+#	}else{
+#		myLevels<-getLevels(object)
+#	}
+#	
+#	sampleString<-'('
+#	for (i in myLevels){
+#		sampleString<-paste(sampleString,"'",i,"',",sep="")
+#	}
+#	sampleString<-substr(sampleString,1,nchar(sampleString)-1)
+#	sampleString<-paste(sampleString,")",sep="")
+#	
+#	#ID Search String (SQL)
+#	idString<-'('
+#	for (i in featureIdList){
+#		idString<-paste(idString,"'",i,"',",sep="")
+#	}
+#	idString<-substr(idString,1,nchar(idString)-1)
+#	idString<-paste(idString,")",sep="")
+#	
+#	whereString<-paste('WHERE (x.gene_id IN ',idString,' OR g.gene_short_name IN ',idString,')',sep="")
+#	whereStringFPKM<-paste('WHERE (x.gene_id IN ',idString,' OR g.gene_short_name IN ',idString,')',sep="")
+#	whereStringDiff<-paste('WHERE (x.gene_id IN ',idString,' OR g.gene_short_name IN ',idString,')',sep="")
+#	
+#	if(!is.null(sampleIdList)){
+#		whereString<-whereString
+#		whereStringFPKM<-paste(whereStringFPKM, ' AND y.sample_name IN ',sampleString,sep="")
+#		whereStringDiff<-paste(whereStringDiff,' AND (y.sample_1 IN ',sampleString,' AND y.sample_2 IN ',sampleString,')',sep="")
+#	}
+#	
+#	
+#	AnnotationQuery<-paste("SELECT x.* from ",slot(object,level)@tables$mainTable," x LEFT JOIN ",slot(object,level)@tables$featureTable," xf ON x.",slot(object,level)@idField,"=xf.",slot(object,level)@idField," JOIN genes g on x.gene_id=g.gene_id ", whereString,sep="")
+#	FPKMQuery<-paste("SELECT y.* from isoforms x JOIN isoformData y ON x.isoform_id = y.isoform_id JOIN genes g on x.gene_id=g.gene_id ", whereStringFPKM,sep="")
+#	DiffQuery<-paste("SELECT y.* from isoforms x JOIN isoformExpDiffData y ON x.isoform_id = y.isoform_id JOIN genes g on x.gene_id=g.gene_id ", whereStringDiff,sep="")
+#	
+#}
+	
+
+
+
 #getGeneIds from featureIds
 #SELECT DISTINCT g.gene_id from genes g LEFT JOIN isoforms i on g.gene_id=i.gene_id LEFT JOIN TSS t on g.gene_id=t.gene_id LEFT JOIN CDS c on g.gene_id=c.gene_id WHERE (g.gene_id IN ('$VAL') OR i.isoform_id IN ('$VAL') OR t.tss_group_id IN ('$VAL') OR c.CDS_id IN ('$VAL') OR g.gene_short_name IN ('$VAL'));
 

@@ -1,6 +1,7 @@
 \name{csDensity}
 \alias{csDensity}
 \alias{csDensity,CuffData-method}
+\alias{csDensity,CuffFeatureSet-method}
 
 \title{
 Density plot of CuffData
@@ -10,6 +11,7 @@ Creates a smoothed density plot, by sample, for log10 FPKM values from a cuffdif
 }
 \usage{
 \S4method{csDensity}{CuffData}(object, logMode=TRUE, pseudocount=1.0, labels, features=FALSE, ...)
+\S4method{csDensity}{CuffFeatureSet}(object, logMode=TRUE, pseudocount=1.0, labels, features=FALSE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

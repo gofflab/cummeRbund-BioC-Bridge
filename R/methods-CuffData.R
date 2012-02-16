@@ -358,8 +358,8 @@ setMethod("csDendro",signature(object="CuffData"),.dendro)
 #############
 # Other Methods
 #############
-.specificity<-function(object,logMode=T,pseudocount=1){
-	fpkms<-fpkmMatrix(object)
+.specificity<-function(object,logMode=T,pseudocount=1,relative=FALSE,...){
+	fpkms<-fpkmMatrix(object,...)
 	if(logMode){
 		fpkms<-log10(fpkms+pseudocount)
 	}
@@ -368,7 +368,11 @@ setMethod("csDendro",signature(object="CuffData"),.dendro)
 	res<-apply(d,MARGIN=1,function(q){
 				JSdistFromP(fpkms,q)
 			})
-	colnames(res)<-colnames(fpkms)
+	colnames(res)<-paste(colnames(fpkms),"_spec",sep="")
+	
+	if(relative){
+		res<-res/max(res)
+	}
 	1-res
 }
 
