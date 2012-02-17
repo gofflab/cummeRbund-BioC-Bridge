@@ -145,14 +145,14 @@ setMethod("annotation","CuffFeatureSet",function(object){
 #There is no genericMethod yet, goal is to replace .heatmap with .ggheat for genericMethod 'csHeatmap'
 
 .ggheat<-function(object, rescaling='none', clustering='none', labCol=T, labRow=T, logMode=T, pseudocount=1.0, 
-		border=FALSE, heatscale= c(low='darkred',mid='orange',high='white'), heatMidpoint=NULL,...) {
+		border=FALSE, heatscale= c(low='darkred',mid='orange',high='white'), heatMidpoint=NULL,fullnames=T,...) {
 	## the function can be be viewed as a two step process
 	## 1. using the rehape package and other funcs the data is clustered, scaled, and reshaped
 	## using simple options or by a user supplied function
 	## 2. with the now resahped data the plot, the chosen labels and plot style are built
 
 	
-	m=fpkmMatrix(object,fullnames=T)
+	m=fpkmMatrix(object,fullnames=fullnames)
 
 	#remove genes with no expression in any condition
 	m=m[!apply(m,1,sum)==0,]
