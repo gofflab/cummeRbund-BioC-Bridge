@@ -203,7 +203,7 @@ loadIsoforms<-function(fpkmFile,
 		if (all(samples %in% dbSamples$sample_name)){
 			write ("OK!",stderr())
 		}else{
-			write(samples,sys.stderr())
+			write(samples,stderr())
 			stop("Sample mismatch!")
 		}
 	}else{

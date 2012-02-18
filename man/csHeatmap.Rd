@@ -10,7 +10,7 @@ Creates a ggplot plot object with a geom_tile layer of FPKM values per feature a
 }
 \usage{
 \S4method{csHeatmap}{CuffFeatureSet}(object, rescaling='none', clustering='none', labCol=T, labRow=T, logMode=T, pseudocount=1.0, 
-		border=FALSE, heatscale= c(low='darkred',mid='orange',high='white'), heatMidpoint=NULL,...)
+		border=FALSE, heatscale= c(low='darkred',mid='orange',high='white'), heatMidpoint=NULL, fullnames = T, ...)
 }
 
 \arguments{
@@ -44,6 +44,9 @@ A list with min length=2, max length=3 that detail the low,mid,and high colors t
 }
   \item{heatMidpoint}{
 Value for midpoint of color scale.
+}
+  \item{fullnames}{
+A logical value whether to use 'fullnames' (concatenated gene_short_name and gene_id) for rows in heatmap. Default [ TRUE ].
 }
   \item{\dots}{
 Additional arguments to csHeatmap

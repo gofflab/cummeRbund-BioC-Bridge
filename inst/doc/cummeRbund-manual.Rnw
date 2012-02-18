@@ -36,7 +36,7 @@
 \title{cummeRbund: Visualization and Exploration of Cufflinks High-throughput Sequencing Data}
 
 \author{Loyal A. Goff, Cole Trapnell}
-\date{23 January, 2012}
+\date{February 18, 2012}
 
 \begin{document}
 <<init, echo=FALSE>>=
