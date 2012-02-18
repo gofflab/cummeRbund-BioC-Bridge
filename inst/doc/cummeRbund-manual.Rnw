@@ -6,6 +6,7 @@
 %\VignettePackage{cummeRbund}
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\SweaveOpts{prefix.string=graphics/plot}
 \documentclass[10pt]{article}
 \usepackage{amsmath}
 \usepackage[authoryear,round]{natbib}
@@ -528,7 +529,7 @@ We have found this to be a more robust way to determine distance between genes u
 
 \section{Miscellaneous}
 \begin{itemize}
-	\item As of v1.1.3 we attempt to provide a new visual queue in most plots that will indicate the quantification status for a particular feature in each given condition. We have enabled this feature by default for most
+	\item As of v1.1.3 we attempt to provide new visual cues in most plots that will indicate the quantification status for a particular feature in each given condition. We have enabled this feature by default for most
 	plots to suggest a measure of reliability for each feature in a particular condition. In most cases, this feature can be disabled by setting 'showStatus=FALSE'.
 	\item All plotting functions return ggplot objects and the resulting objects can be manipulated/faceted/altered using standard ggplot2 methods.
 	\item There are occasional DB connectivity issues that arise.  Not entirely sure why yet.  If necessary, just \Rfunction{readCufflinks} again and this should solve connectivity issues with a new
