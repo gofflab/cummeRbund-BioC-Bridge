@@ -29,6 +29,7 @@ exportMethods(
 			csHeatmap,
 			csCluster,
 			csDendro,
+			MAplot,
 			csSpecificity,
 			fpkmMatrix,
 			diffData,

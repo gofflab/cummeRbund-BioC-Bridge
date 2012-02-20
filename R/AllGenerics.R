@@ -40,7 +40,7 @@ setGeneric("tables",function(object) standardGeneric("tables"))
 setGeneric("fpkmMatrix",function(object,...) standardGeneric("fpkmMatrix"))
 setGeneric("diffData",function(object, x, y, features=FALSE, lnFcCutoff=20, ...) standardGeneric("diffData"))
 setGeneric("getLevels",function(object) standardGeneric("getLevels"))
-
+setGeneric("MAplot",function(object,x,y,logMode=T,pseudocount=1) standardGeneric("MAplot"))
 
 #CuffDist generics
 setGeneric("distValues",function(object, x, y,...) standardGeneric("distValues"))

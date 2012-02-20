@@ -148,6 +148,25 @@ setMethod("fpkmMatrix","CuffData",.fpkmMatrix)
 
 setMethod("diffData",signature(object="CuffData"),.diffData)
 
+.getMA<-function(object,x,y,logMode=T,pseudocount=1){
+	if (missing(x) || missing(y)){
+		stop("You must supply both x and y.")
+	}else{
+		sql<-paste("SELECT x.",object@idField,", sum(case when x.sample_name = '",x,"' then x.fpkm end) AS 'x', sum(case when x.sample_name = '",y,"' then x.fpkm end) AS 'y' FROM ",object@tables$dataTable," x GROUP BY x.",object@idField,";",sep="")
+		print(sql)
+	dat<-dbGetQuery(object@DB,sql)
+	
+	if(logMode){
+		dat$x<-log10(dat$x+pseudocount)
+		dat$y<-log10(dat$y+pseudocount)
+	}
+	dat$A<-(dat$x+dat$y)/2
+	dat$M<-dat$x/dat$y
+	res<-dat[,c(1,4:5)]
+	res
+	}
+}
+
 setMethod("DB","CuffData",function(object){
 		return(object@DB)
 		})
@@ -356,8 +375,14 @@ setMethod("csBoxplot",signature(object="CuffData"),.boxplot)
 setMethod("csDendro",signature(object="CuffData"),.dendro)
 
 .MAplot<-function(object,x,y,logMode=T,pseudocount=1){
+	dat<-.getMA(object,x,y,logMode=T,pseudocount=1)
+	p<-ggplot(dat)
+	p<-p+geom_point(aes(x=A,y=log2(M)))
+	p
 	
 }
+
+setMethod("MAplot",signature(object="CuffData"),.MAplot)
 
 #############
 # Other Methods
