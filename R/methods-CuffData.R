@@ -355,6 +355,10 @@ setMethod("csBoxplot",signature(object="CuffData"),.boxplot)
 
 setMethod("csDendro",signature(object="CuffData"),.dendro)
 
+.MAplot<-function(object,x,y,logMode=T,pseudocount=1){
+	
+}
+
 #############
 # Other Methods
 #############
