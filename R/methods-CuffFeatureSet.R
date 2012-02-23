@@ -145,7 +145,7 @@ setMethod("annotation","CuffFeatureSet",function(object){
 #There is no genericMethod yet, goal is to replace .heatmap with .ggheat for genericMethod 'csHeatmap'
 
 .ggheat<-function(object, rescaling='none', clustering='none', labCol=T, labRow=T, logMode=T, pseudocount=1.0, 
-		border=FALSE, heatscale= c(low='darkred',mid='orange',high='white'), heatMidpoint=NULL,fullnames=T,...) {
+		border=FALSE, heatscale=c(low='darkred',mid='orange',high='white'), heatMidpoint=NULL,fullnames=T,...) {
 	## the function can be be viewed as a two step process
 	## 1. using the rehape package and other funcs the data is clustered, scaled, and reshaped
 	## using simple options or by a user supplied function
@@ -160,16 +160,6 @@ setMethod("annotation","CuffFeatureSet",function(object){
 	## you can either scale by row or column not both! 
 	## if you wish to scale by both or use a different scale method then simply supply a scale
 	## function instead NB scale is a base funct
-	
-	if(is.function(rescaling))
-	{ 
-		m=rescaling(m)
-	} else {
-		if(rescaling=='column') 
-			m=scale(m, center=T)
-		if(rescaling=='row') 
-			m=t(scale(t(m),center=T))
-	}
 	
     if(logMode) 
     {
@@ -192,6 +182,20 @@ setMethod("annotation","CuffFeatureSet",function(object){
 			m=m[hclust(JSdist(makeprobs(t(m))))$order ,hclust(JSdist(makeprobs(m)))$order]
 	}
 	## this is just reshaping into a ggplot format matrix and making a ggplot layer
+	
+	if(is.function(rescaling))
+	{ 
+		m=rescaling(m)
+	} else {
+		if(rescaling=='column'){
+			m=scale(m, center=T)
+		    m[is.nan(m)] = 0
+		}
+		if(rescaling=='row'){ 
+			m=t(scale(t(m),center=T))
+		    m[is.nan(m)] = 0
+	    }
+	}
 	
 	rows=dim(m)[1]
 	cols=dim(m)[2]
@@ -259,9 +263,8 @@ setMethod("annotation","CuffFeatureSet",function(object){
 	   legendTitle <- "FPKM"
 	}
 	
-	if (length(heatscale) == 2)
-	{
-	    g2 <- g2 + scale_fill_gradient(low=heatscale[1], mid=heatscale[2], name=legendTitle)
+	if (length(heatscale) == 2){
+	    g2 <- g2 + scale_fill_gradient(low=heatscale[1], high=heatscale[2], name=legendTitle)
 	} else if (length(heatscale) == 3) {
 	    if (is.null(heatMidpoint))
 	    {
