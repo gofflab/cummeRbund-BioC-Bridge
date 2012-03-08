@@ -61,44 +61,32 @@ makeprobs<-function(a){
 	b
 }
 
-#Intersection of a list of vectors
-#intersect2 <- function(...) {
-#	
-#	args <- list(...) 
-#	nargs <- length(args) 
-#	if(nargs <= 1) {
-#		
-#		if(nargs == 1 && is.list(args[[1]])) {
-#			do.call("intersect2", args[[1]])
-#		} else {
-#			stop("cannot evaluate intersection fewer than 2 arguments")
-#		}
-#	} else if(nargs == 2) {
-#		intersect(args[[1]], args[[2]])
-#	} else {
-#		intersect(args[[1]], intersect2(args[-1]))
-#	} 
-#}
-
-#Union of a list of vectors
-#union2 <- function(...) {
-#	
-#	args <- list(...) 
-#	nargs <- length(args) 
-#	if(nargs <= 1) {
-#		
-#		if(nargs == 1 && is.list(args[[1]])) {
-#			do.call("union2", args[[1]])
-#		} else {
-#			stop("cannot evaluate intersection fewer than 2 arguments")
-#		}
-#	} else if(nargs == 2) {
-#		union(args[[1]], args[[2]])
-#	} else {
-#		union(args[[1]], union2(args[-1]))
-#	} 
-#}
-
+multiplot <- function(..., plotlist=NULL, cols) {
+	require(grid)
+	
+	# Make a list from the ... arguments and plotlist
+	plots <- c(list(...), plotlist)
+	
+	numPlots = length(plots)
+	
+	# Make the panel
+	plotCols = cols                          # Number of columns of plots
+	plotRows = ceiling(numPlots/plotCols) # Number of rows needed, calculated from # of cols
+	
+	# Set up the page
+	grid.newpage()
+	pushViewport(viewport(layout = grid.layout(plotRows, plotCols)))
+	vplayout <- function(x, y)
+		viewport(layout.pos.row = x, layout.pos.col = y)
+	
+	# Make each plot, in the correct location
+	for (i in 1:numPlots) {
+		curRow = ceiling(i/plotCols)
+		curCol = (i-1) %% plotCols + 1
+		print(plots[[i]], vp = vplayout(curRow, curCol ))
+	}
+	
+}
 
 #THIS IS NOT MINE....I MUST REMOVE IT PRIOR TO SUBMISSION (For detailed GO analysis, check out clusterProfiler and goProfiles)
 #ClusterProfiles <- function(geneClusters, onto="CC", level=3, orgPackage="org.Hs.eg.db") {
