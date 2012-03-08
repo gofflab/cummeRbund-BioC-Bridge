@@ -456,11 +456,22 @@ setMethod("getGenes",signature(object="CuffSet"),.getGenes)
 #	}
 #	
 #	
-#	AnnotationQuery<-paste("SELECT x.* from ",slot(object,level)@tables$mainTable," x LEFT JOIN ",slot(object,level)@tables$featureTable," xf ON x.",slot(object,level)@idField,"=xf.",slot(object,level)@idField," JOIN genes g on x.gene_id=g.gene_id ", whereString,sep="")
-#	FPKMQuery<-paste("SELECT y.* from isoforms x JOIN isoformData y ON x.isoform_id = y.isoform_id JOIN genes g on x.gene_id=g.gene_id ", whereStringFPKM,sep="")
-#	DiffQuery<-paste("SELECT y.* from isoforms x JOIN isoformExpDiffData y ON x.isoform_id = y.isoform_id JOIN genes g on x.gene_id=g.gene_id ", whereStringDiff,sep="")
+#	AnnotationQuery<-paste("SELECT x.* from ",slot(object,level)@tables$mainTable," x LEFT JOIN ",slot(object,level)@tables$featureTable," xf ON x.",slot(object,level)@idField,"=xf.",slot(object,level)@idField," JOIN genes g ON x.gene_id=g.gene_id ", whereString,sep="")
+#	FPKMQuery<-paste("SELECT y.* from ",slot(object,level)@tables$mainTable," x JOIN ",slot(object,level)@tables$dataTable,"  y ON x.",slot(object,level)@idField," = y.",slot(object,level)@idField," JOIN genes g ON x.gene_id=g.gene_id ", whereStringFPKM,sep="")
+#	DiffQuery<-paste("SELECT y.* from ",slot(object,level)@tables$mainTable," x JOIN ",slot(object,level)@tables$expDiffTable,"  y ON x.",slot(object,level)@idField," = y.",slot(object,level)@idField," JOIN genes g ON x.gene_id=g.gene_id ", whereStringDiff,sep="")
+#	
+#	begin<-dbSendQuery(object@DB,"BEGIN;")	
+#	res<-isoforms=new("CuffFeatureSet",
+#			annotation=dbGetQuery(object@DB,AnnotationQuery),
+#			fpkm=dbGetQuery(object@DB,FPKMQuery),
+#			diff=dbGetQuery(object@DB,DiffQuery)
+#		)
+#	end<-dbSendQuery(object@DB,"END;")		
+#	res
 #	
 #}
+#
+#setMethod("getFeatures",signature(object="CuffSet"),.getFeatures)
 	
 
 
