@@ -617,7 +617,7 @@ setMethod("getSig",signature(object="CuffSet"),.getSig)
 	sig<-sig[,fieldsNeeded]
 	
 	#recast
-	sig.table<-cast(sig,gene_id~testName,value='testResult')
+	sig.table<-acast(sig,gene_id~testName,value='testResult')
 	
 	#remove genes that do not reject null in any test
 	sig.table<-sig.table[rowSums(sig.table,na.rm=T)>0,]

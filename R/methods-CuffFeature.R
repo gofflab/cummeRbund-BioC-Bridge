@@ -66,7 +66,7 @@ setMethod("fpkm",signature="CuffFeature",.fpkm)
 	colnames(res)[1]<-"tracking_id"
 	res<-res[,c(1:3)]
 	res<-melt(res)
-	res<-cast(res,tracking_id~sample_name)
+	res<-dcast(res,tracking_id~sample_name)
 	res<-data.frame(res[,-1],row.names=res[,1])
 }
 

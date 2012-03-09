@@ -102,7 +102,7 @@ setMethod("features",signature(object="CuffFeatureSet"),.features)
 	selectedRows<-c('tracking_id','sample_name','fpkm')
 	res<-res[,selectedRows]
 	res<-melt(res)
-	res<-cast(res,tracking_id~sample_name)
+	res<-dcast(res,tracking_id~sample_name)
 	res<-data.frame(res[,-1],row.names=res[,1])
 	res
 }
