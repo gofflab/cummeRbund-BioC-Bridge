@@ -68,6 +68,7 @@ setMethod("fpkm",signature="CuffFeature",.fpkm)
 	res<-melt(res)
 	res<-dcast(res,tracking_id~sample_name)
 	res<-data.frame(res[,-1],row.names=res[,1])
+	res
 }
 
 setMethod("fpkmMatrix",signature(object="CuffFeature"),.fpkmMatrix)

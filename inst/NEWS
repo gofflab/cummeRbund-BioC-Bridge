@@ -3,6 +3,7 @@ v1.1.4
 		- Added MAplot() method to CuffData objects.
 	Bugfixes:
 		- Finished abrupt migration to reshape2. As a result fixed a bug in which 'cast' was still required for several functions and could not be found. Now appropriately using 'dcast' or 'acast'.
+		- Fixed minor bug in CuffFeature::fpkmMatrix
 		
 v1.1.3 
 	New Features:
