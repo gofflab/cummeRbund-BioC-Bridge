@@ -95,7 +95,7 @@ loadGenes<-function(fpkmFile,
 	
 	#Recast
 	write("Recasting",stderr())
-	genemelt<-as.data.frame(dcast(genemelt,...~measurement))
+	genemelt<-as.data.frame(cast(genemelt,...~measurement))
 	
 	#debugging
 	#write(colnames(genemelt),stderr())
@@ -115,20 +115,24 @@ loadGenes<-function(fpkmFile,
 		write(paste("Reading ",diffFile,sep=""),stderr())
 		diffArgs$file = diffFile
 		diff<-as.data.frame(do.call(read.table,diffArgs))
-		
-		#Adjust sample names with make.db.names
-		diff$sample_1<-make.db.names(dbConn,as.vector(diff$sample_1),unique=FALSE)
-		diff$sample_2<-make.db.names(dbConn,as.vector(diff$sample_2),unique=FALSE)
-		
-		write("Writing geneExpDiffData table",stderr())
-		diffCols<-c(1,5:14)
-		
-		#debugging
-		#write(colnames(diff[,diffCols]),stderr())
-		
-		#dbWriteTable(dbConn,'geneExpDiffData',diff[,diffCols],row.names=F,append=T)
-		insert_SQL<-"INSERT INTO geneExpDiffData VALUES(:test_id,:sample_1,:sample_2,:status,:value_1,:value_2,?,:test_stat,:p_value,:q_value,:significant)"
-		bulk_insert(dbConn,insert_SQL,diff[,diffCols])
+		if(dim(diff)[1]>0){
+			#Adjust sample names with make.db.names
+			diff$sample_1<-make.db.names(dbConn,as.vector(diff$sample_1),unique=FALSE)
+			diff$sample_2<-make.db.names(dbConn,as.vector(diff$sample_2),unique=FALSE)
+			
+			write("Writing geneExpDiffData table",stderr())
+			diffCols<-c(1,5:14)
+			
+			#debugging
+			#write(colnames(diff[,diffCols]),stderr())
+			
+			#dbWriteTable(dbConn,'geneExpDiffData',diff[,diffCols],row.names=F,append=T)
+			insert_SQL<-"INSERT INTO geneExpDiffData VALUES(:test_id,:sample_1,:sample_2,:status,:value_1,:value_2,?,:test_stat,:p_value,:q_value,:significant)"
+			bulk_insert(dbConn,insert_SQL,diff[,diffCols])
+		}else{
+			write(paste("No records found in", diffFile),stderr())
+		}
+	
 	}
 	
 	########
@@ -249,7 +253,7 @@ loadIsoforms<-function(fpkmFile,
 	
 	#Recast
 	write("Recasting",stderr())
-	isoformmelt<-as.data.frame(dcast(isoformmelt,...~measurement))
+	isoformmelt<-as.data.frame(cast(isoformmelt,...~measurement))
 	
 	#Write geneData table
 	write("Writing isoformData table",stderr())
@@ -266,12 +270,11 @@ loadIsoforms<-function(fpkmFile,
 		write(paste("Reading ",diffFile,sep=""),stderr())
 		diffArgs$file = diffFile
 		diff<-as.data.frame(do.call(read.table,diffArgs))
-		
-		#Adjust sample names with make.db.names
-		diff$sample_1<-make.db.names(dbConn,as.vector(diff$sample_1),unique=FALSE)
-		diff$sample_2<-make.db.names(dbConn,as.vector(diff$sample_2),unique=FALSE)
-		
 		if(dim(diff)[1]>0){
+			#Adjust sample names with make.db.names
+			diff$sample_1<-make.db.names(dbConn,as.vector(diff$sample_1),unique=FALSE)
+			diff$sample_2<-make.db.names(dbConn,as.vector(diff$sample_2),unique=FALSE)
+		
 			write("Writing isoformExpDiffData table",stderr())
 			diffCols<-c(1,5:14)
 			#dbWriteTable(dbConn,'isoformExpDiffData',diff[,diffCols],row.names=F,append=T)
@@ -373,7 +376,7 @@ loadTSS<-function(fpkmFile,
 		
 		#Recast
 		write("Recasting",stderr())
-		tssmelt<-as.data.frame(dcast(tssmelt,...~measurement))
+		tssmelt<-as.data.frame(cast(tssmelt,...~measurement))
 		
 		#Write geneData table
 		write("Writing TSSData table",stderr())
@@ -522,7 +525,7 @@ loadCDS<-function(fpkmFile,
 		
 		#Recast
 		write("Recasting",stderr())
-		cdsmelt<-as.data.frame(dcast(cdsmelt,...~measurement))
+		cdsmelt<-as.data.frame(cast(cdsmelt,...~measurement))
 		
 		#Write geneData table
 		write("Writing CDSData table",stderr())
@@ -1561,7 +1564,7 @@ loadGTF<-function(gtfFile,dbConn) {
 	#Grab only gene_ID and transcript_ID to add to features table
 	id.attributes<-attributes[attributes$attribute %in% c("gene_id","transcript_id"),]
 	id.attributes$featureID<-as.numeric(as.character(id.attributes$featureID))
-	id.attributes<-dcast(id.attributes,...~attribute)
+	id.attributes<-cast(id.attributes,...~attribute)
 	
 	#Main features table
 	features<-gtf[,c(1:8)]
