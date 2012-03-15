@@ -114,6 +114,8 @@ loadGenes<-function(fpkmFile,
 		#Read diff file
 		write(paste("Reading ",diffFile,sep=""),stderr())
 		diffArgs$file = diffFile
+		#Something like this to make sure sample names are treated as character values and not numeric, logical, etc.
+		#diffArgs$colClasses<-c(rep('character',7),rep('numeric',6),'character')
 		diff<-as.data.frame(do.call(read.table,diffArgs))
 		if(dim(diff)[1]>0){
 			#Adjust sample names with make.db.names
