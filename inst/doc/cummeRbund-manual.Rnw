@@ -239,14 +239,25 @@ s
 print(s)
 @
 
-Volcano plots are also available for the \Rclass{CuffData} objects. Again, you must specify the comparisons by sample name.
+MvsA plots can be useful to determine any systematic bias that may be present between conditions. The CuffData method \Rmethod{MAplot()} can be used to examine these intensity vs fold-change plots. You must specify the sample names to use for the pairwise comparison with $x$ and $y$:
 <<global_plots_4,include=FALSE>>=
+m<-MAplot(genes(cuff),"hESC","Fibroblasts")
+m
+@
+
+<<label=global_plots_MA,fig=TRUE,echo=FALSE>>=
+<<global_plots_4>>
+print(m)
+@
+
+Volcano plots are also available for the \Rclass{CuffData} objects. Again, you must specify the comparisons by sample name.
+<<global_plots_5,include=FALSE>>=
 v<-csVolcano(genes(cuff),"hESC","Fibroblasts")
 v
 @
 
 <<label=global_plots_volcano,fig=TRUE,echo=FALSE>>=
-<<global_plots_4>>
+<<global_plots_5>>
 print(v)
 @
 
