@@ -6,7 +6,7 @@
 %\VignettePackage{cummeRbund}
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\SweaveOpts{prefix.string=graphics/plot}
+%\SweaveOpts{prefix.string=graphics/plot}
 \documentclass[10pt]{article}
 \usepackage{amsmath}
 \usepackage[authoryear,round]{natbib}
