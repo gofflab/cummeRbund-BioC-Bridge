@@ -28,7 +28,7 @@ A logical argument to log10-transform FPKM values prior to plotting.
   \item{pseudocount}{
 Value to be added to FPKM for appropriate log transformation and clustering. (Avoids zero-based errors)
 }
-  \item{pseudocount}{
+  \item{smooth}{
 Logical argument whether or not to draw a smoothed line fit through data.
 }
  
