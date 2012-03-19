@@ -9,7 +9,7 @@ MAplot
 Creates an M vs A plot (Avg intensity vs log ratio) for a given pair of conditions across all fpkms
 }
 \usage{
-\S4method{MAplot}{CuffData}(object,x,y,logMode=T,pseudocount=1)
+\S4method{MAplot}{CuffData}(object,x,y,logMode=T,pseudocount=1,smooth=F)
 }
 
 \arguments{
@@ -28,6 +28,10 @@ A logical argument to log10-transform FPKM values prior to plotting.
   \item{pseudocount}{
 Value to be added to FPKM for appropriate log transformation and clustering. (Avoids zero-based errors)
 }
+  \item{pseudocount}{
+Logical argument whether or not to draw a smoothed line fit through data.
+}
+ 
  
 }
 \details{
