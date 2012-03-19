@@ -153,7 +153,7 @@ setMethod("diffData",signature(object="CuffData"),.diffData)
 		stop("You must supply both x and y.")
 	}else{
 		sql<-paste("SELECT x.",object@idField,", sum(case when x.sample_name = '",x,"' then x.fpkm end) AS 'x', sum(case when x.sample_name = '",y,"' then x.fpkm end) AS 'y' FROM ",object@tables$dataTable," x GROUP BY x.",object@idField,";",sep="")
-		print(sql)
+		#print(sql)
 	dat<-dbGetQuery(object@DB,sql)
 	
 	if(logMode){
@@ -367,19 +367,26 @@ setMethod("csBoxplot",signature(object="CuffData"),.boxplot)
 	#colnames(res)<-colnames(fpkmMat)
 	
 	#res<-as.dist(res)
-	res<-as.dendro(hclust(res))
-	plot(res,title=paste("All",title=deparse(substitute(object))))
+	res<-as.dendrogram(hclust(res))
+	plot(res,main=paste("All",deparse(substitute(object)),sep=" "))
 	res
 }
 
 setMethod("csDendro",signature(object="CuffData"),.dendro)
 
-.MAplot<-function(object,x,y,logMode=T,pseudocount=1){
-	dat<-.getMA(object,x,y,logMode=T,pseudocount=1)
+.MAplot<-function(object,x,y,logMode=T,pseudocount=1,smooth=F){
+	dat<-.getMA(object,x,y,logMode=logMode,pseudocount=pseudocount)
 	p<-ggplot(dat)
 	p<-p+geom_point(aes(x=A,y=log2(M)))
-	p
 	
+	#add smoother
+	if(smooth){
+		p <- p + stat_smooth(aes(x=A,y=log2(M)),fill="blue")
+	}
+	#add baseline
+	p <- p + geom_hline(yintercept=0)
+	
+	p
 }
 
 setMethod("MAplot",signature(object="CuffData"),.MAplot)
