@@ -95,7 +95,7 @@ loadGenes<-function(fpkmFile,
 	
 	#Recast
 	write("Recasting",stderr())
-	genemelt<-as.data.frame(cast(genemelt,...~measurement))
+	genemelt<-as.data.frame(dcast(genemelt,...~measurement))
 	
 	#debugging
 	#write(colnames(genemelt),stderr())
@@ -255,7 +255,7 @@ loadIsoforms<-function(fpkmFile,
 	
 	#Recast
 	write("Recasting",stderr())
-	isoformmelt<-as.data.frame(cast(isoformmelt,...~measurement))
+	isoformmelt<-as.data.frame(dcast(isoformmelt,...~measurement))
 	
 	#Write geneData table
 	write("Writing isoformData table",stderr())
@@ -378,7 +378,7 @@ loadTSS<-function(fpkmFile,
 		
 		#Recast
 		write("Recasting",stderr())
-		tssmelt<-as.data.frame(cast(tssmelt,...~measurement))
+		tssmelt<-as.data.frame(dcast(tssmelt,...~measurement))
 		
 		#Write geneData table
 		write("Writing TSSData table",stderr())
@@ -527,7 +527,7 @@ loadCDS<-function(fpkmFile,
 		
 		#Recast
 		write("Recasting",stderr())
-		cdsmelt<-as.data.frame(cast(cdsmelt,...~measurement))
+		cdsmelt<-as.data.frame(dcast(cdsmelt,...~measurement))
 		
 		#Write geneData table
 		write("Writing CDSData table",stderr())
@@ -1566,7 +1566,7 @@ loadGTF<-function(gtfFile,dbConn) {
 	#Grab only gene_ID and transcript_ID to add to features table
 	id.attributes<-attributes[attributes$attribute %in% c("gene_id","transcript_id"),]
 	id.attributes$featureID<-as.numeric(as.character(id.attributes$featureID))
-	id.attributes<-cast(id.attributes,...~attribute)
+	id.attributes<-dcast(id.attributes,...~attribute)
 	
 	#Main features table
 	features<-gtf[,c(1:8)]
