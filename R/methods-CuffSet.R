@@ -655,7 +655,7 @@ setMethod("getSigTable",signature(object="CuffSet"),.getSigTable)
 	mySimilarIds<-names(myDist)
 	
 	if(returnGeneSet){
-		mySimilarGenes<-getGenes(object,mySimilarIds)
+		mySimilarGenes<-getGenes(object,mySimilarIds,...)
 		return(mySimilarGenes)
 	}else{
 		res<-as.data.frame(myDist)
