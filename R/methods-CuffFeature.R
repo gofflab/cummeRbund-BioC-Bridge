@@ -61,17 +61,38 @@ setMethod("length","CuffFeature",
 }
 setMethod("fpkm",signature="CuffFeature",.fpkm)
 
-.fpkmMatrix<-function(object){
+.fpkmMatrix<-function(object,sampleIdList){
+	#Sample subsetting
+	if(!missing(sampleIdList)){
+		if (!all(sampleIdList %in% samples(object))){
+			stop("Sample does not exist!")
+		}else{
+			mySamples<-sampleIdList
+		}
+	}else{
+		mySamples<-samples(object)
+	}
 	res<-fpkm(object)
 	colnames(res)[1]<-"tracking_id"
 	res<-res[,c(1:3)]
 	res<-melt(res)
 	res<-dcast(res,tracking_id~sample_name)
 	res<-data.frame(res[,-1],row.names=res[,1])
+	if(!missing(sampleIdList)){
+		res<-res[,mySamples]
+	}
 	res
 }
 
 setMethod("fpkmMatrix",signature(object="CuffFeature"),.fpkmMatrix)
+
+.samples<-function(object){
+	res<-fpkm(object)$sample_name
+	res
+}
+
+setMethod("samples","CuffFeature",.samples)
+
 
 #setMethod("diff","CuffFeature",function(object){
 #		return(object@diff)

@@ -1,3 +1,9 @@
+v1.1.6
+	New Features:
+		- Added 'distThresh' argument to findSimilar.  This allows you to retrieve all similar genes within a given JS distance as specified by distThresh.
+		- Added 'returnGeneSet' argument to findSimilar.  [default = T] If true, findSimilar returns a CuffGeneSet of genes matching criteria (default). If false, a rank-ordered data frame of JS distance values is returned.
+
+
 v1.1.5
 	Bugfixes:
 		- Fixed minor bug in database setup that caused instability with cuffdiff --no-diff argument.

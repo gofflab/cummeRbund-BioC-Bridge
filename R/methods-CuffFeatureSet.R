@@ -91,7 +91,17 @@ setMethod("featureNames",signature(object="CuffFeatureSet"),.featureNames)
 
 setMethod("features",signature(object="CuffFeatureSet"),.features)
 
-.fpkmMatrix<-function(object,fullnames=FALSE){
+.fpkmMatrix<-function(object,fullnames=FALSE,sampleIdList){
+	#Sample subsetting
+	if(!missing(sampleIdList)){
+		if (!all(sampleIdList %in% samples(object))){
+			stop("Sample does not exist!")
+		}else{
+			mySamples<-sampleIdList
+		}
+	}else{
+		mySamples<-samples(object)
+	}
 	if(fullnames){
 		res<-fpkm(object,features=TRUE)
 		res$tracking_id<-paste(res$gene_short_name,res[,1],sep="|")
@@ -104,6 +114,9 @@ setMethod("features",signature(object="CuffFeatureSet"),.features)
 	res<-melt(res)
 	res<-dcast(res,tracking_id~sample_name)
 	res<-data.frame(res[,-1],row.names=res[,1])
+	if(!missing(sampleIdList)){
+		res<-res[,mySamples]
+	}
 	res
 }
 

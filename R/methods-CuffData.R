@@ -94,11 +94,29 @@ setMethod("featureNames","CuffData",.featureNames)
 
 setMethod("samples","CuffData",.samples)
 
-.fpkm<-function(object,features=FALSE){
-	if(!features){
-		FPKMQuery<-paste("SELECT * FROM",object@tables$dataTable)
+.fpkm<-function(object,features=FALSE,sampleIdList){
+	#Sample subsetting
+	if(!missing(sampleIdList)){
+		if(.checkSamples(object@DB,sampleIdList)){
+			myLevels<-sampleIdList
+		}else{
+			stop("Sample does not exist!")
+		}
 	}else{
-		FPKMQuery<-paste("SELECT xf.*,xm.*,x.sample_name,x.fpkm,x.conf_hi,x.conf_lo FROM ",object@tables$dataTable," x LEFT JOIN ",object@tables$featureTable," xf ON x.",object@idField,"=xf.",object@idField," LEFT JOIN ",object@tables$mainTable," xm ON x.",object@idField,"=xm.",object@idField,sep="")
+		myLevels<-getLevels(object)
+	}
+	#Sample Search String (SQL)
+	sampleString<-'('
+	for (i in myLevels){
+		sampleString<-paste(sampleString,"'",i,"',",sep="")
+	}
+	sampleString<-substr(sampleString,1,nchar(sampleString)-1)
+	sampleString<-paste(sampleString,")",sep="")
+	
+	if(!features){
+		FPKMQuery<-paste("SELECT * FROM ",object@tables$dataTable," WHERE sample_name IN ",sampleString,sep="")
+	}else{
+		FPKMQuery<-paste("SELECT xf.*,xm.*,x.sample_name,x.fpkm,x.conf_hi,x.conf_lo FROM ",object@tables$dataTable," x LEFT JOIN ",object@tables$featureTable," xf ON x.",object@idField,"=xf.",object@idField," LEFT JOIN ",object@tables$mainTable," xm ON x.",object@idField,"=xm.",object@idField," WHERE x.sample_name IN ",sampleString,sep="")
 		print(FPKMQuery)
 	}
 	res<-dbGetQuery(object@DB,FPKMQuery)
@@ -108,7 +126,18 @@ setMethod("samples","CuffData",.samples)
 
 setMethod("fpkm","CuffData",.fpkm)
 
-.fpkmMatrix<-function(object){
+.fpkmMatrix<-function(object,sampleIdList){
+	#Sample subsetting
+	if(!missing(sampleIdList)){
+		if(.checkSamples(object@DB,sampleIdList)){
+			myLevels<-sampleIdList
+		}else{
+			stop("Sample does not exist!")
+		}
+	}else{
+		myLevels<-getLevels(object)
+	}
+	
 	samp<-samples(object)
 	FPKMMatQuery<-paste("select x.",object@idField,", ",sep="")
 	for (i in samp){
@@ -117,7 +146,12 @@ setMethod("fpkm","CuffData",.fpkm)
 	FPKMMatQuery<-substr(FPKMMatQuery, 1, nchar(FPKMMatQuery)-1)
 	FPKMMatQuery<-paste(FPKMMatQuery," from ",object@tables$mainTable," x LEFT JOIN ",object@tables$dataTable," xd on x.",object@idField," = xd.",object@idField," group by x.",object@idField,sep="")
 	res<-dbGetQuery(object@DB,FPKMMatQuery)
-	data.frame(res[,-1],row.names=res[,1])
+	res<-data.frame(res[,-1],row.names=res[,1])
+	if(!missing(sampleIdList)){
+		res<-data.frame(res[,sampleIdList],row.names=rownames(res))
+		colnames(res)<-sampleIdList
+	}
+	res
 }
 
 setMethod("fpkmMatrix","CuffData",.fpkmMatrix)
@@ -414,3 +448,14 @@ setMethod("MAplot",signature(object="CuffData"),.MAplot)
 
 setMethod("csSpecificity",signature(object="CuffData"),.specificity)
 
+#############
+#Utility functions
+#############
+.checkSamples<-function(dbConn,sampleIdList){
+	dbSamples<-dbReadTable(dbConn,"samples")
+	if (all(sampleIdList %in% dbSamples$sample_name)){
+		return(TRUE)
+	}else{
+		return(FALSE)
+	}
+}

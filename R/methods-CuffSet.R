@@ -628,22 +628,41 @@ setMethod("getSig",signature(object="CuffSet"),.getSig)
 setMethod("getSigTable",signature(object="CuffSet"),.getSigTable)
 
 #Find similar genes
-.findSimilar<-function(object,x,n){
+.findSimilar<-function(object,x,n,distThresh,returnGeneSet=T,...){
 	#x can be either a gene_id, gene_short_name or a vector of FPKM values (fake gene expression profile)
 	if(is.character(x)){
 		myGene<-getGene(object,x)
-		sig<-makeprobsvec(fpkmMatrix(myGene)[1,])
+		sig<-makeprobsvec(fpkmMatrix(myGene,...)[1,])
 	}else if(is.vector(x)){
 		sig<-makeprobsvec(x)
 	}
-	allGenes<-fpkmMatrix(object@genes)
+	allGenes<-fpkmMatrix(object@genes,...)
 	allGenes<-t(makeprobs(t(allGenes)))
 	compare<-function(q){
 		JSdistVec(sig,q)
 	}
 	myDist<-apply(allGenes,MARGIN=1,compare)
-	mySimilarIds<-names(sort(myDist))[1:n]
-	mySimilarGenes<-getGenes(object,mySimilarIds)
+	
+	if(!missing(distThresh)){
+		myDist<-myDist[myDist<=distThresh]
+	}
+	myDist<-sort(myDist)
+	
+	if(!missing(n)){
+		myDist<-myDist[1:n]
+	}
+	
+	mySimilarIds<-names(myDist)
+	
+	if(returnGeneSet){
+		mySimilarGenes<-getGenes(object,mySimilarIds)
+		return(mySimilarGenes)
+	}else{
+		res<-as.data.frame(myDist)
+		colnames(res)<-c("distance")
+		return(res)
+	}
+	
 }
 setMethod("findSimilar",signature(object="CuffSet"),.findSimilar)
 

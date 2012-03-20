@@ -24,7 +24,7 @@ setGeneric("getFeatures",function(object,featureIdList,sampleIdList=NULL) standa
 setGeneric("getSig", function(object,x,y,alpha=0.05,level="genes") standardGeneric("getSig"))
 setGeneric("getSigTable", function(object,alpha=0.05,level='genes') standardGeneric("getSigTable"))
 setGeneric("addFeatures",function(object, features, ...) standardGeneric("addFeatures"))
-setGeneric("findSimilar",function(object,x,n) standardGeneric("findSimilar"))
+setGeneric("findSimilar",function(object,x,n,...) standardGeneric("findSimilar"))
 
 ###############
 #CuffData
@@ -33,7 +33,7 @@ setGeneric("findSimilar",function(object,x,n) standardGeneric("findSimilar"))
 #CuffData generics
 setGeneric("features",function(object) standardGeneric("features"))
 setGeneric("featureNames",function(object) standardGeneric("featureNames"))
-setGeneric("fpkm",function(object, features=FALSE) standardGeneric("fpkm"))
+setGeneric("fpkm",function(object, features=FALSE,...) standardGeneric("fpkm"))
 setGeneric("filters",function(object) standardGeneric("filters"))
 setGeneric("idField",function(object) standardGeneric("idField"))
 setGeneric("tables",function(object) standardGeneric("tables"))
