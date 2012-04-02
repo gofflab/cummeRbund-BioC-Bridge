@@ -421,13 +421,12 @@ setMethod("csVolcano",signature(object="CuffFeatureSet"), .volcano)
     }
 	
 	p<-ggplot(dat,aes(x=tracking_id,y=fpkm,fill=sample_name))
-	p <- p + 
-	    geom_bar(aes(group=1),position=dodge,stat='identity')
+	p <- p + geom_bar(position=dodge,stat='identity')
 
 	if (showErrorbars)
 	{
 	    p <- p +
-		    geom_errorbar(aes(ymin=conf_lo,ymax=conf_hi,group=1),position=dodge,width=0.5)
+		    geom_errorbar(aes(ymin=conf_lo,ymax=conf_hi),position=dodge,width=0.5)
 	}
 	
 	if (logMode)
@@ -437,9 +436,9 @@ setMethod("csVolcano",signature(object="CuffFeatureSet"), .volcano)
     }
 	if(showStatus){
 		if(logMode){
-			p <- p + geom_text(aes(x=tracking_id,y=1,label=warning,group=1),position=dodge,stat='identity',color='red',vjust=1.5,size=3)
+			p <- p + geom_text(aes(x=tracking_id,y=1,label=warning),position=dodge,stat='identity',color='red',vjust=1.5,size=3)
 		}else{
-			p <- p + geom_text(aes(x=tracking_id,y=0,label=warning,group=1),position=dodge,color='red',stat='identity',vjust=1.5,size=3)
+			p <- p + geom_text(aes(x=tracking_id,y=0,label=warning),position=dodge,color='red',stat='identity',vjust=1.5,size=3)
 		}
 	}
 	#gene_labels = dat$gene_short_name
