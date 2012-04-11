@@ -339,7 +339,7 @@ setMethod("csDensity",signature(object="CuffData"),.density)
 
 setMethod("csScatter",signature(object="CuffData"), .scatter)
 
-.volcano<-function(object,x,y,features=FALSE,xlimits=c(-20,20),...){
+.volcano<-function(object,x,y,alpha=0.05,showSignificant=TRUE,features=FALSE,xlimits=c(-20,20),...){
 	samp<-samples(object)
 	
 	#check to make sure x and y are in samples
@@ -352,12 +352,17 @@ setMethod("csScatter",signature(object="CuffData"), .scatter)
 	#subset dat for samples of interest
 	mySamples<-c(x,y)
 	dat<-dat[(dat$sample_1 %in% mySamples & dat$sample_2 %in% mySamples),]
+	dat$significant <- 'no'
+	dat$significant[dat$q_value<=alpha]<-'yes'
 	s1<-unique(dat$sample_1)
 	s2<-unique(dat$sample_2)
 	
 	p<-ggplot(dat)
-	p<- p + geom_point(aes(x=log2_fold_change,y=-log10(p_value),color=significant),size=0.8)
-	
+	if(showSignificant){
+		p<- p + geom_point(aes(x=log2_fold_change,y=-log10(p_value),color=significant),size=0.8)
+	}else{
+		p<- p + geom_point(aes(x=log2_fold_change,y=-log10(p_value)),size=0.8)
+	}
 	#Add title and return
 	p<- p + opts(title=paste(object@tables$mainTable,": ",s2,"/",s1,sep=""))
 	p<- p + scale_colour_manual(values=c("red", "steelblue"))

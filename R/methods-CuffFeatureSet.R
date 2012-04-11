@@ -357,7 +357,7 @@ setMethod("csHeatmap",signature("CuffFeatureSet"),.ggheat)
 setMethod("csScatter",signature(object="CuffFeatureSet"), .scatter)
 
 #Volcano plot
-.volcano<-function(object,x,y,xlimits=c(-20,20),...){
+.volcano<-function(object,x,y,alpha=0.05,showSignificant=TRUE,xlimits=c(-20,20),...){
 	samp<-samples(object)
 	
 	#check to make sure x and y are in samples
@@ -365,6 +365,8 @@ setMethod("csScatter",signature(object="CuffFeatureSet"), .scatter)
 		stop("One or more values of 'x' or 'y' are not valid sample names!")
 	}
 	dat<-diffData(object=object)
+	dat$significant<-'no'
+	dat$significant[dat$q_value<=alpha]<-'yes'
 	
 	#subset dat for samples of interest
 	mySamples<-c(x,y)
@@ -375,7 +377,11 @@ setMethod("csScatter",signature(object="CuffFeatureSet"), .scatter)
 	s2<-unique(dat$sample_2)
 	
 	p<-ggplot(dat)
-	p<- p + geom_point(aes(x=log2_fold_change,y=-log10(p_value),color=significant),alpha=I(1/3))
+	if(showSignificant){
+		p<- p + geom_point(aes(x=log2_fold_change,y=-log10(p_value),color=significant),alpha=I(1/3))
+	}else{
+		p<- p + geom_point(aes(x=log2_fold_change,y=-log10(p_value)),alpha=I(1/3))
+	}
 	
 	p<- p + opts(title=paste(s2,"/",s1,sep=""))
 	
