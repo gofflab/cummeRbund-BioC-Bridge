@@ -7,6 +7,11 @@
 #####################
 #File Archetype parsing
 #####################
+
+#RunInfo
+
+#ReplicateTable
+
 #Genes
 loadGenes<-function(fpkmFile,
 		diffFile,
@@ -161,6 +166,15 @@ loadGenes<-function(fpkmFile,
 	#Handle Feature Data (this will actually be done on CuffData objects instead...but I may include something here as well)
 	#########
 	
+	###########
+	#Handle Counts .count_tracking
+	###########
+	
+	###########
+	#Handle Replicates .rep_tracking
+	###########
+	
+	
 }
 	
 #Isoforms
@@ -286,6 +300,14 @@ loadIsoforms<-function(fpkmFile,
 			write(paste("No records found in",diffFile),stderr())
 		}
 	}
+	
+	###########
+	#Handle Counts .count_tracking
+	###########
+	
+	###########
+	#Handle Replicates .rep_tracking
+	###########
 	
 }
 
@@ -434,6 +456,14 @@ loadTSS<-function(fpkmFile,
 			write(paste("No records found in",splicingFile),stderr())
 		}
 	}
+	
+	###########
+	#Handle Counts .count_tracking
+	###########
+	
+	###########
+	#Handle Replicates .rep_tracking
+	###########
 	
 }
 
@@ -584,6 +614,14 @@ loadCDS<-function(fpkmFile,
 			write(paste("No records found in",CDSDiff),stderr())
 		}
 	}
+	
+	###########
+	#Handle Counts .count_tracking
+	###########
+	
+	###########
+	#Handle Replicates .rep_tracking
+	###########
 	
 }
 
@@ -1470,7 +1508,7 @@ bulk_insert <- function(dbConn,sql,bound.data)
 #############
 #readCufflinks
 #############
-#TODO: Add directory pointer
+#TODO: Add count and replicate files
 readCufflinks<-function(dir = getwd(),
 						dbFile="cuffData.db",
 						geneFPKM="genes.fpkm_tracking",

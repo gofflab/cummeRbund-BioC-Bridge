@@ -117,7 +117,7 @@ setMethod("samples","CuffData",.samples)
 		FPKMQuery<-paste("SELECT * FROM ",object@tables$dataTable," WHERE sample_name IN ",sampleString,sep="")
 	}else{
 		FPKMQuery<-paste("SELECT xf.*,xm.*,x.sample_name,x.fpkm,x.conf_hi,x.conf_lo FROM ",object@tables$dataTable," x LEFT JOIN ",object@tables$featureTable," xf ON x.",object@idField,"=xf.",object@idField," LEFT JOIN ",object@tables$mainTable," xm ON x.",object@idField,"=xm.",object@idField," WHERE x.sample_name IN ",sampleString,sep="")
-		print(FPKMQuery)
+		#print(FPKMQuery)
 	}
 	res<-dbGetQuery(object@DB,FPKMQuery)
 	res$sample_name<-factor(res$sample_name,levels=getLevels(object))
@@ -126,7 +126,7 @@ setMethod("samples","CuffData",.samples)
 
 setMethod("fpkm","CuffData",.fpkm)
 
-.fpkmMatrix<-function(object,sampleIdList){
+.fpkmMatrix<-function(object,fullnames=FALSE,sampleIdList){
 	#Sample subsetting
 	if(!missing(sampleIdList)){
 		if(.checkSamples(object@DB,sampleIdList)){
@@ -452,6 +452,13 @@ setMethod("MAplot",signature(object="CuffData"),.MAplot)
 }
 
 setMethod("csSpecificity",signature(object="CuffData"),.specificity)
+
+.makeRNK<-function(object,x,y,filename){
+	#This will make a .rnk file for GSEA pre-ranked analysis using the log2_fold_change value from diffData.  Writes to 'filename'
+	
+}
+
+
 
 #############
 #Utility functions
