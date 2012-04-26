@@ -1548,7 +1548,9 @@ readCufflinks<-function(dir = getwd(),
 		dbConn<-createDB_noIndex(dbFile)
 		
 		#populate DB
-				
+		#loadRepTable
+		#loadExpInfo
+		
 		loadGenes(geneFPKM,geneDiff,promoterFile,dbConn)
 		loadIsoforms(isoformFPKM,isoformDiff,dbConn)
 		loadTSS(TSSFPKM,TSSDiff,splicingFile,dbConn)
@@ -1565,6 +1567,7 @@ readCufflinks<-function(dir = getwd(),
 	dbConn<-dbConnect(dbDriver(driver),dbFile)
 	return (
 			new("CuffSet",DB = dbConn,
+					#TODO: need to add replicate and count tables here and in AllClasses.R
 					genes = new("CuffData",DB = dbConn, tables = list(mainTable = "genes",dataTable = "geneData",expDiffTable = "geneExpDiffData",featureTable = "geneFeatures"), filters = list(),type = "genes",idField = "gene_id"),
 					isoforms = new("CuffData", DB = dbConn, tables = list(mainTable = "isoforms",dataTable = "isoformData",expDiffTable = "isoformExpDiffData",featureTable = "isoformFeatures"), filters = list(),type="isoforms",idField = "isoform_id"),
 					TSS = new("CuffData", DB = dbConn, tables = list(mainTable = "TSS",dataTable = "TSSData",expDiffTable = "TSSExpDiffData",featureTable = "TSSFeatures"), filters = list(),type = "TSS",idField = "TSS_group_id"),
