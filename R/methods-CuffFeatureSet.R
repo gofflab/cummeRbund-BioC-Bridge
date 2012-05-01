@@ -17,7 +17,7 @@ setMethod("initialize","CuffFeatureSet",
 				fpkm=data.frame(),
 				diff=data.frame(),
 				repFpkm=data.frame(),
-				count=data.frame()
+				count=data.frame(),
 				... ){
 			.Object<-callNextMethod(.Object,
 					annotation=annotation,
@@ -74,6 +74,13 @@ setMethod("length","CuffFeatureSet",
 
 setMethod("samples","CuffFeatureSet",.samples)
 
+.replicates<-function(object){
+	res<-repFpkm(object)$rep_name
+	res
+}
+
+setMethod("replicates","CuffFeatureSet",.replicates)
+
 .fpkm<-function(object,features=FALSE){
 	if (features){
 		return (merge(object@annotation,object@fpkm))
@@ -82,6 +89,15 @@ setMethod("samples","CuffFeatureSet",.samples)
 	}
 }
 setMethod("fpkm",signature(object="CuffFeatureSet"),.fpkm)
+
+.repFpkm<-function(object,features=FALSE){
+	if (features){
+		return (merge(object@annotation,object@repFpkm))
+	}else{
+		return(object@repFpkm)
+	}
+}
+setMethod("repFpkm",signature(object="CuffFeatureSet"),.repFpkm)
 
 .featureNames<-function(object){
 	data.frame(tracking_id=object@annotation[,1],gene_short_name=object@annotation$gene_short_name)
@@ -126,15 +142,48 @@ setMethod("features",signature(object="CuffFeatureSet"),.features)
 
 setMethod("fpkmMatrix",signature(object="CuffFeatureSet"),.fpkmMatrix)
 
+.repFpkmMatrix<-function(object,fullnames=FALSE,repIdList){
+	#Sample subsetting
+	if(!missing(repIdList)){
+		if (!all(repIdList %in% replicates(object))){
+			stop("Replicate does not exist!")
+		}else{
+			myReps<-repIdList
+		}
+	}else{
+		myReps<-replicates(object)
+	}
+	if(fullnames){
+		res<-repFpkm(object,features=TRUE)
+		res$tracking_id<-paste(res$gene_short_name,res[,1],sep="|")
+	}else{
+		res<-repFpkm(object)
+		colnames(res)[1]<-"tracking_id"	
+	}
+	selectedRows<-c('tracking_id','rep_name','fpkm')
+	res<-res[,selectedRows]
+	res<-melt(res)
+	res<-dcast(res,tracking_id~rep_name)
+	res<-data.frame(res[,-1],row.names=res[,1])
+	if(!missing(repIdList)){
+		res<-res[,myReps]
+	}
+	res
+}
+
+setMethod("repFpkmMatrix",signature(object="CuffFeatureSet"),.repFpkmMatrix)
+
 .diffData<-function(object){
 	return(object@diff)
 }
 
 setMethod("diffData",signature(object="CuffFeatureSet"),.diffData)
 
-#setMethod("diff","CuffFeatureSet",function(object){
-#			return(object@diff)
-#		})
+.count<-function(object){
+	return(object@count)
+}
+
+setMethod("count",signature(object="CuffFeatureSet"),.count)
 
 setMethod("annotation","CuffFeatureSet",function(object){
 			return(object@annotation)
@@ -162,15 +211,17 @@ setMethod("annotation","CuffFeatureSet",function(object){
 #There is no genericMethod yet, goal is to replace .heatmap with .ggheat for genericMethod 'csHeatmap'
 
 .ggheat<-function(object, rescaling='none', clustering='none', labCol=T, labRow=T, logMode=T, pseudocount=1.0, 
-		border=FALSE, heatscale=c(low='darkred',mid='orange',high='white'), heatMidpoint=NULL,fullnames=T,...) {
+		border=FALSE, heatscale=c(low='darkred',mid='orange',high='white'), heatMidpoint=NULL,fullnames=T,replicates=FALSE...) {
 	## the function can be be viewed as a two step process
 	## 1. using the rehape package and other funcs the data is clustered, scaled, and reshaped
 	## using simple options or by a user supplied function
 	## 2. with the now resahped data the plot, the chosen labels and plot style are built
 
-	
-	m=fpkmMatrix(object,fullnames=fullnames)
-
+	if(replicates){
+		m=repFpkmMatrix(object,fullnames=fullnames)
+	}else{
+		m=fpkmMatrix(object,fullnames=fullnames)
+	}
 	#remove genes with no expression in any condition
 	m=m[!apply(m,1,sum)==0,]
 	
@@ -400,7 +451,7 @@ setMethod("csScatter",signature(object="CuffFeatureSet"), .scatter)
 
 setMethod("csVolcano",signature(object="CuffFeatureSet"), .volcano)
 
-.barplot<-function(object,logMode=TRUE,pseudocount=1.0,showErrorbars=TRUE,showStatus=TRUE,...){
+.barplot<-function(object,logMode=TRUE,pseudocount=1.0,showErrorbars=TRUE,showStatus=TRUE,replicates=T,...){
 	quant_types<-c("OK","FAIL","LOWDATA","HIDATA","TOOSHORT")
 	quant_types<-factor(quant_types,levels=quant_types)
 	quant_colors<-c("black","red","blue","orange","green")
@@ -410,6 +461,12 @@ setMethod("csVolcano",signature(object="CuffFeatureSet"), .volcano)
 	dat$warning<-""
 	dat$warning[dat$quant_status!="OK"]<-"!"
 	#TODO: Test dat to ensure that there are >0 rows to plot.  If not, trap error and move on...
+	
+	#Handle replicates
+	if(replicates){
+		repDat<-repFpkm(object)
+		colnames(repDat)[1]<-"tracking_id"
+	}
 	
 	colnames(dat)[1]<-"tracking_id"
 	#tracking_ids<-dat$tracking_id
@@ -486,7 +543,7 @@ setMethod("csVolcano",signature(object="CuffFeatureSet"), .volcano)
 
 setMethod("expressionBarplot",signature(object="CuffFeatureSet"),.barplot)
 
-.expressionPlot<-function(object,logMode=FALSE,pseudocount=1.0, drawSummary=FALSE, sumFun=mean_cl_boot, showErrorbars=TRUE,showStatus=TRUE,...){
+.expressionPlot<-function(object,logMode=FALSE,pseudocount=1.0, drawSummary=FALSE, sumFun=mean_cl_boot, showErrorbars=TRUE,showStatus=TRUE,showReplicates=FALSE,...){
 	quant_types<-c("OK","FAIL","LOWDATA","HIDATA","TOOSHORT")
 	quant_types<-factor(quant_types,levels=quant_types)
 	quant_colors<-c("black","red","blue","orange","green")

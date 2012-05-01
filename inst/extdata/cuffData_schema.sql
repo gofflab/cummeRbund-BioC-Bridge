@@ -2,7 +2,7 @@
 -- Author:        Loyal Goff
 -- Caption:       New Model
 -- Project:       Name of the project
--- Changed:       2012-04-30 22:21
+-- Changed:       2012-05-01 15:20
 -- Created:       2011-05-02 12:52
 PRAGMA foreign_keys = OFF;
 
@@ -31,6 +31,7 @@ CREATE TABLE "TSS"(
   "class_code" VARCHAR(45),
   "nearest_ref_id" VARCHAR(45),
   "gene_id" VARCHAR(45) NOT NULL,
+  "gene_short_name" VARCHAR(45),
   "locus" VARCHAR(45),
   "length" INTEGER,
   "coverage" FLOAT,
@@ -64,6 +65,7 @@ CREATE TABLE "CDS"(
   "locus" VARCHAR(45),
   "length" INTEGER,
   "coverage" FLOAT,
+  "gene_short_name" VARCHAR(45),
   CONSTRAINT "fk_CDS_genes1"
     FOREIGN KEY("gene_id")
     REFERENCES "genes"("gene_id"),
@@ -250,6 +252,8 @@ CREATE TABLE "geneCount"(
   "sample_name" VARCHAR(45) NOT NULL,
   "count" FLOAT,
   "variance" FLOAT,
+  "uncertainty" FLOAT,
+  "dispersion" FLOAT,
   "status" VARCHAR(45),
   CONSTRAINT "fk_geneCount_samples1"
     FOREIGN KEY("sample_name")
@@ -265,6 +269,8 @@ CREATE TABLE "CDSCount"(
   "sample_name" VARCHAR(45) NOT NULL,
   "count" FLOAT,
   "variance" FLOAT,
+  "uncertainty" FLOAT,
+  "dispersion" FLOAT,
   "status" VARCHAR(45),
   CONSTRAINT "fk_CDSCount_CDS1"
     FOREIGN KEY("CDS_id")
@@ -280,6 +286,8 @@ CREATE TABLE "TSSCount"(
   "sample_name" VARCHAR(45) NOT NULL,
   "count" FLOAT,
   "variance" FLOAT,
+  "uncertainty" FLOAT,
+  "dispersion" FLOAT,
   "status" VARCHAR(45),
   CONSTRAINT "fk_TSSCount_TSS1"
     FOREIGN KEY("TSS_group_id")
@@ -293,6 +301,7 @@ CREATE INDEX "TSSCount.fk_TSSCount_samples1" ON "TSSCount"("sample_name");
 CREATE TABLE "replicates"(
   "file" INTEGER NOT NULL,
   "sample_name" VARCHAR(45) NOT NULL,
+  "replicate" VARCHAR(45),
   "rep_name" VARCHAR(45) PRIMARY KEY NOT NULL,
   "total_mass" FLOAT,
   "norm_mass" FLOAT,
@@ -305,6 +314,8 @@ CREATE TABLE "replicates"(
 CREATE INDEX "replicates.fk_replicates_samples1" ON "replicates"("sample_name");
 CREATE TABLE "geneReplicateData"(
   "gene_id" VARCHAR(45) NOT NULL,
+  "sample_name" VARCHAR(45) NOT NULL,
+  "replicate" INTEGER,
   "rep_name" VARCHAR(45) NOT NULL,
   "raw_frags" FLOAT,
   "internal_scaled_frags" FLOAT,
@@ -317,12 +328,18 @@ CREATE TABLE "geneReplicateData"(
     REFERENCES "genes"("gene_id"),
   CONSTRAINT "fk_geneReplicateData_replicates1"
     FOREIGN KEY("rep_name")
-    REFERENCES "replicates"("rep_name")
+    REFERENCES "replicates"("rep_name"),
+  CONSTRAINT "fk_geneReplicateData_samples1"
+    FOREIGN KEY("sample_name")
+    REFERENCES "samples"("sample_name")
 );
-CREATE INDEX "geneReplicateData.fk_geneData_genes1" ON "geneReplicateData"("gene_id");
+CREATE INDEX "geneReplicateData.fk_geneReplicateData_genes1" ON "geneReplicateData"("gene_id");
 CREATE INDEX "geneReplicateData.fk_geneReplicateData_replicates1" ON "geneReplicateData"("rep_name");
+CREATE INDEX "geneReplicateData.fk_geneReplicateData_samples1" ON "geneReplicateData"("sample_name");
 CREATE TABLE "CDSReplicateData"(
   "CDS_id" VARCHAR(45) NOT NULL,
+  "sample_name" VARCHAR(45) NOT NULL,
+  "replicate" INTEGER,
   "rep_name" VARCHAR(45) NOT NULL,
   "raw_frags" FLOAT,
   "internal_scaled_frags" FLOAT,
@@ -335,12 +352,18 @@ CREATE TABLE "CDSReplicateData"(
     REFERENCES "replicates"("rep_name"),
   CONSTRAINT "fk_CDSReplicateData_CDS1"
     FOREIGN KEY("CDS_id")
-    REFERENCES "CDS"("CDS_id")
+    REFERENCES "CDS"("CDS_id"),
+  CONSTRAINT "fk_CDSReplicateData_samples1"
+    FOREIGN KEY("sample_name")
+    REFERENCES "samples"("sample_name")
 );
 CREATE INDEX "CDSReplicateData.fk_CDSReplicateData_replicates1" ON "CDSReplicateData"("rep_name");
 CREATE INDEX "CDSReplicateData.fk_CDSReplicateData_CDS1" ON "CDSReplicateData"("CDS_id");
+CREATE INDEX "CDSReplicateData.fk_CDSReplicateData_samples1" ON "CDSReplicateData"("sample_name");
 CREATE TABLE "TSSReplicateData"(
   "TSS_group_id" VARCHAR(45) NOT NULL,
+  "sample_name" VARCHAR(45) NOT NULL,
+  "replicate" VARCHAR(45),
   "rep_name" VARCHAR(45) NOT NULL,
   "raw_frags" FLOAT,
   "internal_scaled_frags" FLOAT,
@@ -353,12 +376,15 @@ CREATE TABLE "TSSReplicateData"(
     REFERENCES "replicates"("rep_name"),
   CONSTRAINT "fk_TSSReplicateData_TSS1"
     FOREIGN KEY("TSS_group_id")
-    REFERENCES "TSS"("TSS_group_id")
+    REFERENCES "TSS"("TSS_group_id"),
+  CONSTRAINT "fk_TSSReplicateData_samples1"
+    FOREIGN KEY("sample_name")
+    REFERENCES "samples"("sample_name")
 );
 CREATE INDEX "TSSReplicateData.fk_TSSReplicateData_replicates1" ON "TSSReplicateData"("rep_name");
 CREATE INDEX "TSSReplicateData.fk_TSSReplicateData_TSS1" ON "TSSReplicateData"("TSS_group_id");
+CREATE INDEX "TSSReplicateData.fk_TSSReplicateData_samples1" ON "TSSReplicateData"("sample_name");
 CREATE TABLE "runInfo"(
-  "runInfo_id" INTEGER PRIMARY KEY NOT NULL,
   "param" VARCHAR(45),
   "value" TEXT
 );
@@ -418,6 +444,7 @@ CREATE TABLE "isoforms"(
   "isoform_id" VARCHAR(45) PRIMARY KEY NOT NULL,
   "gene_id" VARCHAR(45),
   "CDS_id" VARCHAR(45),
+  "gene_short_name" VARCHAR(45),
   "TSS_group_id" VARCHAR(45),
   "class_code" VARCHAR(45),
   "nearest_ref_id" VARCHAR(45),
@@ -529,6 +556,8 @@ CREATE TABLE "isoformCount"(
   "sample_name" VARCHAR(45) NOT NULL,
   "count" FLOAT,
   "variance" FLOAT,
+  "uncertainty" FLOAT,
+  "dispersion" FLOAT,
   "status" VARCHAR(45),
   CONSTRAINT "fk_isoformCount_isoforms1"
     FOREIGN KEY("isoform_id")
@@ -541,6 +570,8 @@ CREATE INDEX "isoformCount.fk_isoformCount_isoforms1" ON "isoformCount"("isoform
 CREATE INDEX "isoformCount.fk_isoformCount_samples1" ON "isoformCount"("sample_name");
 CREATE TABLE "isoformReplicateData"(
   "isoform_id" VARCHAR(45) NOT NULL,
+  "sample_name" VARCHAR(45) NOT NULL,
+  "replicate" INTEGER,
   "rep_name" VARCHAR(45) NOT NULL,
   "raw_frags" FLOAT,
   "internal_scaled_frags" FLOAT,
@@ -553,8 +584,12 @@ CREATE TABLE "isoformReplicateData"(
     REFERENCES "replicates"("rep_name"),
   CONSTRAINT "fk_isoformReplicateData_isoforms1"
     FOREIGN KEY("isoform_id")
-    REFERENCES "isoforms"("isoform_id")
+    REFERENCES "isoforms"("isoform_id"),
+  CONSTRAINT "fk_isoformReplicateData_samples1"
+    FOREIGN KEY("sample_name")
+    REFERENCES "samples"("sample_name")
 );
 CREATE INDEX "isoformReplicateData.fk_isoformReplicateData_replicates1" ON "isoformReplicateData"("rep_name");
 CREATE INDEX "isoformReplicateData.fk_isoformReplicateData_isoforms1" ON "isoformReplicateData"("isoform_id");
+CREATE INDEX "isoformReplicateData.fk_isoformReplicateData_samples1" ON "isoformReplicateData"("sample_name");
 COMMIT;

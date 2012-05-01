@@ -17,7 +17,7 @@ setMethod("initialize","CuffFeature",
 				fpkm=data.frame(),
 				diff=data.frame(),
 				repFpkm=data.frame(),
-				count=data.frame()
+				count=data.frame(),
 				... ){
 			.Object<-callNextMethod(.Object,
 					annotation=annotation,
@@ -132,13 +132,17 @@ setMethod("count",signature(object="CuffFeature"),.count)
 #################
 #Plotting		#
 #################
-.barplot<-function(object,logMode=FALSE,pseudocount=1.0,showErrorbars=TRUE,showStatus=TRUE,...){
+.barplot<-function(object,logMode=FALSE,pseudocount=1.0,showErrorbars=TRUE,showStatus=TRUE,replicates=FALSE,...){
 	quant_types<-c("OK","FAIL","LOWDATA","HIDATA","TOOSHORT")
 	quant_types<-factor(quant_types,levels=quant_types)
 	quant_colors<-c("black","red","blue","orange","green")
 	names(quant_colors)<-quant_types
 	
 	dat<-fpkm(object)
+	if(replicates){
+		repDat<-repFpkm(object)
+		colnames(repDat)[1]<-"tracking_id"
+	}
 	#TODO: Test dat to ensure that there are >0 rows to plot.  If not, trap error and move on...
 	
 	colnames(dat)[1]<-"tracking_id"
@@ -148,12 +152,20 @@ setMethod("count",signature(object="CuffFeature"),.count)
 	    dat$fpkm <- dat$fpkm + pseudocount
 	    dat$conf_hi <- dat$conf_hi + pseudocount
 	    dat$conf_lo <- dat$conf_lo + pseudocount
+		
+		if(replicates){
+			repDat$fpkm<-repDat$fpkm + pseudocount
+		}
     }
 
     p<-ggplot(dat,aes(x=sample_name,y=fpkm,fill=sample_name))
     
-	p <- p + 
-	    geom_bar()
+	p <- p + geom_bar()
+	
+	if(replicates){
+		p <- p + geom_point(aes(x=sample_name,y=fpkm),size=3,shape=18,colour="black",data=repDat)
+	}
+	
 	if (showErrorbars)
 	{
 	    p <- p +

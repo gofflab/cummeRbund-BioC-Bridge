@@ -2,13 +2,12 @@
 -- Author:        Loyal Goff
 -- Caption:       New Model
 -- Project:       Name of the project
--- Changed:       2012-04-30 22:21
+-- Changed:       2012-05-01 15:20
 -- Created:       2011-05-02 12:52
 PRAGMA foreign_keys = OFF;
 
 -- Schema: cuffData
 BEGIN;
-DROP TABLE IF EXISTS "genes";
 CREATE TABLE "genes"(
   "gene_id" VARCHAR(45) PRIMARY KEY NOT NULL,
   "class_code" VARCHAR(45),
@@ -18,21 +17,19 @@ CREATE TABLE "genes"(
   "length" INTEGER,
   "coverage" FLOAT
 );
-DROP TABLE IF EXISTS "biasData";
 CREATE TABLE "biasData"(
   "biasData_id" INTEGER PRIMARY KEY NOT NULL
 );
-DROP TABLE IF EXISTS "samples";
 CREATE TABLE "samples"(
   "sample_index" INTEGER NOT NULL,
   "sample_name" VARCHAR(45) PRIMARY KEY NOT NULL
 );
-DROP TABLE IF EXISTS "TSS";
 CREATE TABLE "TSS"(
   "TSS_group_id" VARCHAR(45) PRIMARY KEY NOT NULL,
   "class_code" VARCHAR(45),
   "nearest_ref_id" VARCHAR(45),
   "gene_id" VARCHAR(45) NOT NULL,
+  "gene_short_name" VARCHAR(45),
   "locus" VARCHAR(45),
   "length" INTEGER,
   "coverage" FLOAT,
@@ -40,7 +37,6 @@ CREATE TABLE "TSS"(
     FOREIGN KEY("gene_id")
     REFERENCES "genes"("gene_id")
 );
-DROP TABLE IF EXISTS "TSSData";
 CREATE TABLE "TSSData"(
   "TSS_group_id" VARCHAR(45) NOT NULL,
   "sample_name" VARCHAR(45) NOT NULL,
@@ -55,7 +51,6 @@ CREATE TABLE "TSSData"(
     FOREIGN KEY("sample_name")
     REFERENCES "samples"("sample_name")
 );
-DROP TABLE IF EXISTS "CDS";
 CREATE TABLE "CDS"(
   "CDS_id" VARCHAR(45) PRIMARY KEY NOT NULL,
   "class_code" VARCHAR(45),
@@ -65,6 +60,7 @@ CREATE TABLE "CDS"(
   "locus" VARCHAR(45),
   "length" INTEGER,
   "coverage" FLOAT,
+  "gene_short_name" VARCHAR(45),
   CONSTRAINT "fk_CDS_genes1"
     FOREIGN KEY("gene_id")
     REFERENCES "genes"("gene_id"),
@@ -72,7 +68,6 @@ CREATE TABLE "CDS"(
     FOREIGN KEY("TSS_group_id")
     REFERENCES "TSS"("TSS_group_id")
 );
-DROP TABLE IF EXISTS "CDSData";
 CREATE TABLE "CDSData"(
   "CDS_id" VARCHAR(45) NOT NULL,
   "sample_name" VARCHAR(45) NOT NULL,
@@ -87,7 +82,6 @@ CREATE TABLE "CDSData"(
     FOREIGN KEY("sample_name")
     REFERENCES "samples"("sample_name")
 );
-DROP TABLE IF EXISTS "splicingDiffData";
 CREATE TABLE "splicingDiffData"(
   "TSS_group_id" VARCHAR(45) NOT NULL,
   "gene_id" VARCHAR(45) NOT NULL,
@@ -114,7 +108,6 @@ CREATE TABLE "splicingDiffData"(
     FOREIGN KEY("gene_id")
     REFERENCES "genes"("gene_id")
 );
-DROP TABLE IF EXISTS "TSSExpDiffData";
 CREATE TABLE "TSSExpDiffData"(
   "TSS_group_id" VARCHAR(45) NOT NULL,
   "sample_1" VARCHAR(45) NOT NULL,
@@ -137,7 +130,6 @@ CREATE TABLE "TSSExpDiffData"(
     FOREIGN KEY("sample_2")
     REFERENCES "samples"("sample_name")
 );
-DROP TABLE IF EXISTS "CDSDiffData";
 CREATE TABLE "CDSDiffData"(
   "gene_id" VARCHAR(45) NOT NULL,
   "sample_1" VARCHAR(45) NOT NULL,
@@ -160,7 +152,6 @@ CREATE TABLE "CDSDiffData"(
     FOREIGN KEY("gene_id")
     REFERENCES "genes"("gene_id")
 );
-DROP TABLE IF EXISTS "CDSExpDiffData";
 CREATE TABLE "CDSExpDiffData"(
   "CDS_id" VARCHAR(45) NOT NULL,
   "sample_1" VARCHAR(45) NOT NULL,
@@ -183,7 +174,6 @@ CREATE TABLE "CDSExpDiffData"(
     FOREIGN KEY("sample_2")
     REFERENCES "samples"("sample_name")
 );
-DROP TABLE IF EXISTS "promoterDiffData";
 CREATE TABLE "promoterDiffData"(
   "gene_id" VARCHAR(45) NOT NULL,
   "sample_1" VARCHAR(45) NOT NULL,
@@ -206,37 +196,34 @@ CREATE TABLE "promoterDiffData"(
     FOREIGN KEY("sample_2")
     REFERENCES "samples"("sample_name")
 );
-DROP TABLE IF EXISTS "geneFeatures";
 CREATE TABLE "geneFeatures"(
   "gene_id" VARCHAR(45) NOT NULL,
   CONSTRAINT "fk_geneFeatures_genes1"
     FOREIGN KEY("gene_id")
     REFERENCES "genes"("gene_id")
 );
-DROP TABLE IF EXISTS "TSSFeatures";
 CREATE TABLE "TSSFeatures"(
   "TSS_group_id" VARCHAR(45) NOT NULL,
   CONSTRAINT "fk_TSSFeatures_TSS1"
     FOREIGN KEY("TSS_group_id")
     REFERENCES "TSS"("TSS_group_id")
 );
-DROP TABLE IF EXISTS "CDSFeatures";
 CREATE TABLE "CDSFeatures"(
   "CDS_id" VARCHAR(45) NOT NULL,
   CONSTRAINT "fk_CDSFeatures_CDS1"
     FOREIGN KEY("CDS_id")
     REFERENCES "CDS"("CDS_id")
 );
-DROP TABLE IF EXISTS "model_transcripts";
 CREATE TABLE "model_transcripts"(
   "model_transcript_id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
 );
-DROP TABLE IF EXISTS "geneCount";
 CREATE TABLE "geneCount"(
   "gene_id" VARCHAR(45) NOT NULL,
   "sample_name" VARCHAR(45) NOT NULL,
   "count" FLOAT,
   "variance" FLOAT,
+  "uncertainty" FLOAT,
+  "dispersion" FLOAT,
   "status" VARCHAR(45),
   CONSTRAINT "fk_geneCount_samples1"
     FOREIGN KEY("sample_name")
@@ -245,12 +232,13 @@ CREATE TABLE "geneCount"(
     FOREIGN KEY("gene_id")
     REFERENCES "genes"("gene_id")
 );
-DROP TABLE IF EXISTS "CDSCount";
 CREATE TABLE "CDSCount"(
   "CDS_id" VARCHAR(45) NOT NULL,
   "sample_name" VARCHAR(45) NOT NULL,
   "count" FLOAT,
   "variance" FLOAT,
+  "uncertainty" FLOAT,
+  "dispersion" FLOAT,
   "status" VARCHAR(45),
   CONSTRAINT "fk_CDSCount_CDS1"
     FOREIGN KEY("CDS_id")
@@ -259,12 +247,13 @@ CREATE TABLE "CDSCount"(
     FOREIGN KEY("sample_name")
     REFERENCES "samples"("sample_name")
 );
-DROP TABLE IF EXISTS "TSSCount";
 CREATE TABLE "TSSCount"(
   "TSS_group_id" VARCHAR(45) NOT NULL,
   "sample_name" VARCHAR(45) NOT NULL,
   "count" FLOAT,
   "variance" FLOAT,
+  "uncertainty" FLOAT,
+  "dispersion" FLOAT,
   "status" VARCHAR(45),
   CONSTRAINT "fk_TSSCount_TSS1"
     FOREIGN KEY("TSS_group_id")
@@ -273,10 +262,10 @@ CREATE TABLE "TSSCount"(
     FOREIGN KEY("sample_name")
     REFERENCES "samples"("sample_name")
 );
-DROP TABLE IF EXISTS "replicates";
 CREATE TABLE "replicates"(
   "file" INTEGER NOT NULL,
   "sample_name" VARCHAR(45) NOT NULL,
+  "replicate" VARCHAR(45),
   "rep_name" VARCHAR(45) PRIMARY KEY NOT NULL,
   "total_mass" FLOAT,
   "norm_mass" FLOAT,
@@ -286,9 +275,10 @@ CREATE TABLE "replicates"(
     FOREIGN KEY("sample_name")
     REFERENCES "samples"("sample_name")
 );
-DROP TABLE IF EXISTS "geneReplicateData";
 CREATE TABLE "geneReplicateData"(
   "gene_id" VARCHAR(45) NOT NULL,
+  "sample_name" VARCHAR(45) NOT NULL,
+  "replicate" INTEGER,
   "rep_name" VARCHAR(45) NOT NULL,
   "raw_frags" FLOAT,
   "internal_scaled_frags" FLOAT,
@@ -301,11 +291,15 @@ CREATE TABLE "geneReplicateData"(
     REFERENCES "genes"("gene_id"),
   CONSTRAINT "fk_geneReplicateData_replicates1"
     FOREIGN KEY("rep_name")
-    REFERENCES "replicates"("rep_name")
+    REFERENCES "replicates"("rep_name"),
+  CONSTRAINT "fk_geneReplicateData_samples1"
+    FOREIGN KEY("sample_name")
+    REFERENCES "samples"("sample_name")
 );
-DROP TABLE IF EXISTS "CDSReplicateData";
 CREATE TABLE "CDSReplicateData"(
   "CDS_id" VARCHAR(45) NOT NULL,
+  "sample_name" VARCHAR(45) NOT NULL,
+  "replicate" INTEGER,
   "rep_name" VARCHAR(45) NOT NULL,
   "raw_frags" FLOAT,
   "internal_scaled_frags" FLOAT,
@@ -318,11 +312,15 @@ CREATE TABLE "CDSReplicateData"(
     REFERENCES "replicates"("rep_name"),
   CONSTRAINT "fk_CDSReplicateData_CDS1"
     FOREIGN KEY("CDS_id")
-    REFERENCES "CDS"("CDS_id")
+    REFERENCES "CDS"("CDS_id"),
+  CONSTRAINT "fk_CDSReplicateData_samples1"
+    FOREIGN KEY("sample_name")
+    REFERENCES "samples"("sample_name")
 );
-DROP TABLE IF EXISTS "TSSReplicateData";
 CREATE TABLE "TSSReplicateData"(
   "TSS_group_id" VARCHAR(45) NOT NULL,
+  "sample_name" VARCHAR(45) NOT NULL,
+  "replicate" VARCHAR(45),
   "rep_name" VARCHAR(45) NOT NULL,
   "raw_frags" FLOAT,
   "internal_scaled_frags" FLOAT,
@@ -335,15 +333,15 @@ CREATE TABLE "TSSReplicateData"(
     REFERENCES "replicates"("rep_name"),
   CONSTRAINT "fk_TSSReplicateData_TSS1"
     FOREIGN KEY("TSS_group_id")
-    REFERENCES "TSS"("TSS_group_id")
+    REFERENCES "TSS"("TSS_group_id"),
+  CONSTRAINT "fk_TSSReplicateData_samples1"
+    FOREIGN KEY("sample_name")
+    REFERENCES "samples"("sample_name")
 );
-DROP TABLE IF EXISTS "runInfo";
 CREATE TABLE "runInfo"(
-  "runInfo_id" INTEGER PRIMARY KEY NOT NULL,
   "param" VARCHAR(45),
   "value" TEXT
 );
-DROP TABLE IF EXISTS "geneData";
 CREATE TABLE "geneData"(
   "gene_id" VARCHAR(45) NOT NULL,
   "sample_name" VARCHAR(45) NOT NULL,
@@ -358,7 +356,6 @@ CREATE TABLE "geneData"(
     FOREIGN KEY("sample_name")
     REFERENCES "samples"("sample_name")
 );
-DROP TABLE IF EXISTS "phenoData";
 CREATE TABLE "phenoData"(
   "sample_name" VARCHAR(45) NOT NULL,
   "parameter" VARCHAR(45) NOT NULL,
@@ -367,7 +364,6 @@ CREATE TABLE "phenoData"(
     FOREIGN KEY("sample_name")
     REFERENCES "samples"("sample_name")
 );
-DROP TABLE IF EXISTS "geneExpDiffData";
 CREATE TABLE "geneExpDiffData"(
   "gene_id" VARCHAR(45) NOT NULL,
   "sample_1" VARCHAR(45) NOT NULL,
@@ -390,11 +386,11 @@ CREATE TABLE "geneExpDiffData"(
     FOREIGN KEY("sample_2")
     REFERENCES "samples"("sample_name")
 );
-DROP TABLE IF EXISTS "isoforms";
 CREATE TABLE "isoforms"(
   "isoform_id" VARCHAR(45) PRIMARY KEY NOT NULL,
   "gene_id" VARCHAR(45),
   "CDS_id" VARCHAR(45),
+  "gene_short_name" VARCHAR(45),
   "TSS_group_id" VARCHAR(45),
   "class_code" VARCHAR(45),
   "nearest_ref_id" VARCHAR(45),
@@ -411,7 +407,6 @@ CREATE TABLE "isoforms"(
     FOREIGN KEY("gene_id")
     REFERENCES "genes"("gene_id")
 );
-DROP TABLE IF EXISTS "isoformData";
 CREATE TABLE "isoformData"(
   "isoform_id" VARCHAR(45) NOT NULL,
   "sample_name" VARCHAR(45) NOT NULL,
@@ -426,7 +421,6 @@ CREATE TABLE "isoformData"(
     FOREIGN KEY("isoform_id")
     REFERENCES "isoforms"("isoform_id")
 );
-DROP TABLE IF EXISTS "isoformExpDiffData";
 CREATE TABLE "isoformExpDiffData"(
   "isoform_id" VARCHAR(45) NOT NULL,
   "sample_1" VARCHAR(45) NOT NULL,
@@ -449,14 +443,12 @@ CREATE TABLE "isoformExpDiffData"(
     FOREIGN KEY("sample_2")
     REFERENCES "samples"("sample_name")
 );
-DROP TABLE IF EXISTS "isoformFeatures";
 CREATE TABLE "isoformFeatures"(
   "isoform_id" VARCHAR(45) NOT NULL,
   CONSTRAINT "fk_isoformFeatures_isoforms1"
     FOREIGN KEY("isoform_id")
     REFERENCES "isoforms"("isoform_id")
 );
-DROP TABLE IF EXISTS "features";
 CREATE TABLE "features"(
 --   GTF Features (all lines/records from reference .gtf file)
   "feature_id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -477,7 +469,6 @@ CREATE TABLE "features"(
     FOREIGN KEY("isoforms_isoform_id")
     REFERENCES "isoforms"("isoform_id")
 );
-DROP TABLE IF EXISTS "attribtes";
 CREATE TABLE "attributes"(
   "attribute_lookup_id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
   "feature_id" INTEGER NOT NULL,
@@ -487,12 +478,13 @@ CREATE TABLE "attributes"(
     FOREIGN KEY("feature_id")
     REFERENCES "features"("feature_id")
 );
-DROP TABLE IF EXISTS "isoformCount";
 CREATE TABLE "isoformCount"(
   "isoform_id" VARCHAR(45) NOT NULL,
   "sample_name" VARCHAR(45) NOT NULL,
   "count" FLOAT,
   "variance" FLOAT,
+  "uncertainty" FLOAT,
+  "dispersion" FLOAT,
   "status" VARCHAR(45),
   CONSTRAINT "fk_isoformCount_isoforms1"
     FOREIGN KEY("isoform_id")
@@ -501,9 +493,10 @@ CREATE TABLE "isoformCount"(
     FOREIGN KEY("sample_name")
     REFERENCES "samples"("sample_name")
 );
-DROP TABLE IF EXISTS "isoformReplicateData";
 CREATE TABLE "isoformReplicateData"(
   "isoform_id" VARCHAR(45) NOT NULL,
+  "sample_name" VARCHAR(45) NOT NULL,
+  "replicate" INTEGER,
   "rep_name" VARCHAR(45) NOT NULL,
   "raw_frags" FLOAT,
   "internal_scaled_frags" FLOAT,
@@ -516,6 +509,9 @@ CREATE TABLE "isoformReplicateData"(
     REFERENCES "replicates"("rep_name"),
   CONSTRAINT "fk_isoformReplicateData_isoforms1"
     FOREIGN KEY("isoform_id")
-    REFERENCES "isoforms"("isoform_id")
+    REFERENCES "isoforms"("isoform_id"),
+  CONSTRAINT "fk_isoformReplicateData_samples1"
+    FOREIGN KEY("sample_name")
+    REFERENCES "samples"("sample_name")
 );
 COMMIT;

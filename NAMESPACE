@@ -32,12 +32,15 @@ exportMethods(
 			csCluster,
 			csDendro,
 			MAplot,
+			dispersionPlot,
 			csSpecificity,
 			fpkmMatrix,
+			repFpkmMatrix,
 			diffData,
 			features,
 			featureNames,
 			samples,
+			replicates,
 			expressionPlot,
 			expressionBarplot,
 			getGene,
@@ -46,6 +49,7 @@ exportMethods(
 			getSigTable,
 			addFeatures,
 			getLevels,
+			getRepLevels,
 			findSimilar
 )
 

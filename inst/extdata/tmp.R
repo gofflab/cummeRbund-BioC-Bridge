@@ -57,7 +57,6 @@ loadRepTable<-function(repTableFile,
 	
 	#Read Run Info file
 	full = as.data.frame(do.call(read.table,fileArgs))
-	#print(head(full))
 	
 	#Parsing
 	#For now, I need to concatenate condition and replicate number
@@ -65,7 +64,7 @@ loadRepTable<-function(repTableFile,
 	
 	#Load into database (replicates table)
 	write("Writing replicates Table",stderr())
-	insert_SQL<-'INSERT INTO replicates VALUES(:file, :condition, :replicate_num, :rep_name, :total_mass, :norm_mass, :internal_scale, :external_scale)'
+	insert_SQL<-'INSERT INTO replicate VALUES(:file, :condition, :rep_name, :total_mass, :norm_mass, :internal_scale, :external_scale)'
 	bulk_insert(dbConn,insert_SQL,full)
 }
 
@@ -248,18 +247,15 @@ loadGenes<-function(fpkmFile,
 		
 		countmelt$measurement[grepl("_count$",countmelt$sample_name)] = "count"
 		countmelt$measurement[grepl("_count_variance$",countmelt$sample_name)] = "variance"
-		countmelt$measurement[grepl("_count_uncertainty_var$",countmelt$sample_name)] = "uncertainty"
-		countmelt$measurement[grepl("_count_dispersion_var$",countmelt$sample_name)] = "dispersion"
 		countmelt$measurement[grepl("_status$",countmelt$sample_name)] = "status"
 		
 		countmelt$sample_name<-gsub("_count$","",countmelt$sample_name)
 		countmelt$sample_name<-gsub("_count_variance$","",countmelt$sample_name)
-		countmelt$sample_name<-gsub("_count_uncertainty_var$","",countmelt$sample_name)
-		countmelt$sample_name<-gsub("_count_dispersion_var$","",countmelt$sample_name)
 		countmelt$sample_name<-gsub("_status$","",countmelt$sample_name)
 		
 		#Adjust sample names with make.db.names
 		countmelt$sample_name <- make.db.names(dbConn,as.vector(countmelt$sample_name),unique=FALSE)
+
 		
 		#Recast
 		write("Recasting",stderr())
@@ -271,8 +267,8 @@ loadGenes<-function(fpkmFile,
 
 		#Write geneCount table
 		write("Writing geneCount table",stderr())
-		insert_SQL<-'INSERT INTO geneCount VALUES(:tracking_id,:sample_name,:count,:variance,:uncertainty,:dispersion,:status)'
-		bulk_insert(dbConn,insert_SQL,countmelt)
+		insert_SQL<-'INSERT INTO geneData VALUES(:tracking_id,:sample_name,:count,:variance,:status)'
+		bulk_insert(dbConn,insert_SQL,countmelt[,c(1:2,3,5,4)])
 		
 	}
 		
@@ -287,16 +283,12 @@ loadGenes<-function(fpkmFile,
 		write(paste("Reading read group info in ", replicateFile,sep=""),stderr())
 		replicateArgs$file = replicateFile
 		reps<-as.data.frame(do.call(read.table,replicateArgs))
-		#print(head(reps))
 		
-		#Create unique rep name
-		reps$rep_name<-paste(reps$condition,reps$replicate,sep="_")
-		colnames(reps)[colnames(reps)=="condition"]<-"sample_name"
-		
-		#Write geneReplicateData table
+		#Write geneCount table
 		write("Writing geneReplicateData table",stderr())
-		insert_SQL<-'INSERT INTO geneReplicateData VALUES(:tracking_id,:sample_name,:replicate,:rep_name,:raw_frags,:internal_scaled_frags,:external_scaled_frags,:FPKM,:effective_length,:status)'
-		bulk_insert(dbConn,insert_SQL,reps)
+		insert_SQL<-'INSERT INTO geneReplicateData VALUES(:tracking_id,:rep_name,:raw_frags,:internal_scaled_frags,:external_scaled_frags,:fpkm,:effective_length,:status)'
+		bulk_insert(dbConn,insert_SQL,repsmelt[,c(1,10,4:9)])
+		
 		
 	}
 	
@@ -369,7 +361,6 @@ loadIsoforms<-function(fpkmFile,
 	#This is a temporary fix until p_id is added to the 'isoforms.fpkm_tracking' file
 	isoformsTable<-cbind(isoformsTable[,1:2],data.frame(CDS_id=rep("NA",dim(isoformsTable)[1])),isoformsTable[,-c(1:2)])
 	#print (head(isoformsTable))
-	
 	write("Writing isoforms table",stderr())
 	#dbWriteTable(dbConn,'isoforms',as.data.frame(isoformsTable),row.names=F,append=T)
 	insert_SQL<-'INSERT INTO isoforms VALUES(?,?,?,?,?,?,?,?,?,?)'
@@ -434,76 +425,10 @@ loadIsoforms<-function(fpkmFile,
 	###########
 	#Handle Counts .count_tracking
 	###########
-	if(file.exists(countFile)){
-		
-		idCols = c(1)
-		
-		#Read countFile
-		write(paste("Reading ", countFile,sep=""),stderr())
-		countArgs$file = countFile
-		counts<-as.data.frame(do.call(read.table,countArgs))
-		
-		#Reshape isoformCount table
-		write("Reshaping isoformCount table",stderr())
-		countmelt<-melt(counts,id.vars=c("tracking_id"),measure.vars=-idCols)
-		colnames(countmelt)[colnames(countmelt)=='variable']<-'sample_name'
-		
-		countmelt$measurement = ""
-		
-		countmelt$measurement[grepl("_count$",countmelt$sample_name)] = "count"
-		countmelt$measurement[grepl("_count_variance$",countmelt$sample_name)] = "variance"
-		countmelt$measurement[grepl("_count_uncertainty_var$",countmelt$sample_name)] = "uncertainty"
-		countmelt$measurement[grepl("_count_dispersion_var$",countmelt$sample_name)] = "dispersion"
-		countmelt$measurement[grepl("_status$",countmelt$sample_name)] = "status"
-		
-		countmelt$sample_name<-gsub("_count$","",countmelt$sample_name)
-		countmelt$sample_name<-gsub("_count_variance$","",countmelt$sample_name)
-		countmelt$sample_name<-gsub("_count_uncertainty_var$","",countmelt$sample_name)
-		countmelt$sample_name<-gsub("_count_dispersion_var$","",countmelt$sample_name)
-		countmelt$sample_name<-gsub("_status$","",countmelt$sample_name)
-		
-		#Adjust sample names with make.db.names
-		countmelt$sample_name <- make.db.names(dbConn,as.vector(countmelt$sample_name),unique=FALSE)
-		
-		
-		#Recast
-		write("Recasting",stderr())
-		countmelt<-as.data.frame(dcast(countmelt,...~measurement))
-		
-		#debugging
-		#write(colnames(countmelt),stderr())
-		
-		
-		#Write isoformCount table
-		write("Writing isoformCount table",stderr())
-		insert_SQL<-'INSERT INTO isoformCount VALUES(:tracking_id,:sample_name,:count,:variance,:uncertainty,:dispersion,:status)'
-		bulk_insert(dbConn,insert_SQL,countmelt)
-		
-	}
-	
 	
 	###########
 	#Handle Replicates .rep_tracking
 	###########
-	if(file.exists(replicateFile)){
-		
-		idCols = 1
-		#Read countFile
-		write(paste("Reading read group info in ", replicateFile,sep=""),stderr())
-		replicateArgs$file = replicateFile
-		reps<-as.data.frame(do.call(read.table,replicateArgs))
-		#print(head(reps))
-		
-		#Create unique rep name
-		reps$rep_name<-paste(reps$condition,reps$replicate,sep="_")
-		colnames(reps)[colnames(reps)=="condition"]<-"sample_name"
-		
-		#Write isoformReplicateData table
-		write("Writing isoformReplicateData table",stderr())
-		insert_SQL<-'INSERT INTO isoformReplicateData VALUES(:tracking_id,:sample_name,:replicate,:rep_name,:raw_frags,:internal_scaled_frags,:external_scaled_frags,:FPKM,:effective_length,:status)'
-		bulk_insert(dbConn,insert_SQL,reps)
-		
-	}
 	
 }
 
@@ -567,7 +492,7 @@ loadTSS<-function(fpkmFile,
 	}
 	
 	######
-	#Populate TSS table
+	#Populate genes table
 	######
 	tssTable<-full[,c(1:5,7:9)]
 	write("Writing TSS table",stderr())
@@ -660,76 +585,10 @@ loadTSS<-function(fpkmFile,
 	###########
 	#Handle Counts .count_tracking
 	###########
-	if(file.exists(countFile)){
-		
-		idCols = c(1)
-		
-		#Read countFile
-		write(paste("Reading ", countFile,sep=""),stderr())
-		countArgs$file = countFile
-		counts<-as.data.frame(do.call(read.table,countArgs))
-		
-		#Reshape TSSCount table
-		write("Reshaping TSSCount table",stderr())
-		countmelt<-melt(counts,id.vars=c("tracking_id"),measure.vars=-idCols)
-		colnames(countmelt)[colnames(countmelt)=='variable']<-'sample_name'
-		
-		countmelt$measurement = ""
-		
-		countmelt$measurement[grepl("_count$",countmelt$sample_name)] = "count"
-		countmelt$measurement[grepl("_count_variance$",countmelt$sample_name)] = "variance"
-		countmelt$measurement[grepl("_count_uncertainty_var$",countmelt$sample_name)] = "uncertainty"
-		countmelt$measurement[grepl("_count_dispersion_var$",countmelt$sample_name)] = "dispersion"
-		countmelt$measurement[grepl("_status$",countmelt$sample_name)] = "status"
-		
-		countmelt$sample_name<-gsub("_count$","",countmelt$sample_name)
-		countmelt$sample_name<-gsub("_count_variance$","",countmelt$sample_name)
-		countmelt$sample_name<-gsub("_count_uncertainty_var$","",countmelt$sample_name)
-		countmelt$sample_name<-gsub("_count_dispersion_var$","",countmelt$sample_name)
-		countmelt$sample_name<-gsub("_status$","",countmelt$sample_name)
-		
-		#Adjust sample names with make.db.names
-		countmelt$sample_name <- make.db.names(dbConn,as.vector(countmelt$sample_name),unique=FALSE)
-		
-		
-		#Recast
-		write("Recasting",stderr())
-		countmelt<-as.data.frame(dcast(countmelt,...~measurement))
-		
-		#debugging
-		#write(colnames(countmelt),stderr())
-		
-		
-		#Write TSSCount table
-		write("Writing TSSCount table",stderr())
-		insert_SQL<-'INSERT INTO TSSCount VALUES(:tracking_id,:sample_name,:count,:variance,:uncertainty,:dispersion,:status)'
-		bulk_insert(dbConn,insert_SQL,countmelt)
-		
-	}
-	
 	
 	###########
 	#Handle Replicates .rep_tracking
 	###########
-	if(file.exists(replicateFile)){
-		
-		idCols = 1
-		#Read countFile
-		write(paste("Reading read group info in ", replicateFile,sep=""),stderr())
-		replicateArgs$file = replicateFile
-		reps<-as.data.frame(do.call(read.table,replicateArgs))
-		#print(head(reps))
-		
-		#Create unique rep name
-		reps$rep_name<-paste(reps$condition,reps$replicate,sep="_")
-		colnames(reps)[colnames(reps)=="condition"]<-"sample_name"
-		
-		#Write TSSReplicateData table
-		write("Writing TSSReplicateData table",stderr())
-		insert_SQL<-'INSERT INTO TSSReplicateData VALUES(:tracking_id,:sample_name,:replicate,:rep_name,:raw_frags,:internal_scaled_frags,:external_scaled_frags,:FPKM,:effective_length,:status)'
-		bulk_insert(dbConn,insert_SQL,reps)
-		
-	}
 	
 }
 
@@ -794,7 +653,7 @@ loadCDS<-function(fpkmFile,
 	}
 	
 	######
-	#Populate CDS table
+	#Populate genes table
 	######
 	cdsTable<-full[,c(1:5,6:9)]
 	write("Writing CDS table",stderr())
@@ -888,76 +747,10 @@ loadCDS<-function(fpkmFile,
 	###########
 	#Handle Counts .count_tracking
 	###########
-	if(file.exists(countFile)){
-		
-		idCols = c(1)
-		
-		#Read countFile
-		write(paste("Reading ", countFile,sep=""),stderr())
-		countArgs$file = countFile
-		counts<-as.data.frame(do.call(read.table,countArgs))
-		
-		#Reshape CDSCount table
-		write("Reshaping CDSCount table",stderr())
-		countmelt<-melt(counts,id.vars=c("tracking_id"),measure.vars=-idCols)
-		colnames(countmelt)[colnames(countmelt)=='variable']<-'sample_name'
-		
-		countmelt$measurement = ""
-		
-		countmelt$measurement[grepl("_count$",countmelt$sample_name)] = "count"
-		countmelt$measurement[grepl("_count_variance$",countmelt$sample_name)] = "variance"
-		countmelt$measurement[grepl("_count_uncertainty_var$",countmelt$sample_name)] = "uncertainty"
-		countmelt$measurement[grepl("_count_dispersion_var$",countmelt$sample_name)] = "dispersion"
-		countmelt$measurement[grepl("_status$",countmelt$sample_name)] = "status"
-		
-		countmelt$sample_name<-gsub("_count$","",countmelt$sample_name)
-		countmelt$sample_name<-gsub("_count_variance$","",countmelt$sample_name)
-		countmelt$sample_name<-gsub("_count_uncertainty_var$","",countmelt$sample_name)
-		countmelt$sample_name<-gsub("_count_dispersion_var$","",countmelt$sample_name)
-		countmelt$sample_name<-gsub("_status$","",countmelt$sample_name)
-		
-		#Adjust sample names with make.db.names
-		countmelt$sample_name <- make.db.names(dbConn,as.vector(countmelt$sample_name),unique=FALSE)
-		
-		
-		#Recast
-		write("Recasting",stderr())
-		countmelt<-as.data.frame(dcast(countmelt,...~measurement))
-		
-		#debugging
-		#write(colnames(countmelt),stderr())
-		
-		
-		#Write CDSCount table
-		write("Writing CDSCount table",stderr())
-		insert_SQL<-'INSERT INTO CDSCount VALUES(:tracking_id,:sample_name,:count,:variance,:uncertainty,:dispersion,:status)'
-		bulk_insert(dbConn,insert_SQL,countmelt)
-		
-	}
-	
 	
 	###########
 	#Handle Replicates .rep_tracking
 	###########
-	if(file.exists(replicateFile)){
-		
-		idCols = 1
-		#Read countFile
-		write(paste("Reading read group info in ", replicateFile,sep=""),stderr())
-		replicateArgs$file = replicateFile
-		reps<-as.data.frame(do.call(read.table,replicateArgs))
-		#print(head(reps))
-		
-		#Create unique rep name
-		reps$rep_name<-paste(reps$condition,reps$replicate,sep="_")
-		colnames(reps)[colnames(reps)=="condition"]<-"sample_name"
-		
-		#Write CDSReplicateData table
-		write("Writing CDSReplicateData table",stderr())
-		insert_SQL<-'INSERT INTO CDSReplicateData VALUES(:tracking_id,:sample_name,:replicate,:rep_name,:raw_frags,:internal_scaled_frags,:external_scaled_frags,:FPKM,:effective_length,:status)'
-		bulk_insert(dbConn,insert_SQL,reps)
-		
-	}
 	
 }
 
@@ -969,6 +762,416 @@ loadCDS<-function(fpkmFile,
 #####################
 #Database Setup Functions
 #####################
+
+createDB<-function(dbFname="cuffData.db",driver="SQLite") {
+	#Builds sqlite db at 'dbFname' and returns a dbConnect object pointing to newly created database.
+	#May be deprecated if I can load first and index later...
+	
+	drv<-dbDriver(driver)
+	db <- dbConnect(drv,dbname=dbFname)
+	
+	schema.text<-'
+-- Creator:       MySQL Workbench 5.2.33/ExportSQLite plugin 2009.12.02
+-- Author:        Loyal Goff
+-- Caption:       CuffData.db Model
+-- Project:       cummeRbund
+-- Changed:       2011-08-02 14:03
+-- Created:       2011-05-02 12:52
+PRAGMA foreign_keys = OFF;
+PRAGMA synchronous = OFF;
+PRAGMA journal_mode = MEMORY;
+-- Schema: cuffData
+BEGIN;
+DROP TABLE IF EXISTS "genes";
+CREATE TABLE "genes"(
+  "gene_id" VARCHAR(45) PRIMARY KEY NOT NULL,
+  "class_code" VARCHAR(45),
+  "nearest_ref_id" VARCHAR(45),
+  "gene_short_name" VARCHAR(45),
+  "locus" VARCHAR(45),
+  "length" INTEGER,
+  "coverage" FLOAT
+);
+DROP TABLE IF EXISTS "biasData";
+CREATE TABLE "biasData"(
+  "biasData_id" INTEGER PRIMARY KEY NOT NULL
+);
+DROP TABLE IF EXISTS "samples";
+CREATE TABLE "samples"(
+  "sample_index" INTEGER PRIMARY KEY NOT NULL,
+  "sample_name" VARCHAR(45) NOT NULL
+);
+DROP TABLE IF EXISTS "TSS";
+CREATE TABLE "TSS"(
+  "TSS_group_id" VARCHAR(45) PRIMARY KEY NOT NULL,
+  "class_code" VARCHAR(45),
+  "nearest_ref_id" VARCHAR(45),
+  "gene_id" VARCHAR(45) NOT NULL,
+  "gene_short_name" VARCHAR(45),
+  "locus" VARCHAR(45),
+  "length" INTEGER,
+  "coverage" FLOAT,
+  CONSTRAINT "fk_TSS_genes1"
+    FOREIGN KEY("gene_id")
+    REFERENCES "genes"("gene_id")
+);
+CREATE INDEX "TSS.fk_TSS_genes1" ON "TSS"("gene_id");
+CREATE INDEX "TSS.fk_TSS_genes2" ON "TSS"("gene_short_name");
+DROP TABLE IF EXISTS "TSSData";
+CREATE TABLE "TSSData"(
+  "TSS_group_id" VARCHAR(45) NOT NULL,
+  "sample_name" VARCHAR(45) NOT NULL,
+  "fpkm" FLOAT,
+  "conf_hi" FLOAT,
+  "conf_lo" FLOAT,
+  "quant_status" VARCHAR(45),
+  CONSTRAINT "fk_TSSData_TSS1"
+    FOREIGN KEY("TSS_group_id")
+    REFERENCES "TSS"("TSS_group_id"),
+  CONSTRAINT "fk_TSSData_samples1"
+    FOREIGN KEY("sample_name")
+    REFERENCES "samples"("sample_name")
+);
+CREATE INDEX "TSSData.fk_TSSData_TSS1" ON "TSSData"("TSS_group_id");
+CREATE INDEX "TSSData.fk_TSSData_samples1" ON "TSSData"("sample_name");
+DROP TABLE IF EXISTS "CDS";
+CREATE TABLE "CDS"(
+  "CDS_id" VARCHAR(45) PRIMARY KEY NOT NULL,
+  "class_code" VARCHAR(45),
+  "nearest_ref_id" VARCHAR(45),
+  "gene_id" VARCHAR(45),
+  "gene_short_name" VARCHAR(45),
+  "TSS_group_id" VARCHAR(45),
+  "locus" VARCHAR(45),
+  "length" INTEGER,
+  "coverage" FLOAT,
+  CONSTRAINT "fk_CDS_genes1"
+    FOREIGN KEY("gene_id")
+    REFERENCES "genes"("gene_id"),
+  CONSTRAINT "fk_CDS_TSS1"
+    FOREIGN KEY("TSS_group_id")
+    REFERENCES "TSS"("TSS_group_id")
+);
+CREATE INDEX "CDS.fk_CDS_genes1" ON "CDS"("gene_id");
+CREATE INDEX "CDS.fk_CDS_genes2" ON "CDS"("gene_short_name");
+CREATE INDEX "CDS.fk_CDS_TSS1" ON "CDS"("TSS_group_id");
+DROP TABLE IF EXISTS "CDSData";
+CREATE TABLE "CDSData"(
+  "CDS_id" VARCHAR(45) NOT NULL,
+  "sample_name" VARCHAR(45) NOT NULL,
+  "fpkm" FLOAT,
+  "conf_hi" FLOAT,
+  "conf_lo" FLOAT,
+  "quant_status" VARCHAR(45),
+  CONSTRAINT "fk_CDSData_CDS1"
+    FOREIGN KEY("CDS_id")
+    REFERENCES "CDS"("CDS_id"),
+  CONSTRAINT "fk_CDSData_samples1"
+    FOREIGN KEY("sample_name")
+    REFERENCES "samples"("sample_name")
+);
+CREATE INDEX "CDSData.fk_CDSData_CDS1" ON "CDSData"("CDS_id");
+CREATE INDEX "CDSData.fk_CDSData_samples1" ON "CDSData"("sample_name");
+DROP TABLE IF EXISTS "splicingDiffData";
+CREATE TABLE "splicingDiffData"(
+  "TSS_group_id" VARCHAR(45) NOT NULL,
+  "gene_id" VARCHAR(45) NOT NULL,
+  "sample_1" VARCHAR(45) NOT NULL,
+  "sample_2" VARCHAR(45) NOT NULL,
+  "status" VARCHAR(45),
+  "value_1" FLOAT,
+  "value_2" FLOAT,
+  "JS_dist" FLOAT,
+  "test_stat" FLOAT,
+  "p_value" FLOAT,
+  "q_value" FLOAT,
+  "significant" VARCHAR(45),
+  CONSTRAINT "fk_splicingDiffData_samples1"
+    FOREIGN KEY("sample_1")
+    REFERENCES "samples"("sample_name"),
+  CONSTRAINT "fk_splicingDiffData_samples2"
+    FOREIGN KEY("sample_2")
+    REFERENCES "samples"("sample_name"),
+  CONSTRAINT "fk_splicingDiffData_TSS1"
+    FOREIGN KEY("TSS_group_id")
+    REFERENCES "TSS"("TSS_group_id"),
+  CONSTRAINT "fk_splicingDiffData_genes1"
+    FOREIGN KEY("gene_id")
+    REFERENCES "genes"("gene_id")
+);
+CREATE INDEX "splicingDiffData.fk_splicingDiffData_samples1" ON "splicingDiffData"("sample_1");
+CREATE INDEX "splicingDiffData.fk_splicingDiffData_samples2" ON "splicingDiffData"("sample_2");
+CREATE INDEX "splicingDiffData.fk_splicingDiffData_TSS1" ON "splicingDiffData"("TSS_group_id");
+CREATE INDEX "splicingDiffData.fk_splicingDiffData_genes1" ON "splicingDiffData"("gene_id");
+DROP TABLE IF EXISTS "TSSExpDiffData";
+CREATE TABLE "TSSExpDiffData"(
+  "TSS_group_id" VARCHAR(45) NOT NULL,
+  "sample_1" VARCHAR(45) NOT NULL,
+  "sample_2" VARCHAR(45) NOT NULL,
+  "status" VARCHAR(45),
+  "value_1" FLOAT,
+  "value_2" FLOAT,
+  "log2_fold_change" FLOAT,
+  "test_stat" FLOAT,
+  "p_value" FLOAT,
+  "q_value" FLOAT,
+  "significant" VARCHAR(45),
+  CONSTRAINT "fk_TSSExpDiffData_TSS1"
+    FOREIGN KEY("TSS_group_id")
+    REFERENCES "TSS"("TSS_group_id"),
+  CONSTRAINT "fk_TSSExpDiffData_samples1"
+    FOREIGN KEY("sample_1")
+    REFERENCES "samples"("sample_name"),
+  CONSTRAINT "fk_TSSExpDiffData_samples2"
+    FOREIGN KEY("sample_2")
+    REFERENCES "samples"("sample_name")
+);
+CREATE INDEX "TSSExpDiffData.fk_TSSExpDiffData_TSS1" ON "TSSExpDiffData"("TSS_group_id");
+CREATE INDEX "TSSExpDiffData.fk_TSSExpDiffData_samples1" ON "TSSExpDiffData"("sample_1");
+CREATE INDEX "TSSExpDiffData.fk_TSSExpDiffData_samples2" ON "TSSExpDiffData"("sample_2");
+DROP TABLE IF EXISTS "CDSDiffData";
+CREATE TABLE "CDSDiffData"(
+  "gene_id" VARCHAR(45) NOT NULL,
+  "sample_1" VARCHAR(45) NOT NULL,
+  "sample_2" VARCHAR(45) NOT NULL,
+  "status" VARCHAR(45),
+  "value_1" FLOAT,
+  "value_2" FLOAT,
+  "JS_dist" FLOAT,
+  "test_stat" FLOAT,
+  "p_value" FLOAT,
+  "q_value" FLOAT,
+  "significant" VARCHAR(45),
+  CONSTRAINT "fk_CDSDiffData_samples1"
+    FOREIGN KEY("sample_1")
+    REFERENCES "samples"("sample_name"),
+  CONSTRAINT "fk_CDSDiffData_samples2"
+    FOREIGN KEY("sample_2")
+    REFERENCES "samples"("sample_name"),
+  CONSTRAINT "fk_CDSDiffData_genes1"
+    FOREIGN KEY("gene_id")
+    REFERENCES "genes"("gene_id")
+);
+CREATE INDEX "CDSDiffData.fk_CDSDiffData_samples1" ON "CDSDiffData"("sample_1");
+CREATE INDEX "CDSDiffData.fk_CDSDiffData_samples2" ON "CDSDiffData"("sample_2");
+CREATE INDEX "CDSDiffData.fk_CDSDiffData_genes1" ON "CDSDiffData"("gene_id");
+DROP TABLE IF EXISTS "CDSExpDiffData";
+CREATE TABLE "CDSExpDiffData"(
+  "CDS_id" VARCHAR(45) NOT NULL,
+  "sample_1" VARCHAR(45) NOT NULL,
+  "sample_2" VARCHAR(45) NOT NULL,
+  "status" VARCHAR(45),
+  "value_1" FLOAT,
+  "value_2" FLOAT,
+  "log2_fold_change" FLOAT,
+  "test_stat" FLOAT,
+  "p_value" FLOAT,
+  "q_value" FLOAT,
+  "significant" VARCHAR(45),
+  CONSTRAINT "fk_CDSExpDiffData_CDS1"
+    FOREIGN KEY("CDS_id")
+    REFERENCES "CDS"("CDS_id"),
+  CONSTRAINT "fk_CDSExpDiffData_samples1"
+    FOREIGN KEY("sample_1")
+    REFERENCES "samples"("sample_name"),
+  CONSTRAINT "fk_CDSExpDiffData_samples2"
+    FOREIGN KEY("sample_2")
+    REFERENCES "samples"("sample_name")
+);
+CREATE INDEX "CDSExpDiffData.fk_CDSExpDiffData_CDS1" ON "CDSExpDiffData"("CDS_id");
+CREATE INDEX "CDSExpDiffData.fk_CDSExpDiffData_samples1" ON "CDSExpDiffData"("sample_1");
+CREATE INDEX "CDSExpDiffData.fk_CDSExpDiffData_samples2" ON "CDSExpDiffData"("sample_2");
+DROP TABLE IF EXISTS "promoterDiffData";
+CREATE TABLE "promoterDiffData"(
+  "gene_id" VARCHAR(45) NOT NULL,
+  "sample_1" VARCHAR(45) NOT NULL,
+  "sample_2" VARCHAR(45) NOT NULL,
+  "status" VARCHAR(45),
+  "value_1" FLOAT,
+  "value_2" FLOAT,
+  "JS_dist" FLOAT,
+  "test_stat" FLOAT,
+  "p_value" FLOAT,
+  "q_value" FLOAT,
+  "significant" VARCHAR(45),
+  CONSTRAINT "fk_promoterDiffData_genes1"
+    FOREIGN KEY("gene_id")
+    REFERENCES "genes"("gene_id"),
+  CONSTRAINT "fk_promoterDiffData_samples1"
+    FOREIGN KEY("sample_1")
+    REFERENCES "samples"("sample_name"),
+  CONSTRAINT "fk_promoterDiffData_samples2"
+    FOREIGN KEY("sample_2")
+    REFERENCES "samples"("sample_name")
+);
+CREATE INDEX "promoterDiffData.fk_promoterDiffData_genes1" ON "promoterDiffData"("gene_id");
+CREATE INDEX "promoterDiffData.fk_promoterDiffData_samples1" ON "promoterDiffData"("sample_1");
+CREATE INDEX "promoterDiffData.fk_promoterDiffData_samples2" ON "promoterDiffData"("sample_2");
+DROP TABLE IF EXISTS "geneFeatures";
+CREATE TABLE "geneFeatures"(
+  "gene_id" VARCHAR(45) NOT NULL,
+  CONSTRAINT "fk_geneFeatures_genes1"
+    FOREIGN KEY("gene_id")
+    REFERENCES "genes"("gene_id")
+);
+CREATE INDEX "geneFeatures.fk_geneFeatures_genes1" ON "geneFeatures"("gene_id");
+DROP TABLE IF EXISTS "TSSFeatures";
+CREATE TABLE "TSSFeatures"(
+  "TSS_group_id" VARCHAR(45) NOT NULL,
+  CONSTRAINT "fk_TSSFeatures_TSS1"
+    FOREIGN KEY("TSS_group_id")
+    REFERENCES "TSS"("TSS_group_id")
+);
+CREATE INDEX "TSSFeatures.fk_TSSFeatures_TSS1" ON "TSSFeatures"("TSS_group_id");
+DROP TABLE IF EXISTS "CDSFeatures";
+CREATE TABLE "CDSFeatures"(
+  "CDS_id" VARCHAR(45) NOT NULL,
+  CONSTRAINT "fk_CDSFeatures_CDS1"
+    FOREIGN KEY("CDS_id")
+    REFERENCES "CDS"("CDS_id")
+);
+CREATE INDEX "CDSFeatures.fk_CDSFeatures_CDS1" ON "CDSFeatures"("CDS_id");
+DROP TABLE IF EXISTS "geneData";
+CREATE TABLE "geneData"(
+  "gene_id" VARCHAR(45) NOT NULL,
+  "sample_name" VARCHAR(45) NOT NULL,
+  "fpkm" FLOAT,
+  "conf_hi" FLOAT,
+  "conf_lo" FLOAT,
+  "quant_status" VARCHAR(45),
+  CONSTRAINT "fk_geneData_genes1"
+    FOREIGN KEY("gene_id")
+    REFERENCES "genes"("gene_id"),
+  CONSTRAINT "fk_geneData_samples1"
+    FOREIGN KEY("sample_name")
+    REFERENCES "samples"("sample_name")
+);
+CREATE INDEX "geneData.fk_geneData_genes1" ON "geneData"("gene_id");
+CREATE INDEX "geneData.fk_geneData_samples1" ON "geneData"("sample_name");
+DROP TABLE IF EXISTS "phenoData";
+CREATE TABLE "phenoData"(
+  "sample_name" VARCHAR(45) NOT NULL,
+  "parameter" VARCHAR(45) NOT NULL,
+  "value" VARCHAR(45),
+  CONSTRAINT "fk_phenoData_samples"
+    FOREIGN KEY("sample_name")
+    REFERENCES "samples"("sample_name")
+);
+CREATE INDEX "phenoData.fk_phenoData_samples" ON "phenoData"("sample_name");
+DROP TABLE IF EXISTS "geneExpDiffData";
+CREATE TABLE "geneExpDiffData"(
+  "gene_id" VARCHAR(45) NOT NULL,
+  "sample_1" VARCHAR(45) NOT NULL,
+  "sample_2" VARCHAR(45) NOT NULL,
+  "status" VARCHAR(45),
+  "value_1" FLOAT,
+  "value_2" FLOAT,
+  "log2_fold_change" FLOAT,
+  "test_stat" FLOAT,
+  "p_value" FLOAT,
+  "q_value" FLOAT,
+  "significant" VARCHAR(45),
+  CONSTRAINT "fk_geneExpDiffData_genes1"
+    FOREIGN KEY("gene_id")
+    REFERENCES "genes"("gene_id"),
+  CONSTRAINT "fk_geneExpDiffData_samples1"
+    FOREIGN KEY("sample_1")
+    REFERENCES "samples"("sample_name"),
+  CONSTRAINT "fk_geneExpDiffData_samples2"
+    FOREIGN KEY("sample_2")
+    REFERENCES "samples"("sample_name")
+);
+CREATE INDEX "geneExpDiffData.fk_geneExpDiffData_genes1" ON "geneExpDiffData"("gene_id");
+CREATE INDEX "geneExpDiffData.fk_geneExpDiffData_samples1" ON "geneExpDiffData"("sample_1");
+CREATE INDEX "geneExpDiffData.fk_geneExpDiffData_samples2" ON "geneExpDiffData"("sample_2");
+DROP TABLE IF EXISTS "isoforms";
+CREATE TABLE "isoforms"(
+  "isoform_id" VARCHAR(45) PRIMARY KEY NOT NULL,
+  "gene_id" VARCHAR(45),
+  "CDS_id" VARCHAR(45),
+  "gene_short_name" VARCHAR(45),
+  "TSS_group_id" VARCHAR(45),
+  "class_code" VARCHAR(45),
+  "nearest_ref_id" VARCHAR(45),
+  "locus" VARCHAR(45),
+  "length" INTEGER,
+  "coverage" FLOAT,
+  CONSTRAINT "fk_isoforms_TSS1"
+    FOREIGN KEY("TSS_group_id")
+    REFERENCES "TSS"("TSS_group_id"),
+  CONSTRAINT "fk_isoforms_CDS1"
+    FOREIGN KEY("CDS_id")
+    REFERENCES "CDS"("CDS_id"),
+  CONSTRAINT "fk_isoforms_genes1"
+    FOREIGN KEY("gene_id")
+    REFERENCES "genes"("gene_id")
+);
+CREATE INDEX "isoforms.fk_isoforms_TSS1" ON "isoforms"("TSS_group_id");
+CREATE INDEX "isoforms.fk_isoforms_CDS1" ON "isoforms"("CDS_id");
+CREATE INDEX "isoforms.fk_isoforms_genes1" ON "isoforms"("gene_id");
+CREATE INDEX "isoforms.fk_isoforms_genes2" ON "isoforms"("gene_short_name");
+DROP TABLE IF EXISTS "isoformData";
+CREATE TABLE "isoformData"(
+  "isoform_id" VARCHAR(45) NOT NULL,
+  "sample_name" VARCHAR(45) NOT NULL,
+  "fpkm" FLOAT NOT NULL,
+  "conf_hi" FLOAT,
+  "conf_lo" FLOAT,
+  "quant_status" VARCHAR(45),
+  CONSTRAINT "fk_isoformData_samples1"
+    FOREIGN KEY("sample_name")
+    REFERENCES "samples"("sample_name"),
+  CONSTRAINT "fk_isoformData_isoforms1"
+    FOREIGN KEY("isoform_id")
+    REFERENCES "isoforms"("isoform_id")
+);
+CREATE INDEX "isoformData.fk_isoformData_samples1" ON "isoformData"("sample_name");
+CREATE INDEX "isoformData.fk_isoformData_isoforms1" ON "isoformData"("isoform_id");
+DROP TABLE IF EXISTS "isoformExpDiffData";
+CREATE TABLE "isoformExpDiffData"(
+  "isoform_id" VARCHAR(45) NOT NULL,
+  "sample_1" VARCHAR(45) NOT NULL,
+  "sample_2" VARCHAR(45) NOT NULL,
+  "status" VARCHAR(45),
+  "value_1" FLOAT,
+  "value_2" FLOAT,
+  "log2_fold_change" FLOAT,
+  "test_stat" FLOAT,
+  "p_value" FLOAT,
+  "q_value" FLOAT,
+  "significant" VARCHAR(45),
+  CONSTRAINT "fk_isoformExpDiffData_isoforms1"
+    FOREIGN KEY("isoform_id")
+    REFERENCES "isoforms"("isoform_id"),
+  CONSTRAINT "fk_isoformExpDiffData_samples1"
+    FOREIGN KEY("sample_1")
+    REFERENCES "samples"("sample_name"),
+  CONSTRAINT "fk_isoformExpDiffData_samples2"
+    FOREIGN KEY("sample_2")
+    REFERENCES "samples"("sample_name")
+);
+CREATE INDEX "isoformExpDiffData.fk_isoformExpDiffData_isoforms1" ON "isoformExpDiffData"("isoform_id");
+CREATE INDEX "isoformExpDiffData.fk_isoformExpDiffData_samples1" ON "isoformExpDiffData"("sample_1");
+CREATE INDEX "isoformExpDiffData.fk_isoformExpDiffData_samples2" ON "isoformExpDiffData"("sample_2");
+DROP TABLE IF EXISTS "isoformFeatures";
+CREATE TABLE "isoformFeatures"(
+  "isoform_id" VARCHAR(45) NOT NULL,
+  CONSTRAINT "fk_isoformFeatures_isoforms1"
+    FOREIGN KEY("isoform_id")
+    REFERENCES "isoforms"("isoform_id")
+);
+CREATE INDEX "isoformFeatures.fk_isoformFeatures_isoforms1" ON "isoformFeatures"("isoform_id");
+COMMIT;
+
+'
+		create.sql <- strsplit(schema.text, "\n")[[1]]
+		create.sql <- paste(collapse="\n", create.sql)
+		create.sql <- strsplit(create.sql, ";")[[1]]
+		create.sql <- create.sql[-length(create.sql)] #nothing to run here
+				
+		tmp <- sapply(create.sql,function(x) sqliteQuickSQL(db,x))
+		db
+}
 
 createDB_noIndex<-function(dbFname="cuffData.db",driver="SQLite") {
 	#Builds sqlite db at 'dbFname' and returns a dbConnect object pointing to newly created database.
@@ -1013,7 +1216,6 @@ CREATE TABLE "TSS"(
   "class_code" VARCHAR(45),
   "nearest_ref_id" VARCHAR(45),
   "gene_id" VARCHAR(45) NOT NULL,
-  "gene_short_name" VARCHAR(45),
   "locus" VARCHAR(45),
   "length" INTEGER,
   "coverage" FLOAT,
@@ -1042,7 +1244,6 @@ CREATE TABLE "CDS"(
   "class_code" VARCHAR(45),
   "nearest_ref_id" VARCHAR(45),
   "gene_id" VARCHAR(45),
-  "gene_short_name" VARCHAR(45),
   "TSS_group_id" VARCHAR(45),
   "locus" VARCHAR(45),
   "length" INTEGER,
@@ -1219,8 +1420,6 @@ CREATE TABLE "geneCount"(
   "sample_name" VARCHAR(45) NOT NULL,
   "count" FLOAT,
   "variance" FLOAT,
-  "uncertainty" FLOAT,
-  "dispersion" FLOAT,
   "status" VARCHAR(45),
   CONSTRAINT "fk_geneCount_samples1"
     FOREIGN KEY("sample_name")
@@ -1235,8 +1434,6 @@ CREATE TABLE "CDSCount"(
   "sample_name" VARCHAR(45) NOT NULL,
   "count" FLOAT,
   "variance" FLOAT,
-  "uncertainty" FLOAT,
-  "dispersion" FLOAT,
   "status" VARCHAR(45),
   CONSTRAINT "fk_CDSCount_CDS1"
     FOREIGN KEY("CDS_id")
@@ -1251,8 +1448,6 @@ CREATE TABLE "TSSCount"(
   "sample_name" VARCHAR(45) NOT NULL,
   "count" FLOAT,
   "variance" FLOAT,
-  "uncertainty" FLOAT,
-  "dispersion" FLOAT,
   "status" VARCHAR(45),
   CONSTRAINT "fk_TSSCount_TSS1"
     FOREIGN KEY("TSS_group_id")
@@ -1265,7 +1460,6 @@ DROP TABLE IF EXISTS "replicates";
 CREATE TABLE "replicates"(
   "file" INTEGER NOT NULL,
   "sample_name" VARCHAR(45) NOT NULL,
-  "replicate" INT NOT NULL,
   "rep_name" VARCHAR(45) PRIMARY KEY NOT NULL,
   "total_mass" FLOAT,
   "norm_mass" FLOAT,
@@ -1278,8 +1472,6 @@ CREATE TABLE "replicates"(
 DROP TABLE IF EXISTS "geneReplicateData";
 CREATE TABLE "geneReplicateData"(
   "gene_id" VARCHAR(45) NOT NULL,
-  "sample_name" VARCHAR(45) NOT NULL,
-  "replicate" INTEGER,
   "rep_name" VARCHAR(45) NOT NULL,
   "raw_frags" FLOAT,
   "internal_scaled_frags" FLOAT,
@@ -1292,16 +1484,11 @@ CREATE TABLE "geneReplicateData"(
     REFERENCES "genes"("gene_id"),
   CONSTRAINT "fk_geneReplicateData_replicates1"
     FOREIGN KEY("rep_name")
-    REFERENCES "replicates"("rep_name"),
-  CONSTRAINT "fk_geneReplicateData_samples1"
-    FOREIGN KEY("sample_name")
-    REFERENCES "samples"("sample_name")
+    REFERENCES "replicates"("rep_name")
 );
 DROP TABLE IF EXISTS "CDSReplicateData";
 CREATE TABLE "CDSReplicateData"(
   "CDS_id" VARCHAR(45) NOT NULL,
-  "sample_name" VARCHAR(45) NOT NULL,
-  "replicate" INTEGER,
   "rep_name" VARCHAR(45) NOT NULL,
   "raw_frags" FLOAT,
   "internal_scaled_frags" FLOAT,
@@ -1314,16 +1501,11 @@ CREATE TABLE "CDSReplicateData"(
     REFERENCES "replicates"("rep_name"),
   CONSTRAINT "fk_CDSReplicateData_CDS1"
     FOREIGN KEY("CDS_id")
-    REFERENCES "CDS"("CDS_id"),
-  CONSTRAINT "fk_CDSReplicateData_samples1"
-    FOREIGN KEY("sample_name")
-    REFERENCES "samples"("sample_name")
+    REFERENCES "CDS"("CDS_id")
 );
 DROP TABLE IF EXISTS "TSSReplicateData";
 CREATE TABLE "TSSReplicateData"(
   "TSS_group_id" VARCHAR(45) NOT NULL,
-  "sample_name" VARCHAR(45) NOT NULL,
-  "replicate" VARCHAR(45),
   "rep_name" VARCHAR(45) NOT NULL,
   "raw_frags" FLOAT,
   "internal_scaled_frags" FLOAT,
@@ -1336,13 +1518,11 @@ CREATE TABLE "TSSReplicateData"(
     REFERENCES "replicates"("rep_name"),
   CONSTRAINT "fk_TSSReplicateData_TSS1"
     FOREIGN KEY("TSS_group_id")
-    REFERENCES "TSS"("TSS_group_id"),
-  CONSTRAINT "fk_TSSReplicateData_samples1"
-    FOREIGN KEY("sample_name")
-    REFERENCES "samples"("sample_name")
+    REFERENCES "TSS"("TSS_group_id")
 );
 DROP TABLE IF EXISTS "runInfo";
 CREATE TABLE "runInfo"(
+  "runInfo_id" INTEGER PRIMARY KEY NOT NULL,
   "param" VARCHAR(45),
   "value" TEXT
 );
@@ -1398,7 +1578,6 @@ CREATE TABLE "isoforms"(
   "isoform_id" VARCHAR(45) PRIMARY KEY NOT NULL,
   "gene_id" VARCHAR(45),
   "CDS_id" VARCHAR(45),
-  "gene_short_name" VARCHAR(45),
   "TSS_group_id" VARCHAR(45),
   "class_code" VARCHAR(45),
   "nearest_ref_id" VARCHAR(45),
@@ -1481,7 +1660,7 @@ CREATE TABLE "features"(
     FOREIGN KEY("isoforms_isoform_id")
     REFERENCES "isoforms"("isoform_id")
 );
-DROP TABLE IF EXISTS "attributes";
+DROP TABLE IF EXISTS "attribtes";
 CREATE TABLE "attributes"(
   "attribute_lookup_id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
   "feature_id" INTEGER NOT NULL,
@@ -1497,8 +1676,6 @@ CREATE TABLE "isoformCount"(
   "sample_name" VARCHAR(45) NOT NULL,
   "count" FLOAT,
   "variance" FLOAT,
-  "uncertainty" FLOAT,
-  "dispersion" FLOAT,
   "status" VARCHAR(45),
   CONSTRAINT "fk_isoformCount_isoforms1"
     FOREIGN KEY("isoform_id")
@@ -1510,8 +1687,6 @@ CREATE TABLE "isoformCount"(
 DROP TABLE IF EXISTS "isoformReplicateData";
 CREATE TABLE "isoformReplicateData"(
   "isoform_id" VARCHAR(45) NOT NULL,
-  "sample_name" VARCHAR(45) NOT NULL,
-  "replicate" INTEGER,
   "rep_name" VARCHAR(45) NOT NULL,
   "raw_frags" FLOAT,
   "internal_scaled_frags" FLOAT,
@@ -1524,10 +1699,7 @@ CREATE TABLE "isoformReplicateData"(
     REFERENCES "replicates"("rep_name"),
   CONSTRAINT "fk_isoformReplicateData_isoforms1"
     FOREIGN KEY("isoform_id")
-    REFERENCES "isoforms"("isoform_id"),
-  CONSTRAINT "fk_isoformReplicateData_samples1"
-    FOREIGN KEY("sample_name")
-    REFERENCES "samples"("sample_name")
+    REFERENCES "isoforms"("isoform_id")
 );
 COMMIT;
 
@@ -1586,15 +1758,12 @@ CREATE INDEX "CDSCount.fk_CDSCount_samples1" ON "CDSCount"("sample_name");
 CREATE INDEX "TSSCount.fk_TSSCount_TSS1" ON "TSSCount"("TSS_group_id");
 CREATE INDEX "TSSCount.fk_TSSCount_samples1" ON "TSSCount"("sample_name");
 CREATE INDEX "replicates.fk_replicates_samples1" ON "replicates"("sample_name");
-CREATE INDEX "geneReplicateData.fk_geneReplicateData_genes1" ON "geneReplicateData"("gene_id");
+CREATE INDEX "geneReplicateData.fk_geneData_genes1" ON "geneReplicateData"("gene_id");
 CREATE INDEX "geneReplicateData.fk_geneReplicateData_replicates1" ON "geneReplicateData"("rep_name");
-CREATE INDEX "geneReplicateData.fk_geneReplicateData_samples1" ON "geneReplicateData"("sample_name");
 CREATE INDEX "CDSReplicateData.fk_CDSReplicateData_replicates1" ON "CDSReplicateData"("rep_name");
 CREATE INDEX "CDSReplicateData.fk_CDSReplicateData_CDS1" ON "CDSReplicateData"("CDS_id");
-CREATE INDEX "CDSReplicateData.fk_CDSReplicateData_samples1" ON "CDSReplicateData"("sample_name");
 CREATE INDEX "TSSReplicateData.fk_TSSReplicateData_replicates1" ON "TSSReplicateData"("rep_name");
 CREATE INDEX "TSSReplicateData.fk_TSSReplicateData_TSS1" ON "TSSReplicateData"("TSS_group_id");
-CREATE INDEX "TSSReplicateData.fk_TSSReplicateData_samples1" ON "TSSReplicateData"("sample_name");
 CREATE INDEX "geneData.fk_geneData_genes1" ON "geneData"("gene_id");
 CREATE INDEX "geneData.fk_geneData_samples1" ON "geneData"("sample_name");
 CREATE INDEX "phenoData.fk_phenoData_samples" ON "phenoData"("sample_name");
@@ -1626,7 +1795,7 @@ CREATE INDEX "isoformCount.fk_isoformCount_isoforms1" ON "isoformCount"("isoform
 CREATE INDEX "isoformCount.fk_isoformCount_samples1" ON "isoformCount"("sample_name");
 CREATE INDEX "isoformReplicateData.fk_isoformReplicateData_replicates1" ON "isoformReplicateData"("rep_name");
 CREATE INDEX "isoformReplicateData.fk_isoformReplicateData_isoforms1" ON "isoformReplicateData"("isoform_id");
-CREATE INDEX "isoformReplicateData.fk_isoformReplicateData_samples1" ON "isoformReplicateData"("sample_name");
+
 '
 	create.sql <- strsplit(index.text,"\n")[[1]]
 	
@@ -1672,25 +1841,24 @@ readCufflinks<-function(dir = getwd(),
 						geneFPKM="genes.fpkm_tracking",
 						geneDiff="gene_exp.diff",
 						geneCount="genes.count_tracking",
-						geneRep="genes.read_group_tracking",
+						geneRep="genes.read_groups_tracking",
 						isoformFPKM="isoforms.fpkm_tracking",
 						isoformDiff="isoform_exp.diff",
-						isoformCount="isoforms.count_tracking",
-						isoformRep="isoforms.read_group_tracking",
+						isoformCount="isoform.count_tracking",
+						isoformRep="isoform.read_groups_tracking",
 						TSSFPKM="tss_groups.fpkm_tracking",
 						TSSDiff="tss_group_exp.diff",
-						TSSCount="tss_groups.count_tracking",
-						TSSRep="tss_groups.read_group_tracking",
+						TSSCount="TSS.count_tracking",
+						TSSRep="TSS.read_groups_tracking",
 						CDSFPKM="cds.fpkm_tracking",
 						CDSExpDiff="cds_exp.diff",
-						CDSCount="cds.count_tracking",
-						CDSRep="cds.read_group_tracking",
+						CDSCount="CDS.count_tracking",
+						CDSRep="CDS.read_groups_tracking",
 						CDSDiff="cds.diff",
 						promoterFile="promoters.diff",
 						splicingFile="splicing.diff",
 						driver = "SQLite",
 						rebuild = FALSE,
-						verbose = FALSE,
 						...){
 	
 	#Set file locations with directory
@@ -1733,14 +1901,14 @@ readCufflinks<-function(dir = getwd(),
 			loadRepTable(repTableFile,dbConn)
 		}
 		
-		loadGenes(geneFPKM,geneDiff,promoterFile,countFile=geneCount,replicateFile=geneRep,dbConn)
-		loadIsoforms(isoformFPKM,isoformDiff,isoformCount,isoformRep,dbConn)
-		loadTSS(TSSFPKM,TSSDiff,splicingFile,TSSCount,TSSRep,dbConn)
-		loadCDS(CDSFPKM,CDSExpDiff,CDSDiff,CDSCount,CDSRep,dbConn)
+		loadGenes(geneFPKM,geneDiff,promoterFile,countFile,replicateFile,dbConn)
+		loadIsoforms(isoformFPKM,isoformDiff,countFile,replicateFile,dbConn)
+		loadTSS(TSSFPKM,TSSDiff,splicingFile,countFile,replicateFile,dbConn)
+		loadCDS(CDSFPKM,CDSExpDiff,CDSDiff,countFile,replicateFile,dbConn)
 		
 		#Create Indexes on DB
 		write("Indexing Tables...",stderr())
-		createIndices(dbFile,verbose=verbose)
+		createIndices(dbFile)
 		
 		#load Distribution Tests
 		#loadDistTests(promoterFile,splicingFile,CDSDiff)
