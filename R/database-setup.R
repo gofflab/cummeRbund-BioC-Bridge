@@ -15,7 +15,7 @@ loadRunInfo<-function(runInfoFile,
 		fileArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
 		sep="\t",
 		na.string = "-",
-		header = FALSE,
+		header = TRUE,
 		quote = "",
 		stringsAsFactors=FALSE,
 		row.names=NULL,
@@ -26,11 +26,16 @@ loadRunInfo<-function(runInfoFile,
 	fileArgs$file = runInfoFile
 	
 	#Read Run Info file
-	full = as.data.frame(do.call(read.table,fileArgs))
+	runInfo = as.data.frame(do.call(read.table,fileArgs))
 	
 	#Parsing
+	#not needed...
 	
 	#Load into database (runInfo table)
+	write("Writing runInfo Table",stderr())
+	insert_SQL<-'INSERT INTO runInfo VALUES(:param, :value)'
+	bulk_insert(dbConn,insert_SQL,runInfo)
+	
 }
 
 #ReplicateTable
@@ -40,22 +45,27 @@ loadRepTable<-function(repTableFile,
 		fileArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
 		sep="\t",
 		na.string = "-",
-		header = FALSE,
+		header = TRUE,
 		quote = "",
 		stringsAsFactors=FALSE,
 		row.names=NULL,
 		...) {
 		
 	#Setup and reporting
-	write(paste("Reading Sample Info  ",repTableFile,sep=""),stderr())
+	write(paste("Reading Read Group Info  ",repTableFile,sep=""),stderr())
 	fileArgs$file = repTableFile
 	
 	#Read Run Info file
 	full = as.data.frame(do.call(read.table,fileArgs))
 	
 	#Parsing
+	#For now, I need to concatenate condition and replicate number
+	full$rep_name<-paste(full$condition,full$replicate_num,sep="_")
 	
 	#Load into database (replicates table)
+	write("Writing replicates Table",stderr())
+	insert_SQL<-'INSERT INTO replicate VALUES(:file, :condition, :rep_name, :total_mass, :norm_mass, :internal_scale, :external_scale)'
+	bulk_insert(dbConn,insert_SQL,full)
 }
 
 #Genes
@@ -221,7 +231,7 @@ loadGenes<-function(fpkmFile,
 	###########
 	if(file.exists(countFile)){
 		
-		idCols = 1
+		idCols = c(1)
 		
 		#Read countFile
 		write(paste("Reading ", countFile,sep=""),stderr())
@@ -230,11 +240,36 @@ loadGenes<-function(fpkmFile,
 		
 		#Reshape geneCount table
 		write("Reshaping geneCount table",stderr())
-		countmelt<-melt(count,id.vars=c("tracking_id"),measure.vars=-idCols)
+		countmelt<-melt(counts,id.vars=c("tracking_id"),measure.vars=-idCols)
+		colnames(countmelt)[colnames(countmelt)=='variable']<-'sample_name'
 		
+		countmelt$measurement = ""
+		
+		countmelt$measurement[grepl("_count$",countmelt$sample_name)] = "count"
+		countmelt$measurement[grepl("_count_variance$",countmelt$sample_name)] = "variance"
+		countmelt$measurement[grepl("_status$",countmelt$sample_name)] = "status"
+		
+		countmelt$sample_name<-gsub("_count$","",countmelt$sample_name)
+		countmelt$sample_name<-gsub("_count_variance$","",countmelt$sample_name)
+		countmelt$sample_name<-gsub("_status$","",countmelt$sample_name)
+		
+		#Adjust sample names with make.db.names
+		countmelt$sample_name <- make.db.names(dbConn,as.vector(countmelt$sample_name),unique=FALSE)
+
+		
+		#Recast
+		write("Recasting",stderr())
+		countmelt<-as.data.frame(dcast(countmelt,...~measurement))
+		
+		#debugging
+		#write(colnames(countmelt),stderr())
+		
+
 		#Write geneCount table
 		write("Writing geneCount table",stderr())
-	
+		insert_SQL<-'INSERT INTO geneData VALUES(:tracking_id,:sample_name,:count,:variance,:status)'
+		bulk_insert(dbConn,insert_SQL,countmelt[,c(1:2,3,5,4)])
+		
 	}
 		
 		
@@ -245,12 +280,14 @@ loadGenes<-function(fpkmFile,
 
 		idCols = 1
 		#Read countFile
-		write(paste("Reading replicate info in ", replicateFile,sep=""),stderr())
+		write(paste("Reading read group info in ", replicateFile,sep=""),stderr())
 		replicateArgs$file = replicateFile
 		reps<-as.data.frame(do.call(read.table,replicateArgs))
 		
 		#Write geneCount table
 		write("Writing geneReplicateData table",stderr())
+		insert_SQL<-'INSERT INTO geneReplicateData VALUES(:tracking_id,:rep_name,:raw_frags,:internal_scaled_frags,:external_scaled_frags,:fpkm,:effective_length,:status)'
+		bulk_insert(dbConn,insert_SQL,repsmelt[,c(1,10,4:9)])
 		
 		
 	}
