@@ -11,6 +11,8 @@
 setMethod("initialize","CuffSet",
 		function(.Object,
 				DB,
+				runInfo=data.frame(),
+				phenoData=data.frame(),
 				conditions=data.frame(),
 				genes,
 				isoforms,
@@ -22,6 +24,8 @@ setMethod("initialize","CuffSet",
 				...){
 			.Object<-callNextMethod(.Object,
 					DB = DB,
+					runInfo=runInfo,
+					phenoData=phenoData,
 					conditions = conditions,
 					genes = genes,
 					isoforms = isoforms,
@@ -90,6 +94,14 @@ setMethod("samples",signature(object="CuffSet"),.samples)
 
 setMethod("DB","CuffSet",function(object){
 		return(object@DB)
+		})
+
+setMethod("runInfo","CuffSet",function(object){
+			return(object@runInfo)
+		})
+
+setMethod("phenoData","CuffSet",function(object){
+			return(object@phenoData)
 		})
 
 setMethod("conditions","CuffSet",function(object){
@@ -219,7 +231,7 @@ setMethod("relCDS","CuffSet",function(object){
 			CDS=new("CuffFeature",
 					annotation=dbGetQuery(object@DB,CDSAnnotationQuery),
 					fpkm=CDS.fpkm,
-					diff=CDS.diff
+					diff=CDS.diff                                                    
 			)
 
 			
@@ -232,6 +244,10 @@ setMethod("relCDS","CuffSet",function(object){
 setMethod("getGene",signature(object="CuffSet"),.getGene)
 	
 .getGenes<-function(object,geneIdList,sampleIdList=NULL){
+	
+	#Determine gene_id from geneIdList
+	#This is useful so that people can pass, for example, isoform_id to geneIdList and getGenes will return full genes
+	
 	
 	#Sample subsetting
 	if(!is.null(sampleIdList)){
@@ -283,18 +299,26 @@ setMethod("getGene",signature(object="CuffSet"),.getGene)
 	geneAnnotationQuery<-paste("SELECT * from genes x ", whereStringGene,sep="")
 	geneFPKMQuery<-paste("SELECT y.* from genes x JOIN geneData y ON x.gene_id=y.gene_id ", whereStringGeneFPKM,sep="")
 	geneDiffQuery<-paste("SELECT y.* from genes x JOIN geneExpDiffData y ON x.gene_id=y.gene_id ", whereStringGeneDiff,sep="")
+	geneRepFPKMQuery<-paste("SELECT y.* from genes x JOIN geneReplicateData y on x.gene_id=y.gene_id ", whereStringGeneFPKM,sep="")
+	geneCountQuery<-paste("SELECT y.* from genes x JOIN geneCount y on x.gene_id=y.gene_id ", whereStringGeneFPKM,sep="")
 	
 	isoformAnnotationQuery<-paste("SELECT x.* from isoforms x LEFT JOIN isoformFeatures xf ON x.isoform_id=xf.isoform_id JOIN genes g on x.gene_id=g.gene_id ", whereString,sep="")
 	isoformFPKMQuery<-paste("SELECT y.* from isoforms x JOIN isoformData y ON x.isoform_id = y.isoform_id JOIN genes g on x.gene_id=g.gene_id ", whereStringFPKM,sep="")
 	isoformDiffQuery<-paste("SELECT y.* from isoforms x JOIN isoformExpDiffData y ON x.isoform_id = y.isoform_id JOIN genes g on x.gene_id=g.gene_id ", whereStringDiff,sep="")
+	isoformRepFPKMQuery<-paste("SELECT y.* from isoforms x JOIN isoformReplicateData y on x.isoform_id=y.isoform_id JOIN genes g on x.gene_id=g.gene_id ", whereStringFPKM,sep="")
+	isoformCountQuery<-paste("SELECT y.* from isoforms x JOIN isoformCount y on x.isoform_id=y.isoform_id JOIN genes g on x.gene_id=g.gene_id ", whereStringFPKM,sep="")
 	
 	TSSAnnotationQuery<-paste("SELECT x.* from TSS x LEFT JOIN TSSFeatures xf ON x.TSS_group_id=xf.TSS_group_id JOIN genes g on x.gene_id=g.gene_id ", whereString,sep="")
 	TSSFPKMQuery<-paste("SELECT y.* from TSS x JOIN TSSData y ON x.TSS_group_id=y.TSS_group_id JOIN genes g on x.gene_id=g.gene_id ", whereStringFPKM,sep="")
 	TSSDiffQuery<-paste("SELECT y.* from TSS x JOIN TSSExpDiffData y ON x.TSS_group_id=y.TSS_group_id JOIN genes g on x.gene_id=g.gene_id ", whereStringDiff,sep="")
+	TSSRepFPKMQuery<-paste("SELECT y.* from TSS x JOIN TSSReplicateData y on x.TSS_group_id=y.TSS_group_id JOIN genes g on x.gene_id=g.gene_id ", whereStringFPKM,sep="")
+	TSSCountQuery<-paste("SELECT y.* from TSS x JOIN TSSCount y on x.TSS_group_id=y.TSS_group_id JOIN genes g on x.gene_id=g.gene_id ", whereStringFPKM,sep="")
 	
 	CDSAnnotationQuery<-paste("SELECT x.* from CDS x LEFT JOIN CDSFeatures xf ON x.CDS_id=xf.CDS_id JOIN genes g on x.gene_id=g.gene_id ", whereString,sep="")
 	CDSFPKMQuery<-paste("SELECT y.* from CDS x JOIN CDSData y ON x.CDS_id = y.CDS_id JOIN genes g on x.gene_id=g.gene_id ", whereStringFPKM,sep="")
 	CDSDiffQuery<-paste("SELECT y.* from CDS x JOIN CDSExpDiffData y ON x.CDS_id = y.CDS_id JOIN genes g on x.gene_id=g.gene_id ", whereStringDiff,sep="")
+	CDSRepFPKMQuery<-paste("SELECT y.* from CDS x JOIN CDSReplicateData y on x.CDS_id=y.CDS_id JOIN genes g on x.gene_id=g.gene_id ", whereStringFPKM,sep="")
+	CDSCountQuery<-paste("SELECT y.* from CDS x JOIN CDSCount y on x.CDS_id=y.CDS_id JOIN genes g on x.gene_id=g.gene_id ", whereStringFPKM,sep="")
 	
 	promotersDistQuery<-paste("SELECT x.* FROM promoterDiffData x LEFT JOIN genes g ON x.gene_id=g.gene_id ", whereString,sep="")
 	splicingDistQuery<-paste("SELECT x.* FROM splicingDiffData x LEFT JOIN genes g ON x.gene_id=g.gene_id ", whereString,sep="")
@@ -314,6 +338,10 @@ setMethod("getGene",signature(object="CuffSet"),.getGene)
 	genes.diff$sample_2<-factor(genes.diff$sample_2,levels=myLevels)
 	write("\tAnnotation Data",stderr())
 	genes.annot<-dbGetQuery(object@DB,geneAnnotationQuery)
+	write("\tReplicate FPKMs",stderr())
+	genes.repFpkm<-dbGetQuery(object@DB,geneRepFPKMQuery)
+	write("\tCounts",stderr())
+	genes.count<-dbGetQuery(object@DB,geneCountQuery)
 	
 	#isoforms
 	write("Getting isoforms information:",stderr())
@@ -326,6 +354,10 @@ setMethod("getGene",signature(object="CuffSet"),.getGene)
 	isoform.diff$sample_2<-factor(isoform.diff$sample_2,levels=myLevels)
 	write("\tAnnotation Data",stderr())
 	isoform.annot<-dbGetQuery(object@DB,isoformAnnotationQuery)
+	write("\tReplicate FPKMs",stderr())
+	isoform.repFpkm<-dbGetQuery(object@DB,isoformRepFPKMQuery)
+	write("\tCounts",stderr())
+	isoform.count<-dbGetQuery(object@DB,isoformCountQuery)
 	
 	#CDS
 	write("Getting CDS information:",stderr())
@@ -338,6 +370,10 @@ setMethod("getGene",signature(object="CuffSet"),.getGene)
 	CDS.diff$sample_2<-factor(CDS.diff$sample_2,levels=myLevels)
 	write("\tAnnotation Data",stderr())
 	CDS.annot<-dbGetQuery(object@DB,CDSAnnotationQuery)
+	write("\tReplicate FPKMs",stderr())
+	CDS.repFpkm<-dbGetQuery(object@DB,CDSRepFPKMQuery)
+	write("\tCounts",stderr())
+	CDS.count<-dbGetQuery(object@DB,CDSCountQuery)
 	
 	
 	#TSS
@@ -351,6 +387,10 @@ setMethod("getGene",signature(object="CuffSet"),.getGene)
 	TSS.diff$sample_2<-factor(TSS.diff$sample_2,levels=myLevels)
 	write("\tAnnotation Data",stderr())
 	TSS.annot<-dbGetQuery(object@DB,TSSAnnotationQuery)
+	write("\tReplicate FPKMs",stderr())
+	TSS.repFpkm<-dbGetQuery(object@DB,TSSRepFPKMQuery)
+	write("\tCounts",stderr())
+	TSS.count<-dbGetQuery(object@DB,TSSCountQuery)
 	
 	#Promoters
 	write("Getting promoter information:", stderr())
@@ -380,20 +420,28 @@ setMethod("getGene",signature(object="CuffSet"),.getGene)
 			annotation=genes.annot,
 			fpkm=genes.fpkm,
 			diff=genes.diff,
+			repFpkm=genes.repFpkm,
+			count=genes.count,
 			isoforms=new("CuffFeatureSet",
 					annotation=isoform.annot,
 					fpkm=isoform.fpkm,
-					diff=isoform.diff
+					diff=isoform.diff,
+					repFpkm=isoform.repFpkm,
+					count=isoform.count
 					),
 			TSS=new("CuffFeatureSet",
 					annotation=TSS.annot,
 					fpkm=TSS.fpkm,
-					diff=TSS.diff
+					diff=TSS.diff,
+					repFpkm=TSS.repFpkm,
+					count=TSS.count
 					),
 			CDS=new("CuffFeatureSet",
 					annotation=CDS.annot,
 					fpkm=CDS.fpkm,
-					diff=CDS.diff
+					diff=CDS.diff,
+					repFpkm=CDS.repFpkm,
+					count=CDS.count
 					),
 			promoters=new("CuffFeatureSet",
 					annotation=genes.annot,

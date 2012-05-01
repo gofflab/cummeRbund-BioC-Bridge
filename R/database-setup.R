@@ -9,19 +9,69 @@
 #####################
 
 #RunInfo
+loadRunInfo<-function(runInfoFile,
+		dbConn,
+		path,
+		fileArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
+		sep="\t",
+		na.string = "-",
+		header = FALSE,
+		quote = "",
+		stringsAsFactors=FALSE,
+		row.names=NULL,
+		...) {
+	
+	#Setup and reporting
+	write(paste("Reading Run Info File ",runInfoFile,sep=""),stderr())
+	fileArgs$file = runInfoFile
+	
+	#Read Run Info file
+	full = as.data.frame(do.call(read.table,fileArgs))
+	
+	#Parsing
+	
+	#Load into database (runInfo table)
+}
 
 #ReplicateTable
+loadRepTable<-function(repTableFile,
+		dbConn,
+		path,
+		fileArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
+		sep="\t",
+		na.string = "-",
+		header = FALSE,
+		quote = "",
+		stringsAsFactors=FALSE,
+		row.names=NULL,
+		...) {
+		
+	#Setup and reporting
+	write(paste("Reading Sample Info  ",repTableFile,sep=""),stderr())
+	fileArgs$file = repTableFile
+	
+	#Read Run Info file
+	full = as.data.frame(do.call(read.table,fileArgs))
+	
+	#Parsing
+	
+	#Load into database (replicates table)
+}
 
 #Genes
 loadGenes<-function(fpkmFile,
 		diffFile,
 		promoterFile,
+		countFile,
+		replicateFile,
 		dbConn,
 		path,
 		#Arguments to read.* methods
 		fpkmArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
 		diffArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
 		promoterArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
+		countArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
+		replicateArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
 		sep="\t",
 		na.string = "-",
 		header = TRUE,
@@ -169,22 +219,56 @@ loadGenes<-function(fpkmFile,
 	###########
 	#Handle Counts .count_tracking
 	###########
+	if(file.exists(countFile)){
+		
+		idCols = 1
+		
+		#Read countFile
+		write(paste("Reading ", countFile,sep=""),stderr())
+		countArgs$file = countFile
+		counts<-as.data.frame(do.call(read.table,countArgs))
+		
+		#Reshape geneCount table
+		write("Reshaping geneCount table",stderr())
+		countmelt<-melt(count,id.vars=c("tracking_id"),measure.vars=-idCols)
+		
+		#Write geneCount table
+		write("Writing geneCount table",stderr())
 	
+	}
+		
+		
 	###########
 	#Handle Replicates .rep_tracking
 	###########
-	
+	if(file.exists(replicateFile)){
+
+		idCols = 1
+		#Read countFile
+		write(paste("Reading replicate info in ", replicateFile,sep=""),stderr())
+		replicateArgs$file = replicateFile
+		reps<-as.data.frame(do.call(read.table,replicateArgs))
+		
+		#Write geneCount table
+		write("Writing geneReplicateData table",stderr())
+		
+		
+	}
 	
 }
 	
 #Isoforms
 loadIsoforms<-function(fpkmFile,
 		diffFile,
+		countFile,
+		replicateFile,
 		dbConn,
 		path,
 		#Arguments to read.* methods
 		fpkmArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
 		diffArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
+		countArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
+		replicateArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
 		sep="\t",
 		na.string = "-",
 		header = TRUE,
@@ -315,12 +399,16 @@ loadIsoforms<-function(fpkmFile,
 loadTSS<-function(fpkmFile,
 		diffFile,
 		splicingFile,
+		countFile,
+		replicateFile,
 		dbConn,
 		path,
 		#Arguments to read.* methods
 		fpkmArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
 		diffArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
 		splicingArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
+		countArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
+		replicateArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
 		sep="\t",
 		na.string = "-",
 		header = TRUE,
@@ -471,12 +559,16 @@ loadTSS<-function(fpkmFile,
 loadCDS<-function(fpkmFile,
 		diffFile,
 		CDSDiff,
+		countFile,
+		replicateFile,
 		dbConn,
 		path,
 		#Arguments to read.* methods
 		fpkmArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
 		diffArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
 		CDSDiffArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
+		countArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
+		replicateArgs = list(sep=sep, header=header, row.names = row.names, quote=quote, na.string=na.string, ...),
 		sep="\t",
 		na.string = "-",
 		header = TRUE,
@@ -1511,14 +1603,24 @@ bulk_insert <- function(dbConn,sql,bound.data)
 #TODO: Add count and replicate files
 readCufflinks<-function(dir = getwd(),
 						dbFile="cuffData.db",
+						runInfoFile="run.info",
+						repTableFile="read_groups.info",
 						geneFPKM="genes.fpkm_tracking",
 						geneDiff="gene_exp.diff",
+						geneCount="genes.count_tracking",
+						geneRep="genes.read_groups_tracking",
 						isoformFPKM="isoforms.fpkm_tracking",
 						isoformDiff="isoform_exp.diff",
+						isoformCount="isoform.count_tracking",
+						isoformRep="isoform.read_groups_tracking",
 						TSSFPKM="tss_groups.fpkm_tracking",
 						TSSDiff="tss_group_exp.diff",
+						TSSCount="TSS.count_tracking",
+						TSSRep="TSS.read_groups_tracking",
 						CDSFPKM="cds.fpkm_tracking",
 						CDSExpDiff="cds_exp.diff",
+						CDSCount="CDS.count_tracking",
+						CDSRep="CDS.read_groups_tracking",
 						CDSDiff="cds.diff",
 						promoterFile="promoters.diff",
 						splicingFile="splicing.diff",
@@ -1528,14 +1630,24 @@ readCufflinks<-function(dir = getwd(),
 	
 	#Set file locations with directory
 	dbFile=file.path(dir,dbFile)
+	runInfoFile=file.path(dir,runInfoFile)
+	repTableFile=file.path(dir,repTableFile)
 	geneFPKM=file.path(dir,geneFPKM)
 	geneDiff=file.path(dir,geneDiff)
+	geneCount=file.path(dir,geneCount)
+	geneRep=file.path(dir,geneRep)
 	isoformFPKM=file.path(dir,isoformFPKM)
 	isoformDiff=file.path(dir,isoformDiff)
+	isoformCount=file.path(dir,isoformCount)
+	isoformRep=file.path(dir,isoformRep)
 	TSSFPKM=file.path(dir,TSSFPKM)
 	TSSDiff=file.path(dir,TSSDiff)
+	TSSCount=file.path(dir,TSSCount)
+	TSSRep=file.path(dir,TSSRep)
 	CDSFPKM=file.path(dir,CDSFPKM)
 	CDSExpDiff=file.path(dir,CDSExpDiff)
+	CDSCount=file.path(dir,CDSCount)
+	CDSRep=file.path(dir,CDSRep)
 	CDSDiff=file.path(dir,CDSDiff)
 	promoterFile=file.path(dir,promoterFile)
 	splicingFile=file.path(dir,splicingFile)
@@ -1548,13 +1660,18 @@ readCufflinks<-function(dir = getwd(),
 		dbConn<-createDB_noIndex(dbFile)
 		
 		#populate DB
-		#loadRepTable
-		#loadExpInfo
+		if(file.exists(runInfoFile)){
+			loadRunInfo(runInfoFile,dbConn)
+		}
 		
-		loadGenes(geneFPKM,geneDiff,promoterFile,dbConn)
-		loadIsoforms(isoformFPKM,isoformDiff,dbConn)
-		loadTSS(TSSFPKM,TSSDiff,splicingFile,dbConn)
-		loadCDS(CDSFPKM,CDSExpDiff,CDSDiff,dbConn)
+		if(file.exists(repTableFile)){
+			loadRepTable(repTableFile,dbConn)
+		}
+		
+		loadGenes(geneFPKM,geneDiff,promoterFile,countFile,replicateFile,dbConn)
+		loadIsoforms(isoformFPKM,isoformDiff,countFile,replicateFile,dbConn)
+		loadTSS(TSSFPKM,TSSDiff,splicingFile,countFile,replicateFile,dbConn)
+		loadCDS(CDSFPKM,CDSExpDiff,CDSDiff,countFile,replicateFile,dbConn)
 		
 		#Create Indexes on DB
 		write("Indexing Tables...",stderr())
@@ -1568,10 +1685,11 @@ readCufflinks<-function(dir = getwd(),
 	return (
 			new("CuffSet",DB = dbConn,
 					#TODO: need to add replicate and count tables here and in AllClasses.R
-					genes = new("CuffData",DB = dbConn, tables = list(mainTable = "genes",dataTable = "geneData",expDiffTable = "geneExpDiffData",featureTable = "geneFeatures"), filters = list(),type = "genes",idField = "gene_id"),
-					isoforms = new("CuffData", DB = dbConn, tables = list(mainTable = "isoforms",dataTable = "isoformData",expDiffTable = "isoformExpDiffData",featureTable = "isoformFeatures"), filters = list(),type="isoforms",idField = "isoform_id"),
-					TSS = new("CuffData", DB = dbConn, tables = list(mainTable = "TSS",dataTable = "TSSData",expDiffTable = "TSSExpDiffData",featureTable = "TSSFeatures"), filters = list(),type = "TSS",idField = "TSS_group_id"),
-					CDS = new("CuffData", DB = dbConn, tables = list(mainTable = "CDS",dataTable = "CDSData",expDiffTable = "CDSExpDiffData",featureTable = "CDSFeatures"), filters = list(),type = "CDS",idField = "CDS_id"),
+					
+					genes = new("CuffData",DB = dbConn, tables = list(mainTable = "genes",dataTable = "geneData",expDiffTable = "geneExpDiffData",featureTable = "geneFeatures",countTable="geneCount",replicateTable="geneReplicateData"), filters = list(),type = "genes",idField = "gene_id"),
+					isoforms = new("CuffData", DB = dbConn, tables = list(mainTable = "isoforms",dataTable = "isoformData",expDiffTable = "isoformExpDiffData",featureTable = "isoformFeatures",countTable="isoformCount",replicateTable="isoformReplicateData"), filters = list(),type="isoforms",idField = "isoform_id"),
+					TSS = new("CuffData", DB = dbConn, tables = list(mainTable = "TSS",dataTable = "TSSData",expDiffTable = "TSSExpDiffData",featureTable = "TSSFeatures",countTable="TSSCount",replicateTable="TSSReplicateData"), filters = list(),type = "TSS",idField = "TSS_group_id"),
+					CDS = new("CuffData", DB = dbConn, tables = list(mainTable = "CDS",dataTable = "CDSData",expDiffTable = "CDSExpDiffData",featureTable = "CDSFeatures",countTable="CDSCount",replicateTable="CDSReplicateData"), filters = list(),type = "CDS",idField = "CDS_id"),
 					promoters = new("CuffDist", DB = dbConn, table = "promoterDiffData",type="promoter",idField="gene_id"),
 					splicing = new("CuffDist", DB = dbConn, table = "splicingDiffData",type="splicing",idField="TSS_group_id"),
 					relCDS = new("CuffDist", DB = dbConn, table = "CDSDiffData",type="relCDS",idField="gene_id")

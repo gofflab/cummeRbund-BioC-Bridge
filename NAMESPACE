@@ -21,6 +21,8 @@ exportMethods(
 			splicing,
 			relCDS,
 			fpkm,
+			repFpkm,
+			count,
 			distValues,
 			csDensity,
 			csScatter,

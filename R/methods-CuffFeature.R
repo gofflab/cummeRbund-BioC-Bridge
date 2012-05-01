@@ -16,11 +16,15 @@ setMethod("initialize","CuffFeature",
 				annotation=data.frame(),
 				fpkm=data.frame(),
 				diff=data.frame(),
+				repFpkm=data.frame(),
+				count=data.frame()
 				... ){
 			.Object<-callNextMethod(.Object,
 					annotation=annotation,
 					fpkm=fpkm,
 					diff=diff,
+					repFpkm=repFpkm,
+					count=count,
 					...)				
 		}
 )
@@ -107,6 +111,18 @@ setMethod("diffData",signature(object="CuffFeature"),.diffData)
 setMethod("annotation","CuffFeature",function(object){
 		return(object@annotation)
 		})
+
+.repFpkm<-function(object){
+	object@repFpkm
+}
+
+setMethod("repFpkm",signature(object="CuffFeature"),.repFpkm)
+
+.count<-function(object){
+	object@count
+}
+
+setMethod("count",signature(object="CuffFeature"),.count)
 
 #################
 #Setters		#

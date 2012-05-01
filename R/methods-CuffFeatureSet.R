@@ -16,11 +16,15 @@ setMethod("initialize","CuffFeatureSet",
 				annotation=data.frame(),
 				fpkm=data.frame(),
 				diff=data.frame(),
+				repFpkm=data.frame(),
+				count=data.frame()
 				... ){
 			.Object<-callNextMethod(.Object,
 					annotation=annotation,
 					fpkm=fpkm,
 					diff=diff,
+					repFpkm=repFpkm,
+					count=count,
 					...)
 		}
 )

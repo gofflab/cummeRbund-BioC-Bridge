@@ -16,7 +16,19 @@
 #################
 #Validate		#
 #################
-
+#TODO: Add validity constraints
+setValidity("CuffGene",function(object){
+			objLen = length(object)
+			if(objLen==0){
+				write("No gene set returned (Gene might not be in database?)",stderr())
+				return(FALSE)
+			}
+			if(objLen>1){
+				write("Warning: Possibly more than one gene returned",stderr())
+				return(TRUE)
+			}
+		}
+)		
 
 #################
 #Class Methods	#
@@ -28,6 +40,12 @@ setMethod("show","CuffGene",function(object){
 						"TSS\t\t",class(object@TSS),"instance of size",length(object@TSS),"\n\t",
 						"CDS\t\t",class(object@CDS),"instance of size",length(object@CDS),"\n"
 						)			
+		}
+)
+
+setMethod("length","CuffGene",
+		function(x){
+			dim(x@annotation)[1]
 		}
 )
 

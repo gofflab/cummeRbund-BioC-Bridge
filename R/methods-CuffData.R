@@ -11,7 +11,7 @@
 setMethod("initialize","CuffData",
 			function(.Object,
 					DB,
-					tables=list(mainTable = "",dataTable = "",expDiffTable = "",featureTable = ""),
+					tables=list(mainTable = "",dataTable = "",expDiffTable = "",featureTable = "",countTable = "", replicateTable = ""),
 					filters=list(),
 					type = c("genes","isoforms","TSS","CDS"),
 					idField,
@@ -125,6 +125,37 @@ setMethod("samples","CuffData",.samples)
 }
 
 setMethod("fpkm","CuffData",.fpkm)
+
+#.repFpkm<-function(object,features=FALSE,repIdList){
+#	#Sample subsetting
+#	if(!missing(sampleIdList)){
+#		if(.checkSamples(object@DB,sampleIdList)){
+#			myLevels<-sampleIdList
+#		}else{
+#			stop("Sample does not exist!")
+#		}
+#	}else{
+#		myLevels<-getLevels(object)
+#	}
+#	#Sample Search String (SQL)
+#	sampleString<-'('
+#	for (i in myLevels){
+#		sampleString<-paste(sampleString,"'",i,"',",sep="")
+#	}
+#	sampleString<-substr(sampleString,1,nchar(sampleString)-1)
+#	sampleString<-paste(sampleString,")",sep="")
+#	
+#	if(!features){
+#		FPKMQuery<-paste("SELECT * FROM ",object@tables$replicateTable," WHERE sample_name IN ",sampleString,sep="")
+#	}else{
+#		FPKMQuery<-paste("SELECT xf.*,xm.*,x.rep_name,x.raw_count,x.int_norm_count,x.ext_norm_count,x.fpkm,x.effective_length FROM ",object@tables$replicateTable," x LEFT JOIN ",object@tables$featureTable," xf on x.",object@idField,"=xf.",object@idField," LEFT JOIN ",object@tables$mainTable," xm ON x.",object@idField,"=xm.",object@idField," WHERE x.sample_name IN ",sampleString,sep="")
+#	}
+#	res<-dbGetQuery(object@DB,FPKMQuery)
+#	res$sample_name<-factor(res$sample_name,levels=getLevels(object))
+#	res
+#}
+#
+#setMethod("repFpkm","CuffData",.repFpkm)
 
 .fpkmMatrix<-function(object,fullnames=FALSE,sampleIdList){
 	#Sample subsetting
