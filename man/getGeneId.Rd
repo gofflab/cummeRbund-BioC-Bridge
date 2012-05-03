@@ -38,7 +38,7 @@ Right now, this does not return an error if it cannot find a gene.  (this is pro
 }
 
 \examples{
-	a<-readCufflinks(system.file("extdata", package="cummeRbund")) #Read cufflinks data and create master CuffSet object
+	cuff<-readCufflinks(system.file("extdata", package="cummeRbund")) #Read cufflinks data and create master CuffSet object
 	sampleFeatureIds<-sample(featureNames(isoforms(cuff)),10)
-	correspondingGeneIds<-getGeneId(a,sampleFeatureIds) # Retrieve gene_id values for parent genes of sampleFeatureIds.
+	correspondingGeneIds<-getGeneId(cuff,sampleFeatureIds) # Retrieve gene_id values for parent genes of sampleFeatureIds.
 }

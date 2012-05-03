@@ -9,6 +9,7 @@ This initializes the backend SQLite table and provides a DB connection for all d
 }
 \usage{
 readCufflinks(dir = getwd(), dbFile = "cuffData.db", 
+				runInfoFile = "run.info", repTableFile = "read_groups.info",
 				geneFPKM = "genes.fpkm_tracking", geneDiff = "gene_exp.diff", geneCount="genes.count_tracking", geneRep="genes.read_group_tracking",
 				isoformFPKM = "isoforms.fpkm_tracking", isoformDiff = "isoform_exp.diff", isoformCount="isoforms.count_tracking", isoformRep="isoforms.read_group_tracking",
 				TSSFPKM = "tss_groups.fpkm_tracking", TSSDiff = "tss_group_exp.diff", TSSCount="tss_groups.count_tracking", TSSRep="tss_groups.read_group_tracking",
@@ -25,6 +26,12 @@ Directory in which all CuffDiff output files can be located. Defaults to current
 }
   \item{dbFile}{
 Name of backend database. Default is 'cuffData.db'
+}
+  \item{runInfoFile}{
+run.info file
+}
+  \item{repTableFile}{
+read_groups.info file
 }
   \item{geneFPKM}{
 genes.fpkm_tracking file

@@ -8,6 +8,8 @@
 \alias{featureNames,CuffFeatureSet-method}
 \alias{features,CuffFeatureSet-method}
 \alias{fpkmMatrix,CuffFeatureSet-method}
+\alias{repFpkmMatrix,CuffFeatureSet-method}
+\alias{countMatrix,CuffFeatureSet-method}
 \alias{samples,CuffFeatureSet-method}
 \alias{length,CuffFeatureSet-method}
 
@@ -34,6 +36,8 @@ Objects can be created by calls of the form \code{new("CuffFeatureSet", annotati
     \item{featureNames}{\code{signature(object = "CuffFeatureSet")}: ... }
     \item{features}{\code{signature(object = "CuffFeatureSet")}: ... }
     \item{fpkmMatrix}{\code{signature(object = "CuffFeatureSet")}: ... }
+    \item{repFpkmMatrix}{\code{signature(object = "CuffFeatureSet")}: ... }
+    \item{countMatrix}{\code{signature(object = "CuffFeatureSet")}: ... }
     \item{samples}{\code{signature(object = "CuffFeatureSet")}: ... }
     \item{length}{\code{signature(object = "CuffFeatureSet")}: ... }
 	 }

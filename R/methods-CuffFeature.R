@@ -209,7 +209,7 @@ setMethod("count",signature(object="CuffFeature"),.count)
 setMethod("expressionBarplot",signature(object="CuffFeature"),.barplot)
 
 
-.expressionPlot<-function(object,logMode=FALSE,pseudocount=1.0, drawSummary=FALSE, sumFun=mean_cl_boot, showErrorbars=TRUE,showStatus=TRUE,replicates=F,...){
+.expressionPlot<-function(object,logMode=FALSE,pseudocount=1.0, drawSummary=FALSE, sumFun=mean_cl_boot, showErrorbars=TRUE,showStatus=TRUE,replicates=FALSE,...){
 	#Coloring scheme for quant flags
 	quant_types<-c("OK","FAIL","LOWDATA","HIDATA","TOOSHORT")
 	quant_types<-factor(quant_types,levels=quant_types)

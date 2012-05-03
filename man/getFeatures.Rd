@@ -43,7 +43,7 @@ Right now, this does not return an error if it cannot find a gene.  (this is pro
 }
 
 \examples{
-	a<-readCufflinks(system.file("extdata", package="cummeRbund")) #Read cufflinks data and create master CuffSet object
+	cuff<-readCufflinks(system.file("extdata", package="cummeRbund")) #Read cufflinks data and create master CuffSet object
 	sample.isoform.ids<-sample(featureNames(isoforms(cuff)),10)
-	myGene<-getFeatures(a,sample.isoform.ids) # Retrieve all information for a set of 10 sampled features.
+	myGene<-getFeatures(cuff,sample.isoform.ids) # Retrieve all information for a set of 10 sampled features.
 }

@@ -9,7 +9,7 @@ findSimilar
 Returns a CuffGeneSet containing n genes with the most similar expression profiles to gene/profile x.
 }
 \usage{
-\S4method{findSimilar}{CuffSet}(object, x, n,distThresh,returnGeneSet=TRUE)
+\S4method{findSimilar}{CuffSet}(object, x, n,distThresh,returnGeneSet=TRUE,...)
 }
 
 \arguments{
@@ -27,6 +27,9 @@ A thresholding value on which to filter results based on JS-distance (e.g. A dis
 }
   \item{returnGeneSet}{
 A logical value whether to return a CuffGeneSet object [default] or a distance-ranked data frame of similar genes.  The latter is useful if you want to explore the returned list based on distances.
+}
+  \item{\dots}{
+Additional arguments to fpkmMatrix call within findSimilar (e.g. fullnames=T)
 }
 }
 \details{

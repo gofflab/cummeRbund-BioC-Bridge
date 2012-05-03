@@ -486,7 +486,7 @@ setMethod("csScatter",signature(object="CuffFeatureSet"), .scatter)
 
 setMethod("csVolcano",signature(object="CuffFeatureSet"), .volcano)
 
-.barplot<-function(object,logMode=TRUE,pseudocount=1.0,showErrorbars=TRUE,showStatus=TRUE,replicates=T,...){
+.barplot<-function(object,logMode=TRUE,pseudocount=1.0,showErrorbars=TRUE,showStatus=TRUE,replicates=FALSE,...){
 	quant_types<-c("OK","FAIL","LOWDATA","HIDATA","TOOSHORT")
 	quant_types<-factor(quant_types,levels=quant_types)
 	quant_colors<-c("black","red","blue","orange","green")
@@ -738,14 +738,20 @@ setMethod("csDendro",signature(object="CuffFeatureSet"),.dendro)
 #	c
 #}
 
-.density<-function(object, logMode = TRUE, pseudocount=1.0, labels, features=FALSE, ...){
-	dat<-fpkm(object,features=features)
+.density<-function(object, logMode = TRUE, pseudocount=1.0, labels, features=FALSE, replicates=FALSE,...){
+	if(replicates){
+		dat<-repFpkm(object,features=features)
+		colnames(dat)[colnames(dat)=="rep_name"]<-"condition"
+	}else{
+		dat<-fpkm(object,features=features)
+		colnames(dat)[colnames(dat)=="sample_name"]<-"condition"
+	}
 	if(logMode) dat$fpkm<-dat$fpkm+pseudocount
 	p<-ggplot(dat)
 	if(logMode) {
-		p<-p+geom_density(aes(x= log10(fpkm),group=sample_name,color=sample_name,fill=sample_name),alpha=I(1/3))
+		p<-p+geom_density(aes(x= log10(fpkm),group=condition,color=condition,fill=condition),alpha=I(1/3))
 	}else{
-		p<-p+geom_density(aes(x=fpkm,group=sample_name,color=sample_name,fill=sample_name),alpha=I(1/3))
+		p<-p+geom_density(aes(x=fpkm,group=condition,color=condition,fill=condition),alpha=I(1/3))
 	}
 	
 	#p<-p + opts(title=object@tables$mainTable)

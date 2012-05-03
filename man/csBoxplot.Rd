@@ -9,7 +9,7 @@ csBoxplot
 Creates a ggplot2 plot object with a geom_box layer displaying summary statistics for FPKM values across samples (x).
 }
 \usage{
-\S4method{csBoxplot}{CuffData}(object, logMode=TRUE, pseudocount=0.0001, replicates=FALSE...)
+\S4method{csBoxplot}{CuffData}(object, logMode=TRUE, pseudocount=0.0001, replicates=FALSE,...)
 }
 
 \arguments{
