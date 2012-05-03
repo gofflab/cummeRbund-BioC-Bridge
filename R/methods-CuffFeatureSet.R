@@ -702,8 +702,12 @@ csClusterPlot<-function(clustering,pseudocount=1.0,drawSummary=TRUE, sumFun=mean
 	c
 }
 
-.dendro<-function(object,logMode=T,pseudocount=1){
-	fpkmMat<-fpkmMatrix(object)
+.dendro<-function(object,logMode=T,pseudocount=1,replicates=FALSE){
+	if(replicates){
+		fpkmMat<-repFpkmMatrix(object)
+	}else{
+		fpkmMat<-fpkmMatrix(object)
+	}
 	if(logMode){
 		fpkmMat<-log10(fpkmMat+pseudocount)
 	}

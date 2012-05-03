@@ -44,6 +44,5 @@ None
 }
 
 \examples{
-	data(sampleData)
-	count(PINK1)
+	
 }

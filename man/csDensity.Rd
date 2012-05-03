@@ -10,8 +10,8 @@ Density plot of CuffData
 Creates a smoothed density plot, by sample, for log10 FPKM values from a cuffdiff run.
 }
 \usage{
-\S4method{csDensity}{CuffData}(object, logMode=TRUE, pseudocount=1.0, labels, features=FALSE, ...)
-\S4method{csDensity}{CuffFeatureSet}(object, logMode=TRUE, pseudocount=1.0, labels, features=FALSE, ...)
+\S4method{csDensity}{CuffData}(object, logMode=TRUE, pseudocount=1.0, labels, features=FALSE, replicates=FALSE,...)
+\S4method{csDensity}{CuffFeatureSet}(object, logMode=TRUE, pseudocount=1.0, labels, features=FALSE, replicates=FALSE,...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -30,6 +30,9 @@ A list of tracking_id values or gene_short_name values used for 'callout' points
   \item{features}{
 Will include all fields from 'features' slot in returned ggplot object.
 Useful for further manipulations of plot object using feature-level attributes (e.g. gene_type, class_code, etc)
+}
+  \item{replicates}{
+A logical value whether or not to plot individual replicates or aggregate condition values.
 }
   \item{\dots}{
 Additional arguments

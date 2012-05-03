@@ -10,8 +10,8 @@ csDendro
 Creates a grid graphics plot of a dendrogram of Jensen-Shannon distances between conditions of a CuffFeatureSet or CuffGeneSet object.
 }
 \usage{
-\S4method{csDendro}{CuffFeatureSet}(object,logMode=T,pseudocount=1)
-\S4method{csDendro}{CuffData}(object,logMode=T,pseudocount=1)
+\S4method{csDendro}{CuffFeatureSet}(object,logMode=T,pseudocount=1,replicates=FALSE)
+\S4method{csDendro}{CuffData}(object,logMode=T,pseudocount=1,replicates=FALSE)
 }
 
 \arguments{
@@ -24,7 +24,9 @@ A logical argument to log10-transform FPKM values prior to plotting.
   \item{pseudocount}{
 Value to be added to FPKM for appropriate log transformation and clustering. (Avoids zero-based errors)
 }
- 
+  \item{replicates}{
+A logical value whether or not to plot individual replicates or aggregate condition values.
+}
 }
 \details{
 None

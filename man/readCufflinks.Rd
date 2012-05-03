@@ -8,7 +8,14 @@ readCufflinks
 This initializes the backend SQLite table and provides a DB connection for all downstream data analysis.
 }
 \usage{
-readCufflinks(dir = getwd(), dbFile = "cuffData.db", geneFPKM = "genes.fpkm_tracking", geneDiff = "gene_exp.diff", isoformFPKM = "isoforms.fpkm_tracking", isoformDiff = "isoform_exp.diff", TSSFPKM = "tss_groups.fpkm_tracking", TSSDiff = "tss_group_exp.diff", CDSFPKM = "cds.fpkm_tracking", CDSExpDiff = "cds_exp.diff", CDSDiff = "cds.diff", promoterFile = "promoters.diff", splicingFile = "splicing.diff", driver = "SQLite", rebuild = FALSE, ...)
+readCufflinks(dir = getwd(), dbFile = "cuffData.db", 
+				geneFPKM = "genes.fpkm_tracking", geneDiff = "gene_exp.diff", geneCount="genes.count_tracking", geneRep="genes.read_group_tracking",
+				isoformFPKM = "isoforms.fpkm_tracking", isoformDiff = "isoform_exp.diff", isoformCount="isoforms.count_tracking", isoformRep="isoforms.read_group_tracking",
+				TSSFPKM = "tss_groups.fpkm_tracking", TSSDiff = "tss_group_exp.diff", TSSCount="tss_groups.count_tracking", TSSRep="tss_groups.read_group_tracking",
+				CDSFPKM = "cds.fpkm_tracking", CDSExpDiff = "cds_exp.diff", CDSDiff = "cds.diff", CDSCount="cds.count_tracking", CDSRep="cds.read_group_tracking",
+				promoterFile = "promoters.diff", 
+				splicingFile = "splicing.diff", 
+				driver = "SQLite", rebuild = FALSE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

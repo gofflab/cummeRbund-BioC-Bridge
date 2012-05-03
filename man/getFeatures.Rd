@@ -9,7 +9,7 @@ getFeatures
 Primary accessor from a CuffSet object to retrieve all related information for >1 (MANY) given FEATURES, indexed by tracking id.
 }
 \usage{
-\S4method{getGenes}{CuffSet}(object, featureIdList, sampleIdList=NULL,level='isoforms')
+\S4method{getFeatures}{CuffSet}(object, featureIdList, sampleIdList=NULL,level='isoforms')
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
