@@ -49,29 +49,51 @@ options(width=65)
 \tableofcontents
 
 \section{Requirements}
+\emph{cummeRbund 2.0 was designed in conjunction with the release of cufflinks 2.0.  While we attempted to preserve backwards-compatability, it is highly recommended
+that you update your cufflinks version >=2.0 to take full advantage of the improvements in modeling, reporting, and visualization that have been incorporated.} 
 \begin{itemize}
-	\item Cufflinks $\ge$ v1.1.0 (Note: as of the release of this package, the current version of cufflinks is 1.3.3.  While this package will work with >v1.1, we recommend updating your cufflinks prior to using cummeRbund)
+	\item Cufflinks $\ge$ v2.0.0
+	\item SQLite 
 	\item R $\ge$ v2.7.0
 	\item Packages:
 	\begin{itemize}
 		\item \Rpackage{RSQLite}
-		\item \Rpackage{ggplot2}
+		\item \Rpackage{ggplot2 v0.9}
 		\item \Rpackage{reshape2}
 		\item \Rpackage{plyr}
+		\item \Rpackage{fastcluster}
+		\item Recommended:
+		\begin{itemize}
+			\item \Rpackage{Hmisc}
+		\end{itemize}
 	\end{itemize}
 \end{itemize}
 	
 
 \section{Introduction}
-	\Rpackage{cummeRbund} is a visualization package for Cufflinks high-throughput sequencing data. The base class, \Rclass{cuffSet} 
-	is a 'pointer' to cufflinks data that are stored out-of-memory in a sqlite database.
+	\Rpackage{cummeRbund} is a visualization package for Cufflinks high-throughput sequencing data. It is designed to help you navigate through the large amount of data produced from a Cuffdiff RNA-Seq differential expression
+	analysis. The results of this analysis are typically a large number of inter-related files that are not terribly intuitive to navigate through. cummeRbund helps promote rapid analysis of RNA-Seq data by aggregating, indexing,
+	and allowing you easily visualize and create publication-ready figures of your RNA-Seq data while maintaining appropriate relationships between connected data points.
+	CummeRbund is a multifaceted suite for streamlined analysis and visualization of massively parallel RNA differential expression data sequencing data. 
+	
+	CummeRbund begins by re-organizing output files of a cuffdiff analysis, and storing these data in a local SQLite database. CummeRbund indexes the data to speed up access to specific feature data (genes, isoforms, TSS, CDS, etc.),
+	and preserves the various relationships between these features. Access to data elements is managed via the RSQLite package and data are presented in appropriately structured R classes with various convenience functions designed
+	to streamline your workflow. This persistent database storage means that inter-connected expression values are rapidly accessible and quickly searchable in future analyses.
+	
+	CummeRbund defines two types of data classes, 'pointer' or reference classes describe SQL connections to the database without directly containing data, and 'data' classes that retrieve a subset of related data points such as associated
+	features from a given gene or gene set. Each class type has methods for direct access to FPKM vales, differential expression information, statistical test results, raw and normalized fragment counts, individual replicate FPKM values, and additional annotation information for features. Output formats allow 
+	for browsing and analysis of data in standard R objects (data.frame, list, etc). CummeRbund was designed to provide analysis and visualization tools analogous to microarray data. In this regard, numerous plotting methods are provided for visualization 
+	of RNA-Seq data quality and global statistics, and simple routines for plotting expression levels for one or thousands of genes, their isoforms, TSS groups, or CDS groups.
+	  
+	The base class, \Rclass{cuffSet} is a 'pointer' to cuffdiff data that are stored out-of-memory in a sqlite database.
 	
 \section{CummeRbund Classes}
 
 \subsection{CuffSet Class}
 	A pointer class to control access to the sqlite tables holding the Cufflinks data. The primary slot is DB which contains the RSQLite connection object. This can be accessed using the \Rmethod{DB()} accessor.
 	The additional slots (genes, isoforms, TSS, and CDS) are each instances of the \Rclass{CuffData} class and are pointers to sets of tables for each data subtype. They can be accessed with similar accessor wrappers.
-	This is the default class created by \Rmethod{readCufflinks}.  By default, \Rclass{CuffData} accessor methods applied to a \Rclass{CuffSet} class will operate on the 'genes' slot.
+	This is the default class created by \Rmethod{readCufflinks}.  By default, \Rclass{CuffData} accessor methods applied to a \Rclass{CuffSet} class will operate on the 'genes' slot. The \Rmethod{runInfo()} method can be used to retrieve information about
+	the actual cuffdiff run itself, including command-line arguments used to generate the results files.
 
 \subsection{CuffData Class}
 	The \Rclass{CuffData} class is also a pointer class to the SQL backend, but each instance is specific for a data subtype (genes, isoforms, TSS, CDS). Again, there is an DB slot (accessible using \Rmethod{DB()}) that contains the RSQLite connection object.
@@ -104,8 +126,10 @@ options(width=65)
 	Available slots for a \Rclass{CuffFeatureSet} object include:
 	\begin{itemize}
 		\item annotation: Holds all feature-level annotation information for all features in object.
-		\item fpkm: A data frame of FPKM data across all samples, for all features in object.
+		\item fpkm: A data frame of FPKM data across all conditions, for all features in object.
+		\item repFpkm: A data frame of deconvolved FPKM values across individual replicates, for all features in object.
 		\item diff: A data frame of differential expression/regulation data for all features in object.
+		\item count: A data frame containing raw and normalized fragment counts, variance, dispersion, and uncertainty for all features in object.
 	\end{itemize}
 	
 	A specialized sub-class of \Rclass{CuffFeatureSet} is the \Rclass{CuffGeneSet} class. This subclass adds additional slots to contain all isoforms, TSS, and CDS information for a given set of gene\_ids.  The \Rclass{CuffGeneSet} class is designed to aggregate all relevant
@@ -125,7 +149,9 @@ options(width=65)
 	\begin{itemize}
 		\item annotation: Holds feature-level annotation information for a given feature.
 		\item fpkm: A data frame of FPKM data across all samples for a given feature.
+		\item repFpkm: A data frame of deconvolved FPRKM values across all replicates for a given feature.
 		\item diff: A data frame of differential expression/regulation data for a given feature.
+		\item count: A data frame containing raw and normalized fragment counts, variance, dispersion, and uncertainty for a given feature.
 	\end{itemize}
 	
 	A specialized sub-class of \Rclass{CuffFeature} is the \Rclass{CuffGene} class. This subclass adds additional slots to contain all isoform, TSS, and CDS information for a given gene.
@@ -208,6 +234,8 @@ distributions of FPKM scores across samples, you can use the \Rmethod{csDensity}
 <<global_plots_1,include=FALSE>>=
 dens<-csDensity(genes(cuff))
 dens
+densRep<-csDensity(genes(cuff),replicates=T)
+densRep
 @
 
 
@@ -216,16 +244,26 @@ dens
 print(dens)
 @
 
+<<label=global_plots_dens_rep,fig=TRUE,echo=FALSE>>=
+print(densRep)
+@
+
 Boxplots can be visualized using the \Rmethod{csBoxplot} method (Figure 2).
 <<global_plots_2,include=FALSE>>=
 b<-csBoxplot(genes(cuff))
 b
+brep<-csBoxplot(genes(cuff),replicates=T)
+brep
 @
 
 
 <<label=global_plots_box,fig=TRUE,echo=FALSE>>=
 <<global_plots_2>>
 print(b)
+@
+
+<<label=global_plots_box_rep,fig=TRUE,echo=FALSE>>=
+print(brep)
 @
 
 Pairwise comparisons can be made by using \Rmethod{csScatter}. You must specify the sample names to use for the $x$ and $y$ axes:
@@ -243,11 +281,14 @@ MvsA plots can be useful to determine any systematic bias that may be present be
 <<global_plots_4,include=FALSE>>=
 m<-MAplot(genes(cuff),"hESC","Fibroblasts")
 m
+mCount<-MAplot(genes(cuff),"hESC","Fibroblasts",useCount=T)
+mCount
 @
 
 <<label=global_plots_MA,fig=TRUE,echo=FALSE>>=
 <<global_plots_4>>
 print(m)
+print(mCount)
 @
 
 Volcano plots are also available for the \Rclass{CuffData} objects. Again, you must specify the comparisons by sample name.
@@ -264,20 +305,33 @@ print(v)
 \clearpage
 
 \section{Accessing Data}
-Feature-level information can be accessed directly from a \Rclass{CuffData} object using the \Rmethod{fpkm}, \Rmethod{diffData}, or \Rmethod{features} methods:
+Run-level information such as run parameters, and sample information can be accessed from a \Rclass{CuffSet} object by using the \Rmethod{runInfo} and \Rmethod{replicates} methods:
+
+<<data_access_0>>=
+runInfo(cuff)
+
+replicates(cuff)
+
+@
+
+Feature-level information can be accessed directly from a \Rclass{CuffData} object using the \Rmethod{fpkm}, \Rmethod{repFpkm}, \Rmethod{count}, \Rmethod{diffData}, or \Rmethod{features} methods:
 
 <<data_access_1>>=
 gene.features<-features(genes(cuff))
 head(gene.features)
 gene.fpkm<-fpkm(genes(cuff))
 head(gene.fpkm)
+gene.repFpkm<-repFpkm(genes(cuff))
+head(gene.repFpkm)
+gene.counts<-count(genes(cuff))
+head(gene.counts)
 isoform.fpkm<-fpkm(isoforms(cuff))
 head(isoform.fpkm)
 gene.diff<-diffData(genes(cuff))
 head(gene.diff)
 @
 
-Vectors of sample names and feature names are available by using the \Rmethod{samples} and \Rmethod{featureNames} methods:
+Vectors of sample namesand feature names are available by using the \Rmethod{samples} and \Rmethod{featureNames} methods:
 
 <<data_access_2>>=
 sample.names<-samples(genes(cuff))
@@ -290,6 +344,12 @@ To facilitate Bioconductor-like operations, an 'FPKM-matrix' can be returned eas
 <<data_access_3>>=
 gene.matrix<-fpkmMatrix(genes(cuff))
 head(gene.matrix)
+@
+
+A matrix of replicate FPKM values can be retrieved by using \Rmethod{repFpkmMatrix}
+<<data_access_4>>=
+gene.rep.matrix<-repFpkmMatrix(genes(cuff))
+head(gene.rep.matrix)
 @
 
 \subsection{Writing your own SQL accessors}

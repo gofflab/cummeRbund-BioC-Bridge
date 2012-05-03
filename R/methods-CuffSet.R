@@ -103,9 +103,12 @@ setMethod("DB","CuffSet",function(object){
 		return(object@DB)
 		})
 
-setMethod("runInfo","CuffSet",function(object){
-			return(object@runInfo)
-		})
+.runInfo<-function(object){
+	runInfoQuery<-"SELECT * FROM runInfo"
+	dbGetQuery(object@DB,runInfoQuery)
+}
+
+setMethod("runInfo","CuffSet",.runInfo)
 
 #setMethod("phenoData","CuffSet",function(object){
 #			return(object@phenoData)
@@ -146,6 +149,13 @@ setMethod("relCDS","CuffSet",function(object){
 
 #make CuffGene objects from a gene_ids
 .getGene<-function(object,geneId,sampleIdList=NULL){
+	
+	#Get gene_id from geneId (can use any identifier now to select gene)
+	geneId<-getGeneId(object,geneId)
+	
+	if(length(geneId)>1){
+		stop("More than one gene_id found for given query. Please use getGenes() instead.")
+	}
 	
 	#Sample subsetting
 	if(!is.null(sampleIdList)){
@@ -280,7 +290,7 @@ setMethod("getGene",signature(object="CuffSet"),.getGene)
 	
 	#Determine gene_id from geneIdList
 	#This is useful so that people can pass, for example, isoform_id to geneIdList and getGenes will return full genes
-	
+	geneIdList<-getGeneId(object=object,geneIdList)
 	
 	#Sample subsetting
 	if(!is.null(sampleIdList)){
@@ -497,6 +507,22 @@ setMethod("getGene",signature(object="CuffSet"),.getGene)
 
 setMethod("getGenes",signature(object="CuffSet"),.getGenes)
 
+.getGeneId<-function(object,idList){
+	#Query that takes list of any identifier and retrieves gene_id values from db
+	searchString<-"("
+	for(i in idList){
+		searchString<-paste(searchString,"'",i,"',",sep="")
+	}
+	searchString<-substr(searchString,1,nchar(searchString)-1)
+	searchString<-paste(searchString,")",sep="")
+	
+	geneIdQuery<-paste("SELECT DISTINCT g.gene_id FROM genes g JOIN isoforms i on g.gene_id=i.gene_id JOIN TSS t on g.gene_id=t.gene_id JOIN CDS c ON g.gene_id=c.gene_id WHERE (g.gene_id IN ",searchString," OR g.gene_short_name IN ",searchString," OR i.isoform_id IN ",searchString," OR t.tss_group_id IN ",searchString," OR c.CDS_id IN ",searchString,")",sep="")
+	#print(geneIdQuery)
+	res<-dbGetQuery(object@DB,geneIdQuery)
+	as.vector(res[,1])
+}
+
+setMethod("getGeneId",signature(object="CuffSet"),.getGeneId)
 
 #.getFeatures<-function(object,featureIdList,sampleIdList=NULL,level='isoforms'){
 #	#Sample subsetting
@@ -790,3 +816,19 @@ setMethod("getLevels",signature(object="CuffSet"),.getLevels)
 setMethod("addFeatures",signature(object="CuffSet"),.addFeatures)
 
 #TODO: Add method to purge existing feature data table to allow 'refresh' of feature level data
+
+##############
+#Reporting
+##############
+#runReport<-function(){
+#	if(!file.exists(".output")){
+#		dir.create(".output")
+#	}
+#	file.copy(system.file("reports/runReport.Rnw", package="cummeRbund"),paste(".output/","runReport.Rnw",sep=""),overwrite=T)
+#	myWD<-getwd()
+#	setwd(".output")
+#	Sweave("runReport.Rnw")
+#	tools::texi2dvi("runReport.tex",pdf=TRUE)
+#	setwd(myWD)
+#}
+

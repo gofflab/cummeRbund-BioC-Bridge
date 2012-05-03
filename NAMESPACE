@@ -12,6 +12,7 @@ exportClasses(CuffSet,
 )
 
 exportMethods(
+			runInfo,
 			annotation,
 			genes,
 			isoforms,
@@ -45,6 +46,7 @@ exportMethods(
 			expressionBarplot,
 			getGene,
 			getGenes,
+			getGeneId,
 			getSig,
 			getSigTable,
 			addFeatures,

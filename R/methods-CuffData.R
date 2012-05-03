@@ -286,16 +286,34 @@ setMethod("diffData",signature(object="CuffData"),.diffData)
 	}else{
 		sql<-paste("SELECT x.",object@idField,", sum(case when x.sample_name = '",x,"' then x.fpkm end) AS 'x', sum(case when x.sample_name = '",y,"' then x.fpkm end) AS 'y' FROM ",object@tables$dataTable," x GROUP BY x.",object@idField,";",sep="")
 		#print(sql)
-	dat<-dbGetQuery(object@DB,sql)
-	
-	if(logMode){
-		dat$x<-log10(dat$x+pseudocount)
-		dat$y<-log10(dat$y+pseudocount)
+		dat<-dbGetQuery(object@DB,sql)
+		
+		if(logMode){
+			dat$x<-log10(dat$x+pseudocount)
+			dat$y<-log10(dat$y+pseudocount)
+		}
+		dat$A<-(dat$x+dat$y)/2
+		dat$M<-dat$x/dat$y
+		res<-dat[,c(1,4:5)]
+		res
 	}
-	dat$A<-(dat$x+dat$y)/2
-	dat$M<-dat$x/dat$y
-	res<-dat[,c(1,4:5)]
-	res
+}
+
+.getCountMA<-function(object,x,y,logMode=T,pseudocount=1){
+	if (missing(x) || missing(y)){
+		stop("You must supply both x and y.")
+	}else{
+		sql<-paste("SELECT x.",object@idField,", sum(case when x.sample_name = '",x,"' then x.count end) AS 'x', sum(case when x.sample_name = '",y,"' then x.count end) AS 'y' FROM ",object@tables$countTable," x GROUP BY x.",object@idField,";",sep="")
+		dat<-dbGetQuery(object@DB,sql)
+		
+		if(logMode){
+			dat$x<-log10(dat$x+pseudocount)
+			dat$y<-log10(dat$y+pseudocount)
+		}
+		dat$A<-(dat$x+dat$y)/2
+		dat$M<-dat$x/dat$y
+		res<-dat[,c(1,4:5)]
+		res
 	}
 }
 
@@ -359,18 +377,24 @@ setMethod("getRepLevels",signature(object="CuffData"),.getRepLevels)
 #Plotting
 ##################
 
-.density<-function(object, logMode = TRUE, pseudocount=1.0, labels, features=FALSE, ...){
+.density<-function(object, logMode = TRUE, pseudocount=1.0, labels, features=FALSE, replicates=FALSE,...){
 	if(is(object,'CuffData')) {
-		dat<-fpkm(object,features=features)
+		if(replicates){
+			dat<-repFpkm(object,features=features)
+			colnames(dat)[colnames(dat)=="rep_name"]<-"condition"
+		}else{
+			dat<-fpkm(object,features=features)
+			colnames(dat)[colnames(dat)=="sample_name"]<-"condition"
+		}
 	} else {
 		stop('Un-supported class of object.')
 	}
 	if(logMode) dat$fpkm<-dat$fpkm+pseudocount
 	p<-ggplot(dat)
 		if(logMode) {
-			p<-p+geom_density(aes(x= log10(fpkm),group=sample_name,color=sample_name,fill=sample_name),alpha=I(1/3))
+			p<-p+geom_density(aes(x= log10(fpkm),group=condition,color=condition,fill=condition),alpha=I(1/3))
 		}else{
-			p<-p+geom_density(aes(x=fpkm,group=sample_name,color=sample_name,fill=sample_name),alpha=I(1/3))
+			p<-p+geom_density(aes(x=fpkm,group=condition,color=condition,fill=condition),alpha=I(1/3))
 		}
 	
 	p<-p + opts(title=object@tables$mainTable)
@@ -529,8 +553,12 @@ setMethod("csBoxplot",signature(object="CuffData"),.boxplot)
 
 setMethod("csDendro",signature(object="CuffData"),.dendro)
 
-.MAplot<-function(object,x,y,logMode=T,pseudocount=1,smooth=F){
-	dat<-.getMA(object,x,y,logMode=logMode,pseudocount=pseudocount)
+.MAplot<-function(object,x,y,logMode=T,pseudocount=1,smooth=FALSE,useCount=FALSE){
+	if(useCount){
+		dat<-.getCountMA(object,x,y,logMode=logMode,pseudocount=pseudocount)
+	}else{
+		dat<-.getMA(object,x,y,logMode=logMode,pseudocount=pseudocount)
+	}
 	p<-ggplot(dat)
 	p<-p+geom_point(aes(x=A,y=log2(M)))
 	

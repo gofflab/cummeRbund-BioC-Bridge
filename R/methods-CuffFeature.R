@@ -209,7 +209,7 @@ setMethod("count",signature(object="CuffFeature"),.count)
 setMethod("expressionBarplot",signature(object="CuffFeature"),.barplot)
 
 
-.expressionPlot<-function(object,logMode=FALSE,pseudocount=1.0, drawSummary=FALSE, sumFun=mean_cl_boot, showErrorbars=TRUE,showStatus=TRUE,...){
+.expressionPlot<-function(object,logMode=FALSE,pseudocount=1.0, drawSummary=FALSE, sumFun=mean_cl_boot, showErrorbars=TRUE,showStatus=TRUE,replicates=F,...){
 	#Coloring scheme for quant flags
 	quant_types<-c("OK","FAIL","LOWDATA","HIDATA","TOOSHORT")
 	quant_types<-factor(quant_types,levels=quant_types)
@@ -218,16 +218,31 @@ setMethod("expressionBarplot",signature(object="CuffFeature"),.barplot)
 	
 	dat<-fpkm(object)
 	colnames(dat)[1]<-"tracking_id"
+	
+	if(replicates){
+		repDat<-repFpkm(object)
+		repDat$replicate<-as.factor(tmp$replicate)
+		colnames(repDat)[1]<-"tracking_id"
+	}
+	
 	if(logMode)
 	{
 	    dat$fpkm <- dat$fpkm + pseudocount
 	    dat$conf_hi <- dat$conf_hi + pseudocount
 	    dat$conf_lo <- dat$conf_lo + pseudocount
+		
+		if(replicates){
+			repDat$fpkm<-repDat$fpkm + pseudocount
+		}
     }
 	p <- ggplot(dat)
 	#dat$fpkm<- log10(dat$fpkm+pseudocount)
-	p <- p + 
-	    geom_line(aes(x=sample_name,y=fpkm,color=tracking_id,group=tracking_id))
+	p <- p + geom_line(aes(x=sample_name,y=fpkm,group=tracking_id,color=tracking_id))
+	
+	if(replicates){
+		p <- p + geom_point(aes(x=sample_name,y=fpkm,color=tracking_id),size=2.5,shape=18,data=repDat)
+	}
+	
 	if (showErrorbars)
 	{
 	    p <- p +
@@ -264,7 +279,7 @@ setMethod("expressionBarplot",signature(object="CuffFeature"),.barplot)
 	#Recolor quant flags
 	#for some reason this doesn't work (ggplot2 problem)
 	#p<- p+ scale_colour_manual(name='quant_status',values=quant_colors)
-	
+	p<-p+facet_wrap('tracking_id')
 	p
 }
 
