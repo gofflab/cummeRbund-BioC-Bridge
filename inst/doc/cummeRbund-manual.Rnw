@@ -8,9 +8,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\SweaveOpts{prefix.string=graphics/plot}
 \documentclass[10pt]{article}
+\usepackage[margin=0.75in]{geometry}
 \usepackage{amsmath}
 \usepackage[authoryear,round]{natbib}
 \usepackage{hyperref}
+\usepackage{graphicx, subfig}
 \hypersetup{
     colorlinks,
     citecolor=black,
@@ -149,7 +151,7 @@ that you update your cufflinks version >=2.0 to take full advantage of the impro
 	\begin{itemize}
 		\item annotation: Holds feature-level annotation information for a given feature.
 		\item fpkm: A data frame of FPKM data across all samples for a given feature.
-		\item repFpkm: A data frame of deconvolved FPRKM values across all replicates for a given feature.
+		\item repFpkm: A data frame of deconvolved FPKM values across all replicates for a given feature.
 		\item diff: A data frame of differential expression/regulation data for a given feature.
 		\item count: A data frame containing raw and normalized fragment counts, variance, dispersion, and uncertainty for a given feature.
 	\end{itemize}
@@ -238,15 +240,28 @@ densRep<-csDensity(genes(cuff),replicates=T)
 densRep
 @
 
+\begin{figure}[ht]
+\begin{center}
+\subfloat[Density plot of individual conditions.]{
 
-<<label=global_plots_dens,fig=TRUE,echo=FALSE>>=
+<<label=global_plots_dens,fig=TRUE,echo=FALSE,include=FALSE>>=
 <<global_plots_1>>
 print(dens)
 @
 
-<<label=global_plots_dens_rep,fig=TRUE,echo=FALSE>>=
+\includegraphics[width=0.45\textwidth]{cummeRbund-manual-global_plots_dens}
+}
+\qquad
+\subfloat[Density plot with replicates=TRUE exposes individual replicate FPKM distributions.]{
+
+<<label=global_plots_dens_rep,fig=TRUE,echo=FALSE,include=FALSE>>=
 print(densRep)
 @
+
+\includegraphics[width=0.45\textwidth]{cummeRbund-manual-global_plots_dens_rep}}
+\end{center}
+\end{figure}
+
 
 Boxplots can be visualized using the \Rmethod{csBoxplot} method (Figure 2).
 <<global_plots_2,include=FALSE>>=
@@ -256,15 +271,27 @@ brep<-csBoxplot(genes(cuff),replicates=T)
 brep
 @
 
+\begin{figure}[ht]
+\begin{center}
+\subfloat[Box plot of FPKM distributions for individual conditions.]{
 
-<<label=global_plots_box,fig=TRUE,echo=FALSE>>=
+<<label=global_plots_box,fig=TRUE,echo=FALSE,include=FALSE>>=
 <<global_plots_2>>
 print(b)
 @
 
-<<label=global_plots_box_rep,fig=TRUE,echo=FALSE>>=
+\includegraphics[width=0.45\textwidth]{cummeRbund-manual-global_plots_box}
+}
+\qquad
+\subfloat[Box plot with replicates=TRUE exposes individual replicate FPKM distributions.]{
+
+<<label=global_plots_box_rep,fig=TRUE,echo=FALSE,include=FALSE>>=
 print(brep)
 @
+
+\includegraphics[width=0.45\textwidth]{cummeRbund-manual-global_plots_box_rep}}
+\end{center}
+\end{figure}
 
 Pairwise comparisons can be made by using \Rmethod{csScatter}. You must specify the sample names to use for the $x$ and $y$ axes:
 <<global_plots_3,include=FALSE>>=
@@ -277,6 +304,35 @@ s
 print(s)
 @
 
+%Dendrograms
+<<global_plots_6,include=FALSE>>=
+dend<-csDendro(genes(cuff))
+dend.rep<-csDendro(genes(cuff),replicates=T)
+@
+
+\begin{figure}[ht]
+\begin{center}
+\subfloat[Dendrogram of JS distances between conditions.]{
+
+<<label=global_plots_dendro,fig=TRUE,echo=FALSE,include=FALSE>>=
+<<global_plots_6>>
+plot(dend)
+@
+
+\includegraphics[width=0.45\textwidth]{cummeRbund-manual-global_plots_dendro}
+}
+\qquad
+\subfloat[Dendrogram with replicates=TRUE can identify outlier replicates.]{
+
+<<label=global_plots_dendro_rep,fig=TRUE,echo=FALSE,include=FALSE>>=
+plot(dend.rep)
+@
+
+\includegraphics[width=0.45\textwidth]{cummeRbund-manual-global_plots_dendro_rep}}
+\end{center}
+\end{figure}
+
+%MA plots
 MvsA plots can be useful to determine any systematic bias that may be present between conditions. The CuffData method \Rmethod{MAplot()} can be used to examine these intensity vs fold-change plots. You must specify the sample names to use for the pairwise comparison with $x$ and $y$:
 <<global_plots_4,include=FALSE>>=
 m<-MAplot(genes(cuff),"hESC","Fibroblasts")
@@ -471,11 +527,34 @@ head(fpkm(isoforms(myGene)))
 gl<-expressionPlot(myGene)
 gl
 @
+<<gene_plots_replicate_1,include=FALSE>>=
+gl.rep<-expressionPlot(myGene,replicates=TRUE)
+gl.rep
+@
 
-<<label=gene_plots_line,fig=TRUE,echo=FALSE>>=
+\begin{figure}[ht]
+\begin{center}
+\subfloat[Expression plot of a single gene.]{
+
+<<label=gene_plots_line,fig=TRUE,echo=FALSE,include=FALSE>>=
 <<gene_plots_1>>
 print(gl)
 @
+
+\includegraphics[width=0.45\textwidth]{cummeRbund-manual-gene_plots_line}
+}
+\qquad
+\subfloat[Expression plot of a single gene with replicate FPKMs exposed.]{
+
+<<label=gene_plots_replicate_line,fig=TRUE,echo=FALSE,include=FALSE>>=
+<<gene_plots_replicate_1>>
+print(gl.rep)
+@
+
+\includegraphics[width=0.45\textwidth]{cummeRbund-manual-gene_plots_replicate_line}}
+\end{center}
+\end{figure}
+
 
 <<gene_plots_2,include=FALSE>>=
 gb<-expressionBarplot(myGene)

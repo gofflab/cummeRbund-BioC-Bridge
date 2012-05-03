@@ -8,13 +8,25 @@ v1.99.1
 	
 	New Features:
 		- Please see updated vignette for overview of new features.
+		- New dispersionPlot() to visualize model fit (mean count vs dispersion) at all feature levels.
+		- New runInfo() method returns cuffdiff run parameters.
+		- New replicates() method returns a data.frame of replicate-level parameters and information.
 		- getGene() and getGenes() can now take a list of any tracking_id or gene_short_name (not just gene_ids) to retrieve
 		a gene or geneset. 
 		- Added getFeatures() method to retrieve a CuffFeatureSet independent of gene-level attributes.  This is ideal for looking at sets of features
-		outside of the context of all other gene-related information (ie. facilitates feature-level analysis)
-		
+		outside of the context of all other gene-related information (i.e. facilitates feature-level analysis)
+		- Replicate-level fpkm data now available.
+		- Condition-level raw and normalized count data now available.
+		- repFpkm(), repFpkmMatrix, count(), and countMatrix are new accessor methods to CuffData, CuffFeatureSet, and CuffFeature objects.
+		- All relevant plots now have a logical 'replicates' argument (default = F) that when set to TRUE will expose replicate FPKM values in appropriate ways.
+		- MAPlot() now has 'useCount' argument to draw MA plots using count data as opposed to fpkm estimates.
+	
+	Notes:
+		- Changed default csHeatmap colorscheme to the much more pleasing 'lightyellow' to 'darkred' through 'orange'.
+		- SQLite journaling is no longer disabled by default (The benefits outweigh the moderate reduction in load times).
+	
 	Bugfixes:
-		- 
+		- Numerous random bug fixes to improve consistency and improve performance for large datasets.
 
 v1.2.1
 	Bugfixes:
