@@ -799,6 +799,14 @@ setMethod("findSimilar",signature(object="CuffSet"),.findSimilar)
 
 setMethod("getLevels",signature(object="CuffSet"),.getLevels)
 
+.getRepLevels<-function(object){
+	levelsQuery<-'SELECT r.rep_name FROM replicates r LEFT JOIN samples s ON r.sample_name=s.sample_name ORDER BY s.sample_index ASC'
+	levels<-dbGetQuery(object@DB,levelsQuery)$rep_name
+	levels
+}
+
+setMethod("getRepLevels",signature(object="CuffSet"),.getRepLevels)
+
 .checkSamples<-function(dbConn,sampleIdList){
 	dbSamples<-dbReadTable(dbConn,"samples")
 	if (all(sampleIdList %in% dbSamples$sample_name)){
