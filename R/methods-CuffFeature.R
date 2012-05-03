@@ -221,7 +221,7 @@ setMethod("expressionBarplot",signature(object="CuffFeature"),.barplot)
 	
 	if(replicates){
 		repDat<-repFpkm(object)
-		repDat$replicate<-as.factor(tmp$replicate)
+		repDat$replicate<-as.factor(repDat$replicate)
 		colnames(repDat)[1]<-"tracking_id"
 	}
 	
@@ -265,7 +265,7 @@ setMethod("expressionBarplot",signature(object="CuffFeature"),.barplot)
 	
 	if (logMode)
     {
-        p <- p + ylab(paste("Log10 FPKM + ",pseudocount))
+        p <- p + ylab(paste("FPKM + ",pseudocount))
     } else {
         p <- p + ylab("FPKM")
     }

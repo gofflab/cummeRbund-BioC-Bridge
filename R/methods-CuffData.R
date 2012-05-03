@@ -255,6 +255,36 @@ setMethod("fpkmMatrix","CuffData",.fpkmMatrix)
 
 setMethod("repFpkmMatrix","CuffData",.repFpkmMatrix)
 
+.countMatrix<-function(object,fullnames=FALSE,sampleIdList){
+	#Sample subsetting
+	if(!missing(sampleIdList)){
+		if(.checkSamples(object@DB,sampleIdList)){
+			myLevels<-sampleIdList
+		}else{
+			stop("Sample does not exist!")
+		}
+	}else{
+		myLevels<-getLevels(object)
+	}
+	
+	samp<-samples(object)
+	CountMatQuery<-paste("select x.",object@idField,", ",sep="")
+	for (i in samp){
+		CountMatQuery<-paste(CountMatQuery,"sum(case when xd.sample_name ='",i,"' then count end) as ",i,",",sep="")
+	}
+	CountMatQuery<-substr(CountMatQuery, 1, nchar(CountMatQuery)-1)
+	CountMatQuery<-paste(CountMatQuery," from ",object@tables$mainTable," x LEFT JOIN ",object@tables$countTable," xd on x.",object@idField," = xd.",object@idField," group by x.",object@idField,sep="")
+	res<-dbGetQuery(object@DB,CountMatQuery)
+	res<-data.frame(res[,-1],row.names=res[,1])
+	if(!missing(sampleIdList)){
+		res<-data.frame(res[,sampleIdList],row.names=rownames(res))
+		colnames(res)<-sampleIdList
+	}
+	res
+}
+
+setMethod("countMatrix","CuffData",.countMatrix)
+
 #This needs a lot of work...
 #TODO: Change this to remove lnFcCutoff but make sure that functions that rely on diffData have their own FC cutoff so that plotting doesn't suffer
 .diffData<-function(object,x,y,features=FALSE){

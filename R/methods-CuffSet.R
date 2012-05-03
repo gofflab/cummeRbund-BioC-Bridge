@@ -516,7 +516,7 @@ setMethod("getGenes",signature(object="CuffSet"),.getGenes)
 	searchString<-substr(searchString,1,nchar(searchString)-1)
 	searchString<-paste(searchString,")",sep="")
 	
-	geneIdQuery<-paste("SELECT DISTINCT g.gene_id FROM genes g JOIN isoforms i on g.gene_id=i.gene_id JOIN TSS t on g.gene_id=t.gene_id JOIN CDS c ON g.gene_id=c.gene_id WHERE (g.gene_id IN ",searchString," OR g.gene_short_name IN ",searchString," OR i.isoform_id IN ",searchString," OR t.tss_group_id IN ",searchString," OR c.CDS_id IN ",searchString,")",sep="")
+	geneIdQuery<-paste("SELECT DISTINCT g.gene_id FROM genes g LEFT JOIN isoforms i on g.gene_id=i.gene_id LEFT JOIN TSS t on g.gene_id=t.gene_id LEFT JOIN CDS c ON g.gene_id=c.gene_id WHERE (g.gene_id IN ",searchString," OR g.gene_short_name IN ",searchString," OR i.isoform_id IN ",searchString," OR t.tss_group_id IN ",searchString," OR c.CDS_id IN ",searchString,")",sep="")
 	#print(geneIdQuery)
 	res<-dbGetQuery(object@DB,geneIdQuery)
 	as.vector(res[,1])
@@ -524,60 +524,70 @@ setMethod("getGenes",signature(object="CuffSet"),.getGenes)
 
 setMethod("getGeneId",signature(object="CuffSet"),.getGeneId)
 
-#.getFeatures<-function(object,featureIdList,sampleIdList=NULL,level='isoforms'){
-#	#Sample subsetting
-#	if(!is.null(sampleIdList)){
-#		if(.checkSamples(object@DB,sampleIdList)){
-#			myLevels<-sampleIdList
-#		}else{
-#			stop("Sample does not exist!")
-#		}
-#	}else{
-#		myLevels<-getLevels(object)
-#	}
-#	
-#	sampleString<-'('
-#	for (i in myLevels){
-#		sampleString<-paste(sampleString,"'",i,"',",sep="")
-#	}
-#	sampleString<-substr(sampleString,1,nchar(sampleString)-1)
-#	sampleString<-paste(sampleString,")",sep="")
-#	
-#	#ID Search String (SQL)
-#	idString<-'('
-#	for (i in featureIdList){
-#		idString<-paste(idString,"'",i,"',",sep="")
-#	}
-#	idString<-substr(idString,1,nchar(idString)-1)
-#	idString<-paste(idString,")",sep="")
-#	
-#	whereString<-paste('WHERE (x.gene_id IN ',idString,' OR g.gene_short_name IN ',idString,')',sep="")
-#	whereStringFPKM<-paste('WHERE (x.gene_id IN ',idString,' OR g.gene_short_name IN ',idString,')',sep="")
-#	whereStringDiff<-paste('WHERE (x.gene_id IN ',idString,' OR g.gene_short_name IN ',idString,')',sep="")
-#	
-#	if(!is.null(sampleIdList)){
-#		whereString<-whereString
-#		whereStringFPKM<-paste(whereStringFPKM, ' AND y.sample_name IN ',sampleString,sep="")
-#		whereStringDiff<-paste(whereStringDiff,' AND (y.sample_1 IN ',sampleString,' AND y.sample_2 IN ',sampleString,')',sep="")
-#	}
-#	
-#	
-#	AnnotationQuery<-paste("SELECT x.* from ",slot(object,level)@tables$mainTable," x LEFT JOIN ",slot(object,level)@tables$featureTable," xf ON x.",slot(object,level)@idField,"=xf.",slot(object,level)@idField," JOIN genes g ON x.gene_id=g.gene_id ", whereString,sep="")
-#	FPKMQuery<-paste("SELECT y.* from ",slot(object,level)@tables$mainTable," x JOIN ",slot(object,level)@tables$dataTable,"  y ON x.",slot(object,level)@idField," = y.",slot(object,level)@idField," JOIN genes g ON x.gene_id=g.gene_id ", whereStringFPKM,sep="")
-#	DiffQuery<-paste("SELECT y.* from ",slot(object,level)@tables$mainTable," x JOIN ",slot(object,level)@tables$expDiffTable,"  y ON x.",slot(object,level)@idField," = y.",slot(object,level)@idField," JOIN genes g ON x.gene_id=g.gene_id ", whereStringDiff,sep="")
-#	
-#	begin<-dbSendQuery(object@DB,"BEGIN;")	
-#	res<-isoforms=new("CuffFeatureSet",
-#			annotation=dbGetQuery(object@DB,AnnotationQuery),
-#			fpkm=dbGetQuery(object@DB,FPKMQuery),
-#			diff=dbGetQuery(object@DB,DiffQuery)
-#		)
-#	end<-dbSendQuery(object@DB,"END;")		
-#	res
-#	
-#}
-#
-#setMethod("getFeatures",signature(object="CuffSet"),.getFeatures)
+.getFeatures<-function(object,featureIdList,sampleIdList=NULL,level='isoforms'){
+	#Sample subsetting
+	if(!is.null(sampleIdList)){
+		if(.checkSamples(object@DB,sampleIdList)){
+			myLevels<-sampleIdList
+		}else{
+			stop("Sample does not exist!")
+		}
+	}else{
+		myLevels<-getLevels(object)
+	}
+	
+	sampleString<-'('
+	for (i in myLevels){
+		sampleString<-paste(sampleString,"'",i,"',",sep="")
+	}
+	sampleString<-substr(sampleString,1,nchar(sampleString)-1)
+	sampleString<-paste(sampleString,")",sep="")
+	
+	#ID Search String (SQL)
+	idString<-'('
+	for (i in featureIdList){
+		idString<-paste(idString,"'",i,"',",sep="")
+	}
+	idString<-substr(idString,1,nchar(idString)-1)
+	idString<-paste(idString,")",sep="")
+	
+	whereString<-paste(' WHERE (x.',slot(object,level)@idField,' IN ',idString,')',sep="")
+	whereStringFPKM<-paste(' WHERE (x.',slot(object,level)@idField,' IN ',idString,')',sep="")
+	whereStringDiff<-paste(' WHERE (x.',slot(object,level)@idField,' IN ',idString,')',sep="")
+	
+	if(!is.null(sampleIdList)){
+		whereString<-whereString
+		whereStringFPKM<-paste(whereStringFPKM, ' AND y.sample_name IN ',sampleString,sep="")
+		whereStringDiff<-paste(whereStringDiff,' AND (y.sample_1 IN ',sampleString,' AND y.sample_2 IN ',sampleString,')',sep="")
+	}
+	
+	
+	AnnotationQuery<-paste("SELECT x.* from ",slot(object,level)@tables$mainTable," x LEFT JOIN ",slot(object,level)@tables$featureTable," xf ON x.",slot(object,level)@idField,"=xf.",slot(object,level)@idField, whereString,sep="")
+	FPKMQuery<-paste("SELECT y.* from ",slot(object,level)@tables$mainTable," x JOIN ",slot(object,level)@tables$dataTable," y ON x.",slot(object,level)@idField," = y.",slot(object,level)@idField,whereStringFPKM,sep="")
+	DiffQuery<-paste("SELECT y.* from ",slot(object,level)@tables$mainTable," x JOIN ",slot(object,level)@tables$expDiffTable," y ON x.",slot(object,level)@idField," = y.",slot(object,level)@idField,whereStringDiff,sep="")
+	repFPKMQuery<-paste("SELECT y.* from ",slot(object,level)@tables$mainTable," x JOIN ",slot(object,level)@tables$replicateTable," y ON x.",slot(object,level)@idField," = y.",slot(object,level)@idField,whereStringFPKM,sep="")
+	countQuery<-paste("SELECT y.* from ",slot(object,level)@tables$mainTable," x JOIN ",slot(object,level)@tables$countTable," y ON x.",slot(object,level)@idField," = y.",slot(object,level)@idField,whereStringFPKM,sep="")
+	
+	#print(AnnotationQuery)
+	#print(FPKMQuery)
+	#print(DiffQuery)
+	#print(repFPKMQuery)
+	#print(countQuery)
+	
+	begin<-dbSendQuery(object@DB,"BEGIN;")	
+	res<-new("CuffFeatureSet",
+			annotation=dbGetQuery(object@DB,AnnotationQuery),
+			fpkm=dbGetQuery(object@DB,FPKMQuery),
+			diff=dbGetQuery(object@DB,DiffQuery),
+			repFpkm=dbGetQuery(object@DB,repFPKMQuery),
+			count=dbGetQuery(object@DB,countQuery)
+		)
+	end<-dbSendQuery(object@DB,"END;")		
+	res
+	
+}
+
+setMethod("getFeatures",signature(object="CuffSet"),.getFeatures)
 	
 
 

@@ -173,14 +173,49 @@ setMethod("fpkmMatrix",signature(object="CuffFeatureSet"),.fpkmMatrix)
 
 setMethod("repFpkmMatrix",signature(object="CuffFeatureSet"),.repFpkmMatrix)
 
+.countMatrix<-function(object,fullnames=FALSE,sampleIdList){
+	#Sample subsetting
+	if(!missing(sampleIdList)){
+		if (!all(sampleIdList %in% samples(object))){
+			stop("Sample does not exist!")
+		}else{
+			mySamples<-sampleIdList
+		}
+	}else{
+		mySamples<-samples(object)
+	}
+	if(fullnames){
+		res<-count(object,features=TRUE)
+		res$tracking_id<-paste(res$gene_short_name,res[,1],sep="|")
+	}else{
+		res<-count(object)
+		colnames(res)[1]<-"tracking_id"	
+	}
+	selectedRows<-c('tracking_id','sample_name','count')
+	res<-res[,selectedRows]
+	res<-melt(res)
+	res<-dcast(res,tracking_id~sample_name)
+	res<-data.frame(res[,-1],row.names=res[,1])
+	if(!missing(sampleIdList)){
+		res<-res[,mySamples]
+	}
+	res
+}
+
+setMethod("countMatrix",signature(object="CuffFeatureSet"),.countMatrix)
+
 .diffData<-function(object){
 	return(object@diff)
 }
 
 setMethod("diffData",signature(object="CuffFeatureSet"),.diffData)
 
-.count<-function(object){
-	return(object@count)
+.count<-function(object,features=FALSE){
+	if (features){
+		return (merge(object@annotation,object@count))
+	}else{
+		return(object@count)
+	}
 }
 
 setMethod("count",signature(object="CuffFeatureSet"),.count)
@@ -211,7 +246,7 @@ setMethod("annotation","CuffFeatureSet",function(object){
 #There is no genericMethod yet, goal is to replace .heatmap with .ggheat for genericMethod 'csHeatmap'
 
 .ggheat<-function(object, rescaling='none', clustering='none', labCol=T, labRow=T, logMode=T, pseudocount=1.0, 
-		border=FALSE, heatscale=c(low='darkred',mid='orange',high='white'), heatMidpoint=NULL,fullnames=T,replicates=FALSE,...) {
+		border=FALSE, heatscale=c(low='lightyellow',mid='orange',high='darkred'), heatMidpoint=NULL,fullnames=T,replicates=FALSE,...) {
 	## the function can be be viewed as a two step process
 	## 1. using the rehape package and other funcs the data is clustered, scaled, and reshaped
 	## using simple options or by a user supplied function
@@ -543,7 +578,7 @@ setMethod("csVolcano",signature(object="CuffFeatureSet"), .volcano)
 
 setMethod("expressionBarplot",signature(object="CuffFeatureSet"),.barplot)
 
-.expressionPlot<-function(object,logMode=FALSE,pseudocount=1.0, drawSummary=FALSE, sumFun=mean_cl_boot, showErrorbars=TRUE,showStatus=TRUE,showReplicates=FALSE,...){
+.expressionPlot<-function(object,logMode=FALSE,pseudocount=1.0, drawSummary=FALSE, sumFun=mean_cl_boot, showErrorbars=TRUE,showStatus=TRUE,replicates=FALSE,...){
 	quant_types<-c("OK","FAIL","LOWDATA","HIDATA","TOOSHORT")
 	quant_types<-factor(quant_types,levels=quant_types)
 	quant_colors<-c("black","red","blue","orange","green")
@@ -551,24 +586,39 @@ setMethod("expressionBarplot",signature(object="CuffFeatureSet"),.barplot)
 	
 	dat<-fpkm(object)
 	colnames(dat)[1]<-"tracking_id"
+	
+	if(replicates){
+		repDat<-repFpkm(object)
+		repDat$replicate<-as.factor(repDat$replicate)
+		colnames(repDat)[1]<-"tracking_id"
+	}
+	
 	if(logMode)
 	{
 		dat$fpkm <- dat$fpkm + pseudocount
 		dat$conf_hi <- dat$conf_hi + pseudocount
 		dat$conf_lo <- dat$conf_lo + pseudocount
+		
+		if(replicates){
+			repDat$fpkm<-repDat$fpkm + pseudocount
+		}
 	}
 	p <- ggplot(dat)
 	#dat$fpkm<- log10(dat$fpkm+pseudocount)
-	p <- p + 
-			geom_line(aes(x=sample_name,y=fpkm,group=tracking_id))
+	p <- p + geom_line(aes(x=sample_name,y=fpkm,group=tracking_id,color=tracking_id))
+	
+	if(replicates){
+		p <- p + geom_point(aes(x=sample_name,y=fpkm,color=tracking_id),size=2.5,shape=18,data=repDat)
+	}
+	
 	if (showErrorbars)
 	{
 		p <- p +
-				geom_errorbar(aes(x=sample_name, ymin=conf_lo,ymax=conf_hi,group=tracking_id),width=0.25)
+				geom_errorbar(aes(x=sample_name, ymin=conf_lo,ymax=conf_hi,color=tracking_id,group=tracking_id),width=0.25)
 	}
 	
 	if(showStatus){
-		p <- p+ geom_point(aes(x=sample_name,y=fpkm,shape=quant_status,color=quant_status))
+		p <- p+ geom_point(aes(x=sample_name,y=fpkm,shape=quant_status))
 	}
 	
 	if (logMode)
@@ -589,7 +639,7 @@ setMethod("expressionBarplot",signature(object="CuffFeatureSet"),.barplot)
 	}
 	
 	#Recolor quant flags
-	p<- p+ scale_colour_manual(name='quant_status',values=quant_colors)
+	#p<- p + scale_colour_manual(name='quant_status',values=quant_colors)
 	
 	p
 }
