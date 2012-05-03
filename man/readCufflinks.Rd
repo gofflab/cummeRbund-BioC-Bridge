@@ -12,10 +12,11 @@ readCufflinks(dir = getwd(), dbFile = "cuffData.db",
 				geneFPKM = "genes.fpkm_tracking", geneDiff = "gene_exp.diff", geneCount="genes.count_tracking", geneRep="genes.read_group_tracking",
 				isoformFPKM = "isoforms.fpkm_tracking", isoformDiff = "isoform_exp.diff", isoformCount="isoforms.count_tracking", isoformRep="isoforms.read_group_tracking",
 				TSSFPKM = "tss_groups.fpkm_tracking", TSSDiff = "tss_group_exp.diff", TSSCount="tss_groups.count_tracking", TSSRep="tss_groups.read_group_tracking",
-				CDSFPKM = "cds.fpkm_tracking", CDSExpDiff = "cds_exp.diff", CDSDiff = "cds.diff", CDSCount="cds.count_tracking", CDSRep="cds.read_group_tracking",
+				CDSFPKM = "cds.fpkm_tracking", CDSExpDiff = "cds_exp.diff", CDSCount="cds.count_tracking", CDSRep="cds.read_group_tracking",
+				CDSDiff = "cds.diff",
 				promoterFile = "promoters.diff", 
 				splicingFile = "splicing.diff", 
-				driver = "SQLite", rebuild = FALSE, ...)
+				driver = "SQLite", rebuild = FALSE,verbose=FALSE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -31,11 +32,23 @@ genes.fpkm_tracking file
   \item{geneDiff}{
 gene_exp.diff file
 }
+  \item{geneCount}{
+genes.count_tracking file
+}
+  \item{geneRep}{
+genes.read_group_tracking file
+}
   \item{isoformFPKM}{
 isoforms.fpkm_tracking file
 }
   \item{isoformDiff}{
 isoform_exp.diff file
+}
+  \item{isoformCount}{
+isoforms.count_tracking file
+}
+  \item{isoformRep}{
+isoform.read_group_tracking file
 }
   \item{TSSFPKM}{
 tss_groups.fpkm_tracking file
@@ -43,11 +56,23 @@ tss_groups.fpkm_tracking file
   \item{TSSDiff}{
 tss_group_exp.diff file
 }
+  \item{TSSCount}{
+tss_groups.count_tracking file
+}
+  \item{TSSRep}{
+tss_groups.read_group_tracking file
+}
   \item{CDSFPKM}{
 cds.fpkm_tracking file
 }
   \item{CDSExpDiff}{
 cds_exp.diff file
+}
+  \item{CDSCount}{
+cds.count_tracking file
+}
+  \item{CDSRep}{
+cds.read_group_tracking file
 }
   \item{CDSDiff}{
 cds.diff file (distribution tests on CDS)
@@ -63,6 +88,9 @@ Driver for backend database. (Currently only "SQLite" is supported).
 }
   \item{rebuild}{
 A logical argument to rebuild database backend.
+}
+  \item{verbose}{
+A logical argument for super verbose reporting (As if it wasn't enough already!)
 }
   \item{\dots}{
 Additional arguments to readCufflinks

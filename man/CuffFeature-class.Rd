@@ -20,6 +20,8 @@ Objects can be created by calls of the form \code{new("CuffFeature", annotation,
     \item{\code{annotation}:}{Object of class \code{"data.frame"} ~~ }
     \item{\code{fpkm}:}{Object of class \code{"data.frame"} ~~ }
     \item{\code{diff}:}{Object of class \code{"data.frame"} ~~ }
+    \item{\code{repFpkm}:}{Object of class \code{"data.frame"} ~~ }
+    \item{\code{count}:}{Object of class \code{"data.frame"} ~~ }
   }
 }
 \section{Methods}{

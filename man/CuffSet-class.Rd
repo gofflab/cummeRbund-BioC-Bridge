@@ -35,9 +35,11 @@ Available methods are primary accessors to retrieve CuffGeneSet or CuffGene obje
     \item{\code{conditions}:}{Object of class \code{"data.frame"} ~~ }
     \item{\code{genes}:}{Object of class \code{"CuffData"} ~~ }
     \item{\code{isoforms}:}{Object of class \code{"CuffData"} ~~ }
+    \item{\code{phenoData}:}{Object of class \code{"data.frame"} ~~ }
     \item{\code{TSS}:}{Object of class \code{"CuffData"} ~~ }
     \item{\code{CDS}:}{Object of class \code{"CuffData"} ~~ }
     \item{\code{promoters}:}{Object of class \code{"CuffDist"} ~~ }
+    \item{\code{runInfo}:}{Object of class \code{"data.frame"} ~~ }
     \item{\code{splicing}:}{Object of class \code{"CuffDist"} ~~ }
     \item{\code{relCDS}:}{Object of class \code{"CuffDist"} ~~ }
   }
