@@ -49,7 +49,7 @@ options(width=65)
 \maketitle
 
 \tableofcontents
-
+\clearpage
 \section{Requirements}
 \emph{cummeRbund 2.0 was designed in conjunction with the release of cufflinks 2.0.  While we attempted to preserve backwards-compatability, it is highly recommended
 that you update your cufflinks version >=2.0 to take full advantage of the improvements in modeling, reporting, and visualization that have been incorporated.} 
@@ -71,6 +71,7 @@ that you update your cufflinks version >=2.0 to take full advantage of the impro
 	\end{itemize}
 \end{itemize}
 	
+\clearpage
 
 \section{Introduction}
 	\Rpackage{cummeRbund} is a visualization package for Cufflinks high-throughput sequencing data. It is designed to help you navigate through the large amount of data produced from a Cuffdiff RNA-Seq differential expression
@@ -88,7 +89,9 @@ that you update your cufflinks version >=2.0 to take full advantage of the impro
 	of RNA-Seq data quality and global statistics, and simple routines for plotting expression levels for one or thousands of genes, their isoforms, TSS groups, or CDS groups.
 	  
 	The base class, \Rclass{cuffSet} is a 'pointer' to cuffdiff data that are stored out-of-memory in a sqlite database.
-	
+
+\clearpage
+
 \section{CummeRbund Classes}
 
 \subsection{CuffSet Class}
@@ -164,7 +167,9 @@ that you update your cufflinks version >=2.0 to take full advantage of the impro
 		\item TSS: A \Rclass{CuffFeature} object for all TSS of a given gene.
 		\item CDS: A \Rclass{CuffFeature} object for all CDS of a given gene.
 	\end{itemize}
-	
+
+\clearpage
+
 \section{Reading cuffdiff output}
 \Rpackage{cummeRbund} was designed to process the multi-file output format for a 'cuffdiff' differential expression analysis.  In this type of analysis, a user will use a reference .gtf file (either known annotation or a .gtf file created from a cufflinks assembly or merge of assemblies) and quantitate the expression values and differential regulation of the annotation(s) in the .gtf file across two or more SAM/BAM files.
 By design, cuffdiff produces a number of output files that contain test results for changes in expression at the level of transcripts, primary transcripts, and genes. It also tracks changes in the relative abundance of transcripts sharing a common transcription start site, and in the relative abundances of the primary transcripts of each gene. Tracking the former allows one to see changes in splicing, and the latter lets one see changes in relative promoter use within a gene. \\
@@ -229,10 +234,32 @@ Gene- or feature-level annotation can be permanently added to the database table
 @
 By default, features added to a \Rclass{CuffSet} object are assumed to be gene-level annotations, but the level can selected using the argument \Rfunarg{level}. Features added to a \Rclass{CuffData} object are assumed to be of the same type as the 'type' value for that given object (e.g. gene-level features for 'genes', isoform-level features for isoforms, etc.)
 
+\clearpage
 
 \section{Global statistics}
-Several plotting methods are available that allow for quality-control or global analysis of cufflinks data. For example, to assess the
-distributions of FPKM scores across samples, you can use the \Rmethod{csDensity} plot (Figure 1).
+Several plotting methods are available that allow for quality-control or global analysis of cufflinks data. A good place to begin is to evaluate the quality of the model fitting. Overdispersion is a common problem in RNA-Seq data. As of cufflinks $v2.0$ mean counts, variance, and dispersion are all emitted,
+allowing you to visualize the estimated overdispersion for each sample as a quality control measure.
+
+<<global_dispersion,include=FALSE>>=
+disp<-dispersionPlot(genes(cuff))
+disp
+@
+
+\begin{figure}[ht]
+\begin{center}
+\subfloat[Count vs dispersion plot by condition for all genes.]{
+<<label=global_dispersion_plot,fig=TRUE,echo=FALSE,include=FALSE>>=
+print(disp)
+@
+
+\includegraphics[width=0.7\textwidth]{cummeRbund-manual-global_dispersion_plot}
+}
+
+\end{center}
+\end{figure}
+
+%FPKM distributions - Density
+To assess the distributions of FPKM scores across samples, you can use the \Rmethod{csDensity} plot (Figure 1).
 <<global_plots_1,include=FALSE>>=
 dens<-csDensity(genes(cuff))
 dens
@@ -361,6 +388,8 @@ print(v)
 \clearpage
 
 \section{Accessing Data}
+
+\subsection*{Cuffdiff run information}
 Run-level information such as run parameters, and sample information can be accessed from a \Rclass{CuffSet} object by using the \Rmethod{runInfo} and \Rmethod{replicates} methods:
 
 <<data_access_0>>=
@@ -368,23 +397,30 @@ runInfo(cuff)
 replicates(cuff)
 @
 
+\subsection*{Features/Annotation}
 Feature-level information can be accessed directly from a \Rclass{CuffData} object using the \Rmethod{fpkm}, \Rmethod{repFpkm}, \Rmethod{count}, \Rmethod{diffData}, or \Rmethod{features} methods:
 
 <<data_access_1>>=
 gene.features<-features(genes(cuff))
 head(gene.features)
+
 gene.fpkm<-fpkm(genes(cuff))
 head(gene.fpkm)
+
 gene.repFpkm<-repFpkm(genes(cuff))
 head(gene.repFpkm)
+
 gene.counts<-count(genes(cuff))
 head(gene.counts)
+
 isoform.fpkm<-fpkm(isoforms(cuff))
 head(isoform.fpkm)
+
 gene.diff<-diffData(genes(cuff))
 head(gene.diff)
 @
 
+\subsection*{Condition information}
 Vectors of sample namesand feature names are available by using the \Rmethod{samples} and \Rmethod{featureNames} methods:
 
 <<data_access_2>>=
@@ -394,6 +430,7 @@ gene.featurenames<-featureNames(genes(cuff))
 head(gene.featurenames)
 @
 
+\subsection*{Convenience functions}
 To facilitate Bioconductor-like operations, an 'FPKM-matrix' can be returned easily using the \Rmethod{fpkmMatrix} method:
 <<data_access_3>>=
 gene.matrix<-fpkmMatrix(genes(cuff))
@@ -435,8 +472,22 @@ myGeneIds
 myGenes<-getGenes(cuff,myGeneIds)
 myGenes
 @
-The same \Rmethod{fpkm}, \Rmethod{fpkmMatrix}, \Rmethod{features}, \Rmethod{diffData}, \Rmethod{samples}, and \Rmethod{featureNames} are available for instances of the \Rmethod{CuffGeneSet} class, but additional accessor methods are available for the \Rmethod{promoters},\Rmethod{relCDS}, and \Rmethod{splicing} slot data as well.
+The same \Rmethod{fpkm}, \Rmethod{repFpkm}, \Rmethod{count}, \Rmethod{features}, \Rmethod{diffData}, \Rmethod{samples}, and \Rmethod{featureNames} methods are available for instances of the \Rmethod{CuffGeneSet} class, but additional accessor methods are available for the \Rmethod{promoters}, \Rmethod{relCDS}, and \Rmethod{splicing} slot data as well.
 
+<<create_geneset_2>>=
+#FPKM values for genes in gene set
+head(fpkm(myGenes))
+
+#Isoform-level FPKMs for gene set
+head(fpkm(isoforms(myGenes)))
+
+#Replicate FPKMs for TSS groups within gene set
+head(repFpkm(TSS(myGenes)))
+
+@
+
+As of \Rpackage{cummeRbund} $v2.0$ \Rclass{CuffGeneSet} classes can be created from any type of identifier ('gene\_id','isoform\_id','TSS\_group\_id', or 'CDS\_id'). When you pass a list of identifiers that are not gene\_id to \Rmethod{getGenes()}, the function attempts to lookup the parent gene\_id for each feature and returns \emph{all} relevant
+information for the given genes and all of their sub-features (not just the sub-features passed to \Rmethod{getGenes()}.  If you are interested in just retrieving information for a given set of features, please use the new \Rmethod{getFeatures()} method described later.
 
 \subsection{Geneset level plots}
 There are several plotting functions available for gene-set-level visualization:
