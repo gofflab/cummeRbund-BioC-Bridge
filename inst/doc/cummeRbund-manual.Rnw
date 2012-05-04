@@ -6,7 +6,7 @@
 %\VignettePackage{cummeRbund}
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\SweaveOpts{prefix.string=graphics/plot}
+%\SweaveOpts{prefix.string=graphics/cummeRbund-manual}
 \documentclass[10pt]{article}
 \usepackage[margin=0.75in]{geometry}
 \usepackage{amsmath}
@@ -810,22 +810,28 @@ By default \Rmethod{getSig()} outputs a vector of tracking IDs corresponding to 
 (the default is $0.05$ to match the default of cuffdiff). 
 
 <<get_sig_1>>=
-mySigGenes<-getSig(cuff,alpha=0.05,level='genes')
-head(mySigGenes)
-length(mySigGenes)
+mySigGeneIds<-getSig(cuff,alpha=0.05,level='genes')
+head(mySigGeneIds)
+length(mySigGeneIds)
 @
 By default \Rmethod{getSig()} outputs a vector of tracking IDs corresponding to all \emph{genes} that reject the null hypothesis in any condition tested. The default feature type can be changed by adjusting the 'level' argument to \Rmethod{getSig()}. In addition, a alpha value can be provided on which to filter the resulting list
 (the default is $0.05$ to match the default of cuffdiff). Significance results for specific pairwise comparisons can be retrieved as well by specifying the two conditions as 'x' and 'y'. In this case, p-values are adjusted to reduce the impact of multiple-testing correction when only one set of tests is being conducted.
 
 <<get_sig_2>>=
-hESC_vs_iPS.sigIsoforms<-getSig(cuff,x='hESC',y='iPS',alpha=0.05,level='isoforms')
-head(hESC_vs_iPS.sigIsoforms)
-length(hESC_vs_iPS.sigIsoforms)
+hESC_vs_iPS.sigIsoformIds<-getSig(cuff,x='hESC',y='iPS',alpha=0.05,level='isoforms')
+head(hESC_vs_iPS.sigIsoformIds)
+length(hESC_vs_iPS.sigIsoformIds)
 @
 The values returned for each level of this list can be used as an argument to getGenes, to create a \Rclass{CuffGeneSet} object of significantly regulated genes (or features).
-Alternatively, you can use the \Rmethod{getSigTable()} method to return a full test-table of 'significant features' x 'pairwise tests' for all comparisons. Only features in which the null hypothesis can be rejected in at least one test are reported.
 
 <<get_sig_3>>=
+mySigGenes<-getGenes(cuff,mySigGeneIds)
+mySigGenes
+
+@
+Alternatively, you can use the \Rmethod{getSigTable()} method to return a full test-table of 'significant features' x 'pairwise tests' for all comparisons. Only features in which the null hypothesis can be rejected in at least one test are reported.
+
+<<get_sig_4>>=
 mySigTable<-getSigTable(cuff,alpha=0.01,level='genes')
 head(mySigTable,20)
 @
