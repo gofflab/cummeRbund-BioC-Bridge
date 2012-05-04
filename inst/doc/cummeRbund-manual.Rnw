@@ -60,18 +60,17 @@
 \newcommand{\Rfunarg}[1]{{\textit{#1}}}
 
 \bibliographystyle{plainnat}
-\title{cummeRbund: Visualization and Exploration of Cufflinks High-throughput Sequencing Data}
+\title{CummeRbund: Visualization and Exploration of Cufflinks High-throughput Sequencing Data}
 
 \author{Loyal A. Goff, Cole Trapnell}
-\date{}
-
+\date{May 4, 2012}
 \begin{document}
 <<init, echo=FALSE>>=
 options(width=65)
 @ 
 
 \maketitle
-
+\footnote[]{Current version 1.99.1}
 \tableofcontents
 \clearpage
 \section{Requirements}
@@ -681,7 +680,7 @@ plot(den)
 \clearpage
 
 \section{Individual Genes}
-An individual CuffGene object can be created by using the \Rfunction{getGene()} function for a given 'gene\_id' or 'gene\_short\_name'. As of cummeRbund $\gev2.0$ you can also use isoform\_id, tss\_group\_id, or
+An individual CuffGene object can be created by using the \Rfunction{getGene()} function for a given 'gene\_id' or 'gene\_short\_name'. As of cummeRbund $\ge v2.0$ you can also use isoform\_id, tss\_group\_id, or
 cds\_id values to retrieve the corresponding parent gene object.
 
 <<gene_level_1>>=
@@ -825,7 +824,6 @@ head(hESC_vs_iPS.sigIsoforms)
 length(hESC_vs_iPS.sigIsoforms)
 @
 The values returned for each level of this list can be used as an argument to getGenes, to create a \Rclass{CuffGeneSet} object of significantly regulated genes (or features).
-
 Alternatively, you can use the \Rmethod{getSigTable()} method to return a full test-table of 'significant features' x 'pairwise tests' for all comparisons. Only features in which the null hypothesis can be rejected in at least one test are reported.
 
 <<get_sig_3>>=
@@ -838,28 +836,28 @@ K-means clustering is a useful tool that can be helpful in identifying clusters 
 \Rmethod{csCluster()} uses the \Rmethod{pam()} method from the \Rpackage{clustering} package to perform the partitioning around medoids. In this case however, the distance metric used by default is the
 Jensen-Shannon distance instead of the default Euclidean distance. Prior to performing this particular partitioning, the user must choose the number of clusters (K) into which the expression profiles should be divided. 
 
-<<geneset_plots_5,include=FALSE>>=
+<<geneset_cluster_1,include=FALSE>>=
 ic<-csCluster(myGenes,k=4)
 head(ic$cluster)
 icp<-csClusterPlot(ic)
 icp
 @
-As of v1.1.1 of \Rpackage{cummeRbund}, the output of csCluster is a modified \Rclass{pam} object. This replaces the default plotting behavior of the original csCluster plot to allow for further analysis of the clustering results. The original plotting behavior has been recapitulated
+
+As of v$1.1.1$ of \Rpackage{cummeRbund}, the output of csCluster is a modified \Rclass{pam} object. This replaces the default plotting behavior of the original csCluster plot to allow for further analysis of the clustering results. The original plotting behavior has been recapitulated
 in the \Rmethod{csClusterPlot()} method.
 
 \begin{figure}[htp]
 	\begin{center}
-	\subfloat[K-medioids clustering with Jensen-Shannon distance for a CuffGeneSet.]{
+	\subfloat[PAM clustering with JS distance for a CuffGeneSet.]{
 	
 <<label=geneset_plots_cluster,fig=TRUE,echo=FALSE,include=FALSE>>=
-<<geneset_plots_5>>
 print(icp)
 @
-	\includegraphics[width=0.6\textwidth]{cummeRbund-manual-geneset_plots_cluster}}
+	\includegraphics[width=0.6\textwidth]{cummeRbund-manual-geneset_plots_cluster}
+	}
 	
 	\end{center}
 \end{figure}
-
 
 \clearpage
 
@@ -904,6 +902,14 @@ print(mySimilar.expression)
 	\end{center}
 \end{figure}
 
+By default, findSimilar will return a CuffGeneSet of similar genes matching your criteria. 
+Recently a few additional features have been added as well to enhance this type of exploration:
+
+\begin{itemize}
+	\item If 'returnGeneSet' is set to FALSE, then findSimilar returns a data.frame of distance-ranked similar genes with distances. This is useful if you would
+	like to see a rank-ordered list of similar genes.
+	\item The 'distThresh' argument allows you to pass a value [between 0-1] to be used as a distance threshold instead of an arbitrary 'n' number of genes. setting distThresh=1.0 will return all genes ranked by their distance to your gene of interest.
+\end{itemize}
 
 You are also able to provide your own expression profile in lieu of a 'gene\_id'.  The vector provided must match the order and length of \Rmethod{samples()}.
 
@@ -934,12 +940,15 @@ We have found this to be a more robust way to determine distance between genes u
 
 \section{Miscellaneous}
 \begin{itemize}
+	\item In appropriate plots, using the argument replicates=T will allow you to visualize replicate-level FPKM values either in lieu of or in addition to condition-level FPKMs.
 	\item As of v1.1.3 we attempt to provide new visual cues in most plots that will indicate the quantification status for a particular feature in each given condition. We have enabled this feature by default for most
 	plots to suggest a measure of reliability for each feature in a particular condition. In most cases, this feature can be disabled by setting 'showStatus=FALSE'.
+	\item CummeRbund will now work with the hidden '--no-diff' argument for cuffdiff.  This will quantify features against .bam files but not do differential testing.  This is useful when you want to aggregate very large numbers
+	of conditions, and cannot afford the time or space for the differential test results. (Not recommended unless you have a SPECIFIC need for this).
 	\item All plotting functions return ggplot objects and the resulting objects can be manipulated/faceted/altered using standard ggplot2 methods.
 	\item There are occasional DB connectivity issues that arise.  Not entirely sure why yet.  If necessary, just \Rfunction{readCufflinks} again and this should solve connectivity issues with a new
 	RSQLite connection object.  If connectivity continues to be a problem, try \Rfunction{cuff<-readCufflinks(rebuild=T)}
-	\item I am still working on fully documenting each of the methods.  There are a good number of arguments that exist, but might be hard to find without looking at the source.
+	\item I am still working on fully documenting each of the methods.  There are a good number of arguments that exist, but might be hard to find without looking at the reference manual.
 \end{itemize}
 
 \clearpage
