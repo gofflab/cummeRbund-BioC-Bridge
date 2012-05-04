@@ -23,7 +23,7 @@
 #################
 setMethod("show","CuffGeneSet",function(object){
 			cat(class(object),"instance for ", length(object), " genes\n",
-					"\nSlots:\n\t annotation\n\t fpkm\n\t diff\n\t",
+					"\nSlots:\n\t annotation\n\t fpkm\n\t repFpkm\n\t diff\n\t count\n\t",
 					"isoforms\t",class(object@isoforms),"instance of size",length(object@isoforms),"\n\t",
 					"TSS\t\t",class(object@TSS),"instance of size",length(object@TSS),"\n\t",
 					"CDS\t\t",class(object@CDS),"instance of size",length(object@CDS),"\n\t",

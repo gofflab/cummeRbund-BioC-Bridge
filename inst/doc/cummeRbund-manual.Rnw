@@ -25,6 +25,30 @@
 \usepackage{ifthen}
 \usepackage[OT1]{fontenc}
 
+%%%%%%
+% Alter some LaTeX defaults for better treatment of figures:
+    % See p.105 of "TeX Unbound" for suggested values.
+    % See pp. 199-200 of Lamport's "LaTeX" book for details.
+    %   General parameters, for ALL pages:
+    \renewcommand{\topfraction}{0.9}	% max fraction of floats at top
+    \renewcommand{\bottomfraction}{0.8}	% max fraction of floats at bottom
+    %   Parameters for TEXT pages (not float pages):
+    \setcounter{topnumber}{2}
+    \setcounter{bottomnumber}{2}
+    \setcounter{totalnumber}{4}     % 2 may work better
+    \setcounter{dbltopnumber}{2}    % for 2-column pages
+    \renewcommand{\dbltopfraction}{0.9}	% fit big float above 2-col. text
+    \renewcommand{\textfraction}{0.07}	% allow minimal text w. figs
+    %   Parameters for FLOAT pages (not text pages):
+    \renewcommand{\floatpagefraction}{0.7}	% require fuller float pages
+	% N.B.: floatpagefraction MUST be less than topfraction !!
+    \renewcommand{\dblfloatpagefraction}{0.7}	% require fuller float pages
+
+	% remember to use [htp] or [htpb] for placement
+%%%%%%%%%%%
+
+
+
 \newcommand{\R}{{\textsf{R}}}
 \newcommand{\code}[1]{{\texttt{#1}}}
 \newcommand{\term}[1]{{\emph{#1}}}
@@ -51,8 +75,8 @@ options(width=65)
 \tableofcontents
 \clearpage
 \section{Requirements}
-\emph{cummeRbund 2.0 was designed in conjunction with the release of cufflinks 2.0.  While we attempted to preserve backwards-compatability, it is highly recommended
-that you update your cufflinks version >=2.0 to take full advantage of the improvements in modeling, reporting, and visualization that have been incorporated.} 
+NOTE: cummeRbund 2.0 was designed in conjunction with the release of cufflinks 2.0.  While we attempted to preserve backwards-compatability, it is highly recommended
+that you update your cufflinks version >=2.0 to take full advantage of the improvements in modeling, reporting, and visualization that have been incorporated. 
 \begin{itemize}
 	\item Cufflinks $\ge$ v2.0.0
 	\item SQLite 
@@ -245,17 +269,17 @@ disp<-dispersionPlot(genes(cuff))
 disp
 @
 
-\begin{figure}[ht]
-\begin{center}
-\subfloat[Count vs dispersion plot by condition for all genes.]{
+\begin{figure}[htp]
+	\begin{center}
+	\subfloat[Count vs dispersion plot by condition for all genes.]{
 <<label=global_dispersion_plot,fig=TRUE,echo=FALSE,include=FALSE>>=
-print(disp)
+	print(disp)
 @
-
-\includegraphics[width=0.7\textwidth]{cummeRbund-manual-global_dispersion_plot}
-}
-
-\end{center}
+	
+	\includegraphics[width=0.4\textwidth]{cummeRbund-manual-global_dispersion_plot}
+	}
+	
+	\end{center}
 \end{figure}
 
 %FPKM distributions - Density
@@ -267,29 +291,29 @@ densRep<-csDensity(genes(cuff),replicates=T)
 densRep
 @
 
-\begin{figure}[ht]
-\begin{center}
-\subfloat[Density plot of individual conditions.]{
-
+\begin{figure}[htp]
+	\begin{center}
+	\subfloat[Density plot of individual conditions.]{
+	
 <<label=global_plots_dens,fig=TRUE,echo=FALSE,include=FALSE>>=
 <<global_plots_1>>
-print(dens)
+	print(dens)
 @
-
-\includegraphics[width=0.45\textwidth]{cummeRbund-manual-global_plots_dens}
-}
-\qquad
-\subfloat[Density plot with replicates=TRUE exposes individual replicate FPKM distributions.]{
-
+	
+	\includegraphics[width=0.4\textwidth]{cummeRbund-manual-global_plots_dens}
+	}
+	\qquad
+	\subfloat[Density plot with replicates=TRUE exposes individual replicate FPKM distributions.]{
+	
 <<label=global_plots_dens_rep,fig=TRUE,echo=FALSE,include=FALSE>>=
-print(densRep)
+	print(densRep)
 @
-
-\includegraphics[width=0.45\textwidth]{cummeRbund-manual-global_plots_dens_rep}}
-\end{center}
+	
+	\includegraphics[width=0.4\textwidth]{cummeRbund-manual-global_plots_dens_rep}}
+	\end{center}
 \end{figure}
 
-
+%FPKM distributions - Boxplot
 Boxplots can be visualized using the \Rmethod{csBoxplot} method (Figure 2).
 <<global_plots_2,include=FALSE>>=
 b<-csBoxplot(genes(cuff))
@@ -298,38 +322,47 @@ brep<-csBoxplot(genes(cuff),replicates=T)
 brep
 @
 
-\begin{figure}[ht]
-\begin{center}
-\subfloat[Box plot of FPKM distributions for individual conditions.]{
-
+\begin{figure}[htp]
+	\begin{center}
+	\subfloat[Box plot of FPKM distributions for individual conditions.]{
+	
 <<label=global_plots_box,fig=TRUE,echo=FALSE,include=FALSE>>=
 <<global_plots_2>>
-print(b)
+	print(b)
 @
-
-\includegraphics[width=0.45\textwidth]{cummeRbund-manual-global_plots_box}
-}
-\qquad
-\subfloat[Box plot with replicates=TRUE exposes individual replicate FPKM distributions.]{
-
+	
+	\includegraphics[width=0.4\textwidth]{cummeRbund-manual-global_plots_box}
+	}
+	\qquad
+	\subfloat[Box plot with replicates=TRUE exposes individual replicate FPKM distributions.]{
+	
 <<label=global_plots_box_rep,fig=TRUE,echo=FALSE,include=FALSE>>=
-print(brep)
+	print(brep)
 @
-
-\includegraphics[width=0.45\textwidth]{cummeRbund-manual-global_plots_box_rep}}
-\end{center}
+	
+	\includegraphics[width=0.4\textwidth]{cummeRbund-manual-global_plots_box_rep}}
+	\end{center}
 \end{figure}
 
+%Scatterplots
 Pairwise comparisons can be made by using \Rmethod{csScatter}. You must specify the sample names to use for the $x$ and $y$ axes:
 <<global_plots_3,include=FALSE>>=
 s<-csScatter(genes(cuff),"hESC","Fibroblasts",smooth=T)
 s
 @
 
-<<label=global_plots_scatter,fig=TRUE,echo=FALSE>>=
+\begin{figure}[htp]
+	\begin{center}
+	\subfloat[Scatterplots can be useful to identify global changes and trends in gene expression between pairs of conditions.]{
+	
+<<label=global_plots_scatter,fig=TRUE,echo=FALSE,include=FALSE>>=
 <<global_plots_3>>
-print(s)
+	print(s)
 @
+	
+	\includegraphics[width=0.4\textwidth]{cummeRbund-manual-global_plots_scatter}}
+	\end{center}
+\end{figure}
 
 %Dendrograms
 <<global_plots_6,include=FALSE>>=
@@ -337,26 +370,26 @@ dend<-csDendro(genes(cuff))
 dend.rep<-csDendro(genes(cuff),replicates=T)
 @
 
-\begin{figure}[ht]
-\begin{center}
-\subfloat[Dendrogram of JS distances between conditions.]{
-
+\begin{figure}[htp]
+	\begin{center}
+	\subfloat[Dendrogram of JS distances between conditions.]{
+	
 <<label=global_plots_dendro,fig=TRUE,echo=FALSE,include=FALSE>>=
 <<global_plots_6>>
-plot(dend)
+	plot(dend)
 @
-
-\includegraphics[width=0.45\textwidth]{cummeRbund-manual-global_plots_dendro}
-}
-\qquad
-\subfloat[Dendrogram with replicates=TRUE can identify outlier replicates.]{
-
+	
+	\includegraphics[width=0.4\textwidth]{cummeRbund-manual-global_plots_dendro}
+	}
+	\qquad
+	\subfloat[Dendrogram with replicates=TRUE can identify outlier replicates.]{
+	
 <<label=global_plots_dendro_rep,fig=TRUE,echo=FALSE,include=FALSE>>=
-plot(dend.rep)
+	plot(dend.rep)
 @
-
-\includegraphics[width=0.45\textwidth]{cummeRbund-manual-global_plots_dendro_rep}}
-\end{center}
+	
+	\includegraphics[width=0.4\textwidth]{cummeRbund-manual-global_plots_dendro_rep}}
+	\end{center}
 \end{figure}
 
 %MA plots
@@ -368,22 +401,44 @@ mCount<-MAplot(genes(cuff),"hESC","Fibroblasts",useCount=T)
 mCount
 @
 
-<<label=global_plots_MA,fig=TRUE,echo=FALSE>>=
+\begin{figure}[htp]
+	\begin{center}
+	\subfloat[MA plots can identify biases across ranges of intensity and fold-change.]{
+	
+<<label=global_plots_MA,fig=TRUE,echo=FALSE,include=FALSE>>=
 <<global_plots_4>>
-print(m)
-print(mCount)
+	print(m)
 @
+	\includegraphics[width=0.4\textwidth]{cummeRbund-manual-global_plots_MA}}
+	
+	\qquad
+	\subfloat[MA plot drawn on normalized count values instead of FPKM.]{
+	
+<<label=global_plots_MA_count,fig=TRUE,echo=FALSE,include=FALSE>>=
+	print(mCount)
+@
+	
+	\includegraphics[width=0.4\textwidth]{cummeRbund-manual-global_plots_MA_count}}
+	\end{center}
+\end{figure}
 
+%Volcano plots
 Volcano plots are also available for the \Rclass{CuffData} objects. Again, you must specify the comparisons by sample name.
 <<global_plots_5,include=FALSE>>=
 v<-csVolcano(genes(cuff),"hESC","Fibroblasts")
 v
 @
-
-<<label=global_plots_volcano,fig=TRUE,echo=FALSE>>=
+\begin{figure}[htp]
+	\begin{center}
+		\subfloat[Volcano plots explore the relationship between fold-change and significance.]{
+		
+<<label=global_plots_volcano,fig=TRUE,echo=FALSE,include=FALSE>>=
 <<global_plots_5>>
 print(v)
 @
+		\includegraphics[width=0.4\textwidth]{cummeRbund-manual-global_plots_volcano}}
+	\end{center}
+\end{figure}
 
 \clearpage
 
@@ -420,8 +475,8 @@ gene.diff<-diffData(genes(cuff))
 head(gene.diff)
 @
 
-\subsection*{Condition information}
-Vectors of sample namesand feature names are available by using the \Rmethod{samples} and \Rmethod{featureNames} methods:
+\subsection*{Condition and feature names}
+Vectors of sample names and feature names are available by using the \Rmethod{samples} and \Rmethod{featureNames} methods:
 
 <<data_access_2>>=
 sample.names<-samples(genes(cuff))
@@ -487,7 +542,7 @@ head(repFpkm(TSS(myGenes)))
 @
 
 As of \Rpackage{cummeRbund} $v2.0$ \Rclass{CuffGeneSet} classes can be created from any type of identifier ('gene\_id','isoform\_id','TSS\_group\_id', or 'CDS\_id'). When you pass a list of identifiers that are not gene\_id to \Rmethod{getGenes()}, the function attempts to lookup the parent gene\_id for each feature and returns \emph{all} relevant
-information for the given genes and all of their sub-features (not just the sub-features passed to \Rmethod{getGenes()}.  If you are interested in just retrieving information for a given set of features, please use the new \Rmethod{getFeatures()} method described later.
+information for the given genes and all of their sub-features (not just the sub-features passed to \Rmethod{getGenes()}).  If you are interested in just retrieving information for a given set of features, please use the new \Rmethod{getFeatures()} method described later.
 
 \subsection{Geneset level plots}
 There are several plotting functions available for gene-set-level visualization:
@@ -498,23 +553,46 @@ By default, the Jensen-Shannon distance is used as the clustering metric, howeve
 <<geneset_plots_1,include=FALSE>>=
 h<-csHeatmap(myGenes,cluster='both')
 h
+h.rep<-csHeatmap(myGenes,cluster='both',replicates=T)
+h.rep
 @
 
-<<label=geneset_plots_heatmap,fig=TRUE,echo=FALSE>>=
+\begin{figure}[htp]
+	\begin{center}
+	\subfloat[Heatmaps provide a convenient way to visualize the expression of entire gene sets at once.]{
+	
+<<label=geneset_plots_heatmap,fig=TRUE,echo=FALSE,include=FALSE>>=
 <<geneset_plots_1>>
 print(h)
 @
+	\includegraphics[width=0.4\textwidth]{cummeRbund-manual-geneset_plots_heatmap}}
+	
+	\qquad
+	\subfloat[Same heatmap, with replicates=T can help to visualize variance between replicates.]{
+	
+<<label=geneset_plots_heatmap_rep,fig=TRUE,echo=FALSE,include=FALSE>>=
+print(h.rep)
+@
+	\includegraphics[width=0.4\textwidth]{cummeRbund-manual-geneset_plots_heatmap_rep}}
+	\end{center}
+\end{figure}
 
 If you prefer barplots over heatmaps for genesets (although this is not necessarily recommended for large gene sets). You can use the \Rmethod{expressionBarplot()} method on a \Rclass{CuffFeatureSet} or a \Rclass{CuffGeneSet} object.
 <<geneset_plots_1.5,include=FALSE>>=
 b<-expressionBarplot(myGenes)
 b
 @
-
-<<label=geneset_plots_barplot,fig=TRUE,echo=FALSE>>=
+\begin{figure}[htp]
+	\begin{center}
+		\subfloat[A (somewhat crowded) barplot for all genes in a CuffGeneSet object.]{
+		
+<<label=geneset_plots_barplot,fig=TRUE,echo=FALSE,include=FALSE,width=8,height=4>>=
 <<geneset_plots_1.5>>
 print(b)
 @
+		\includegraphics[width=0.9\textwidth]{cummeRbund-manual-geneset_plots_barplot}}
+	\end{center}
+\end{figure}
 
 The \Rmethod{csScatter()} method can be used to produce scatter plot comparisons between any two conditions.
 <<geneset_plots_2,include=FALSE>>=
@@ -522,10 +600,18 @@ s<-csScatter(myGenes,"Fibroblasts","hESC",smooth=T)
 s
 @
 
-<<label=geneset_plots_scatter,fig=TRUE,echo=FALSE>>=
+\begin{figure}[htp]
+	\begin{center}
+		\subfloat[Scatterplot showing relationship between two conditions for genes in a CuffGeneSet.]{
+		
+<<label=geneset_plots_scatter,fig=TRUE,echo=FALSE,include=FALSE>>=
 <<geneset_plots_2>>
 print(s)
 @
+		\includegraphics[width=0.4\textwidth]{cummeRbund-manual-geneset_plots_scatter}}
+	\end{center}
+\end{figure}
+
 
 The volcano plot is a useful visualization to compare fold change between any two conditions and significance (-log P-values).
 <<geneset_plots_3,include=FALSE>>=
@@ -533,38 +619,71 @@ v<-csVolcano(myGenes,"Fibroblasts","hESC")
 v
 @
 
-<<label=geneset_plots_volcano,fig=TRUE,echo=FALSE>>=
+\begin{figure}[htp]
+	\begin{center}
+		\subfloat[Fold-change vs significance for genes in a CuffGeneSet object.]{
+		
+<<label=geneset_plots_volcano,fig=TRUE,echo=FALSE,include=FALSE>>=
 <<geneset_plots_3>>
 print(v)
 @
+		\includegraphics[width=0.4\textwidth]{cummeRbund-manual-geneset_plots_volcano}}
+	\end{center}
+\end{figure}
+
 
 Similar plots can be made for all sub-level features of a \Rclass{CuffGeneSet} class by specifying which slot you would like to plot (eg. \Rfunarg{isoforms(myGenes)},\Rfunarg{TSS(myGenes)},\Rfunarg{CDS(myGenes)}).
 
 <<geneset_plots_4,include=FALSE>>=
 ih<-csHeatmap(isoforms(myGenes),cluster='both',labRow=F)
 ih
+th<-csHeatmap(TSS(myGenes),cluster='both',labRow=F)
+th
 @
-
-<<label=geneset_plots_isoform_heatmap,fig=TRUE,echo=FALSE>>=
+\begin{figure}[htp]
+	\begin{center}
+		\subfloat[A heatmap of isoform-level FPKM values for all genes in a CuffGeneSet object.]{
+		
+<<label=geneset_plots_isoform_heatmap,fig=TRUE,echo=FALSE,include=FALSE>>=
 <<geneset_plots_4>>
 print(ih)
 @
+		\includegraphics[width=0.4\textwidth]{cummeRbund-manual-geneset_plots_isoform_heatmap}}
+		\qquad
+		\subfloat[A heatmap of TSS-level FPKM values for all genes in a CuffGeneSet object.]{
+		
+<<label=geneset_plots_TSS_heatmap,fig=TRUE,echo=FALSE,include=FALSE>>=
+print(th)
+@
+		\includegraphics[width=0.4\textwidth]{cummeRbund-manual-geneset_plots_TSS_heatmap}}
+	
+	\end{center}
+\end{figure}
 
 Dendrograms can provide insight into the relationships between conditions for various genesets (e.g. significant genes used to draw relationships between conditions). As of v1.1.3 the method \Rmethod{csDendro()}
 can be used to plot a dendrogram based on Jensen-Shannon distances between conditions for a given \Rclass{CuffFeatureSet} or \Rclass{CuffGeneSet}.
 <<label=geneset_plots_5,include=FALSE>>=
 den<-csDendro(myGenes)
 @
-
-<<label=geneset_plots_dendro,fig=TRUE,echo=FALSE>>=
+\begin{figure}[htp]
+	\begin{center}
+		\subfloat[A dendrogram of the relationship between conditions based on the expression of genes in a CuffGeneSet.]{
+		
+<<label=geneset_plots_dendro,fig=TRUE,echo=FALSE,include=FALSE>>=
 <<geneset_plots_5>>
 plot(den)
 @
+		\includegraphics[width=0.4\textwidth]{cummeRbund-manual-geneset_plots_dendro}}
+	
+	\end{center}
+\end{figure}
 
 \clearpage
 
 \section{Individual Genes}
-An individual CuffGene object can be created by using the \Rfunction{getGene} function for a given 'gene\_id' or 'gene\_short\_name'.
+An individual CuffGene object can be created by using the \Rfunction{getGene()} function for a given 'gene\_id' or 'gene\_short\_name'. As of cummeRbund $\gev2.0$ you can also use isoform\_id, tss\_group\_id, or
+cds\_id values to retrieve the corresponding parent gene object.
+
 <<gene_level_1>>=
 myGeneId<-"PINK1"
 myGene<-getGene(cuff,myGeneId)
@@ -577,55 +696,109 @@ head(fpkm(isoforms(myGene)))
 <<gene_plots_1,include=FALSE>>=
 gl<-expressionPlot(myGene)
 gl
-@
-<<gene_plots_replicate_1,include=FALSE>>=
+
 gl.rep<-expressionPlot(myGene,replicates=TRUE)
 gl.rep
+
+gl.iso.rep<-expressionPlot(isoforms(myGene),replicates=T)
+gl.iso.rep
+
+gl.cds.rep<-expressionPlot(CDS(myGene),replicates=T)
+gl.cds.rep
 @
 
-\begin{figure}[ht]
-\begin{center}
-\subfloat[Expression plot of a single gene.]{
-
+\begin{figure}[htp]
+	\begin{center}
+	\subfloat[Expression plot of a single gene.]{
+	
 <<label=gene_plots_line,fig=TRUE,echo=FALSE,include=FALSE>>=
 <<gene_plots_1>>
-print(gl)
+	print(gl)
 @
-
-\includegraphics[width=0.45\textwidth]{cummeRbund-manual-gene_plots_line}
-}
-\qquad
-\subfloat[Expression plot of a single gene with replicate FPKMs exposed.]{
-
+	
+	\includegraphics[width=0.4\textwidth]{cummeRbund-manual-gene_plots_line}
+	}
+	\qquad
+	\subfloat[Expression plot of a single gene with replicate FPKMs exposed.]{
+	
 <<label=gene_plots_replicate_line,fig=TRUE,echo=FALSE,include=FALSE>>=
-<<gene_plots_replicate_1>>
-print(gl.rep)
-@
 
-\includegraphics[width=0.45\textwidth]{cummeRbund-manual-gene_plots_replicate_line}}
-\end{center}
+	print(gl.rep)
+@
+	
+	\includegraphics[width=0.4\textwidth]{cummeRbund-manual-gene_plots_replicate_line}}
+	\qquad
+	\subfloat[Expression plot of all isoforms of a single gene with replicate FPKMs exposed.]{
+	
+<<label=gene_plots_iso_replicate_line,fig=TRUE,echo=FALSE,include=FALSE>>=
+
+	print(gl.iso.rep)
+@
+	
+	\includegraphics[width=0.4\textwidth]{cummeRbund-manual-gene_plots_iso_replicate_line}}
+	\qquad
+	\subfloat[Expression plot of all CDS for a single gene with replicate FPKMs exposed.]{
+	
+<<label=gene_plots_cds_replicate_line,fig=TRUE,echo=FALSE,include=FALSE>>=
+
+	print(gl.cds.rep)
+@
+	
+	\includegraphics[width=0.4\textwidth]{cummeRbund-manual-gene_plots_cds_replicate_line}}
+	\end{center}
 \end{figure}
 
 
 <<gene_plots_2,include=FALSE>>=
 gb<-expressionBarplot(myGene)
 gb
+gb.rep<-expressionBarplot(myGene,replicates=T)
+gb.rep
 @
 
-<<label=gene_plots_bar,fig=TRUE,echo=FALSE>>=
+\begin{figure}[htp]
+	\begin{center}
+	\subfloat[Expression Barplot of a single gene.]{
+	
+<<label=gene_plots_bar,fig=TRUE,echo=FALSE,include=FALSE>>=
 <<gene_plots_2>>
 print(gb)
 @
+	
+	\includegraphics[width=0.4\textwidth]{cummeRbund-manual-gene_plots_bar}
+	}
+	\qquad
+	\subfloat[Expression Barplot of a single gene with replicate FPKMs exposed.]{
+	
+
+<<label=gene_plots_bar_rep,fig=TRUE,echo=FALSE,include=FALSE>>=
+print(gb.rep)
+@
+	
+	\includegraphics[width=0.4\textwidth]{cummeRbund-manual-gene_plots_bar_rep}}
+	\end{center}
+\end{figure}
+
 
 <<gene_plots_3,include=FALSE>>=
-igb<-expressionBarplot(isoforms(myGene))
+igb<-expressionBarplot(isoforms(myGene),replicates=T)
 igb
 @
 
-<<label=gene_plots_bar_isoforms,fig=TRUE,echo=FALSE>>=
+\begin{figure}[htp]
+	\begin{center}
+	\subfloat[Expression Barplot of all isoforms single gene with replicates exposed.]{
+	
+<<label=gene_plots_bar_isoforms,fig=TRUE,echo=FALSE,include=FALSE>>=
 <<gene_plots_3>>
 print(igb)
 @
+	\includegraphics[width=0.4\textwidth]{cummeRbund-manual-gene_plots_bar_isoforms}
+	}
+	
+	\end{center}
+\end{figure}
+
 
 \clearpage
 
@@ -674,10 +847,19 @@ icp
 As of v1.1.1 of \Rpackage{cummeRbund}, the output of csCluster is a modified \Rclass{pam} object. This replaces the default plotting behavior of the original csCluster plot to allow for further analysis of the clustering results. The original plotting behavior has been recapitulated
 in the \Rmethod{csClusterPlot()} method.
 
-<<label=geneset_plots_cluster,fig=TRUE,echo=FALSE>>=
+\begin{figure}[htp]
+	\begin{center}
+	\subfloat[K-medioids clustering with Jensen-Shannon distance for a CuffGeneSet.]{
+	
+<<label=geneset_plots_cluster,fig=TRUE,echo=FALSE,include=FALSE>>=
 <<geneset_plots_5>>
 print(icp)
 @
+	\includegraphics[width=0.6\textwidth]{cummeRbund-manual-geneset_plots_cluster}}
+	
+	\end{center}
+\end{figure}
+
 
 \clearpage
 
@@ -709,10 +891,19 @@ mySimilar<-findSimilar(cuff,"PINK1",n=20)
 mySimilar.expression<-expressionPlot(mySimilar,logMode=T,showErrorbars=F)
 @
 
-<<label=similar_plots_1,fig=TRUE,echo=FALSE>>=
+\begin{figure}[htp]
+	\begin{center}
+	\subfloat[Top 20 most similar genes to 'PINK1'.]{
+	
+<<label=similar_plots_1,fig=TRUE,echo=FALSE,include=FALSE>>=
 <<similar_1>>
 print(mySimilar.expression)
 @
+	\includegraphics[width=0.6\textwidth]{cummeRbund-manual-similar_plots_1}}
+	
+	\end{center}
+\end{figure}
+
 
 You are also able to provide your own expression profile in lieu of a 'gene\_id'.  The vector provided must match the order and length of \Rmethod{samples()}.
 
@@ -722,10 +913,19 @@ mySimilar2<-findSimilar(cuff,myProfile,n=10)
 mySimilar2.expression<-expressionPlot(mySimilar2,logMode=T,showErrorbars=F)
 @
 
-<<label=similar_plots_2,fig=TRUE,echo=FALSE>>=
+\begin{figure}[htp]
+	\begin{center}
+	\subfloat[Top 10 genes most similar genes to a provided expression profile.]{
+	
+<<label=similar_plots_2,fig=TRUE,echo=FALSE,include=FALSE>>=
 <<similar_2>>
 print(mySimilar2.expression)
 @
+	\includegraphics[width=0.6\textwidth]{cummeRbund-manual-similar_plots_2}}
+	
+	\end{center}
+\end{figure}
+
 
 \Rmethod{findSimilar()} also uses the Jensen-Shannon distance between the probability distributions of each gene across conditions to determine the similarity.  
 We have found this to be a more robust way to determine distance between genes using the high dynamic range of FPKM data. Future versions may allow for other dissimilarity measures to be used instead.
