@@ -48,7 +48,6 @@
 %%%%%%%%%%%
 
 
-
 \newcommand{\R}{{\textsf{R}}}
 \newcommand{\code}[1]{{\texttt{#1}}}
 \newcommand{\term}[1]{{\emph{#1}}}
