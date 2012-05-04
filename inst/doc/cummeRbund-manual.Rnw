@@ -70,7 +70,6 @@ options(width=65)
 @ 
 
 \maketitle
-\footnote[]{Current version 1.99.1}
 \tableofcontents
 \clearpage
 \section{Requirements}
