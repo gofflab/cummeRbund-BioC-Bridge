@@ -10,7 +10,9 @@
 
 #CuffSet generics
 setGeneric("samples",function(object) standardGeneric("samples"))
+setGeneric("replicates",function(object) standardGeneric("replicates"))
 setGeneric("conditions",function(object) standardGeneric("conditions"))
+setGeneric("runInfo",function(object) standardGeneric("runInfo"))
 setGeneric("genes",function(object) standardGeneric("genes"))
 setGeneric("isoforms",function(object) standardGeneric("isoforms"))
 setGeneric("TSS",function(object) standardGeneric("TSS"))
@@ -20,7 +22,8 @@ setGeneric("splicing",function(object) standardGeneric("splicing"))
 setGeneric("relCDS",function(object) standardGeneric("relCDS"))
 setGeneric("getGene",function(object,geneId,sampleIdList=NULL) standardGeneric("getGene"))
 setGeneric("getGenes",function(object,geneIdList,sampleIdList=NULL) standardGeneric("getGenes"))
-setGeneric("getFeatures",function(object,featureIdList,sampleIdList=NULL) standardGeneric("getFeatures"))
+setGeneric("getGeneId",function(object,idList) standardGeneric("getGeneId"))
+setGeneric("getFeatures",function(object,featureIdList,sampleIdList=NULL,...) standardGeneric("getFeatures"))
 setGeneric("getSig", function(object,x,y,alpha=0.05,level="genes") standardGeneric("getSig"))
 setGeneric("getSigTable", function(object,alpha=0.05,level='genes') standardGeneric("getSigTable"))
 setGeneric("addFeatures",function(object, features, ...) standardGeneric("addFeatures"))
@@ -34,13 +37,19 @@ setGeneric("findSimilar",function(object,x,n,...) standardGeneric("findSimilar")
 setGeneric("features",function(object) standardGeneric("features"))
 setGeneric("featureNames",function(object) standardGeneric("featureNames"))
 setGeneric("fpkm",function(object, features=FALSE,...) standardGeneric("fpkm"))
+setGeneric("repFpkm",function(object,features=FALSE,...) standardGeneric("repFpkm"))
+setGeneric("count",function(object,...) standardGeneric("count"))
 setGeneric("filters",function(object) standardGeneric("filters"))
 setGeneric("idField",function(object) standardGeneric("idField"))
 setGeneric("tables",function(object) standardGeneric("tables"))
 setGeneric("fpkmMatrix",function(object,...) standardGeneric("fpkmMatrix"))
+setGeneric("repFpkmMatrix",function(object,...) standardGeneric("repFpkmMatrix"))
+setGeneric("countMatrix",function(object,...) standardGeneric("countMatrix"))
 setGeneric("diffData",function(object, x, y, features=FALSE, lnFcCutoff=20, ...) standardGeneric("diffData"))
 setGeneric("getLevels",function(object) standardGeneric("getLevels"))
+setGeneric("getRepLevels",function(object) standardGeneric("getRepLevels"))
 setGeneric("MAplot",function(object,x,y,logMode=T,pseudocount=1,...) standardGeneric("MAplot"))
+setGeneric("dispersionPlot",function(object) standardGeneric("dispersionPlot"))
 
 #CuffDist generics
 setGeneric("distValues",function(object, x, y,...) standardGeneric("distValues"))
@@ -70,7 +79,7 @@ setGeneric("csCluster",function(object, k, iter.max=100, ...) standardGeneric("c
 #setGeneric("diff",function(object) standardGeneric("diff"))
 setGeneric("annotation",function(object) standardGeneric("annotation"))
 setGeneric("csSpecificity",function(object,logMode=T,pseudocount=1,relative=FALSE,...) standardGeneric("csSpecificity"))
-setGeneric("csDendro",function(object,logMode=T,pseudocount=1) standardGeneric("csDendro"))
+setGeneric("csDendro",function(object,logMode=T,pseudocount=1,replicates=FALSE) standardGeneric("csDendro"))
 
 ##################
 #CuffGene

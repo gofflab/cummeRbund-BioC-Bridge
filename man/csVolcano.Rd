@@ -10,7 +10,7 @@ Volcano Plot
 Creates a volcano plot of log fold change in expression vs -log(pval) for a pair of samples (x,y)
 }
 \usage{
-\S4method{csVolcano}{CuffData}(object, x, y, features=FALSE, xlimits = c(-20, 20), ...)
+\S4method{csVolcano}{CuffData}(object, x, y, alpha=0.05, showSignificant=TRUE,features=FALSE, xlimits = c(-20, 20), ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -22,6 +22,12 @@ Sample name from 'samples' table for comparison
 }
   \item{y}{
 Sample name from 'samples' table for comparison
+}
+  \item{alpha}{
+Provide an alpha cutoff for visualizing significant genes
+}
+  \item{showSignificant}{
+A logical value whether or not to distinguish between significant features or not (by color).
 }
   \item{features}{
 Will include all fields from 'features' slot in returned ggplot object.

@@ -10,7 +10,7 @@ Barplot
 A barplot of FPKM values with confidence intervals for a given gene, set of genes, or features of a gene (e.g. isoforms, TSS, CDS, etc).
 }
 \usage{
-\S4method{expressionBarplot}{CuffFeatureSet}(object, logMode=TRUE, pseudocount=1.0, showErrorbars=TRUE, showStatus=TRUE, ...)
+\S4method{expressionBarplot}{CuffFeatureSet}(object, logMode=TRUE, pseudocount=1.0, showErrorbars=TRUE, showStatus=TRUE, replicates=FALSE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -28,6 +28,9 @@ A logical value whether or not to draw error bars. Default = TRUE
 }
   \item{showStatus}{
 A logical value whether or not to draw visual queues for quantification status of a given gene:condition. Default = TRUE
+}
+  \item{replicates}{
+A logical value whether or not to plot individual replicates or aggregate condition values.
 }
   \item{\dots}{
 Additional arguments.

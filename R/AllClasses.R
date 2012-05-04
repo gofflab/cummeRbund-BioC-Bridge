@@ -5,6 +5,14 @@
 
 #TODO: I get the distinct feeling that these two should be nested environments, but I don't really know what that means.
 
+#CuffRun class describes information about a Cuffdiff run?
+#setClass("CuffRun",
+#		representation(DB = "SQLiteConnection",
+#						sampleInfo = "data.frame",
+#						runParams = "data.frame"
+#						)
+#		)
+
 #CuffData Class is a 'pointer' container to a group of features in a cufflinks dataset
 setClass("CuffData",
 		representation(DB = "SQLiteConnection",
@@ -27,6 +35,8 @@ setClass("CuffDist",
 #CuffSet Class is a 'pointer' container to a group of CuffData elements in a cufflinks dataset
 setClass("CuffSet",
 		representation(DB = "SQLiteConnection",
+						runInfo = "data.frame",
+						phenoData = "data.frame",
 						conditions = "data.frame",
 						genes = "CuffData",
 						isoforms = "CuffData",
@@ -43,7 +53,9 @@ setClass("CuffSet",
 setClass("CuffFeature",
 		representation(annotation="data.frame",
 						fpkm="data.frame",
-						diff="data.frame"
+						diff="data.frame",
+						repFpkm="data.frame",
+						count="data.frame"
 				)
 		)
 
@@ -65,7 +77,9 @@ setClass("CuffGene",
 setClass("CuffFeatureSet",
 		representation(annotation="data.frame",
 				fpkm="data.frame",
-				diff="data.frame"
+				diff="data.frame",
+				repFpkm="data.frame",
+				count="data.frame"
 			)
 )
 

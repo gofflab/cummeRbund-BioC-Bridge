@@ -6,6 +6,7 @@
 \alias{diffData,CuffFeature-method}
 \alias{fpkmMatrix,CuffFeature-method}
 \alias{length,CuffFeature-method}
+\alias{samples,CuffFeature-method}
 
 \title{Class "CuffFeature"}
 \description{
@@ -20,6 +21,8 @@ Objects can be created by calls of the form \code{new("CuffFeature", annotation,
     \item{\code{annotation}:}{Object of class \code{"data.frame"} ~~ }
     \item{\code{fpkm}:}{Object of class \code{"data.frame"} ~~ }
     \item{\code{diff}:}{Object of class \code{"data.frame"} ~~ }
+    \item{\code{repFpkm}:}{Object of class \code{"data.frame"} ~~ }
+    \item{\code{count}:}{Object of class \code{"data.frame"} ~~ }
   }
 }
 \section{Methods}{
@@ -33,6 +36,7 @@ Objects can be created by calls of the form \code{new("CuffFeature", annotation,
 	\describe{
 		\item{annotation}{\code{signature(object="CuffFeature")}: Access @annotation slot}
 		\item{diffData}{\code{signature(object="CuffFeature")}: Access @diff slot}
+		\item{samples}{\code{signature(object="CuffFeature")}: Get vector of samples}
 	}
 }
 \references{

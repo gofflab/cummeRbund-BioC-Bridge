@@ -9,6 +9,7 @@
 \alias{promoters,CuffGene-method}
 \alias{relCDS,CuffGene-method}
 \alias{splicing,CuffGene-method}
+\alias{length,CuffGene-method}
 
 \title{Class "CuffGene"}
 \description{
@@ -36,7 +37,9 @@ Objects can be created by calls of the form \code{new("CuffGene", id, isoforms, 
 Class \code{"\linkS4class{CuffFeature}"}, directly.
 }
 \section{Methods}{
-No methods defined with class "CuffGene" in the signature.
+\describe{
+	\item{length}{\code{signature(object="CuffFeature")}: Part of length validation (internal use only)}
+}
 }
 
 \section{Accessors}{

@@ -16,11 +16,15 @@ setMethod("initialize","CuffFeature",
 				annotation=data.frame(),
 				fpkm=data.frame(),
 				diff=data.frame(),
+				repFpkm=data.frame(),
+				count=data.frame(),
 				... ){
 			.Object<-callNextMethod(.Object,
 					annotation=annotation,
 					fpkm=fpkm,
 					diff=diff,
+					repFpkm=repFpkm,
+					count=count,
 					...)				
 		}
 )
@@ -108,6 +112,18 @@ setMethod("annotation","CuffFeature",function(object){
 		return(object@annotation)
 		})
 
+.repFpkm<-function(object){
+	object@repFpkm
+}
+
+setMethod("repFpkm",signature(object="CuffFeature"),.repFpkm)
+
+.count<-function(object){
+	object@count
+}
+
+setMethod("count",signature(object="CuffFeature"),.count)
+
 #################
 #Setters		#
 #################
@@ -116,13 +132,17 @@ setMethod("annotation","CuffFeature",function(object){
 #################
 #Plotting		#
 #################
-.barplot<-function(object,logMode=FALSE,pseudocount=1.0,showErrorbars=TRUE,showStatus=TRUE,...){
+.barplot<-function(object,logMode=FALSE,pseudocount=1.0,showErrorbars=TRUE,showStatus=TRUE,replicates=FALSE,...){
 	quant_types<-c("OK","FAIL","LOWDATA","HIDATA","TOOSHORT")
 	quant_types<-factor(quant_types,levels=quant_types)
 	quant_colors<-c("black","red","blue","orange","green")
 	names(quant_colors)<-quant_types
 	
 	dat<-fpkm(object)
+	if(replicates){
+		repDat<-repFpkm(object)
+		colnames(repDat)[1]<-"tracking_id"
+	}
 	#TODO: Test dat to ensure that there are >0 rows to plot.  If not, trap error and move on...
 	
 	colnames(dat)[1]<-"tracking_id"
@@ -132,12 +152,20 @@ setMethod("annotation","CuffFeature",function(object){
 	    dat$fpkm <- dat$fpkm + pseudocount
 	    dat$conf_hi <- dat$conf_hi + pseudocount
 	    dat$conf_lo <- dat$conf_lo + pseudocount
+		
+		if(replicates){
+			repDat$fpkm<-repDat$fpkm + pseudocount
+		}
     }
 
     p<-ggplot(dat,aes(x=sample_name,y=fpkm,fill=sample_name))
     
-	p <- p + 
-	    geom_bar()
+	p <- p + geom_bar()
+	
+	if(replicates){
+		p <- p + geom_point(aes(x=sample_name,y=fpkm),size=3,shape=18,colour="black",data=repDat)
+	}
+	
 	if (showErrorbars)
 	{
 	    p <- p +
@@ -181,7 +209,7 @@ setMethod("annotation","CuffFeature",function(object){
 setMethod("expressionBarplot",signature(object="CuffFeature"),.barplot)
 
 
-.expressionPlot<-function(object,logMode=FALSE,pseudocount=1.0, drawSummary=FALSE, sumFun=mean_cl_boot, showErrorbars=TRUE,showStatus=TRUE,...){
+.expressionPlot<-function(object,logMode=FALSE,pseudocount=1.0, drawSummary=FALSE, sumFun=mean_cl_boot, showErrorbars=TRUE,showStatus=TRUE,replicates=FALSE,...){
 	#Coloring scheme for quant flags
 	quant_types<-c("OK","FAIL","LOWDATA","HIDATA","TOOSHORT")
 	quant_types<-factor(quant_types,levels=quant_types)
@@ -190,16 +218,31 @@ setMethod("expressionBarplot",signature(object="CuffFeature"),.barplot)
 	
 	dat<-fpkm(object)
 	colnames(dat)[1]<-"tracking_id"
+	
+	if(replicates){
+		repDat<-repFpkm(object)
+		repDat$replicate<-as.factor(repDat$replicate)
+		colnames(repDat)[1]<-"tracking_id"
+	}
+	
 	if(logMode)
 	{
 	    dat$fpkm <- dat$fpkm + pseudocount
 	    dat$conf_hi <- dat$conf_hi + pseudocount
 	    dat$conf_lo <- dat$conf_lo + pseudocount
+		
+		if(replicates){
+			repDat$fpkm<-repDat$fpkm + pseudocount
+		}
     }
 	p <- ggplot(dat)
 	#dat$fpkm<- log10(dat$fpkm+pseudocount)
-	p <- p + 
-	    geom_line(aes(x=sample_name,y=fpkm,color=tracking_id,group=tracking_id))
+	p <- p + geom_line(aes(x=sample_name,y=fpkm,group=tracking_id,color=tracking_id))
+	
+	if(replicates){
+		p <- p + geom_point(aes(x=sample_name,y=fpkm,color=tracking_id),size=2.5,shape=18,data=repDat)
+	}
+	
 	if (showErrorbars)
 	{
 	    p <- p +
@@ -222,7 +265,7 @@ setMethod("expressionBarplot",signature(object="CuffFeature"),.barplot)
 	
 	if (logMode)
     {
-        p <- p + ylab(paste("Log10 FPKM + ",pseudocount))
+        p <- p + ylab(paste("FPKM + ",pseudocount))
     } else {
         p <- p + ylab("FPKM")
     }
@@ -236,7 +279,7 @@ setMethod("expressionBarplot",signature(object="CuffFeature"),.barplot)
 	#Recolor quant flags
 	#for some reason this doesn't work (ggplot2 problem)
 	#p<- p+ scale_colour_manual(name='quant_status',values=quant_colors)
-	
+	p<-p+facet_wrap('tracking_id')
 	p
 }
 
