@@ -1,6 +1,7 @@
 v1.99.2
 	Bugfixes:
 		- Fixed bug in replicate table that did not apply make.db.names to match samples table.
+		- Fixed bug for missing values in *.count_tracking files.
 
 v1.99.1
 	- This represents a major set of improvements and feature additions to cummeRbund.
