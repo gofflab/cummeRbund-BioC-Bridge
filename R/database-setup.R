@@ -296,6 +296,9 @@ loadGenes<-function(fpkmFile,
 		reps<-as.data.frame(do.call(read.table,replicateArgs))
 		#print(head(reps))
 		
+		#Adjust sample names with make.db.names
+		reps$condition <- make.db.names(dbConn,as.character(reps$condition),unique=FALSE)
+	
 		#Create unique rep name
 		reps$rep_name<-paste(reps$condition,reps$replicate,sep="_")
 		colnames(reps)[colnames(reps)=="condition"]<-"sample_name"
@@ -505,6 +508,9 @@ loadIsoforms<-function(fpkmFile,
 		reps<-as.data.frame(do.call(read.table,replicateArgs))
 		#print(head(reps))
 		
+		#Adjust sample names with make.db.names
+		reps$condition <- make.db.names(dbConn,as.character(reps$condition),unique=FALSE)
+	
 		#Create unique rep name
 		reps$rep_name<-paste(reps$condition,reps$replicate,sep="_")
 		colnames(reps)[colnames(reps)=="condition"]<-"sample_name"
@@ -735,6 +741,9 @@ loadTSS<-function(fpkmFile,
 		reps<-as.data.frame(do.call(read.table,replicateArgs))
 		#print(head(reps))
 		
+		#Adjust sample names with make.db.names
+		reps$condition <- make.db.names(dbConn,as.character(reps$condition),unique=FALSE)
+	
 		#Create unique rep name
 		reps$rep_name<-paste(reps$condition,reps$replicate,sep="_")
 		colnames(reps)[colnames(reps)=="condition"]<-"sample_name"
@@ -967,6 +976,9 @@ loadCDS<-function(fpkmFile,
 		reps<-as.data.frame(do.call(read.table,replicateArgs))
 		#print(head(reps))
 		
+		#Adjust sample names with make.db.names
+		reps$condition <- make.db.names(dbConn,as.character(reps$condition),unique=FALSE)
+	
 		#Create unique rep name
 		reps$rep_name<-paste(reps$condition,reps$replicate,sep="_")
 		colnames(reps)[colnames(reps)=="condition"]<-"sample_name"
