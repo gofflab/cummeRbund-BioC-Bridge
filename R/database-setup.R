@@ -60,7 +60,7 @@ loadRepTable<-function(repTableFile,
 	#print(head(full))
 	
 	#Fix sample_names
-	full$condition<-make.db.names(dbConn,full$condition,unique=FALSE)
+	full$condition<-make.db.names(dbConn,as.character(full$condition),unique=FALSE)
 	
 	#Parsing
 	#For now, I need to concatenate condition and replicate number
