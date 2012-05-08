@@ -1,3 +1,7 @@
+v1.99.2
+	Bugfixes:
+		- Fixed bug in replicate table that did not apply make.db.names to match samples table.
+
 v1.99.1
 	- This represents a major set of improvements and feature additions to cummeRbund.
 	- cummeRbund now incorporates additional information emitted from cuffdiff 2.0 including:

@@ -1,6 +1,6 @@
 Package: cummeRbund
 Title: Analysis, exploration, manipulation, and visualization of Cufflinks high-throughput sequencing data.
-Version: 1.99.1
+Version: 1.99.2
 Date: 2012-05-04
 Author: L. Goff, C. Trapnell
 Description: Allows for persistent storage, access, exploration, and manipulation of Cufflinks high-throughput sequencing data.  In addition, provides numerous plotting functions for commonly used visualizations.
