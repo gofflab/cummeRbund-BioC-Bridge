@@ -296,17 +296,22 @@ loadGenes<-function(fpkmFile,
 		reps<-as.data.frame(do.call(read.table,replicateArgs))
 		#print(head(reps))
 		
-		#Adjust sample names with make.db.names
-		reps$condition <- make.db.names(dbConn,as.character(reps$condition),unique=FALSE)
-	
-		#Create unique rep name
-		reps$rep_name<-paste(reps$condition,reps$replicate,sep="_")
-		colnames(reps)[colnames(reps)=="condition"]<-"sample_name"
+		if(dim(reps)[1]>0){
 		
-		#Write geneReplicateData table
-		write("Writing geneReplicateData table",stderr())
-		insert_SQL<-'INSERT INTO geneReplicateData VALUES(:tracking_id,:sample_name,:replicate,:rep_name,:raw_frags,:internal_scaled_frags,:external_scaled_frags,:FPKM,:effective_length,:status)'
-		bulk_insert(dbConn,insert_SQL,reps)
+			#Adjust sample names with make.db.names
+			reps$condition <- make.db.names(dbConn,as.character(reps$condition),unique=FALSE)
+		
+			#Create unique rep name
+			reps$rep_name<-paste(reps$condition,reps$replicate,sep="_")
+			colnames(reps)[colnames(reps)=="condition"]<-"sample_name"
+			
+			#Write geneReplicateData table
+			write("Writing geneReplicateData table",stderr())
+			insert_SQL<-'INSERT INTO geneReplicateData VALUES(:tracking_id,:sample_name,:replicate,:rep_name,:raw_frags,:internal_scaled_frags,:external_scaled_frags,:FPKM,:effective_length,:status)'
+			bulk_insert(dbConn,insert_SQL,reps)
+		}else{
+			write(paste("No records found in", replicateFile),stderr())
+		}
 		
 	}
 	
@@ -508,18 +513,22 @@ loadIsoforms<-function(fpkmFile,
 		reps<-as.data.frame(do.call(read.table,replicateArgs))
 		#print(head(reps))
 		
-		#Adjust sample names with make.db.names
-		reps$condition <- make.db.names(dbConn,as.character(reps$condition),unique=FALSE)
-	
-		#Create unique rep name
-		reps$rep_name<-paste(reps$condition,reps$replicate,sep="_")
-		colnames(reps)[colnames(reps)=="condition"]<-"sample_name"
+		if(dim(reps)[1]>0){
+			
+			#Adjust sample names with make.db.names
+			reps$condition <- make.db.names(dbConn,as.character(reps$condition),unique=FALSE)
 		
-		#Write isoformReplicateData table
-		write("Writing isoformReplicateData table",stderr())
-		insert_SQL<-'INSERT INTO isoformReplicateData VALUES(:tracking_id,:sample_name,:replicate,:rep_name,:raw_frags,:internal_scaled_frags,:external_scaled_frags,:FPKM,:effective_length,:status)'
-		bulk_insert(dbConn,insert_SQL,reps)
-		
+			#Create unique rep name
+			reps$rep_name<-paste(reps$condition,reps$replicate,sep="_")
+			colnames(reps)[colnames(reps)=="condition"]<-"sample_name"
+			
+			#Write isoformReplicateData table
+			write("Writing isoformReplicateData table",stderr())
+			insert_SQL<-'INSERT INTO isoformReplicateData VALUES(:tracking_id,:sample_name,:replicate,:rep_name,:raw_frags,:internal_scaled_frags,:external_scaled_frags,:FPKM,:effective_length,:status)'
+			bulk_insert(dbConn,insert_SQL,reps)
+		}else{
+			write(paste("No records found in",replicateFile),stderr())
+		}	
 	}
 	
 }
@@ -741,17 +750,22 @@ loadTSS<-function(fpkmFile,
 		reps<-as.data.frame(do.call(read.table,replicateArgs))
 		#print(head(reps))
 		
-		#Adjust sample names with make.db.names
-		reps$condition <- make.db.names(dbConn,as.character(reps$condition),unique=FALSE)
-	
-		#Create unique rep name
-		reps$rep_name<-paste(reps$condition,reps$replicate,sep="_")
-		colnames(reps)[colnames(reps)=="condition"]<-"sample_name"
+		if(dim(reps)[1]>0){
+				
+			#Adjust sample names with make.db.names
+			reps$condition <- make.db.names(dbConn,as.character(reps$condition),unique=FALSE)
 		
-		#Write TSSReplicateData table
-		write("Writing TSSReplicateData table",stderr())
-		insert_SQL<-'INSERT INTO TSSReplicateData VALUES(:tracking_id,:sample_name,:replicate,:rep_name,:raw_frags,:internal_scaled_frags,:external_scaled_frags,:FPKM,:effective_length,:status)'
-		bulk_insert(dbConn,insert_SQL,reps)
+			#Create unique rep name
+			reps$rep_name<-paste(reps$condition,reps$replicate,sep="_")
+			colnames(reps)[colnames(reps)=="condition"]<-"sample_name"
+			
+			#Write TSSReplicateData table
+			write("Writing TSSReplicateData table",stderr())
+			insert_SQL<-'INSERT INTO TSSReplicateData VALUES(:tracking_id,:sample_name,:replicate,:rep_name,:raw_frags,:internal_scaled_frags,:external_scaled_frags,:FPKM,:effective_length,:status)'
+			bulk_insert(dbConn,insert_SQL,reps)
+		}else{
+			write(paste("No records found in",replicateFile),stderr())
+		}
 		
 	}
 	
@@ -976,17 +990,22 @@ loadCDS<-function(fpkmFile,
 		reps<-as.data.frame(do.call(read.table,replicateArgs))
 		#print(head(reps))
 		
-		#Adjust sample names with make.db.names
-		reps$condition <- make.db.names(dbConn,as.character(reps$condition),unique=FALSE)
-	
-		#Create unique rep name
-		reps$rep_name<-paste(reps$condition,reps$replicate,sep="_")
-		colnames(reps)[colnames(reps)=="condition"]<-"sample_name"
+		if(dim(reps)[1]>0){
+				
+			#Adjust sample names with make.db.names
+			reps$condition <- make.db.names(dbConn,as.character(reps$condition),unique=FALSE)
 		
-		#Write CDSReplicateData table
-		write("Writing CDSReplicateData table",stderr())
-		insert_SQL<-'INSERT INTO CDSReplicateData VALUES(:tracking_id,:sample_name,:replicate,:rep_name,:raw_frags,:internal_scaled_frags,:external_scaled_frags,:FPKM,:effective_length,:status)'
-		bulk_insert(dbConn,insert_SQL,reps)
+			#Create unique rep name
+			reps$rep_name<-paste(reps$condition,reps$replicate,sep="_")
+			colnames(reps)[colnames(reps)=="condition"]<-"sample_name"
+			
+			#Write CDSReplicateData table
+			write("Writing CDSReplicateData table",stderr())
+			insert_SQL<-'INSERT INTO CDSReplicateData VALUES(:tracking_id,:sample_name,:replicate,:rep_name,:raw_frags,:internal_scaled_frags,:external_scaled_frags,:FPKM,:effective_length,:status)'
+			bulk_insert(dbConn,insert_SQL,reps)
+		}else{
+			write(paste("No records found in",replicateFile),stderr())
+		}
 		
 	}
 	
