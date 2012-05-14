@@ -648,16 +648,16 @@ setMethod("csSpecificity",signature(object="CuffData"),.specificity)
 # GSEA helper methods
 #############
 
-.makeRnk<-function(object,x,y,filename){
-	samp<-samples(object)
-	#check to make sure x and y are in samples
-	if (!all(c(x,y) %in% samp)){
-		stop("One or more values of 'x' or 'y' are not valid sample names!")
-	}
-	
-}
-
-setMethod("makeRnk",signature(object="CuffData"),.makeRnk)
+#.makeRnk<-function(object,x,y,filename){
+#	samp<-samples(object)
+#	#check to make sure x and y are in samples
+#	if (!all(c(x,y) %in% samp)){
+#		stop("One or more values of 'x' or 'y' are not valid sample names!")
+#	}
+#	
+#}
+#
+#setMethod("makeRnk",signature(object="CuffData"),.makeRnk)
 
 
 #############
