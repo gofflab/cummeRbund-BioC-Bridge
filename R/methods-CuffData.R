@@ -347,6 +347,14 @@ setMethod("diffData",signature(object="CuffData"),.diffData)
 	}
 }
 
+#.getRankOrder<-function(object,x,y,logMode=TRUE,pseudocount=1,ratio=TRUE){
+#	if (missing(x) || missing(y)){
+#		stop("You must supply both x and y.")
+#	}else{
+#		
+#	}
+#}
+
 setMethod("DB","CuffData",function(object){
 		return(object@DB)
 		})
@@ -636,11 +644,20 @@ setMethod("dispersionPlot",signature(object="CuffData"),.dispersionPlot)
 
 setMethod("csSpecificity",signature(object="CuffData"),.specificity)
 
-.makeRNK<-function(object,x,y,filename){
-	#This will make a .rnk file for GSEA pre-ranked analysis using the log2_fold_change value from diffData.  Writes to 'filename'
+#############
+# GSEA helper methods
+#############
+
+.makeRnk<-function(object,x,y,filename){
+	samp<-samples(object)
+	#check to make sure x and y are in samples
+	if (!all(c(x,y) %in% samp)){
+		stop("One or more values of 'x' or 'y' are not valid sample names!")
+	}
 	
 }
 
+setMethod("makeRnk",signature(object="CuffData"),.makeRnk)
 
 
 #############

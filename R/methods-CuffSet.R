@@ -588,8 +588,6 @@ setMethod("getGeneId",signature(object="CuffSet"),.getGeneId)
 }
 
 setMethod("getFeatures",signature(object="CuffSet"),.getFeatures)
-	
-
 
 
 #getGeneIds from featureIds
