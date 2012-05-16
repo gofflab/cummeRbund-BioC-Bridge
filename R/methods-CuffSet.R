@@ -524,6 +524,15 @@ setMethod("getGenes",signature(object="CuffSet"),.getGenes)
 
 setMethod("getGeneId",signature(object="CuffSet"),.getGeneId)
 
+.findGene<-function(object,query){
+	geneQuery<-paste("SELECT DISTINCT g.gene_id,g.gene_short_name FROM genes g LEFT JOIN isoforms i on g.gene_id=i.gene_id LEFT JOIN TSS t on g.gene_id=t.gene_id LEFT JOIN CDS c ON g.gene_id=c.gene_id WHERE (g.gene_id = '",query,"' OR g.gene_short_name = '",query,"' OR i.isoform_id = '",query,"' OR t.tss_group_id = '",query,"' OR c.CDS_id ='",query,"') OR g.gene_short_name LIKE '%",query,"%'",sep="")
+	res<-dbGetQuery(object@DB,geneQuery)
+	res
+}
+
+setMethod("findGene",signature(object="CuffSet"),.findGene)
+
+
 .getFeatures<-function(object,featureIdList,sampleIdList=NULL,level='isoforms'){
 	#Sample subsetting
 	if(!is.null(sampleIdList)){

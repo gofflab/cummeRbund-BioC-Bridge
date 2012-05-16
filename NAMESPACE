@@ -49,6 +49,7 @@ exportMethods(
 			getGenes,
 			getFeatures,
 			getGeneId,
+			findGene,
 			getSig,
 			getSigTable,
 			addFeatures,
