@@ -724,6 +724,18 @@ csClusterPlot<-function(clustering,pseudocount=1.0,drawSummary=TRUE, sumFun=mean
 
 setMethod("csDendro",signature(object="CuffFeatureSet"),.dendro)
 
+#.csNMF<-function(object,rank,method,...){
+#	#Non-negative Matrix Factorization
+#	require(NMF)
+#	#Retrieve FPKM values
+#	fpkms<-fpkmMatrix(object)
+#	
+#	#Remove rows with sum()==0
+#	fpkms<-fpkms[rowSums(fpkms)>0,]
+#	
+#}
+#
+#setMethod("csNMF",signature(object="CuffFeatureSet"),.csNMF)
 
 ##Takes as first argument the object returned from csCluster (a modified 'cluster' list)
 #.clusterPlot<-function(clusters, pseudocount=1, ...){

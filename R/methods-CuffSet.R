@@ -220,6 +220,7 @@ setMethod("relCDS","CuffSet",function(object){
 	genes.diff$sample_2<-factor(genes.diff$sample_2,levels=myLevels)
 	genes.repFpkm<-dbGetQuery(object@DB,geneRepFPKMQuery)
 	genes.count<-dbGetQuery(object@DB,geneCountQuery)
+	genes.annotation<-dbGetQuery(object@DB,geneAnnotationQuery)
 	
 	#isoforms
 	isoform.fpkm<-dbGetQuery(object@DB,isoformFPKMQuery)
@@ -229,6 +230,7 @@ setMethod("relCDS","CuffSet",function(object){
 	isoform.diff$sample_2<-factor(isoform.diff$sample_2,levels=myLevels)
 	isoform.repFpkm<-dbGetQuery(object@DB,isoformRepFPKMQuery)
 	isoform.count<-dbGetQuery(object@DB,isoformCountQuery)
+	isoform.annotation<-dbGetQuery(object@DB,isoformAnnotationQuery)
 	
 	#CDS
 	CDS.fpkm<-dbGetQuery(object@DB,CDSFPKMQuery)
@@ -238,6 +240,7 @@ setMethod("relCDS","CuffSet",function(object){
 	CDS.diff$sample_2<-factor(CDS.diff$sample_2,levels=myLevels)
 	CDS.repFpkm<-dbGetQuery(object@DB,CDSRepFPKMQuery)
 	CDS.count<-dbGetQuery(object@DB,CDSCountQuery)
+	CDS.annotation<-dbGetQuery(object@DB,CDSAnnotationQuery)
 	
 	#TSS
 	TSS.fpkm<-dbGetQuery(object@DB,TSSFPKMQuery)
@@ -247,40 +250,42 @@ setMethod("relCDS","CuffSet",function(object){
 	TSS.diff$sample_2<-factor(TSS.diff$sample_2,levels=myLevels)
 	TSS.repFpkm<-dbGetQuery(object@DB,TSSRepFPKMQuery)
 	TSS.count<-dbGetQuery(object@DB,TSSCountQuery)
+	TSS.annotation<-dbGetQuery(object@DB,TSSAnnotationQuery)
+	
+	end<-dbSendQuery(object@DB,"END;")
+	
 	
 	res<-new("CuffGene",
 			id=geneId,
-			annotation=dbGetQuery(object@DB,geneAnnotationQuery),
+			annotation=genes.annotation,
 			fpkm=genes.fpkm,
 			diff=genes.diff,
 			repFpkm=genes.repFpkm,
 			count=genes.count,
 			isoforms=new("CuffFeature",
-					annotation=dbGetQuery(object@DB,isoformAnnotationQuery),
+					annotation=isoform.annotation,
 					fpkm=isoform.fpkm,
 					diff=isoform.diff,
 					repFpkm=isoform.repFpkm,
 					count=isoform.count
 					),
 			TSS=new("CuffFeature",
-					annotation=dbGetQuery(object@DB,TSSAnnotationQuery),
+					annotation=TSS.annotation,
 					fpkm=TSS.fpkm,
 					diff=TSS.diff,
 					repFpkm=TSS.repFpkm,
 					count=TSS.count
-			),
+					),
 			CDS=new("CuffFeature",
-					annotation=dbGetQuery(object@DB,CDSAnnotationQuery),
+					annotation=CDS.annotation,
 					fpkm=CDS.fpkm,
 					diff=CDS.diff,
 					repFpkm=CDS.repFpkm,
 					count=CDS.count
-			)
+					)
 
 			
-		)
-	end<-dbSendQuery(object@DB,"END;")
-		
+			)
 		res
 }
 
@@ -434,6 +439,8 @@ setMethod("getGene",signature(object="CuffSet"),.getGene)
 	write("\tCounts",stderr())
 	TSS.count<-dbGetQuery(object@DB,TSSCountQuery)
 	
+	end<-dbSendQuery(object@DB,"END;")
+	
 	#Promoters
 	write("Getting promoter information:", stderr())
 	write("\tdistData",stderr())
@@ -454,7 +461,6 @@ setMethod("getGene",signature(object="CuffSet"),.getGene)
 	CDS.distData<-dbGetQuery(object@DB,CDSDistQuery)
 	CDS.distData$sample_1<-factor(CDS.distData$sample_1,levels=myLevels)
 	CDS.distData$sample_2<-factor(CDS.distData$sample_2,levels=myLevels)
-
 	
 	res<-new("CuffGeneSet",
 			#TODO: Fix ids so that it only displays those genes in CuffGeneSet
@@ -500,15 +506,14 @@ setMethod("getGene",signature(object="CuffSet"),.getGene)
 					fpkm=genes.fpkm,
 					diff=CDS.distData
 					)
-			)
-	end<-dbSendQuery(object@DB,"END;")		
+			)	
 	res
 }
 
 setMethod("getGenes",signature(object="CuffSet"),.getGenes)
 
 .getGeneId<-function(object,idList){
-	#Query that takes list of any identifier and retrieves gene_id values from db
+	#Query that takes list of any identifier and retrieves gene_id values from db (does not report missing finds)
 	searchString<-"("
 	for(i in idList){
 		searchString<-paste(searchString,"'",i,"',",sep="")
@@ -525,6 +530,7 @@ setMethod("getGenes",signature(object="CuffSet"),.getGenes)
 setMethod("getGeneId",signature(object="CuffSet"),.getGeneId)
 
 .findGene<-function(object,query){
+	#Utility to search for gene_id and gene_short_name given a single 'query' string (e.g. query='pink1' will return all genes with 'pink1' (case-insensitive) in the gene_short_name field.
 	geneQuery<-paste("SELECT DISTINCT g.gene_id,g.gene_short_name FROM genes g LEFT JOIN isoforms i on g.gene_id=i.gene_id LEFT JOIN TSS t on g.gene_id=t.gene_id LEFT JOIN CDS c ON g.gene_id=c.gene_id WHERE (g.gene_id = '",query,"' OR g.gene_short_name = '",query,"' OR i.isoform_id = '",query,"' OR t.tss_group_id = '",query,"' OR c.CDS_id ='",query,"') OR g.gene_short_name LIKE '%",query,"%'",sep="")
 	res<-dbGetQuery(object@DB,geneQuery)
 	res
