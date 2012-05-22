@@ -676,8 +676,8 @@ setMethod("expressionPlot",signature(object="CuffFeatureSet"),.expressionPlot)
 #	c
 #}
 
-.cluster<-function(object, k, pseudocount=1, ...){
-	library(cluster)
+.cluster<-function(object, k, pseudocount=1,...){
+	require(cluster)
 	m<-as.data.frame(fpkmMatrix(object))
 	m<-m[rowSums(m)>0,]
 	n<-JSdist(makeprobs(t(m)))
@@ -689,6 +689,19 @@ setMethod("expressionPlot",signature(object="CuffFeatureSet"),.expressionPlot)
 }
 
 setMethod("csCluster",signature(object="CuffFeatureSet"),.cluster)
+
+.ratioCluster<-function(object,k,ratioTo=NULL,...){
+	require(cluster)
+	m<-as.data.frame(fpkmMatrix(object))
+	#TODO: ensure that ratioTo is in colnames(fpkmMatrix(object))
+	m.ratio<-m/m[[ratioTo]]
+	m.log.ratio<-log2(m.ratio)
+	n<-dist(m.log.ratio)
+	clusters<-pam(n,k,...)
+	class(clusters)<-"list"
+	clusters$ratio<-m
+	clusters
+}
 
 csClusterPlot<-function(clustering,pseudocount=1.0,drawSummary=TRUE, sumFun=mean_cl_boot){
 	m<-clustering$fpkm+pseudocount
