@@ -373,7 +373,7 @@ setMethod("annotation","CuffFeatureSet",function(object){
 	} else if (length(heatscale) == 3) {
 	    if (is.null(heatMidpoint))
 	    {
-	        heatMidpoint = (max(m) - min(m)) / 2.0
+	        heatMidpoint = (max(m) + min(m)) / 2.0
 	        #write(heatMidpoint, stderr())
 	    }
 
@@ -389,6 +389,61 @@ setMethod("annotation","CuffFeatureSet",function(object){
 }
 
 setMethod("csHeatmap",signature("CuffFeatureSet"),.ggheat)
+
+
+# Distance Heatmaps
+.distheat<-function(object, samples.not.genes=T, logMode=T, pseudocount=1.0, heatscale=c(low='lightyellow',mid='orange',high='darkred'), heatMidpoint=NULL) {
+  # get expression from a sample or gene perspective
+  if(samples.not.genes) {
+    obj.fpkm = fpkmMatrix(object)
+    obj.fpkm.pos = obj.fpkm[rowSums(obj.fpkm)>0,]
+  } else {
+    obj.fpkm = t(fpkmMatrix(object))
+    obj.fpkm.pos = obj.fpkm[,colSums(obj.fpkm)>0]
+  }
+  
+  if(logMode) {
+    obj.fpkm.pos = log10(obj.fpkm.pos+pseudocount)
+  }
+
+  # compute distances
+  obj.dists = JSdist(makeprobs(obj.fpkm.pos))
+  
+  # cluster to order
+  obj.hc = hclust(obj.dists)
+
+  # make data frame
+  dist.df = melt(as.matrix(obj.dists))
+
+  # initialize
+  g = ggplot(dist.df, aes(x=X1, y=X2, fill=value))
+
+  # draw
+  labels = labels(obj.dists)
+  g = g + geom_tile() + scale_x_discrete("", limits=labels[obj.hc$order]) + scale_y_discrete("", limits=labels[obj.hc$order])
+
+  # roll labels
+  g = g + opts(axis.text.x=theme_text(angle=-90, hjust=0), axis.text.y=theme_text(angle=0, hjust=1))
+
+  # drop grey panel background and gridlines
+  g = g + opts(panel.grid.minor=theme_line(colour=NA), panel.grid.major=theme_line(colour=NA), panel.background=theme_rect(fill=NA, colour=NA))
+
+  # adjust heat scale
+  if (length(heatscale) == 2) {
+    g = g + scale_fill_gradient(low=heatscale[1], high=heatscale[2], name="JS Distance")
+  }
+  else if (length(heatscale) == 3) {
+    if (is.null(heatMidpoint)) {
+      heatMidpoint = (max(obj.dists) + min(obj.dists)) / 2.0
+    }
+    g = g + scale_fill_gradient2(low=heatscale[1], mid=heatscale[2], high=heatscale[3], midpoint=heatMidpoint, name="JS Distance")
+  }
+
+  # return
+  g
+}
+
+setMethod("csDistHeat", signature("CuffFeatureSet"), .distheat)
 
 #Scatterplot
 .scatter<-function(object,x,y,logMode=TRUE,pseudocount=1.0,labels, smooth=FALSE,colorByStatus=FALSE,...){

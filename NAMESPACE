@@ -30,6 +30,7 @@ exportMethods(
 			csVolcano,
 			csBoxplot,
 			csHeatmap,
+                        csDistHeat,
 			csCluster,
 			csDendro,
 			MAplot,
