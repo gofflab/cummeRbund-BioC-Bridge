@@ -760,6 +760,8 @@ setMethod("getSigTable",signature(object="CuffSet"),.getSigTable)
 .findSimilar<-function(object,x,n,distThresh,returnGeneSet=TRUE,...){
 	#x can be either a gene_id, gene_short_name or a vector of FPKM values (fake gene expression profile)
 	#TODO: make findSimilar work with all levels
+	#TODO: Possibly add FPKM thresholding
+	
 	if(is.character(x)){
 		myGene<-getGene(object,x)
 		sig<-makeprobsvec(fpkmMatrix(myGene,...)[1,])

@@ -196,6 +196,7 @@ setMethod("repFpkm","CuffData",.repFpkm)
 setMethod("count","CuffData",.count)
 
 .fpkmMatrix<-function(object,fullnames=FALSE,sampleIdList){
+	#TODO: fix fullnames for CuffData::fpkmMatrix
 	#Sample subsetting
 	if(!missing(sampleIdList)){
 		if(.checkSamples(object@DB,sampleIdList)){
