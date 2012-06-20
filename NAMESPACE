@@ -30,7 +30,7 @@ exportMethods(
 			csVolcano,
 			csBoxplot,
 			csHeatmap,
-                        csDistHeat,
+            csDistHeat,
 			csCluster,
 			csDendro,
 			MAplot,
@@ -56,7 +56,8 @@ exportMethods(
 			addFeatures,
 			getLevels,
 			getRepLevels,
-			findSimilar
+			findSimilar,
+			makeRnk
 )
 
 export("readCufflinks",

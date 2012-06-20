@@ -650,6 +650,9 @@ setMethod("csSpecificity",signature(object="CuffData"),.specificity)
 #############
 
 .makeRnk<-function(object,x,y,filename,...){
+	#Creates a log2-fold change .rnk file for all genes given an x/y comparison.
+	#While this method will work for any cuffData level, it really only makes sense for 'genes' as this is what is required for GSEA...
+	#Must provide 'x' and 'y' so as to provide a log2 fold change.
 	samp<-samples(object)
 	#check to make sure x and y are in samples
 	if (!all(c(x,y) %in% samp)){
@@ -658,9 +661,13 @@ setMethod("csSpecificity",signature(object="CuffData"),.specificity)
 	query<-paste("SELECT gd.gene_id,g.gene_short_name,(sum(CASE WHEN gd.sample_name='",x,"' THEN gd.fpkm+1 END))/(sum(CASE WHEN gd.sample_name='",y,"' THEN gd.fpkm+1 END)) as 'ratio' FROM genes g LEFT JOIN geneData gd ON g.gene_id=gd.gene_id GROUP BY g.gene_id ORDER BY ratio DESC",sep="")
 	res<-dbGetQuery(object@DB,query)
 	res$ratio<-log2(res$ratio)
+	#Remove gene_id field
 	res<-res[,-1]
+	#Remove rows with "NA" for gene_short_name
+	res<-res[!is.na(res$gene_short_name),]
+	#Write to file
 	write.table(res,file=filename,sep="\t",quote=F,...,row.names=F,col.names=F)
-	res
+	#res
 }
 
 setMethod("makeRnk",signature(object="CuffData"),.makeRnk)
