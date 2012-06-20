@@ -649,16 +649,21 @@ setMethod("csSpecificity",signature(object="CuffData"),.specificity)
 # GSEA helper methods
 #############
 
-#.makeRnk<-function(object,x,y,filename){
-#	samp<-samples(object)
-#	#check to make sure x and y are in samples
-#	if (!all(c(x,y) %in% samp)){
-#		stop("One or more values of 'x' or 'y' are not valid sample names!")
-#	}
-#	
-#}
-#
-#setMethod("makeRnk",signature(object="CuffData"),.makeRnk)
+.makeRnk<-function(object,x,y,filename,...){
+	samp<-samples(object)
+	#check to make sure x and y are in samples
+	if (!all(c(x,y) %in% samp)){
+		stop("One or more values of 'x' or 'y' are not valid sample names!")
+	}
+	query<-paste("SELECT gd.gene_id,g.gene_short_name,(sum(CASE WHEN gd.sample_name='",x,"' THEN gd.fpkm+1 END))/(sum(CASE WHEN gd.sample_name='",y,"' THEN gd.fpkm+1 END)) as 'ratio' FROM genes g LEFT JOIN geneData gd ON g.gene_id=gd.gene_id GROUP BY g.gene_id ORDER BY ratio DESC",sep="")
+	res<-dbGetQuery(object@DB,query)
+	res$ratio<-log2(res$ratio)
+	res<-res[,-1]
+	write.table(res,file=filename,sep="\t",quote=F,...,row.names=F,col.names=F)
+	res
+}
+
+setMethod("makeRnk",signature(object="CuffData"),.makeRnk)
 
 
 #############

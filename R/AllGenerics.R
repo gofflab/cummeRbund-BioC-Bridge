@@ -51,6 +51,7 @@ setGeneric("getLevels",function(object) standardGeneric("getLevels"))
 setGeneric("getRepLevels",function(object) standardGeneric("getRepLevels"))
 setGeneric("MAplot",function(object,x,y,logMode=T,pseudocount=1,...) standardGeneric("MAplot"))
 setGeneric("dispersionPlot",function(object) standardGeneric("dispersionPlot"))
+setGeneric("makeRnk",function(object,x,y,filename,...) standardGeneric("makeRnk"))
 
 #CuffDist generics
 setGeneric("distValues",function(object, x, y,...) standardGeneric("distValues"))
