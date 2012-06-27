@@ -57,6 +57,10 @@ setMethod("length","CuffFeatureSet",
 			dim(x@annotation)[1]
 		}
 )
+
+#Add dim method so you can find number of samples in CuffFeatureSet, not just number of genes
+
+
 #################
 #Subsetting		#
 #################
