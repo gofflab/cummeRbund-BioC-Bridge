@@ -315,8 +315,8 @@ setMethod("diffData",signature(object="CuffData"),.diffData)
 	measureVars<-c('status','value_1','value_2','log2_fold_change','test_stat','p_value','q_value','significant')
 	all.diff<-diffData(object,features=TRUE)
 	all.diff.melt<-melt(all.diff,measure.vars=measureVars)
-	all.diff.melt<-all.diff.melt[!grepl("^value_",all.diff.melt$variable),]
-	all.diff.cast<-dcast(all.diff.melt,formula=...~sample_1+sample_2+variable)
+	#all.diff.melt<-all.diff.melt[!grepl("^value_",all.diff.melt$variable),]
+	all.diff.cast<-dcast(all.diff.melt,formula=...~sample_2+sample_1+variable)
 	all.diff.cast
 }
 

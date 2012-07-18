@@ -189,7 +189,7 @@ setMethod("relCDS","CuffSet",function(object){
 	#print(geneDiffQuery)
 	geneRepFPKMQuery<-paste("SELECT y.* from genes x JOIN geneReplicateData y ON x.gene_id=y.gene_id ",whereStringRep,sep="")
 	geneCountQuery<-paste("SELECT y.* from genes x JOIN geneCount y ON x.gene_id=y.gene_id ",whereStringFPKM,sep="")
-	geneFeatureQuery<-paste("SELECT y.* FROM features y JOIN genes x on y.gene_id = x.gene_id ",whereString,sep="")
+	geneFeatureQuery<-paste("SELECT y.* FROM features y JOIN genes x on y.genes_gene_id = x.gene_id ",whereString,sep="")
 	
 	isoformAnnotationQuery<-paste("SELECT * from isoforms i JOIN genes x ON i.gene_id = x.gene_id ",whereString,sep="")
 	isoformFPKMQuery<-paste("SELECT y.* from isoforms i JOIN isoformData y ON i.isoform_id = y.isoform_id JOIN genes x ON i.gene_id = x.gene_id ",whereStringFPKM,sep="")
