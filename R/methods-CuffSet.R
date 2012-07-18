@@ -189,6 +189,7 @@ setMethod("relCDS","CuffSet",function(object){
 	#print(geneDiffQuery)
 	geneRepFPKMQuery<-paste("SELECT y.* from genes x JOIN geneReplicateData y ON x.gene_id=y.gene_id ",whereStringRep,sep="")
 	geneCountQuery<-paste("SELECT y.* from genes x JOIN geneCount y ON x.gene_id=y.gene_id ",whereStringFPKM,sep="")
+	geneFeatureQuery<-paste("SELECT y.* FROM features y JOIN genes x on y.gene_id = x.gene_id ",whereString,sep="")
 	
 	isoformAnnotationQuery<-paste("SELECT * from isoforms i JOIN genes x ON i.gene_id = x.gene_id ",whereString,sep="")
 	isoformFPKMQuery<-paste("SELECT y.* from isoforms i JOIN isoformData y ON i.isoform_id = y.isoform_id JOIN genes x ON i.gene_id = x.gene_id ",whereStringFPKM,sep="")
@@ -221,6 +222,7 @@ setMethod("relCDS","CuffSet",function(object){
 	genes.repFpkm<-dbGetQuery(object@DB,geneRepFPKMQuery)
 	genes.count<-dbGetQuery(object@DB,geneCountQuery)
 	genes.annotation<-dbGetQuery(object@DB,geneAnnotationQuery)
+	genes.features<-dbGetQuery(object@DB,geneFeatureQuery)
 	
 	#isoforms
 	isoform.fpkm<-dbGetQuery(object@DB,isoformFPKMQuery)
@@ -257,6 +259,7 @@ setMethod("relCDS","CuffSet",function(object){
 	
 	res<-new("CuffGene",
 			id=geneId,
+			features=genes.features,
 			annotation=genes.annotation,
 			fpkm=genes.fpkm,
 			diff=genes.diff,
@@ -283,7 +286,6 @@ setMethod("relCDS","CuffSet",function(object){
 					repFpkm=CDS.repFpkm,
 					count=CDS.count
 					)
-
 			
 			)
 		res
@@ -831,6 +833,33 @@ setMethod("getRepLevels",signature(object="CuffSet"),.getRepLevels)
 	}
 }
 
+#####################
+#GenomicRanges
+#####################
+#.makeGRanges<-function(dbConn,id,idField='transcript_id'){
+#	txQuery<-paste("SELECT * FROM features WHERE ",idField,"='",id,"'",sep="")
+#	print(txQuery)
+#	features<-dbGetQuery(dbConn,txQuery)
+#	#res<-GRanges(seqnames=features$seqnames,ranges=IRanges(start=features$start,end=features$end,names=features$exon_number),strand=features$strand)
+#	res<-GRanges(features[,-1])
+#	res
+#}
+
+.makeGRanges<-function(object,id,idField='transcript_id'){
+	txQuery<-paste("SELECT * from features WHERE ",idField,"='",id,"'",sep="")
+	myFeat<-dbGetQuery(object@DB,txQuery)
+	#res<-GRanges(myFeat[,-1])
+	res<-GRanges(seqnames=myFeat$seqnames,ranges=IRanges(start=myFeat$start,end=myFeat$end,names=myFeat$exon_number),strand=myFeat$strand)
+	res
+}
+
+setMethod("makeGRanges",signature(object="CuffSet"),.makeGRanges)
+
+#.makeGRangesList<-function(object,id,idField="gene_id"){
+#	#use .makeGRanges for each sub-feature of id to create GRangesList
+#}
+#
+#setMethod("makeGRangesList",signature(object="CuffSet"),.makeGRangesList)
 
 #####################
 #Add FeatureData    #
@@ -865,3 +894,7 @@ setMethod("addFeatures",signature(object="CuffSet"),.addFeatures)
 #	setwd(myWD)
 #}
 
+###################
+# Coersion methods
+###################
+#As ExpressionSet

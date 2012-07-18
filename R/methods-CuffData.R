@@ -293,7 +293,7 @@ setMethod("countMatrix","CuffData",.countMatrix)
 		if(!features){
 			diffQuery<-paste("SELECT * FROM ",object@tables$expDiffTable,sep="")
 		}else{
-			diffQuery<-paste("SELECT * FROM ",object@tables$expDiffTable," x LEFT JOIN ",object@tables$featureTable," xf ON x.",object@idField,"=xf.",object@idField,sep="")
+			diffQuery<-paste("SELECT xm.*, xed.*, xf.* FROM ",object@tables$mainTable," xm LEFT JOIN ",object@tables$expDiffTable," xed ON xm.",object@idField,"=xed.",object@idField," LEFT JOIN ",object@tables$featureTable," xf ON xm.",object@idField,"=xf.",object@idField,sep="")
 		}
 	}else if (missing(x) || missing(y)){
 		stop("You must supply both x and y or neither.")
@@ -301,7 +301,7 @@ setMethod("countMatrix","CuffData",.countMatrix)
 		if(!features){
 			diffQuery<-paste("SELECT x.",object@idField,", xed.* FROM ",object@tables$mainTable," x LEFT JOIN ",object@tables$expDiffTable," xed on x.",object@idField," = xed.",object@idField," WHERE ((sample_1 = '",x,"' AND sample_2 = '",y,"') OR (sample_1 = '",y,"' AND sample_2 = '",x,"'))",sep="")
 		}else{
-			diffQuery<-paste("SELECT x.",object@idField,", xed.*, xf.* FROM ",object@tables$mainTable," x LEFT JOIN ",object@tables$expDiffTable," xed on x.",object@idField," = xed.",object@idField," LEFT JOIN ",object@tables$featureTable," xf ON x.",object@idField,"=xf.",object@idField," WHERE ((sample_1 = '",x,"' AND sample_2 = '",y,"') OR (sample_1 = '",y,"' AND sample_2 = '",x,"'))",sep="")
+			diffQuery<-paste("SELECT xm.*, xed.*, xf.* FROM ",object@tables$mainTable," xm LEFT JOIN ",object@tables$expDiffTable," xed on xm.",object@idField," = xed.",object@idField," LEFT JOIN ",object@tables$featureTable," xf ON xm.",object@idField,"=xf.",object@idField," WHERE ((sample_1 = '",x,"' AND sample_2 = '",y,"') OR (sample_1 = '",y,"' AND sample_2 = '",x,"'))",sep="")
 		}
 	}
 	dat<-dbGetQuery(object@DB,diffQuery)
@@ -310,6 +310,17 @@ setMethod("countMatrix","CuffData",.countMatrix)
 }
 
 setMethod("diffData",signature(object="CuffData"),.diffData)
+
+.diffTable<-function(object){
+	measureVars<-c('status','value_1','value_2','log2_fold_change','test_stat','p_value','q_value','significant')
+	all.diff<-diffData(object,features=TRUE)
+	all.diff.melt<-melt(all.diff,measure.vars=measureVars)
+	all.diff.melt<-all.diff.melt[!grepl("^value_",all.diff.melt$variable),]
+	all.diff.cast<-dcast(all.diff.melt,formula=...~sample_1+sample_2+variable)
+	all.diff.cast
+}
+
+setMethod("diffTable",signature(object="CuffData"),.diffTable)
 
 .getMA<-function(object,x,y,logMode=T,pseudocount=1){
 	if (missing(x) || missing(y)){
@@ -693,3 +704,10 @@ setMethod("makeRnk",signature(object="CuffData"),.makeRnk)
 		return(FALSE)
 	}
 }
+
+###################
+# Coersion methods
+###################
+#As ExpressionSet
+
+

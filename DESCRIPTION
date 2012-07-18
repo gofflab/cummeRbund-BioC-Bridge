@@ -6,7 +6,7 @@ Author: L. Goff, C. Trapnell, D. Kelley
 Description: Allows for persistent storage, access, exploration, and manipulation of Cufflinks high-throughput sequencing data.  In addition, provides numerous plotting functions for commonly used visualizations.
 Suggests: 
 Imports: methods
-Depends: R (>= 2.7.0), RSQLite, ggplot2, reshape2, fastcluster
+Depends: R (>= 2.7.0), RSQLite, ggplot2, reshape2, fastcluster, rtracklayer, Gviz
 Suggests: cluster
 Maintainer: Loyal A. Goff <lgoff@csail.mit.edu>
 License: Artistic-2.0

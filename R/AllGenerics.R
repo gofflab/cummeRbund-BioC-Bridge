@@ -29,6 +29,7 @@ setGeneric("getSig", function(object,x,y,alpha=0.05,level="genes") standardGener
 setGeneric("getSigTable", function(object,alpha=0.05,level='genes') standardGeneric("getSigTable"))
 setGeneric("addFeatures",function(object, features, ...) standardGeneric("addFeatures"))
 setGeneric("findSimilar",function(object,x,n,...) standardGeneric("findSimilar"))
+setGeneric("makeGRanges",function(object,id,idField='transcript_id') standardGeneric("makeGRanges"))
 
 ###############
 #CuffData
@@ -47,6 +48,7 @@ setGeneric("fpkmMatrix",function(object,...) standardGeneric("fpkmMatrix"))
 setGeneric("repFpkmMatrix",function(object,...) standardGeneric("repFpkmMatrix"))
 setGeneric("countMatrix",function(object,...) standardGeneric("countMatrix"))
 setGeneric("diffData",function(object, x, y, features=FALSE, lnFcCutoff=20, ...) standardGeneric("diffData"))
+setGeneric("diffTable",function(object) standardGeneric("diffTable"))
 setGeneric("getLevels",function(object) standardGeneric("getLevels"))
 setGeneric("getRepLevels",function(object) standardGeneric("getRepLevels"))
 setGeneric("MAplot",function(object,x,y,logMode=T,pseudocount=1,...) standardGeneric("MAplot"))
@@ -87,6 +89,7 @@ setGeneric("csDendro",function(object,logMode=T,pseudocount=1,replicates=FALSE) 
 ##################
 #CuffGene
 ##################
+setGeneric("genePlot",function(object) standardGeneric("genePlot"))
 
 ##############
 #CuffFeature

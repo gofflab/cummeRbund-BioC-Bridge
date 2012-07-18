@@ -1,3 +1,10 @@
+v1.99.3
+	New Features:
+		- Added diffTable() method to return a table of differential results broken out by pairwise comparison. (more human-readable)
+	
+	Bugfixes:
+		- Fixed diffData 'features' argument so that it now does what it's supposed to do.
+		
 v1.99.2
 	Bugfixes:
 		- Fixed bug in replicate table that did not apply make.db.names to match samples table.

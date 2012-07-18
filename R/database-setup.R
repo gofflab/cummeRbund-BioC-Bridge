@@ -1514,8 +1514,8 @@ DROP TABLE IF EXISTS "features";
 CREATE TABLE "features"(
 --   GTF Features (all lines/records from reference .gtf file)
   "feature_id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-  "genes_gene_id" VARCHAR(45) NOT NULL,
-  "isoforms_isoform_id" VARCHAR(45) NOT NULL,
+  "gene_id" VARCHAR(45) NOT NULL,
+  "isoform_id" VARCHAR(45) NOT NULL,
   "seqname" VARCHAR(45) NOT NULL,
   "source" VARCHAR(45) NOT NULL,
   "type_id" INTEGER,
@@ -1525,10 +1525,10 @@ CREATE TABLE "features"(
   "strand" VARCHAR(45),
   "frame" VARCHAR(45),
   CONSTRAINT "fk_features_genes1"
-    FOREIGN KEY("genes_gene_id")
+    FOREIGN KEY("gene_id")
     REFERENCES "genes"("gene_id"),
   CONSTRAINT "fk_features_isoforms1"
-    FOREIGN KEY("isoforms_isoform_id")
+    FOREIGN KEY("isoform_id")
     REFERENCES "isoforms"("isoform_id")
 );
 DROP TABLE IF EXISTS "attributes";
@@ -1663,12 +1663,6 @@ CREATE INDEX "isoformExpDiffData.fk_isoformExpDiffData_samples1" ON "isoformExpD
 CREATE INDEX "isoformExpDiffData.fk_isoformExpDiffData_samples2" ON "isoformExpDiffData"("sample_2");
 CREATE INDEX "isoformExpDiffData.isoformExpDiffData_sig_index" ON "isoformExpDiffData"("test_stat","p_value","q_value","significant");
 CREATE INDEX "isoformFeatures.fk_isoformFeatures_isoforms1" ON "isoformFeatures"("isoform_id");
-CREATE INDEX "features.features_seqname_index" ON "features"("seqname");
-CREATE INDEX "features.features_type_index" ON "features"("type_id");
-CREATE INDEX "features.features_strand_index" ON "features"("strand");
-CREATE INDEX "features.features_start_end_index" ON "features"("start","end");
-CREATE INDEX "features.fk_features_genes1" ON "features"("genes_gene_id");
-CREATE INDEX "features.fk_features_isoforms1" ON "features"("isoforms_isoform_id");
 CREATE INDEX "attributes.fk_attributes_feature_id" ON "attributes"("feature_id");
 CREATE INDEX "attributes.attributes_attribute_index" ON "attributes"("attribute");
 CREATE INDEX "attributes.attributes_value_index" ON "attributes"("value");
@@ -1678,6 +1672,13 @@ CREATE INDEX "isoformReplicateData.fk_isoformReplicateData_replicates1" ON "isof
 CREATE INDEX "isoformReplicateData.fk_isoformReplicateData_isoforms1" ON "isoformReplicateData"("isoform_id");
 CREATE INDEX "isoformReplicateData.fk_isoformReplicateData_samples1" ON "isoformReplicateData"("sample_name");
 '
+#CREATE INDEX "features.features_seqname_index" ON "features"("seqname");
+#CREATE INDEX "features.features_type_index" ON "features"("type_id");
+#CREATE INDEX "features.features_strand_index" ON "features"("strand");
+#CREATE INDEX "features.features_start_end_index" ON "features"("start","end");
+#CREATE INDEX "features.fk_features_genes1" ON "features"("gene_id");
+#CREATE INDEX "features.fk_features_isoforms1" ON "features"("isoform_id");
+
 	create.sql <- strsplit(index.text,"\n")[[1]]
 	
 	tmp <- sapply(create.sql,function(x){
@@ -1716,6 +1717,7 @@ bulk_insert <- function(dbConn,sql,bound.data)
 #############
 #TODO: Add count and replicate files
 readCufflinks<-function(dir = getwd(),
+						gtfFile=NULL,
 						dbFile="cuffData.db",
 						runInfoFile="run.info",
 						repTableFile="read_groups.info",
@@ -1739,6 +1741,7 @@ readCufflinks<-function(dir = getwd(),
 						promoterFile="promoters.diff",
 						splicingFile="splicing.diff",
 						driver = "SQLite",
+						genome = NULL,
 						rebuild = FALSE,
 						verbose = FALSE,
 						...){
@@ -1782,6 +1785,13 @@ readCufflinks<-function(dir = getwd(),
 		if(file.exists(repTableFile)){
 			loadRepTable(repTableFile,dbConn)
 		}
+		if(!is.null(gtfFile)){
+			if(!is.null(genome)){
+				.loadGTF(gtfFile,genome,dbConn)
+			}else{
+				stop("'genome' cannot be NULL if you are supplying a .gtf file!")	
+			}
+		}
 		
 		loadGenes(geneFPKM,geneDiff,promoterFile,countFile=geneCount,replicateFile=geneRep,dbConn)
 		loadIsoforms(isoformFPKM,isoformDiff,isoformCount,isoformRep,dbConn)
@@ -1816,8 +1826,57 @@ readCufflinks<-function(dir = getwd(),
 ############
 # Handle GTF file
 ############
-loadGTF<-function(gtfFile,dbConn) {
-	
+#loadGTF<-function(gtfFile,dbConn) {
+#	
+#	#Error Trapping
+#	if (missing(gtfFile))
+#		stop("GTF file cannot be missing!")
+#	
+#	if (missing(dbConn))
+#		stop("Must provide a dbConn connection")
+#	
+#	write("Reading GTF file")
+#	gtf<-read.table(gtfFile,sep="\t",header=F)
+#	
+#	write("Melting attributes")
+#	attributes<-melt(strsplit(as.character(gtf$V9),"; "))
+#	colnames(attributes)<-c("attribute","featureID")
+#	attributes<-paste(attributes$attribute,attributes$featureID)
+#	attributes<-strsplit(as.character(attributes)," ")
+#	attributes<-as.data.frame(do.call("rbind",attributes))
+#	
+#	colnames(attributes)<-c("attribute","value","featureID")
+#	attributes<-attributes[,c(3,1,2)]
+#	
+#	#Grab only gene_ID and transcript_ID to add to features table
+#	id.attributes<-attributes[attributes$attribute %in% c("gene_id","transcript_id"),]
+#	id.attributes$featureID<-as.numeric(as.character(id.attributes$featureID))
+#	id.attributes<-dcast(id.attributes,...~attribute)
+#	
+#	#Main features table
+#	features<-gtf[,c(1:8)]
+#	colnames(features)<-c("seqname","source","type","start","end","score","strand","frame")
+#	features$featureID<-as.numeric(as.character(rownames(features)))
+#	
+#	#Merge features and id.attributes
+#	features<-merge(features,id.attributes,by.x='featureID',by.y='featureID')
+#	features<-features[,c(1,10:11,2:9)]
+#	
+#	#strip gene_id and transcript_id from attributes
+#	attributes<-attributes[!(attributes$attribute %in% c("gene_id","transcript_id")),]
+#	
+#	#Write features table
+#	write("Writing features table",stderr())
+#	#dbWriteTable(dbConn,'geneData',as.data.frame(genemelt[,c(1:2,5,3,4,6)]),row.names=F,append=T)
+#	dbWriteTable(dbConn,'features',as.data.frame(features),append=T)
+#	
+#	#Write features attribtues table
+#	#write("Writing feature attributes table",stderr())
+#	dbWriteTable(dbConn,'attributes',as.data.frame(attributes),append=T)
+#	
+#}
+
+.loadGTF<-function(gtfFile,genomebuild,dbConn){
 	#Error Trapping
 	if (missing(gtfFile))
 		stop("GTF file cannot be missing!")
@@ -1825,46 +1884,38 @@ loadGTF<-function(gtfFile,dbConn) {
 	if (missing(dbConn))
 		stop("Must provide a dbConn connection")
 	
-	gtf<-read.table(gtfFile,sep="\t",header=F)
-	
-	
-	attributes<-melt(strsplit(as.character(gtf$V9),"; "))
-	colnames(attributes)<-c("attribute","featureID")
-	attributes<-paste(attributes$attribute,attributes$featureID)
-	attributes<-strsplit(as.character(attributes)," ")
-	attributes<-as.data.frame(do.call("rbind",attributes))
-	
-	colnames(attributes)<-c("attribute","value","featureID")
-	attributes<-attributes[,c(3,1,2)]
-	
-	#Grab only gene_ID and transcript_ID to add to features table
-	id.attributes<-attributes[attributes$attribute %in% c("gene_id","transcript_id"),]
-	id.attributes$featureID<-as.numeric(as.character(id.attributes$featureID))
-	id.attributes<-dcast(id.attributes,...~attribute)
-	
-	#Main features table
-	features<-gtf[,c(1:8)]
-	colnames(features)<-c("seqname","source","type","start","end","score","strand","frame")
-	features$featureID<-as.numeric(as.character(rownames(features)))
-	
-	#Merge features and id.attributes
-	features<-merge(features,id.attributes,by.x='featureID',by.y='featureID')
-	features<-features[,c(1,10:11,2:9)]
-	
-	#strip gene_id and transcript_id from attributes
-	attributes<-attributes[!(attributes$attribute %in% c("gene_id","transcript_id")),]
-	
-	#Write features table
-	write("Writing features table",stderr())
-	#dbWriteTable(dbConn,'geneData',as.data.frame(genemelt[,c(1:2,5,3,4,6)]),row.names=F,append=T)
-	dbWriteTable(dbConn,'features',as.data.frame(features),append=F)
-	
-	#Write features table
-	write("Writing feature attributes table",stderr())
-	dbWriteTable(dbConn,'attributes',as.data.frame(attributes),append=F)
+	write("Reading GTF file",stderr())
+	gr<-import(gtfFile,asRangedData=FALSE)
+	gr<-as(gr,"data.frame")
+	gr$genome<-genomebuild
+	write("Writing GTF features to 'features' table...",stderr())
+	dbSendQuery(dbConn,"DROP TABLE IF EXISTS 'features'")
+	dbWriteTable(dbConn,'features',gr,append=F)
 	
 }
-	
+
+#library(Gviz)
+#myGeneId<-'XLOC_000071'
+#geneQuery<-paste("SELECT start,end,source AS feature,gene_id as gene,exon_number AS exon,transcript_id as transcript,gene_name as symbol, exon_number as rank, strand FROM features WHERE gene_id ='",myGeneId,"'",sep="")
+#geneFeatures<-dbGetQuery(cuff@DB,geneQuery)
+#geneFeatures$symbol[is.na(geneFeatures$symbol)]<-"NA"
+#grtrack<-GeneRegionTrack(geneFeatures,genome="hg19",chromosome="chr1",name="CuffDiff",showId=T,stacking="pack")
+#biomTrack<-BiomartGeneRegionTrack(genome="hg19",chromosome="chr1",start=min(start(grtrack)),end=max(end(grtrack)),name="ENSEMBL",showId=T,stacking="pack")
+#ideoTrack <- IdeogramTrack(genome = "hg19", chromosome = "chr1")
+#axTrack <- GenomeAxisTrack()
+#conservation <- UcscTrack(genome = "hg19", chromosome = "chr1",
+#		track = "Conservation", table = "phyloP46wayAll",
+#		from = min(start(grtrack)), to = max(end(grtrack)), trackType = "DataTrack",
+#		start = "start", end = "end", data = "score",
+#		type = "hist", window = "auto", col.histogram = "darkblue",
+#		fill.histogram = "darkblue", ylim = c(-3.7, 4),
+#		name = "Conservation")
+#
+#
+#plotTracks(list(ideoTrack,axTrack,grtrack,biomTrack,conservation),from=min(start(grtrack))-1000,to=max(end(grtrack))+1000)
+#plotTracks(list(axTrack,grtrack),from=min(start(grtrack))-1000,to=max(end(grtrack))+1000)
+
+
 
 #######
 #Unit Test
