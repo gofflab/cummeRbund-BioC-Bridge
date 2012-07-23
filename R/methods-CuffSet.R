@@ -146,6 +146,12 @@ setMethod("relCDS","CuffSet",function(object){
 		return(object@relCDS)
 		})
 
+.getGenome<-function(object){
+	genomeQuery<-"SELECT value FROM runInfo WHERE param='genome'"
+	genome<-dbGetQuery(object@DB,genomeQuery)
+	genome<-unique(genome[,1])
+	genome
+}
 
 #make CuffGene objects from a gene_ids
 .getGene<-function(object,geneId,sampleIdList=NULL){
@@ -265,6 +271,7 @@ setMethod("relCDS","CuffSet",function(object){
 			diff=genes.diff,
 			repFpkm=genes.repFpkm,
 			count=genes.count,
+			genome=.getGenome(object),
 			isoforms=new("CuffFeature",
 					annotation=isoform.annotation,
 					fpkm=isoform.fpkm,
@@ -472,6 +479,7 @@ setMethod("getGene",signature(object="CuffSet"),.getGene)
 			diff=genes.diff,
 			repFpkm=genes.repFpkm,
 			count=genes.count,
+			genome=.getGenome(object),
 			isoforms=new("CuffFeatureSet",
 					annotation=isoform.annot,
 					fpkm=isoform.fpkm,
@@ -597,7 +605,8 @@ setMethod("findGene",signature(object="CuffSet"),.findGene)
 			fpkm=dbGetQuery(object@DB,FPKMQuery),
 			diff=dbGetQuery(object@DB,DiffQuery),
 			repFpkm=dbGetQuery(object@DB,repFPKMQuery),
-			count=dbGetQuery(object@DB,countQuery)
+			count=dbGetQuery(object@DB,countQuery),
+			genome=.getGenome(object)
 		)
 	end<-dbSendQuery(object@DB,"END;")		
 	res

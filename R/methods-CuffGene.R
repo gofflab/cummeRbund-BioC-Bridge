@@ -96,7 +96,7 @@ setMethod("relCDS","CuffGene",function(object){
 	#print(feats)
 	feats$symbol[is.na(feats$symbol)]<-"NA"
 	#THIS NEEDS TO BE MADE GENERIC
-	genetrack<-GeneRegionTrack(feats,genome="hg19",chromosome=mychr,name='CuffDiff',showId=T,stacking="pack")
+	genetrack<-GeneRegionTrack(feats,genome=object@genome,chromosome=mychr,name='CuffDiff',showId=T,stacking="pack")
 	genetrack
 }
 
@@ -105,7 +105,7 @@ setMethod("relCDS","CuffGene",function(object){
 	myStart<-min(object@features$start)
 	myEnd<-max(object@features$end)
 	#Make the following conditional on network connectivity
-	ideoTrack <- IdeogramTrack(genome = "hg19", chromosome = unique(object@features$seqnames))
+	ideoTrack <- IdeogramTrack(genome = object@genome, chromosome = unique(object@features$seqnames))
 	trackList<-c(trackList,ideoTrack)
 	
 	axtrack<-GenomeAxisTrack()
@@ -115,7 +115,7 @@ setMethod("relCDS","CuffGene",function(object){
 	
 	trackList<-c(trackList,genetrack)
 	
-	biomTrack<-BiomartGeneRegionTrack(genome="hg19",chromosome=as.character(unique(object@features$seqnames)),start=myStart,end=myEnd,name="ENSEMBL",showId=T)
+	biomTrack<-BiomartGeneRegionTrack(genome=object@genome,chromosome=as.character(unique(object@features$seqnames)),start=myStart,end=myEnd,name="ENSEMBL",showId=T)
 	trackList<-c(trackList,biomTrack)
 	
 	

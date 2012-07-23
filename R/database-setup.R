@@ -1892,6 +1892,14 @@ readCufflinks<-function(dir = getwd(),
 	dbSendQuery(dbConn,"DROP TABLE IF EXISTS 'features'")
 	dbWriteTable(dbConn,'features',gr,append=F)
 	
+	#record Genome build
+	.recordGenome(genomebuild,dbConn)
+}
+
+.recordGenome<-function(genome,dbConn){
+	genomeInsertQuery<-paste("INSERT INTO runInfo VALUES('genome', '",genome,"')",sep="")
+	print(genomeInsertQuery)
+	dbSendQuery(dbConn,genomeInsertQuery)
 }
 
 #library(Gviz)

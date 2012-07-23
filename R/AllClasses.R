@@ -55,7 +55,8 @@ setClass("CuffFeature",
 						fpkm="data.frame",
 						diff="data.frame",
 						repFpkm="data.frame",
-						count="data.frame"
+						count="data.frame",
+						genome="character"
 				)
 		)
 
@@ -80,7 +81,8 @@ setClass("CuffFeatureSet",
 				fpkm="data.frame",
 				diff="data.frame",
 				repFpkm="data.frame",
-				count="data.frame"
+				count="data.frame",
+				genome="character"
 			)
 )
 
