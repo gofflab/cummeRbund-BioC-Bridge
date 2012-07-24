@@ -1889,11 +1889,12 @@ readCufflinks<-function(dir = getwd(),
 	gr<-as(gr,"data.frame")
 	gr$genome<-genomebuild
 	write("Writing GTF features to 'features' table...",stderr())
+	dbBeginTransaction(dbConn)
 	dbSendQuery(dbConn,"DROP TABLE IF EXISTS 'features'")
 	dbWriteTable(dbConn,'features',gr,append=F)
-	
 	#record Genome build
 	.recordGenome(genomebuild,dbConn)
+	dbCommit(dbConn)
 }
 
 .recordGenome<-function(genome,dbConn){
