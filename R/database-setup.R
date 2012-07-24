@@ -1671,15 +1671,13 @@ CREATE INDEX "isoformCount.fk_isoformCount_samples1" ON "isoformCount"("sample_n
 CREATE INDEX "isoformReplicateData.fk_isoformReplicateData_replicates1" ON "isoformReplicateData"("rep_name");
 CREATE INDEX "isoformReplicateData.fk_isoformReplicateData_isoforms1" ON "isoformReplicateData"("isoform_id");
 CREATE INDEX "isoformReplicateData.fk_isoformReplicateData_samples1" ON "isoformReplicateData"("sample_name");
-CREATE INDEX "features.fk_genes_gene_id" ON "features"("gene_id");
-CREATE INDEX "features.fk_isoforms_isoform_id" ON "features"("isoform_id");
+CREATE INDEX "features.features_seqname_index" ON "features"("seqname");
+CREATE INDEX "features.features_type_index" ON "features"("type_id");
+CREATE INDEX "features.features_strand_index" ON "features"("strand");
+CREATE INDEX "features.features_start_end_index" ON "features"("start","end");
+CREATE INDEX "features.fk_features_genes1" ON "features"("gene_id");
+CREATE INDEX "features.fk_features_isoforms1" ON "features"("isoform_id");
 '
-#CREATE INDEX "features.features_seqname_index" ON "features"("seqname");
-#CREATE INDEX "features.features_type_index" ON "features"("type_id");
-#CREATE INDEX "features.features_strand_index" ON "features"("strand");
-#CREATE INDEX "features.features_start_end_index" ON "features"("start","end");
-#CREATE INDEX "features.fk_features_genes1" ON "features"("gene_id");
-#CREATE INDEX "features.fk_features_isoforms1" ON "features"("isoform_id");
 
 	create.sql <- strsplit(index.text,"\n")[[1]]
 	
@@ -1890,21 +1888,22 @@ readCufflinks<-function(dir = getwd(),
 	gr<-import(gtfFile,asRangedData=FALSE)
 	gr<-as(gr,"data.frame")
 	#gr$genome<-genomebuild
-	colnames(gr)[grepl('transcript_id',colnames(gr))]<-'isoform_id'
-	colnames(gr)[grepl('tss_id',colnames(gr))]<-'TSS_group_id'
-	colnames(gr)[grepl('p_id',colnames(gr))]<-'CDS_id'
+	colnames(gr)[grepl('^transcript_id$',colnames(gr))]<-'isoform_id'
+	colnames(gr)[grepl('^tss_id$',colnames(gr))]<-'TSS_group_id'
+	colnames(gr)[grepl('^p_id$',colnames(gr))]<-'CDS_id'
 	write("Writing GTF features to 'features' table...",stderr())
-	dbBeginTransaction(dbConn)
-	dbSendQuery(dbConn,"DROP TABLE IF EXISTS 'features'")
-	dbWriteTable(dbConn,'features',gr,append=F)
+	#dbSendQuery(dbConn,"DROP TABLE IF EXISTS 'features'")
+	#dbBeginTransaction(dbConn)
+	dbWriteTable(dbConn,'features',gr,row.names=F,overwrite=T)
 	#record Genome build
 	.recordGenome(genomebuild,dbConn)
-	dbCommit(dbConn)
+	#dbCommit(dbConn)
+	return()
 }
 
 .recordGenome<-function(genome,dbConn){
 	genomeInsertQuery<-paste("INSERT INTO runInfo VALUES('genome', '",genome,"')",sep="")
-	print(genomeInsertQuery)
+	#print(genomeInsertQuery)
 	dbSendQuery(dbConn,genomeInsertQuery)
 }
 
