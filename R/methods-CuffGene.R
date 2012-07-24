@@ -100,6 +100,8 @@ setMethod("relCDS","CuffGene",function(object){
 	genetrack
 }
 
+setMethod("makeGeneRegionTrack",signature(object="CuffGene"),.makeGeneRegionTrack)
+
 .plot<-function(object){
 	trackList<-list()
 	myStart<-min(object@features$start)
@@ -128,5 +130,18 @@ setMethod("genePlot",signature(object="CuffGene"),.plot)
 #Coersion methods
 #################
 #As GRanges
+.asGRanges<-function(object){
+	#featCols<-c('seqnames','start','end','source','gene_id','exon_number','isoform_id','isoform_id','exon_number','strand')
+	feats<-object@features
+	#newColnames<-c('seqnames','start','end','feature','gene','exon','transcript','symbol','rank','strand')
+	colnames(feats)[colnames(feats)=='isoform_id']<-'transcript'
+	colnames(feats)[colnames(feats)=='gene_id']<-'gene'
+	colnames(feats)[colnames(feats)=='exon_number']<-'exon'
+	colnames(feats)[colnames(feats)=='source']<-'feature'
+	feats$symbol<-feats$transcript
+	corCols<-c('seqnames','start','end','strand')
+	myGR<-GRanges(Rle(feats$seqnames),ranges=IRanges(feats$start,end=feats$end),strand=Rle(feats$strand),elementMetadata=feats[,!colnames(feats) %in% corCols])
+	myGR
+}
 
-#As GRangesLit
+#As GRangesList

@@ -90,6 +90,7 @@ setGeneric("csDendro",function(object,logMode=T,pseudocount=1,replicates=FALSE) 
 #CuffGene
 ##################
 setGeneric("genePlot",function(object) standardGeneric("genePlot"))
+setGeneric("makeGeneRegionTrack",function(object) standardGeneric("genePlot"))
 
 ##############
 #CuffFeature
