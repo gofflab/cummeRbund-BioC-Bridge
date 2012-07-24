@@ -87,7 +87,7 @@ setMethod("relCDS","CuffGene",function(object){
 #Plotting		#
 #################
 .makeGeneRegionTrack<-function(object){
-	featCols<-c('seqnames','start','end','source','gene_id','exon_number','transcript_id','transcript_id','exon_number','strand')
+	featCols<-c('seqnames','start','end','source','gene_id','exon_number','isoform_id','isoform_id','exon_number','strand')
 	feats<-object@features[featCols]
 	newColnames<-c('seqnames','start','end','feature','gene','exon','transcript','symbol','rank','strand')
 	mychr<-unique(feats$seqnames)
