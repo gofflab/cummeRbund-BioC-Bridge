@@ -59,7 +59,9 @@ exportMethods(
 			getRepLevels,
 			findSimilar,
 			makeRnk,
-			genePlot
+			genePlot,
+			makeGeneRegionTrack,
+			DB
 )
 
 export("readCufflinks",

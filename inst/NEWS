@@ -4,6 +4,7 @@ v1.99.3
 	
 	Bugfixes:
 		- Fixed diffData 'features' argument so that it now does what it's supposed to do.
+		- added DB() with signature(object="CuffSet") to NAMESPACE
 		
 v1.99.2
 	Bugfixes:
