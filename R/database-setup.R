@@ -1518,7 +1518,7 @@ CREATE TABLE "features"(
   "isoform_id" VARCHAR(45) NOT NULL,
   "seqname" VARCHAR(45) NOT NULL,
   "source" VARCHAR(45) NOT NULL,
-  "type_id" INTEGER,
+  "type" INTEGER,
   "start" INTEGER,
   "end" INTEGER,
   "score" FLOAT,
@@ -1531,6 +1531,7 @@ CREATE TABLE "features"(
     FOREIGN KEY("isoform_id")
     REFERENCES "isoforms"("isoform_id")
 );
+
 DROP TABLE IF EXISTS "attributes";
 CREATE TABLE "attributes"(
   "attribute_lookup_id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,

@@ -366,11 +366,6 @@ setMethod("diffTable",signature(object="CuffData"),.diffTable)
 #		
 #	}
 #}
-.fullMatrix<-function(object){
-#Organized output of all information into feature x value matrix
-	
-}
-
 
 setMethod("DB","CuffData",function(object){
 		return(object@DB)
