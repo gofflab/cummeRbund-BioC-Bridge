@@ -1,7 +1,7 @@
 v1.99.3
 	New Features:
 		- Added diffTable() method to return a table of differential results broken out by pairwise comparison. (more human-readable)
-	
+		- Added sigMatrix() method to CuffSet objects to draw heatmap showing number of significant genes by pairwise comparison at a given FDR.
 	Bugfixes:
 		- Fixed diffData 'features' argument so that it now does what it's supposed to do.
 		- added DB() with signature(object="CuffSet") to NAMESPACE
