@@ -583,7 +583,7 @@ setMethod("csVolcano",signature(object="CuffData"), .volcano)
 
 setMethod("csBoxplot",signature(object="CuffData"),.boxplot)
 
-.dendro<-function(object,logMode=T,pseudocount=1,replicates=FALSE){
+.dendro<-function(object,logMode=T,pseudocount=1,replicates=FALSE,...){
 	if(replicates){
 		fpkmMat<-repFpkmMatrix(object)
 	}else{
@@ -597,7 +597,7 @@ setMethod("csBoxplot",signature(object="CuffData"),.boxplot)
 	
 	#res<-as.dist(res)
 	res<-as.dendrogram(hclust(res))
-	plot(res,main=paste("All",deparse(substitute(object)),sep=" "))
+	plot(res,main=paste("All",deparse(substitute(object)),sep=" "),...)
 	res
 }
 
