@@ -30,6 +30,7 @@ setGeneric("getSigTable", function(object,alpha=0.05,level='genes') standardGene
 setGeneric("addFeatures",function(object, features, ...) standardGeneric("addFeatures"))
 setGeneric("findSimilar",function(object,x,n,...) standardGeneric("findSimilar"))
 setGeneric("makeGRanges",function(object,id,idField='transcript_id') standardGeneric("makeGRanges"))
+setGeneric("sigMatrix",function(object,alpha=0.05,level='genes') standardGeneric("sigMatrix"))
 
 ###############
 #CuffData

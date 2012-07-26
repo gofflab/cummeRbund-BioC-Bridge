@@ -767,6 +767,40 @@ setMethod("getSig",signature(object="CuffSet"),.getSig)
 
 setMethod("getSigTable",signature(object="CuffSet"),.getSigTable)
 
+.sigMatrix<-function(object,alpha=0.05,level='genes'){
+	if(level %in% c('promoters','splicing','relCDS')){
+		diffTable<-slot(object,level)@table
+	}else{
+		diffTable<-slot(object,level)@tables$expDiffTable
+	}
+	
+	sql<-paste("SELECT ",slot(object,level)@idField,", sample_1, sample_2, p_value from ", diffTable," WHERE status='OK';")
+	sig<-dbGetQuery(object@DB,sql)
+	sig$q_value<-p.adjust(sig$p_value,method='BH')
+	
+	sig<-sig[sig$q_value<=alpha,]
+	
+	fieldsNeeded<-c('sample_1','sample_2')
+	sig<-sig[,fieldsNeeded]
+	
+	sampleOrder<-rev(samples(object)$sample_name)
+	sig$sample_1<-factor(sig$sample_1,levels=sampleOrder)
+	sig$sample_2<-factor(sig$sample_2,levels=sampleOrder)
+	
+	p<-ggplot(sig,aes(x=sample_1,y=sample_2))
+	
+	p<- p + stat_sum(aes(fill=..n..), geom="tile") + scale_fill_continuous(low="white",high="green") + expand_limits(fill=0)
+	
+	p<- p + stat_sum(aes(label=..n..),geom="text",size=6)
+	
+	#p <- p + geom_tile(aes(fill=..n..))
+	
+	p + theme_bw() + opts(title=paste("Significant ",slot(object,level)@tables$mainTable,"\n at FDR ",alpha*100,"%",sep=""))
+	
+}
+
+setMethod("sigMatrix",signature(object="CuffSet"),.sigMatrix)
+
 #Find similar genes
 .findSimilar<-function(object,x,n,distThresh,returnGeneSet=TRUE,...){
 	#x can be either a gene_id, gene_short_name or a vector of FPKM values (fake gene expression profile)
