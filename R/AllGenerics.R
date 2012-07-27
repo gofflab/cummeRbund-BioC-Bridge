@@ -85,7 +85,7 @@ setGeneric("csCluster",function(object, k, iter.max=100, ...) standardGeneric("c
 #setGeneric("diff",function(object) standardGeneric("diff"))
 setGeneric("annotation",function(object) standardGeneric("annotation"))
 setGeneric("csSpecificity",function(object,logMode=T,pseudocount=1,relative=FALSE,...) standardGeneric("csSpecificity"))
-setGeneric("csDendro",function(object,logMode=T,pseudocount=1,replicates=FALSE) standardGeneric("csDendro"))
+setGeneric("csDendro",function(object,logMode=T,pseudocount=1,replicates=FALSE,...) standardGeneric("csDendro"))
 
 ##################
 #CuffGene
