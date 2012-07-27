@@ -88,19 +88,23 @@ setMethod("samples","CuffFeatureSet",.samples)
 setMethod("replicates","CuffFeatureSet",.replicates)
 
 .fpkm<-function(object,features=FALSE){
+	myFPKM<-object@fpkm
+	myFPKM$stdev<-(myFPKM$conf_hi-myFPKM$fpkm)/2
 	if (features){
-		return (merge(object@annotation,object@fpkm))
+		return (merge(object@annotation,myFPKM))
 	}else{
-		return(object@fpkm)
+		return(myFPKM)
 	}
 }
 setMethod("fpkm",signature(object="CuffFeatureSet"),.fpkm)
 
 .repFpkm<-function(object,features=FALSE){
+	myFPKM<-object@repFpkm
+	myFPKM$stdev<-(myFPKM$conf_hi-myFPKM$fpkm)/2
 	if (features){
-		return (merge(object@annotation,object@repFpkm))
+		return (merge(object@annotation,myFPKM))
 	}else{
-		return(object@repFpkm)
+		return(myFPKM)
 	}
 }
 setMethod("repFpkm",signature(object="CuffFeatureSet"),.repFpkm)

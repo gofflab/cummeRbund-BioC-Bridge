@@ -129,6 +129,7 @@ setMethod("replicates","CuffData",.replicates)
 	}
 	res<-dbGetQuery(object@DB,FPKMQuery)
 	res$sample_name<-factor(res$sample_name,levels=getLevels(object))
+	res$stdev<-(res$conf_hi-res$fpkm)/2
 	res
 }
 
@@ -161,6 +162,7 @@ setMethod("fpkm","CuffData",.fpkm)
 	#print(FPKMQuery)
 	res<-dbGetQuery(object@DB,FPKMQuery)
 	res$rep_name<-factor(res$rep_name,levels=getRepLevels(object))
+	res$stdev<-(res$conf_hi-res$fpkm)/2
 	res
 }
 
