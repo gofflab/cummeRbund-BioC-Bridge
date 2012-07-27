@@ -767,7 +767,7 @@ setMethod("getSig",signature(object="CuffSet"),.getSig)
 
 setMethod("getSigTable",signature(object="CuffSet"),.getSigTable)
 
-.sigMatrix<-function(object,alpha=0.05,level='genes'){
+.sigMatrix<-function(object,alpha=0.05,level='genes',orderByDist=F){
 	if(level %in% c('promoters','splicing','relCDS')){
 		diffTable<-slot(object,level)@table
 	}else{
@@ -783,7 +783,13 @@ setMethod("getSigTable",signature(object="CuffSet"),.getSigTable)
 	fieldsNeeded<-c('sample_1','sample_2')
 	sig<-sig[,fieldsNeeded]
 	
-	sampleOrder<-rev(samples(object)$sample_name)
+	if(orderByDist){
+		#This does not work yet...
+		sampleOrder<-order.dendrogram(as.dendrogram(hclust(JSdist(makeprobs(fpkmMatrix(slot(object,level)))))))
+	}
+	else {
+		sampleOrder<-rev(samples(object)$sample_name)
+	}
 	sig$sample_1<-factor(sig$sample_1,levels=sampleOrder)
 	sig$sample_2<-factor(sig$sample_2,levels=sampleOrder)
 	
