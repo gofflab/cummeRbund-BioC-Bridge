@@ -23,6 +23,7 @@ Objects can be created by calls of the form \code{new("CuffFeature", annotation,
     \item{\code{diff}:}{Object of class \code{"data.frame"} ~~ }
     \item{\code{repFpkm}:}{Object of class \code{"data.frame"} ~~ }
     \item{\code{count}:}{Object of class \code{"data.frame"} ~~ }
+    \item{\code{genome}:}{Object of class \code{"character"} ~~ }
   }
 }
 \section{Methods}{

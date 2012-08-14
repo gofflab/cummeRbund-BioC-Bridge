@@ -4,6 +4,7 @@
 \alias{CuffDist-class}
 \alias{dim,CuffDist-method}
 \alias{samples,CuffDist-method}
+\alias{DB,CuffDist-method}
 
 \title{Class "CuffDist"}
 \description{
@@ -19,13 +20,14 @@ Objects can be created by calls of the form \code{new("CuffDist", DB, table, typ
     \item{\code{table}:}{Object of class \code{"character"} ~~ }
     \item{\code{type}:}{Object of class \code{"character"} ~~ }
     \item{\code{idField}:}{Object of class \code{"character"} ~~ }
-  }
+  	}
 }
 \section{Methods}{
   \describe{
     \item{dim}{\code{signature(x = "CuffDist")}: ... }
     \item{samples}{\code{signature(x = "CuffDist")}: ... }
-	 }
+    \item{DB}{\code{signature(object = "CuffDist")}: Accessor for @DB slot }
+	}
 }
 \references{
 None

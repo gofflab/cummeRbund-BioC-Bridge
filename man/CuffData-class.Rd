@@ -4,6 +4,11 @@
 \alias{CuffData-class}
 \alias{dim,CuffData-method}
 \alias{getFeatures,CuffData-method}
+\alias{DB,CuffData-method}
+\alias{diffTable}
+\alias{makeRnk}
+\alias{diffTable,CuffData-method}
+\alias{makeRnk,CuffData-method}
 
 \title{Class "CuffData"}
 \description{
@@ -27,6 +32,9 @@ Objects can be created by calls of the form \code{new("CuffData", DB, tables, fi
   \describe{
     \item{dim}{\code{signature(x = "CuffData")}: ... }
     \item{getFeatures}{\code{signature(object = "CuffData")}: ... }
+    \item{DB}{\code{signature(object = "CuffData")}: Accessor for @DB slot }
+    \item{diffTable}{\code{signature(object = "CuffData")}: Create a Full table (wide format) of differential expression information for all pairwise comparisons }
+    \item{makeRnk}{\code{signature(object = "CuffData")}: Internal method to create .rnk file. Should not be called directly }	
 	 }
 }
 \references{

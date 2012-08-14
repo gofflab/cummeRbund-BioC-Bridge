@@ -3,6 +3,7 @@
 \docType{class}
 \alias{CuffSet-class}
 %Accessors
+\alias{DB}
 \alias{genes}
 \alias{isoforms}
 \alias{TSS}
@@ -11,6 +12,7 @@
 \alias{splicing}
 \alias{relCDS}
 
+\alias{DB,CuffSet-method}
 \alias{genes,CuffSet-method}
 \alias{isoforms,CuffSet-method}
 \alias{TSS,CuffSet-method}
@@ -52,6 +54,7 @@ Available methods are primary accessors to retrieve CuffGeneSet or CuffGene obje
 
 \section{Accessors}{
 	\describe{
+		\item{DB}{\code{signature(object="CuffSet")}: Access @DB slot }
 		\item{genes}{\code{signature(object = "CuffSet")}: Access @genes slot }
 		\item{isoforms}{\code{signature(object = "CuffSet")}: Access @isoforms slot }
 		\item{TSS}{\code{signature(object = "CuffSet")}: Access @TSS slot }

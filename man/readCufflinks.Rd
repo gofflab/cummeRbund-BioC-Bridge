@@ -8,7 +8,7 @@ readCufflinks
 This initializes the backend SQLite table and provides a DB connection for all downstream data analysis.
 }
 \usage{
-readCufflinks(dir = getwd(), dbFile = "cuffData.db", 
+readCufflinks(dir = getwd(), dbFile = "cuffData.db", gtfFile = NULL, 
 				runInfoFile = "run.info", repTableFile = "read_groups.info",
 				geneFPKM = "genes.fpkm_tracking", geneDiff = "gene_exp.diff", geneCount="genes.count_tracking", geneRep="genes.read_group_tracking",
 				isoformFPKM = "isoforms.fpkm_tracking", isoformDiff = "isoform_exp.diff", isoformCount="isoforms.count_tracking", isoformRep="isoforms.read_group_tracking",
@@ -17,7 +17,9 @@ readCufflinks(dir = getwd(), dbFile = "cuffData.db",
 				CDSDiff = "cds.diff",
 				promoterFile = "promoters.diff", 
 				splicingFile = "splicing.diff", 
-				driver = "SQLite", rebuild = FALSE,verbose=FALSE, ...)
+				driver = "SQLite", 
+				genome = NULL, 
+				rebuild = FALSE,verbose=FALSE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -26,6 +28,9 @@ Directory in which all CuffDiff output files can be located. Defaults to current
 }
   \item{dbFile}{
 Name of backend database. Default is 'cuffData.db'
+}
+  \item{gtfFile}{
+Path to .gtf file used in cuffdiff analysis. This file will be parsed to retrieve transcript model information.
 }
   \item{runInfoFile}{
 run.info file
@@ -92,6 +97,9 @@ splicing.diff (distribution tests on isoforms)
 }
   \item{driver}{
 Driver for backend database. (Currently only "SQLite" is supported).
+}
+  \item{genome}{
+A character string indicating to which genome build the .gtf annotations belong (e.g. 'hg19' or 'mm9')
 }
   \item{rebuild}{
 A logical argument to rebuild database backend.

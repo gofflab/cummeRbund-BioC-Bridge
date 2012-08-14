@@ -18,6 +18,7 @@ setMethod("initialize","CuffFeature",
 				diff=data.frame(),
 				repFpkm=data.frame(),
 				count=data.frame(),
+				genome=character(),
 				... ){
 			.Object<-callNextMethod(.Object,
 					annotation=annotation,

@@ -10,6 +10,10 @@
 \alias{relCDS,CuffGene-method}
 \alias{splicing,CuffGene-method}
 \alias{length,CuffGene-method}
+\alias{makeGeneRegionTrack}
+\alias{makeGeneRegionTrack,CuffGene-method}
+\alias{genePlot}
+\alias{genePlot,CuffGene-method}
 
 \title{Class "CuffGene"}
 \description{
@@ -29,8 +33,10 @@ Objects can be created by calls of the form \code{new("CuffGene", id, isoforms, 
     \item{\code{relCDS}:}{Object of class \code{"CuffFeature"} ~~ }
     \item{\code{splicing}:}{Object of class \code{"CuffFeature"} ~~ }
     \item{\code{annotation}:}{Object of class \code{"data.frame"} ~~ }
+    \item{\code{genome}:}{Object of class \code{"character"} ~~ }
     \item{\code{fpkm}:}{Object of class \code{"data.frame"} ~~ }
     \item{\code{diff}:}{Object of class \code{"data.frame"} ~~ }
+    \item{\code{features}:}{Object of class \code{"data.frame"} ~~ }
   }
 }
 \section{Extends}{
@@ -39,6 +45,8 @@ Class \code{"\linkS4class{CuffFeature}"}, directly.
 \section{Methods}{
 \describe{
 	\item{length}{\code{signature(object="CuffFeature")}: Part of length validation (internal use only)}
+	\item{makeGeneRegionTrack}{\code{signature(object="CuffFeature")}: Creates a GeneRegionTrack object (see package Gviz) from a CuffGene object.}
+	\item{genePlot}{\code{signature(object="CuffFeature")}: Internal use only.}
 }
 }
 

@@ -1718,8 +1718,8 @@ bulk_insert <- function(dbConn,sql,bound.data)
 #############
 #TODO: Add count and replicate files
 readCufflinks<-function(dir = getwd(),
-						gtfFile=NULL,
 						dbFile="cuffData.db",
+						gtfFile=NULL,
 						runInfoFile="run.info",
 						repTableFile="read_groups.info",
 						geneFPKM="genes.fpkm_tracking",

@@ -162,7 +162,7 @@ setMethod("fpkm","CuffData",.fpkm)
 	#print(FPKMQuery)
 	res<-dbGetQuery(object@DB,FPKMQuery)
 	res$rep_name<-factor(res$rep_name,levels=getRepLevels(object))
-	res$stdev<-(res$conf_hi-res$fpkm)/2
+	#res$stdev<-(res$conf_hi-res$fpkm)/2 #Not really available yet since conf_hi and conf_lo are not 
 	res
 }
 
@@ -313,9 +313,11 @@ setMethod("countMatrix","CuffData",.countMatrix)
 
 setMethod("diffData",signature(object="CuffData"),.diffData)
 
-.diffTable<-function(object){
+.diffTable<-function(object,logCutoffValue=1e+300){
 	measureVars<-c('status','value_1','value_2','log2_fold_change','test_stat','p_value','q_value','significant')
 	all.diff<-diffData(object,features=TRUE)
+	all.diff$log2_fold_change[all.diff$log2_fold_change>=logCutoffValue]<-Inf
+	all.diff$log2_fold_change[all.diff$log2_fold_change>=-logCutoffValue]<--Inf
 	all.diff.melt<-melt(all.diff,measure.vars=measureVars)
 	#all.diff.melt<-all.diff.melt[!grepl("^value_",all.diff.melt$variable),]
 	all.diff.cast<-dcast(all.diff.melt,formula=...~sample_2+sample_1+variable)

@@ -100,7 +100,7 @@ setMethod("fpkm",signature(object="CuffFeatureSet"),.fpkm)
 
 .repFpkm<-function(object,features=FALSE){
 	myFPKM<-object@repFpkm
-	myFPKM$stdev<-(myFPKM$conf_hi-myFPKM$fpkm)/2
+	#myFPKM$stdev<-(myFPKM$conf_hi-myFPKM$fpkm)/2
 	if (features){
 		return (merge(object@annotation,myFPKM))
 	}else{
@@ -400,7 +400,7 @@ setMethod("csHeatmap",signature("CuffFeatureSet"),.ggheat)
 
 
 # Distance Heatmaps
-.distheat<-function(object, samples.not.genes=T, logMode=T, pseudocount=1.0, heatscale=c(low='lightyellow',mid='orange',high='darkred'), heatMidpoint=NULL) {
+.distheat<-function(object, samples.not.genes=T, logMode=T, pseudocount=1.0, heatscale=c(low='lightyellow',mid='orange',high='darkred'), heatMidpoint=NULL, ...) {
   # get expression from a sample or gene perspective
   if(samples.not.genes) {
     obj.fpkm = fpkmMatrix(object)

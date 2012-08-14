@@ -767,7 +767,7 @@ setMethod("getSig",signature(object="CuffSet"),.getSig)
 
 setMethod("getSigTable",signature(object="CuffSet"),.getSigTable)
 
-.sigMatrix<-function(object,alpha=0.05,level='genes',orderByDist=F){
+.sigMatrix<-function(object,alpha=0.05,level='genes',orderByDist=FALSE){
 	if(level %in% c('promoters','splicing','relCDS')){
 		diffTable<-slot(object,level)@table
 	}else{

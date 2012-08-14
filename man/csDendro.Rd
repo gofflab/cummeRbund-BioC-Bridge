@@ -11,7 +11,7 @@ Creates a grid graphics plot of a dendrogram of Jensen-Shannon distances between
 }
 \usage{
 \S4method{csDendro}{CuffFeatureSet}(object,logMode=T,pseudocount=1,replicates=FALSE)
-\S4method{csDendro}{CuffData}(object,logMode=T,pseudocount=1,replicates=FALSE)
+\S4method{csDendro}{CuffData}(object,logMode=T,pseudocount=1,replicates=FALSE,...)
 }
 
 \arguments{
@@ -26,6 +26,9 @@ Value to be added to FPKM for appropriate log transformation and clustering. (Av
 }
   \item{replicates}{
 A logical value whether or not to plot individual replicates or aggregate condition values.
+}
+  \item{\dots}{
+Additional arguments to csHeatmap
 }
 }
 \details{
