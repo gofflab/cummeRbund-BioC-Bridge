@@ -313,7 +313,7 @@ setMethod("countMatrix","CuffData",.countMatrix)
 
 setMethod("diffData",signature(object="CuffData"),.diffData)
 
-.diffTable<-function(object,logCutoffValue=1e+300){
+.diffTable<-function(object,logCutoffValue=99999){
 	measureVars<-c('status','value_1','value_2','log2_fold_change','test_stat','p_value','q_value','significant')
 	all.diff<-diffData(object,features=TRUE)
 	all.diff$log2_fold_change[all.diff$log2_fold_change>=logCutoffValue]<-Inf
