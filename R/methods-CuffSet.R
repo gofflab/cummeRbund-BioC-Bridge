@@ -785,7 +785,8 @@ setMethod("getSigTable",signature(object="CuffSet"),.getSigTable)
 	
 	if(orderByDist){
 		#This does not work yet...
-		sampleOrder<-order.dendrogram(as.dendrogram(hclust(JSdist(makeprobs(fpkmMatrix(slot(object,level)))))))
+		mySamples<-colnames(fpkmMatrix(slot(object,level)))
+		sampleOrder<-mySamples[order.dendrogram(as.dendrogram(hclust(JSdist(makeprobs(log10(fpkmMatrix(slot(object,level))))))))]
 	}
 	else {
 		sampleOrder<-rev(samples(object)$sample_name)
@@ -801,7 +802,7 @@ setMethod("getSigTable",signature(object="CuffSet"),.getSigTable)
 	
 	#p <- p + geom_tile(aes(fill=..n..))
 	
-	p + theme_bw() + opts(title=paste("Significant ",slot(object,level)@tables$mainTable,"\n at FDR ",alpha*100,"%",sep=""))
+	p + theme_bw() + opts(title=paste("Significant ",slot(object,level)@tables$mainTable,"\n at FDR ",alpha*100,"%",sep=""), axis.text.x=theme_text(angle=-90, hjust=0)) + coord_equal(1)
 	
 }
 
