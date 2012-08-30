@@ -26,6 +26,7 @@ setMethod("initialize","CuffFeature",
 					diff=diff,
 					repFpkm=repFpkm,
 					count=count,
+					genome=genome,
 					...)				
 		}
 )
@@ -111,6 +112,10 @@ setMethod("diffData",signature(object="CuffFeature"),.diffData)
 
 setMethod("annotation","CuffFeature",function(object){
 		return(object@annotation)
+		})
+
+setMethod("getGenome","CuffFeature",function(object){
+			return(object@genome)
 		})
 
 .repFpkm<-function(object){

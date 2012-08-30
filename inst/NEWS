@@ -3,7 +3,7 @@ v1.99.3
 		- Added diffTable() method to return a table of differential results broken out by pairwise comparison. (more human-readable)
 		- Added sigMatrix() method to CuffSet objects to draw heatmap showing number of significant genes by pairwise comparison at a given FDR.
 		- A call to fpkm() now emits calculated stdev field as well.
-		- - Can now pass gtf file as argument to readCufflinks() to integrate transcript model information into database backend
+		- - Can now pass a GTF file as argument to readCufflinks() to integrate transcript model information into database backend
 			* Added requirement for rtracklayer and GenomicFeatures packages.
 			* You must also indicate which genome build the .gtf was created against by using the 'genome' argument to readCufflinks.
 		- Integration with Gviz:

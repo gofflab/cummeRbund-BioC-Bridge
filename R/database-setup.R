@@ -1516,7 +1516,7 @@ CREATE TABLE "features"(
   "feature_id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
   "gene_id" VARCHAR(45) NOT NULL,
   "isoform_id" VARCHAR(45) NOT NULL,
-  "seqname" VARCHAR(45) NOT NULL,
+  "seqnames" VARCHAR(45) NOT NULL,
   "source" VARCHAR(45) NOT NULL,
   "type" INTEGER,
   "start" INTEGER,
@@ -1672,7 +1672,7 @@ CREATE INDEX "isoformCount.fk_isoformCount_samples1" ON "isoformCount"("sample_n
 CREATE INDEX "isoformReplicateData.fk_isoformReplicateData_replicates1" ON "isoformReplicateData"("rep_name");
 CREATE INDEX "isoformReplicateData.fk_isoformReplicateData_isoforms1" ON "isoformReplicateData"("isoform_id");
 CREATE INDEX "isoformReplicateData.fk_isoformReplicateData_samples1" ON "isoformReplicateData"("sample_name");
-CREATE INDEX "features.features_seqname_index" ON "features"("seqname");
+CREATE INDEX "features.features_seqnames_index" ON "features"("seqnames");
 CREATE INDEX "features.features_type_index" ON "features"("type");
 CREATE INDEX "features.features_strand_index" ON "features"("strand");
 CREATE INDEX "features.features_start_end_index" ON "features"("start","end");

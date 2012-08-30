@@ -262,7 +262,7 @@ setMethod("relCDS","CuffSet",function(object){
 	
 	end<-dbSendQuery(object@DB,"END;")
 	
-	
+	#write(.getGenome(object),stderr())
 	res<-new("CuffGene",
 			id=geneId,
 			features=genes.features,

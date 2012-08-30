@@ -83,6 +83,11 @@ setMethod("relCDS","CuffGene",function(object){
 			return(object@relCDS)
 		})
 
+#features
+setMethod("features","CuffGene",function(object){
+			return(object@features)
+		})
+
 #################
 #Plotting		#
 #################

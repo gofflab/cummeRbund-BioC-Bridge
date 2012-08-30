@@ -241,10 +241,16 @@ library(cummeRbund)
 @
 %%fileDir<-("../../extdata/")
 <<read>>=
-cuff <- readCufflinks(dir=system.file("extdata", package="cummeRbund"))
+myDir<-system.file("extdata", package="cummeRbund") #You can leave blank if cwd or replace with your own directory path.
+gtfFile<-system.file("extdata/chr1_snippet.gtf",package="cummeRbund") #path to .gtf file used in cuffdiff analysis.
+cuff <- readCufflinks(dir=myDir,gtfFile=gtfFile,genome="hg19")
 cuff
 @
-Again, by default $dir$ is assumed to be the current working directory and \code{cuff<-readCufflinks()} should work if all appropriate files are in the current working directory. Should you need to rebuild the SQLite backend for any reason, you can add the option \Rfunarg{rebuild=T} to \Rmethod{readCufflinks}.  Once the database is created, \Rmethod{readCufflinks} will default to using the SQL backend and should not need to rebuild this database.
+
+Again, by default $dir$ is assumed to be the current working directory and \code{cuff<-readCufflinks()} should work if all appropriate files are in the current working directory. We now also
+recommend that you use both the \Rfunarg{genome} and \Rfunarg{gtfFile} arguments to readCufflinks(). This will allow cummeRbund to archive the transcript structure information located in the .gtf file associated with
+your particular cuffdiff run, as well as associate these transcripts with an appropriate genome build (e.g. \'hg19\', \'mm9\', etc) so as to allow for transcript-level visualizations and future integration with other external resources. 
+Should you need to rebuild the SQLite backend for any reason, you can add the option \Rfunarg{rebuild=T} to \Rmethod{readCufflinks}.  Once the database is created, \Rmethod{readCufflinks} will default to using the SQL backend and should not need to rebuild this database.
 Each R session should begin with a call to \Rmethod{readCufflinks} so as to initialize the database connection and create an object with the appropriate RSQLite connection information. 
 
 \subsection{Adding additional feature annotation}
@@ -797,11 +803,87 @@ print(igb)
 	\end{center}
 \end{figure}
 
+\clearpage
+
+\subsubsection{Gene Feature plots}
+If you included both the genome build and gtfFile in your call to \Rmethod{readCufflinks()} then you will be able to access some of the transcript-structure level features that are now being integrated into cummeRbund. For now, these features are extended only to the single gene, \Rclass{CuffGene} objects.
+
+Feature data are loaded into the \'features\' table of the cuffData.db database. When a \Rclass{CuffGene} object is created using \Rmethod{getGene()}, all relative features are selected from this table and a \'features\' slot is added to the resulting object.
+
+<<features_1>>=
+head(features(myGene))
+@
+
+The \Rpackage{Gviz} package can be used to display features in a 'track'-like format. In particular, the \Rclass{GeneRegionTrack} class creates a mechanism by which we can start to visualize transcript-level structures in their genomic context. \Rpackage{cummeRbund} implements the \Rmethod{makeGeneRegionTrack()} method to quickly create a \Rclass{GeneRegionTrack} from the gene features.
+
+<<features_2,fig=TRUE>>=
+myGene.geneTrack<-makeGeneRegionTrack(myGene)
+plotTracks(myGene.geneTrack)
+@
+
+We can then use some of the additional features from the \Rpackage{Gviz} package to add additional tracks to our track.
+
+<<features_3,fig=TRUE>>=
+trackList<-list()
+myStart<-min(features(myGene)$start)
+myEnd<-max(features(myGene)$end)
+myChr<-unique(features(myGene)$seqnames)
+genome<-'hg19'
+
+ideoTrack <- IdeogramTrack(genome = genome, chromosome = myChr)
+trackList<-c(trackList,ideoTrack)
+
+axtrack<-GenomeAxisTrack()
+trackList<-c(trackList,axtrack)
+ 
+genetrack<-makeGeneRegionTrack(myGene)
+ 
+trackList<-c(trackList,genetrack)
+ 
+biomTrack<-BiomartGeneRegionTrack(genome=genome,chromosome=as.character(myChr),
+		start=myStart,end=myEnd,name="ENSEMBL",showId=T)
+ 
+trackList<-c(trackList,biomTrack)
+ 
+conservation <- UcscTrack(genome = genome, chromosome = myChr,
+		track = "Conservation", table = "phyloP46wayPlacental",
+		from = myStart-2000, to = myEnd+2000, trackType = "DataTrack",
+		start = "start", end = "end", data = "score",
+		type = "hist", window = "auto", col.histogram = "darkblue",
+		fill.histogram = "darkblue", ylim = c(-3.7, 4),
+		name = "Conservation")
+
+trackList<-c(trackList,conservation)
+ 
+plotTracks(trackList,from=myStart-2000,to=myEnd+2000)
+
+@
 
 \clearpage
 
 \section{Data Exploration}
 The cummeRbund package is more than just a visualization tool as well.  We are working to implement several different means of data exploration from gene and condition clustering, finding features with similar expression profiles, as well as incorporating Gene Ontology analysis.
+
+\subsection{Overview of significant features}
+The \Rmethod{sigMatrix()} function can provide you with a \'quick--and--dirty\' view of the number of significant features of a particular type, and at a given alpha ($0.05$ by default). For example:
+
+<<sig_mat_1,include=FALSE>>=
+mySigMat<-sigMatrix(cuff,level='genes',alpha=0.05)
+
+@
+
+\begin{figure}[htp]
+	\begin{center}
+	\subfloat[Significant features overview matrix. This plot describes the number of significant genes at a 5\%FDR for each pairwise interaction tested.]{
+	
+<<label=sig_mat_plot_1,fig=TRUE,echo=FALSE,include=FALSE>>=
+<<sig_mat_1>>
+print(mySigMat)
+@
+	\includegraphics[width=0.6\textwidth]{cummeRbund-manual-sig_mat_plot_1}}
+	
+	\end{center}
+\end{figure}
 
 \subsection{Creating gene sets from significantly regulated genes}
 One of the primary roles of a differential expression analysis is to conduct significance tests on each feature (genes, isoforms, TSS, and CDS) for appropriate pairwise comparisons of conditions. The results of these tests (after multiple testing correction of course) can be used to determine which genes are differentially regulated. 

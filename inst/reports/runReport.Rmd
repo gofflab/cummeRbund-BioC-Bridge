@@ -1,0 +1,9 @@
+CummeRbund Run Report
+=====================
+
+Run Parameters
+--------------
+
+```{r}
+runInfo(cuff)
+```

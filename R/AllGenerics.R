@@ -93,9 +93,11 @@ setGeneric("csDendro",function(object,logMode=T,pseudocount=1,replicates=FALSE,.
 setGeneric("genePlot",function(object) standardGeneric("genePlot"))
 setGeneric("makeGeneRegionTrack",function(object) standardGeneric("makeGeneRegionTrack"))
 
+
 ##############
 #CuffFeature
 ##############
+setGeneric("getGenome",function(object) standardGeneric	("getGenome"))
 
 #CuffFeature plotting
 setGeneric("expressionBarplot",function(object, logMode=FALSE, pseudocount=1.0, showErrorbars=TRUE, ...) standardGeneric("expressionBarplot"))
