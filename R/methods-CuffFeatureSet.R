@@ -421,7 +421,7 @@ setMethod("csHeatmap",signature("CuffFeatureSet"),.ggheat)
   obj.hc = hclust(obj.dists)
 
   # make data frame
-  dist.df = melt(as.matrix(obj.dists))
+  dist.df = melt(as.matrix(obj.dists),varnames=c("X1","X2"))
 
   # initialize
   g = ggplot(dist.df, aes(x=X1, y=X2, fill=value))

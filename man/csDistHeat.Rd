@@ -59,7 +59,7 @@
 
 \examples{
 	data(sampleData)
-	#csDistHeat(sampleGeneSet) #still working the bugs out here...
+	csDistHeat(sampleGeneSet) 
 }
 
 \keyword{heatmap}
