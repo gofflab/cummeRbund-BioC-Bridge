@@ -523,6 +523,32 @@ setMethod("csDensity",signature(object="CuffData"),.density)
 
 setMethod("csScatter",signature(object="CuffData"), .scatter)
 
+.scatterMat<-function(object,replicates=FALSE,logMode=TRUE,...){
+	if(replicates){
+		dat<-repFpkmMatrix(object)
+	}else{
+		dat<-fpkmMatrix(object)
+	}
+	
+	if(logMode){
+		myLab = "log10 FPKM"
+		p <- plotmatrix(log10(dat),...)
+	}else{
+		myLab = "FPKM"
+		p <- plotmatrix(dat,...)
+	}
+	
+	
+	p <- p + theme_bw() + ylab(myLab) + xlab(myLab)
+	
+	#p<- p + aes(alpha=0.01)
+	
+	p
+	
+}
+
+setMethod("csScatterMatrix",signature(object="CuffData"),.scatterMat)
+
 .volcano<-function(object,x,y,alpha=0.05,showSignificant=TRUE,features=FALSE,xlimits=c(-20,20),...){
 	samp<-samples(object)
 	
@@ -636,6 +662,13 @@ setMethod("MAplot",signature(object="CuffData"),.MAplot)
 }
 
 setMethod("dispersionPlot",signature(object="CuffData"),.dispersionPlot)
+
+#TODO:Log2FC vs Test-statistic
+
+#TODO:log2FPKM vs log2(stdev) (color by sample)
+
+
+
 
 #############
 # Other Methods

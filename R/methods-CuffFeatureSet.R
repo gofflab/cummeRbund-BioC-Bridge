@@ -438,15 +438,17 @@ setMethod("csHeatmap",signature("CuffFeatureSet"),.ggheat)
 
   # adjust heat scale
   if (length(heatscale) == 2) {
-    g = g + scale_fill_gradient(low=heatscale[1], high=heatscale[2], name="JS Distance")
+    g = g + scale_fill_gradient(low=heatscale[1], high=heatscale[3], name="JS Distance")
   }
   else if (length(heatscale) == 3) {
     if (is.null(heatMidpoint)) {
-      heatMidpoint = (max(obj.dists) + min(obj.dists)) / 2.0
+      heatMidpoint = max(obj.dists) / 2.0
     }
     g = g + scale_fill_gradient2(low=heatscale[1], mid=heatscale[2], high=heatscale[3], midpoint=heatMidpoint, name="JS Distance")
   }
-
+  
+  g <- g + geom_text(aes(label=format(value,digits=3)),size=6)
+  
   # return
   g
 }

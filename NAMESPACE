@@ -62,7 +62,8 @@ exportMethods(
 			genePlot,
 			makeGeneRegionTrack,
 			DB,
-			sigMatrix
+			sigMatrix,
+			csScatterMatrix
 )
 
 export("readCufflinks",
