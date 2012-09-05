@@ -667,6 +667,8 @@ setMethod("dispersionPlot",signature(object="CuffData"),.dispersionPlot)
 
 #TODO:log2FPKM vs log2(stdev) (color by sample)
 
+#TODO: Index of dispersion alpha (FPKM vs ?)
+#SELECT gd.*, gc.count, gc.variance, gc.uncertainty, gc.dispersion, (gc.variance/gd.fpkm) AS 'IOD' FROM geneData gd LEFT JOIN geneCount gc ON gd.gene_id=gc.gene_id AND gd.sample_name=gc.sample_name;
 
 
 
