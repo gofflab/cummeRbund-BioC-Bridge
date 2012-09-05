@@ -456,7 +456,7 @@ setMethod("csHeatmap",signature("CuffFeatureSet"),.ggheat)
 setMethod("csDistHeat", signature("CuffFeatureSet"), .distheat)
 
 #Scatterplot
-.scatter<-function(object,x,y,logMode=TRUE,pseudocount=1.0,labels, smooth=FALSE,colorByStatus=FALSE,...){
+.scatter<-function(object,x,y,logMode=TRUE,pseudocount=0.0,labels, smooth=FALSE,colorByStatus=FALSE,...){
 	dat<-fpkmMatrix(object)
 	samp<-samples(object)
 	
@@ -830,7 +830,7 @@ setMethod("csDendro",signature(object="CuffFeatureSet"),.dendro)
 #	c
 #}
 
-.density<-function(object, logMode = TRUE, pseudocount=1.0, labels, features=FALSE, replicates=FALSE,...){
+.density<-function(object, logMode = TRUE, pseudocount=0.0, labels, features=FALSE, replicates=FALSE,...){
 	if(replicates){
 		dat<-repFpkm(object,features=features)
 		colnames(dat)[colnames(dat)=="rep_name"]<-"condition"

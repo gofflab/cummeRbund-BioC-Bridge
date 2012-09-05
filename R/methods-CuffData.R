@@ -431,7 +431,7 @@ setMethod("getRepLevels",signature(object="CuffData"),.getRepLevels)
 #Plotting
 ##################
 
-.density<-function(object, logMode = TRUE, pseudocount=1.0, labels, features=FALSE, replicates=FALSE,...){
+.density<-function(object, logMode = TRUE, pseudocount=0.0, labels, features=FALSE, replicates=FALSE,...){
 	if(is(object,'CuffData')) {
 		if(replicates){
 			dat<-repFpkm(object,features=features)
@@ -523,19 +523,23 @@ setMethod("csDensity",signature(object="CuffData"),.density)
 
 setMethod("csScatter",signature(object="CuffData"), .scatter)
 
-.scatterMat<-function(object,replicates=FALSE,logMode=TRUE,...){
+.scatterMat<-function(object,replicates=FALSE,logMode=TRUE,pseudocount=1.0,hexbin=FALSE,...){
 	if(replicates){
 		dat<-repFpkmMatrix(object)
 	}else{
 		dat<-fpkmMatrix(object)
 	}
 	
+	if(hexbin){
+		dat<-dat+pseudocount
+	}
+	
 	if(logMode){
-		myLab = "log10 FPKM"
-		p <- plotmatrix(log10(dat),...)
+		myLab = paste("log10 FPKM + ",pseudocount,sep="")
+		p <- .plotmatrix(log10(dat),hexbin=hexbin,...)
 	}else{
 		myLab = "FPKM"
-		p <- plotmatrix(dat,...)
+		p <- .plotmatrix(dat,hexbin=hexbin,...)
 	}
 	
 	
@@ -749,4 +753,48 @@ setMethod("makeRnk",signature(object="CuffData"),.makeRnk)
 ###################
 #As ExpressionSet
 
+###################
+#Utility functions
+###################
+.plotmatrix <- function (data, hexbin=FALSE, mapping = aes())
+#Modified from original ggplot2 plotmatrix
+{
+	grid <- expand.grid(x = 1:ncol(data), y = 1:ncol(data))
+	grid <- subset(grid, x != y)
+	all <- do.call("rbind", lapply(1:nrow(grid), function(i) {
+						xcol <- grid[i, "x"]
+						ycol <- grid[i, "y"]
+						data.frame(xvar = names(data)[ycol], yvar = names(data)[xcol], 
+								x = data[, xcol], y = data[, ycol], data)
+					}))
+	all$xvar <- factor(all$xvar, levels = names(data))
+	all$yvar <- factor(all$yvar, levels = names(data))
+	densities <- do.call("rbind", lapply(1:ncol(data), function(i) {
+						data.frame(xvar = names(data)[i], yvar = names(data)[i], 
+								x = data[, i])
+					}))
+	mapping <- defaults(mapping, aes_string(x = "x", y = "y"))
+	class(mapping) <- "uneval"
+	p <-ggplot(all) + facet_grid(xvar ~ yvar, scales = "free")
+	
+	if(hexbin){ 
+		p<- p + geom_hex(mapping,size=1.5,na.rm = TRUE) 
+	}else{
+		p<- p + geom_point(mapping,alpha=0.2,size=1.5,na.rm=TRUE)
+	}
+	
+	p<- p + stat_density(aes(x = x, 
+						y = ..scaled.. * diff(range(x)) + min(x)), data = densities, 
+				position = "identity", colour = "grey20", geom = "line")
+	
+	p
+}
+
+.volcanoMatrix <- function(data){
+	densities <- do.call('rbind',lapply(1:))
+	p <-ggplot(data) + facet_grid(sample1~sample2,scales="free") + geom_point(aes(x=log2_fold_change,y=-log10(p_value))) + stat_density(aes(x = log2_fold_change, 
+					y = ..scaled.. * diff(range(log2_fold_change)) + min(log2_fold_change)), data = densities, 
+			position = "identity", colour = "grey20", geom = "line")
+	
+}
 

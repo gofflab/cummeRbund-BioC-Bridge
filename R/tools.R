@@ -61,7 +61,8 @@ makeprobs<-function(a){
 	b
 }
 
-plotmatrix2 <- function (data, mapping = aes())
+.plotmatrix <- function (data, mapping = aes())
+	#Modified from original ggplot2 plotmatrix
 {
 	grid <- expand.grid(x = 1:ncol(data), y = 1:ncol(data))
 	grid <- subset(grid, x != y)

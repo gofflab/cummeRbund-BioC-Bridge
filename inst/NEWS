@@ -10,6 +10,8 @@ v1.99.3
 			* CuffGene objects now have a makeGeneRegionTrack() argument to create a GeneRegionTrack() from transcript model information
 			* Can also make GRanges object
 			* ONLY WORKS IF YOU READ .gtf FILE IN WITH readCufflinks()
+		- Added csScatterMatrix() method to CuffData objects.
+		- 
 			
 		
 	Bugfixes:
@@ -18,6 +20,8 @@ v1.99.3
 		
 	Notes:
 		- Once again, there have been modifications to the underlying database schema so you will have to re-run readCufflinks(rebuild=T) to re-analyze existing datasets.
+		- Explicitly added requirement for 'plyr' package in DESCRIPTION.
+		- Set pseudocount=0.0 as default for csDensity() and csScatter() methods (This prevents a visual bias for genes with FPKM <1 and ggplot2 handles removing true zero values).
 		
 		
 v1.99.2
