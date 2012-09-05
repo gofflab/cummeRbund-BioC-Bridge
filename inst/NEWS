@@ -10,7 +10,7 @@ v1.99.3
 			* CuffGene objects now have a makeGeneRegionTrack() argument to create a GeneRegionTrack() from transcript model information
 			* Can also make GRanges object
 			* ONLY WORKS IF YOU READ .gtf FILE IN WITH readCufflinks()
-		- Added csScatterMatrix() method to CuffData objects.
+		- Added csScatterMatrix() and csVolcanoMatrix() method to CuffData objects.
 		- 
 			
 		
