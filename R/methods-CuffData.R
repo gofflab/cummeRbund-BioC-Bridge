@@ -542,6 +542,7 @@ setMethod("csScatter",signature(object="CuffData"), .scatter)
 		p <- .plotmatrix(dat,hexbin=hexbin,...)
 	}
 	
+	p<- p + geom_abline(intercept=0,slope=1,linetype=2)
 	
 	p <- p + theme_bw() + ylab(myLab) + xlab(myLab)
 	
@@ -590,6 +591,39 @@ setMethod("csScatterMatrix",signature(object="CuffData"),.scatterMat)
 }
 
 setMethod("csVolcano",signature(object="CuffData"), .volcano)
+
+.volcanoMatrix<-function(object,alpha=0.05,xlimits=c(-20,20),mapping=aes(),...){
+	dat<-diffData(object)
+	part1<-dat[,c('sample_1','sample_2','value_1','value_2','test_stat','p_value','q_value')]
+	part2<-data.frame(sample_1=part1$sample_2,sample_2=part1$sample_1,value_1=part1$value_2,value_2=part1$value_1,test_stat=-part1$test_stat,p_value=part1$p_value,q_value=part1$q_value)
+	dat<-rbind(part1,part2)
+	
+	myLevels<-union(dat$sample_1,dat$sample_2)
+	dat$sample_1<-factor(dat$sample_1,levels=myLevels)
+	dat$sample_2<-factor(dat$sample_2,levels=myLevels)
+	dat$log2_fold_change<-log2(dat$value_2/dat$value_1)
+	
+	#Set significance value
+	dat$significant<-"no"
+	dat$significant[dat$q_value<=alpha]<-"yes"
+	
+	#May need to expand filler for time-series data (when there aren't always all pairwise comparisons on which to facet
+	filler<-data.frame(sample_1=factor(myLevels,levels=myLevels),sample_2=factor(myLevels,levels=myLevels),label="")
+	filler$label<-as.character(filler$label)
+	mapping <- defaults(mapping, aes_string(x = "log2_fold_change", y = "-log10(p_value)", color="significant"))
+	class(mapping) <- "uneval"
+	
+	p <-ggplot(dat) + geom_point(mapping,na.rm=TRUE,size=1.5) + scale_colour_manual(values = c("black","red")) + geom_text(aes(x=0,y=15,label=label),data=filler) + facet_grid(sample_1~sample_2)
+	
+	p<- p + geom_vline(aes(x=0),linetype=2)
+	
+	p <- p + theme_bw() + ylab("log2 Fold Change") + xlab("-log10 p-value")
+
+	p
+	
+}
+
+setMethod("csVolcanoMatrix",signature(object="CuffData"),.volcanoMatrix)
 
 .boxplot<-function(object,logMode=TRUE,pseudocount=0.0001,replicates=FALSE,...){
 	if(replicates){
@@ -756,39 +790,6 @@ setMethod("makeRnk",signature(object="CuffData"),.makeRnk)
 ###################
 #Utility functions
 ###################
-.plotmatrix <- function (data, hexbin=FALSE, mapping = aes())
-#Modified from original ggplot2 plotmatrix
-{
-	grid <- expand.grid(x = 1:ncol(data), y = 1:ncol(data))
-	grid <- subset(grid, x != y)
-	all <- do.call("rbind", lapply(1:nrow(grid), function(i) {
-						xcol <- grid[i, "x"]
-						ycol <- grid[i, "y"]
-						data.frame(xvar = names(data)[ycol], yvar = names(data)[xcol], 
-								x = data[, xcol], y = data[, ycol], data)
-					}))
-	all$xvar <- factor(all$xvar, levels = names(data))
-	all$yvar <- factor(all$yvar, levels = names(data))
-	densities <- do.call("rbind", lapply(1:ncol(data), function(i) {
-						data.frame(xvar = names(data)[i], yvar = names(data)[i], 
-								x = data[, i])
-					}))
-	mapping <- defaults(mapping, aes_string(x = "x", y = "y"))
-	class(mapping) <- "uneval"
-	p <-ggplot(all) + facet_grid(xvar ~ yvar, scales = "free")
-	
-	if(hexbin){ 
-		p<- p + geom_hex(mapping,size=1.5,na.rm = TRUE) 
-	}else{
-		p<- p + geom_point(mapping,alpha=0.2,size=1.5,na.rm=TRUE)
-	}
-	
-	p<- p + stat_density(aes(x = x, 
-						y = ..scaled.. * diff(range(x)) + min(x)), data = densities, 
-				position = "identity", colour = "grey20", geom = "line")
-	
-	p
-}
 
 #.volcanoMatrix <- function(data){
 #	densities <- do.call('rbind',lapply(1:))

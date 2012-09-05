@@ -63,7 +63,8 @@ exportMethods(
 			makeGeneRegionTrack,
 			DB,
 			sigMatrix,
-			csScatterMatrix
+			csScatterMatrix,
+			csVolcanoMatrix
 )
 
 export("readCufflinks",
