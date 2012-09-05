@@ -790,11 +790,11 @@ setMethod("makeRnk",signature(object="CuffData"),.makeRnk)
 	p
 }
 
-.volcanoMatrix <- function(data){
-	densities <- do.call('rbind',lapply(1:))
-	p <-ggplot(data) + facet_grid(sample1~sample2,scales="free") + geom_point(aes(x=log2_fold_change,y=-log10(p_value))) + stat_density(aes(x = log2_fold_change, 
-					y = ..scaled.. * diff(range(log2_fold_change)) + min(log2_fold_change)), data = densities, 
-			position = "identity", colour = "grey20", geom = "line")
-	
-}
+#.volcanoMatrix <- function(data){
+#	densities <- do.call('rbind',lapply(1:))
+#	p <-ggplot(data) + facet_grid(sample1~sample2,scales="free") + geom_point(aes(x=log2_fold_change,y=-log10(p_value))) + stat_density(aes(x = log2_fold_change, 
+#					y = ..scaled.. * diff(range(log2_fold_change)) + min(log2_fold_change)), data = densities, 
+#			position = "identity", colour = "grey20", geom = "line")
+#	
+#}
 
