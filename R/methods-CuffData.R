@@ -580,7 +580,7 @@ setMethod("csScatterMatrix",signature(object="CuffData"),.scatterMat)
 	}
 	#Add title and return
 	p<- p + opts(title=paste(object@tables$mainTable,": ",s2,"/",s1,sep=""))
-	p<- p + + scale_colour_manual(values = c("black","red"))
+	p<- p + scale_colour_manual(values = c("black","red"))
 	
 	#Set axis limits
 	p<- p + scale_x_continuous(limits=xlimits)
