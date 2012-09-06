@@ -546,7 +546,7 @@ setMethod("csScatter",signature(object="CuffFeatureSet"), .scatter)
 	p<- p + scale_x_continuous(limits=xlimits)
 	
 	#Default cummeRbund colorscheme
-	p<-p + scale_color_hue(l=50,h.start=200)
+	p<-p + scale_colour_manual(values = c("black","red"))
 	
 	p
 }

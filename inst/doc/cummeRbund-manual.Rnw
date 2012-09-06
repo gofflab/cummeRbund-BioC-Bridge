@@ -818,7 +818,7 @@ The \Rpackage{Gviz} package can be used to display features in a 'track'-like fo
 
 <<features_2,fig=TRUE>>=
 myGene.geneTrack<-makeGeneRegionTrack(myGene)
-plotTracks(myGene.geneTrack)
+plotTracks(list(myGene.geneTrack))
 @
 
 We can then use some of the additional features from the \Rpackage{Gviz} package to add additional tracks to our track.

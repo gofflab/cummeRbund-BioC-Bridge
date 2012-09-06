@@ -93,7 +93,7 @@ setMethod("features","CuffGene",function(object){
 #################
 .makeGeneRegionTrack<-function(object){
 	featCols<-c('seqnames','start','end','source','gene_id','exon_number','isoform_id','isoform_id','exon_number','strand')
-	feats<-object@features[featCols]
+	feats<-features(object)[,featCols]
 	newColnames<-c('seqnames','start','end','feature','gene','exon','transcript','symbol','rank','strand')
 	mychr<-unique(feats$seqnames)
 	colnames(feats)<-newColnames
