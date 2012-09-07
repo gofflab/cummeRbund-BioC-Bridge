@@ -288,6 +288,35 @@ setMethod("repFpkmMatrix","CuffData",.repFpkmMatrix)
 
 setMethod("countMatrix","CuffData",.countMatrix)
 
+.repCountMatrix<-function(object,fullnames=FALSE,repIdList){
+	#Sample subsetting
+	if(!missing(repIdList)){
+		if(.checkReps(object@DB,repIdList)){
+			myLevels<-repIdList
+		}else{
+			stop("Replicate does not exist!")
+		}
+	}else{
+		myLevels<-getRepLevels(object)
+	}
+	reps<-replicates(object)
+	repCountMatQuery<-paste("select x.",object@idField,", ",sep="")
+	for (i in reps){
+		repCountMatQuery<-paste(repCountMatQuery,"sum(case when xr.rep_name ='",i,"' then external_scaled_frags end) as ",i,",",sep="")
+	}
+	repCountMatQuery<-substr(repCountMatQuery, 1, nchar(repCountMatQuery)-1)
+	repCountMatQuery<-paste(repCountMatQuery," from ",object@tables$mainTable," x LEFT JOIN ",object@tables$replicateTable," xr on x.",object@idField," = xr.",object@idField," group by x.",object@idField,sep="")
+	res<-dbGetQuery(object@DB,repCountMatQuery)
+	res<-data.frame(res[,-1],row.names=res[,1])
+	if(!missing(repIdList)){
+		res<-data.frame(res[,repIdList],row.names=rownames(res))
+		colnames(res)<-repIdList
+	}
+	res
+}
+
+setMethod("repCountMatrix","CuffData",.repCountMatrix)
+
 #This needs a lot of work...
 #TODO: Change this to remove lnFcCutoff but make sure that functions that rely on diffData have their own FC cutoff so that plotting doesn't suffer
 .diffData<-function(object,x,y,features=FALSE){
@@ -523,22 +552,34 @@ setMethod("csDensity",signature(object="CuffData"),.density)
 
 setMethod("csScatter",signature(object="CuffData"), .scatter)
 
-.scatterMat<-function(object,replicates=FALSE,logMode=TRUE,pseudocount=1.0,hexbin=FALSE,...){
+.scatterMat<-function(object,replicates=FALSE,logMode=TRUE,pseudocount=1.0,hexbin=FALSE,useCounts=FALSE,...){
 	if(replicates){
-		dat<-repFpkmMatrix(object)
+		if(useCounts){
+			dat<-repCountMatrix(object)
+		}else{
+			dat<-repFpkmMatrix(object)
+		}
 	}else{
-		dat<-fpkmMatrix(object)
+		if(useCounts){
+			dat<-countMatrix(object)
+		}else{
+			dat<-fpkmMatrix(object)
+		}
 	}
 	
 	if(hexbin){
 		dat<-dat+pseudocount
 	}
 	
-	if(logMode){
-		myLab = "log10 FPKM"
-		p <- .plotmatrix(log10(dat),hexbin=hexbin,...)
+	if(useCounts){
+		myLab = "Normalized Counts"
 	}else{
 		myLab = "FPKM"
+	}
+	if(logMode){
+		myLab = paste("log10 ",myLab,sep="")
+		p <- .plotmatrix(log10(dat),hexbin=hexbin,...)
+	}else{
 		p <- .plotmatrix(dat,hexbin=hexbin,...)
 	}
 	
@@ -617,7 +658,7 @@ setMethod("csVolcano",signature(object="CuffData"), .volcano)
 	
 	p<- p + geom_vline(aes(x=0),linetype=2)
 	
-	p <- p + theme_bw() + ylab("log2 Fold Change") + xlab("-log10 p-value")
+	p <- p + theme_bw() + xlab("log2 Fold Change") + ylab("-log10 p-value")
 
 	p
 	
@@ -701,12 +742,33 @@ setMethod("MAplot",signature(object="CuffData"),.MAplot)
 
 setMethod("dispersionPlot",signature(object="CuffData"),.dispersionPlot)
 
+.MDSplot<-function(object,replicates=FALSE,logMode=TRUE,pseudocount=1.0){
+	if(replicates){
+		dat<-repFpkmMatrix(object)
+	}else{
+		dat<-fpkmMatrix(object)
+	}
+	
+	if(logMode){
+		dat<-log10(dat+pseudocount)
+	}
+
+	d<-JSdist(makeprobs(dat))
+	fit <- cmdscale(d,eig=TRUE, k=2)
+	res<-data.frame(names=rownames(fit$points),M1=fit$points[,1],M2=fit$points[,2])
+	p <- ggplot(res)
+	p <- p + geom_point(aes(x=M1,y=M2,color=names)) + geom_text(aes(x=M1,y=M2,label=names,color=names)) + theme_bw()
+	p
+}
+
+setMethod("MDSplot",signature(object="CuffData"),.MDSplot)
+
 #TODO:Log2FC vs Test-statistic
 
 #TODO:log2FPKM vs log2(stdev) (color by sample)
 
 #TODO: Index of dispersion alpha (FPKM vs ?)
-#SELECT gd.*, gd.conf_hi-gd.fpkm as stdev, gc.count, gc.variance, gc.uncertainty, gc.dispersion, (gc.variance/gd.fpkm) AS 'IOD', (gd.conf_hi-gd.fpkm)/gd.fpkm AS 'CV' FROM geneData gd LEFT JOIN geneCount gc ON gd.gene_id=gc.gene_id AND gd.sample_name=gc.sample_name;
+#SELECT gd.*, (gd.conf_hi-gd.fpkm)/2 as fpkm_stdev, gc.count, gc.variance as count_variance , gc.uncertainty, gc.dispersion, ((gd.conf_hi-gd.fpkm)/2)/gd.fpkm AS 'CV' FROM geneData gd LEFT JOIN geneCount gc ON gd.gene_id=gc.gene_id AND gd.sample_name=gc.sample_name;
 
 
 

@@ -39,6 +39,7 @@ exportMethods(
 			fpkmMatrix,
 			repFpkmMatrix,
 			countMatrix,
+			repCountMatrix,
 			diffData,
 			diffTable,
 			features,
