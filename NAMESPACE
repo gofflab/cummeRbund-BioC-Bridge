@@ -65,7 +65,8 @@ exportMethods(
 			DB,
 			sigMatrix,
 			csScatterMatrix,
-			csVolcanoMatrix
+			csVolcanoMatrix,
+			MDSplot
 )
 
 export("readCufflinks",
