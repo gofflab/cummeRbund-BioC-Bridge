@@ -742,7 +742,7 @@ setMethod("MAplot",signature(object="CuffData"),.MAplot)
 .dispersionPlot<-function(object){
 	dat<-count(object)
 	p<-ggplot(dat)
-	p<-p+geom_point(aes(x=count,y=dispersion,color=sample_name)) + scale_x_log10() + scale_y_log10()
+	p<-p+geom_point(aes(x=count,y=dispersion,color=sample_name)) + facet_wrap('sample_name') + scale_x_log10() + scale_y_log10()
 	p
 }
 
@@ -795,7 +795,7 @@ setMethod("MDSplot",signature(object="CuffData"),.MDSplot)
 	statsQuery<-paste("SELECT xd.*, xc.count, xc.variance as count_variance , xc.uncertainty as count_uncertainty, xc.dispersion as count_dispersion, (xd.conf_hi-xd.fpkm)/2 as fpkm_stdev,((xd.conf_hi-xd.fpkm)/2)/xd.fpkm AS 'CV' FROM ",object@tables$dataTable," xd LEFT JOIN ",object@tables$countTable," xc ON xd.",object@idField,"=xc.",object@idField," AND xd.sample_name=xc.sample_name",sep="")
 	res<-dbGetQuery(object@DB,statsQuery)
 	p<-ggplot(res)
-	p<-p + 	geom_point(aes(x=log10(fpkm),y=log10(count),color=-log(CV))) + 
+	p<-p + 	geom_point(aes(x=log10(fpkm),y=log10(count),color=-log10(CV))) + 
 			facet_wrap('sample_name') + 
 			geom_abline(intercept=0,slope=1,linetype=2,size=0.3) + 
 			scale_color_gradient2() +
