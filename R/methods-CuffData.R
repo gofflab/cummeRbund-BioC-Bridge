@@ -355,6 +355,12 @@ setMethod("diffData",signature(object="CuffData"),.diffData)
 
 setMethod("diffTable",signature(object="CuffData"),.diffTable)
 
+.QCTable<-function(object){
+	qcSQL<-paste("SELECT d.*, (d.conf_hi-d.fpkm)/2 as stdev, c.count, c.variance, c.uncertainty, c.dispersion, (c.variance/d.fpkm) AS 'IOD', ((d.conf_hi-d.fpkm)/2)/d.fpkm AS 'CV' FROM ",object@tables$dataTable," d LEFT JOIN ",object@tables$countTable," c ON d.gene_id=c.gene_id AND d.sample_name=c.sample_name",sep="")
+	res<-dbGetQuery(object@DB,qcSQL)
+	res
+}
+
 .getMA<-function(object,x,y,logMode=T,pseudocount=1){
 	if (missing(x) || missing(y)){
 		stop("You must supply both x and y.")
@@ -763,6 +769,39 @@ setMethod("dispersionPlot",signature(object="CuffData"),.dispersionPlot)
 
 setMethod("MDSplot",signature(object="CuffData"),.MDSplot)
 
+.PCAplot<-function(object,x="PC1", y="PC2",pseudocount=1.0){
+	fpkms<-log10(fpkmMatrix(object)+pseudocount)
+	PC<-prcomp(fpkms)
+	dat <- data.frame(obsnames=row.names(PC$x), PC$x)
+	plot <- ggplot(dat, aes_string(x=x, y=y)) + geom_point(alpha=.4, size=1, aes(label=obsnames))
+	plot <- plot + geom_hline(aes(0), size=.2) + geom_vline(aes(0), size=.2)
+	datapc <- data.frame(varnames=rownames(PC$rotation), PC$rotation)
+	mult <- min(
+			(max(dat[,y]) - min(dat[,y])/(max(datapc[,y])-min(datapc[,y]))),
+			(max(dat[,x]) - min(dat[,x])/(max(datapc[,x])-min(datapc[,x])))
+	)
+	datapc <- transform(datapc,
+			v1 = .7 * mult * (get(x)),
+			v2 = .7 * mult * (get(y))
+	)
+	plot <- plot + 
+			#coord_equal() + 
+			geom_text(data=datapc, aes(x=v1, y=v2, label=varnames), size = 3, vjust=1, color="red")
+	plot <- plot + geom_segment(data=datapc, aes(x=0, y=0, xend=v1, yend=v2), arrow=arrow(length=unit(0.2,"cm")), alpha=0.75, color="red") + theme_bw()
+	plot
+}
+
+.confidencePlot<-function(object){
+	statsQuery<-paste("SELECT xd.*, xc.count, xc.variance as count_variance , xc.uncertainty as count_uncertainty, xc.dispersion as count_dispersion, (xd.conf_hi-xd.fpkm)/2 as fpkm_stdev,((xd.conf_hi-xd.fpkm)/2)/xd.fpkm AS 'CV' FROM ",object@tables$dataTable," xd LEFT JOIN ",object@tables$countTable," xc ON xd.",object@idField,"=xc.",object@idField," AND xd.sample_name=xc.sample_name",sep="")
+	res<-dbGetQuery(object@DB,statsQuery)
+	p<-ggplot(res)
+	p<-p + 	geom_point(aes(x=log10(fpkm),y=log10(count),color=-log(CV))) + 
+			facet_wrap('sample_name') + 
+			geom_abline(intercept=0,slope=1,linetype=2,size=0.3) + 
+			scale_color_gradient2() +
+			opts(title=object@type)
+	p
+}
 #TODO:Log2FC vs Test-statistic
 
 #TODO:log2FPKM vs log2(stdev) (color by sample)

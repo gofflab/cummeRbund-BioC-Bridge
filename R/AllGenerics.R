@@ -58,6 +58,7 @@ setGeneric("dispersionPlot",function(object) standardGeneric("dispersionPlot"))
 setGeneric("makeRnk",function(object,x,y,filename,...) standardGeneric("makeRnk"))
 setGeneric("csScatterMatrix",function(object,replicates=FALSE,logMode=TRUE,...) standardGeneric("csScatterMatrix"))
 setGeneric("csVolcanoMatrix",function(object,replicates=FALSE,logMode=TRUE,...) standardGeneric("csVolcanoMatrix"))
+setGeneric("MDSplot",function(object,replicates=FALSE,logMode=TRUE,...) standardGeneric("MDSplot"))
 
 #CuffDist generics
 setGeneric("distValues",function(object, x, y,...) standardGeneric("distValues"))
