@@ -10,7 +10,6 @@ alpha=0.05
 
 Global Statistics
 -----------------
-
 ```{r}
 cuff
 ```
@@ -21,12 +20,22 @@ csDensity(genes(cuff))
 csDensity(isoforms(cuff))
 ```
 
+### Scatterplots
+```{r}
+csScatterMatrix(genes(cuff),logMode=T)
+```
+
+
 Significant features
 --------------------
 
 ### Genes
 ```{r fig.width=6,fit.height=6}
 sigMatrix(cuff,level="genes")
+```
+
+```{r}
+csVolcanoMatrix(genes(cuff),alpha=alpha)
 ```
 
 ```{r}

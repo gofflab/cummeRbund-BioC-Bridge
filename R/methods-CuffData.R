@@ -317,6 +317,13 @@ setMethod("countMatrix","CuffData",.countMatrix)
 
 setMethod("repCountMatrix","CuffData",.repCountMatrix)
 
+.statsMatrix<-function(object){
+	statsQuery<-paste("SELECT xd.*, xc.count, xc.variance as count_variance , xc.uncertainty as count_uncertainty, xc.dispersion as count_dispersion, (xd.conf_hi-xd.fpkm)/2 as fpkm_stdev,((xd.conf_hi-xd.fpkm)/2)/xd.fpkm AS 'CV' FROM ",object@tables$dataTable," xd LEFT JOIN ",object@tables$countTable," xc ON xd.",object@idField,"=xc.",object@idField," AND xd.sample_name=xc.sample_name",sep="")
+	res<-dbGetQuery(object@DB,statsQuery)
+	res$sample_name<-factor(res$sample_name,levels=samples(object))
+	res
+}
+
 #This needs a lot of work...
 #TODO: Change this to remove lnFcCutoff but make sure that functions that rely on diffData have their own FC cutoff so that plotting doesn't suffer
 .diffData<-function(object,x,y,features=FALSE){
@@ -769,12 +776,15 @@ setMethod("dispersionPlot",signature(object="CuffData"),.dispersionPlot)
 
 setMethod("MDSplot",signature(object="CuffData"),.MDSplot)
 
-.PCAplot<-function(object,x="PC1", y="PC2",pseudocount=1.0){
+#Not sure if I want to include this or not..
+.PCAplot<-function(object,x="PC1", y="PC2",pseudocount=1.0,scale=TRUE,...){
 	fpkms<-log10(fpkmMatrix(object)+pseudocount)
-	PC<-prcomp(fpkms)
+	PC<-prcomp(fpkms,scale=scale,...)
 	dat <- data.frame(obsnames=row.names(PC$x), PC$x)
+	#dat$shoutout<-""
+	#dat$shoutout[matchpt(PC$rotation,PC$x)$index]<-rownames(pca$x[matchpt(pca$rotation,pca$x)$index,])
 	plot <- ggplot(dat, aes_string(x=x, y=y)) + geom_point(alpha=.4, size=1, aes(label=obsnames))
-	plot <- plot + geom_hline(aes(0), size=.2) + geom_vline(aes(0), size=.2)
+	plot <- plot + geom_hline(aes(0), size=.2) + geom_vline(aes(0), size=.2) #+ geom_text(aes(label=shoutout),size=2,color="red")
 	datapc <- data.frame(varnames=rownames(PC$rotation), PC$rotation)
 	mult <- min(
 			(max(dat[,y]) - min(dat[,y])/(max(datapc[,y])-min(datapc[,y]))),
@@ -791,15 +801,24 @@ setMethod("MDSplot",signature(object="CuffData"),.MDSplot)
 	plot
 }
 
-.confidencePlot<-function(object){
-	statsQuery<-paste("SELECT xd.*, xc.count, xc.variance as count_variance , xc.uncertainty as count_uncertainty, xc.dispersion as count_dispersion, (xd.conf_hi-xd.fpkm)/2 as fpkm_stdev,((xd.conf_hi-xd.fpkm)/2)/xd.fpkm AS 'CV' FROM ",object@tables$dataTable," xd LEFT JOIN ",object@tables$countTable," xc ON xd.",object@idField,"=xc.",object@idField," AND xd.sample_name=xc.sample_name",sep="")
-	res<-dbGetQuery(object@DB,statsQuery)
+#This is most definitely a work in progress
+.confidencePlot<-function(object,percentCutoff=20){
+	res<-.statsMatrix(object)
 	p<-ggplot(res)
-	p<-p + 	geom_point(aes(x=log10(fpkm),y=log10(count),color=-log10(CV))) + 
+	p<-p + 	geom_point(aes(x=log10(fpkm),y=log10(count),color=CV*100),size=1.5,alpha=0.3) +
+	#p<-p + 	geom_point(aes(x=log10(fpkm),y=log10(count),color=-log10(CV))) +
+	#p<-p + 	geom_point(aes(x=log10(fpkm),y=log2(fpkm/count),color=-log10(CV))) + geom_hline(aes(0),linetype=2) +
 			facet_wrap('sample_name') + 
 			geom_abline(intercept=0,slope=1,linetype=2,size=0.3) + 
-			scale_color_gradient2() +
+			scale_color_gradient(name="%CV",low="darkblue",high="white",limits=c(0,percentCutoff), na.value = "white") +
 			opts(title=object@type)
+	p
+}
+
+.CVdensity<-function(object){
+	dat<-.statsMatrix(object)
+	p<-ggplot(dat)
+	p <- p + geom_density(aes(x=CV,fill=sample_name),alpha=0.3,position="dodge") + scale_x_log10()
 	p
 }
 #TODO:Log2FC vs Test-statistic
