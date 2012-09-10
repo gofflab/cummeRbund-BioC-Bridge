@@ -804,6 +804,8 @@ setMethod("MDSplot",signature(object="CuffData"),.MDSplot)
 #This is most definitely a work in progress
 .confidencePlot<-function(object,percentCutoff=20){
 	res<-.statsMatrix(object)
+	#res$CV[is.na(res$CV)]<-0.0
+	res$CV<-as.numeric(res$CV)
 	p<-ggplot(res)
 	p<-p + 	geom_point(aes(x=log10(fpkm),y=log10(count),color=CV*100),size=1.5,alpha=0.3) +
 	#p<-p + 	geom_point(aes(x=log10(fpkm),y=log10(count),color=-log10(CV))) +
@@ -820,6 +822,12 @@ setMethod("MDSplot",signature(object="CuffData"),.MDSplot)
 	p<-ggplot(dat)
 	p <- p + geom_density(aes(x=CV,fill=sample_name),alpha=0.3,position="dodge") + scale_x_log10()
 	p
+}
+
+.expressionVsStdev<-function(object){
+	dat<-.statsMatrix(object)
+	sumFun<-
+	
 }
 #TODO:Log2FC vs Test-statistic
 
