@@ -824,11 +824,58 @@ setMethod("MDSplot",signature(object="CuffData"),.MDSplot)
 	p
 }
 
-.expressionVsStdev<-function(object){
-	dat<-.statsMatrix(object)
-	sumFun<-
+.varPlot<-function(object){
+	dat<-repFpkm(object)
+	colnames(dat)[1]<-"tracking_id"
+	dat<-dat[,c('tracking_id','sample_name','fpkm')]
+	dat<-dat[dat$fpkm>0,]
+	
+	#Option 1 (plyr) too slow
+	#system.time(datSum<-ddply(idata.frame(dat),.(tracking_id,sample_name),function(x) { data.frame(fpkm=mean(x$fpkm),stdev=sd(x$fpkm))}))
+	
+	#Option 2 (tapply) kinda messy but fast enough
+#	dat.means<-tapply(dat$fpkm,dat[,c('tracking_id','sample_name')],function(x){mean(x,na.rm=T)})
+#	dat.sd<-tapply(dat$fpkm,dat[,c('tracking_id','sample_name')],function(x){sd(x,na.rm=T)})
+#	write("Calculating replicate fpkm mean...",stderr())
+#	dat.means<-melt(dat.means)
+#	write("Calculating replicate fpkm stdev...",stderr())
+#	dat.sd<-melt(dat.sd)
+#	colnames(dat.means)[colnames(dat.means)=="value"]<-'fpkm'
+#	colnames(dat.sd)[colnames(dat.sd)=="value"]<-'stdev'
+#	dat<-cbind(dat.means,dat.sd$stdev)
+#	colnames(dat)[colnames(dat)=="dat.sd$stdev"]<-'stdev'
+#	dat<-dat[!is.na(dat$stdev) & !is.na(dat$fpkm),]
+#	dat<-dat[dat$fpkm>0 & dat$stdev>0,]
+	
+	#Option 3 (tapply on log10(replicateFPKM values)) kinda messy but fast enough
+	dat.means<-tapply(log10(dat$fpkm+1),dat[,c('tracking_id','sample_name')],function(x){mean(x,na.rm=T)})
+	dat.sd<-tapply(log10(dat$fpkm+1),dat[,c('tracking_id','sample_name')],function(x){sd(x,na.rm=T)})
+	write("Calculating replicate fpkm mean...",stderr())
+	dat.means<-melt(dat.means)
+	write("Calculating replicate fpkm stdev...",stderr())
+	dat.sd<-melt(dat.sd)
+	colnames(dat.means)[colnames(dat.means)=="value"]<-'fpkm'
+	colnames(dat.sd)[colnames(dat.sd)=="value"]<-'stdev'
+	dat<-cbind(dat.means,dat.sd$stdev)
+	colnames(dat)[colnames(dat)=="dat.sd$stdev"]<-'stdev'
+	dat<-dat[!is.na(dat$stdev) & !is.na(dat$fpkm),]
+	dat<-dat[dat$fpkm>0 & dat$stdev>0,]
+	
+	p <-ggplot(dat,aes(x=fpkm,y=stdev),na.rm=T)
+	#p <-ggplot(dat,aes(x=log10(fpkm+1),y=log10(stdev)),na.rm=T)
+	p <- p + #geom_point(aes(color=sample_name),size=1,na.rm=T) +
+	stat_smooth(aes(color=sample_name,fill=sample_name),na.rm=T,method='auto',fullrange=T) + 
+	scale_x_continuous(name="log 10 FPKM + 1") +
+	scale_y_continuous(name="Standard Deviation,log 10 FPKM + 1") +  
+	theme_bw() + expand_limits(y=0,x=0)
+	p
 	
 }
+
+.sensitivityPlot<-function(object){
+	return
+}
+
 #TODO:Log2FC vs Test-statistic
 
 #TODO:log2FPKM vs log2(stdev) (color by sample)
