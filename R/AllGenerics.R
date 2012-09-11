@@ -59,6 +59,8 @@ setGeneric("makeRnk",function(object,x,y,filename,...) standardGeneric("makeRnk"
 setGeneric("csScatterMatrix",function(object,replicates=FALSE,logMode=TRUE,...) standardGeneric("csScatterMatrix"))
 setGeneric("csVolcanoMatrix",function(object,replicates=FALSE,logMode=TRUE,...) standardGeneric("csVolcanoMatrix"))
 setGeneric("MDSplot",function(object,replicates=FALSE,logMode=TRUE,...) standardGeneric("MDSplot"))
+setGeneric("fpkmSCVPlot",function(object,FPKMLowerBound=1,...) standardGeneric("fpkmSCVPlot"))
+
 
 #CuffDist generics
 setGeneric("distValues",function(object, x, y,...) standardGeneric("distValues"))
