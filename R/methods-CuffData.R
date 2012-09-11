@@ -849,8 +849,9 @@ setMethod("MDSplot",signature(object="CuffData"),.MDSplot)
 	#p <-ggplot(dat,aes(x=log10(fpkm+1),y=log10(stdev)),na.rm=T)
 	p <- p + #geom_point(aes(color=sample_name),size=1,na.rm=T) +
 	stat_smooth(aes(color=sample_name,fill=sample_name),na.rm=T,method='auto',fullrange=T) + 
-	scale_x_log10(name="log 10 FPKM") +
-	scale_y_continuous(name="CV^2, FPKM") +  
+	scale_x_log10() +
+	scale_y_continuous(name=bquote(CV^2)) +
+	xlab(bquote(paste(log[10],"FPKM",sep=" "))) +
 	theme_bw() + xlim(c(log10(FPKMLowerBound),max(log10(dat$fpkm))))
 	p
 	
