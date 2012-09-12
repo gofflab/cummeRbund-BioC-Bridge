@@ -831,7 +831,7 @@ setMethod("MDSplot",signature(object="CuffData"),.MDSplot)
 	dat<-dat[,c('tracking_id','sample_name','fpkm')]
 	dat<-dat[dat$fpkm>0,]
 	
-	#Option 3 (tapply on log10(replicateFPKM values)) kinda messy but fast enough
+	#Option 3 (tapply on log10(replicateFPKM) values)
 	dat.means<-tapply(dat$fpkm,dat[,c('tracking_id','sample_name')],function(x){mean(x,na.rm=T)})
 	dat.sd<-tapply(dat$fpkm,dat[,c('tracking_id','sample_name')],function(x){sd(x,na.rm=T)})
 	#write("Calculating replicate fpkm mean...",stderr())
@@ -844,6 +844,7 @@ setMethod("MDSplot",signature(object="CuffData"),.MDSplot)
 	colnames(dat)[colnames(dat)=="dat.sd$stdev"]<-'stdev'
 	dat<-dat[!is.na(dat$stdev) & !is.na(dat$fpkm),]
 	dat<-dat[dat$fpkm>0 & dat$stdev>0,]
+	dat$sample_name<-factor(dat$sample_name,levels=samples(object))
 	
 	p <-ggplot(dat,aes(x=fpkm,y=(stdev/fpkm)^2),na.rm=T)
 	#p <-ggplot(dat,aes(x=log10(fpkm+1),y=log10(stdev)),na.rm=T)
