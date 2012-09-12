@@ -817,11 +817,12 @@ head(features(myGene))
 The \Rpackage{Gviz} package can be used to display features in a 'track'-like format. In particular, the \Rclass{GeneRegionTrack} class creates a mechanism by which we can start to visualize transcript-level structures in their genomic context. \Rpackage{cummeRbund} implements the \Rmethod{makeGeneRegionTrack()} method to quickly create a \Rclass{GeneRegionTrack} from the gene features.
 
 <<features_2,fig=TRUE>>=
-myGene.geneTrack<-makeGeneRegionTrack(myGene)
-plotTracks(list(myGene.geneTrack))
+genetrack<-makeGeneRegionTrack(myGene)
+plotTracks(genetrack)
 @
 
-We can then use some of the additional features from the \Rpackage{Gviz} package to add additional tracks to our track.
+We can then use some of the additional features from the \Rpackage{Gviz} package
+to add additional tracks from an external data source.
 
 <<features_3,fig=TRUE>>=
 trackList<-list()
@@ -865,7 +866,8 @@ plotTracks(trackList,from=myStart-2000,to=myEnd+2000)
 The cummeRbund package is more than just a visualization tool as well.  We are working to implement several different means of data exploration from gene and condition clustering, finding features with similar expression profiles, as well as incorporating Gene Ontology analysis.
 
 \subsection{Overview of significant features}
-The \Rmethod{sigMatrix()} function can provide you with a \'quick--and--dirty\' view of the number of significant features of a particular type, and at a given alpha ($0.05$ by default). For example:
+The \Rmethod{sigMatrix()} function can provide you with a ``quick--and--dirty''
+view of the number of significant features of a particular type, and at a given alpha ($0.05$ by default). For example:
 
 <<sig_mat_1,include=FALSE>>=
 mySigMat<-sigMatrix(cuff,level='genes',alpha=0.05)

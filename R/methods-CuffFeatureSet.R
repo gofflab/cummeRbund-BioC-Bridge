@@ -475,7 +475,7 @@ setMethod("csDistHeat", signature("CuffFeatureSet"), .distheat)
 	#make plot object
 	p<-ggplot(dat)
 	p<- p + aes_string(x=x,y=y)
-	p<- p + geom_point(size=1.2,alpha=I(1/3)) + geom_abline(intercept=0,slope=1,linetype=2) + geom_rug(size=0.5,alpha=0.01)
+	p<- p + geom_point(size=0.8,alpha=I(1/3)) + geom_abline(intercept=0,slope=1,linetype=2) + geom_rug(size=0.5,alpha=0.01)
 	
 	#add smoother
 	if(smooth){
@@ -535,9 +535,9 @@ setMethod("csScatter",signature(object="CuffFeatureSet"), .scatter)
 	
 	p<-ggplot(dat)
 	if(showSignificant){
-		p<- p + geom_point(aes(x=log2_fold_change,y=-log10(p_value),color=significant),alpha=I(1/3))
+		p<- p + geom_point(aes(x=log2_fold_change,y=-log10(p_value),color=significant),alpha=I(1/3),size=0.8)
 	}else{
-		p<- p + geom_point(aes(x=log2_fold_change,y=-log10(p_value)),alpha=I(1/3))
+		p<- p + geom_point(aes(x=log2_fold_change,y=-log10(p_value)),alpha=I(1/3),size=0.8)
 	}
 	
 	p<- p + opts(title=paste(s2,"/",s1,sep=""))

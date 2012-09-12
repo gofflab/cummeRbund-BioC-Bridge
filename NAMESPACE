@@ -67,6 +67,7 @@ exportMethods(
 			csScatterMatrix,
 			csVolcanoMatrix,
 			MDSplot,
+			PCAplot,
 			fpkmSCVPlot
 )
 

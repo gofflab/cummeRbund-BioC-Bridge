@@ -535,7 +535,7 @@ setMethod("csDensity",signature(object="CuffData"),.density)
 	
 	#Add rug
 	if(drawRug){
-		p<- p + geom_rug(size=0.5,alpha=0.01)
+		p<- p + geom_rug(size=0.8,alpha=0.01)
 	}
 	
 	#add smoother
@@ -630,7 +630,7 @@ setMethod("csScatterMatrix",signature(object="CuffData"),.scatterMat)
 	if(showSignificant){
 		p<- p + geom_point(aes(x=log2_fold_change,y=-log10(p_value),color=significant),size=0.8)
 	}else{
-		p<- p + geom_point(aes(x=log2_fold_change,y=-log10(p_value)),size=0.8)
+		p<- p + geom_point(aes(x=log2_fold_change,y=-log10(p_value)),size=1.2)
 	}
 	#Add title and return
 	p<- p + opts(title=paste(object@tables$mainTable,": ",s2,"/",s1,sep=""))
@@ -667,17 +667,73 @@ setMethod("csVolcano",signature(object="CuffData"), .volcano)
 	mapping <- defaults(mapping, aes_string(x = "log2_fold_change", y = "-log10(p_value)", color="significant"))
 	class(mapping) <- "uneval"
 	
-	p <-ggplot(dat) + geom_point(mapping,na.rm=TRUE,size=1.5) + scale_colour_manual(values = c("black","red")) + geom_text(aes(x=0,y=15,label=label),data=filler) + facet_grid(sample_1~sample_2)
+	p <-ggplot(dat) + geom_point(mapping,na.rm=TRUE,size=0.8) + scale_colour_manual(values = c("black","red")) + geom_text(aes(x=0,y=15,label=label),data=filler) + facet_grid(sample_1~sample_2)
 	
 	p<- p + geom_vline(aes(x=0),linetype=2)
 	
-	p <- p + theme_bw() + xlab("log2 Fold Change") + ylab("-log10 p-value")
+	p <- p + theme_bw() + xlab(bquote(paste(log[2],"(fold change)",sep=""))) + ylab(bquote(paste(-log[10],"(p value)",sep="")))
 
 	p
 	
 }
 
 setMethod("csVolcanoMatrix",signature(object="CuffData"),.volcanoMatrix)
+
+.distheat<-function(object, samples.not.genes=T, logMode=T, pseudocount=1.0, heatscale=c(low='lightyellow',mid='orange',high='darkred'), heatMidpoint=NULL, ...) {
+	# get expression from a sample or gene perspective
+	if(samples.not.genes) {
+		obj.fpkm = fpkmMatrix(object)
+		obj.fpkm.pos = obj.fpkm[rowSums(obj.fpkm)>0,]
+	} else {
+		obj.fpkm = t(fpkmMatrix(object,fullnames=T))
+		obj.fpkm.pos = obj.fpkm[,colSums(obj.fpkm)>0]
+	}
+	
+	if(logMode) {
+		obj.fpkm.pos = log10(obj.fpkm.pos+pseudocount)
+	}
+	
+	# compute distances
+	obj.dists = JSdist(makeprobs(obj.fpkm.pos))
+	
+	# cluster to order
+	obj.hc = hclust(obj.dists)
+	
+	# make data frame
+	dist.df = melt(as.matrix(obj.dists),varnames=c("X1","X2"))
+	
+	# initialize
+	g = ggplot(dist.df, aes(x=X1, y=X2, fill=value))
+	
+	# draw
+	labels = labels(obj.dists)
+	g = g + geom_tile(color="black") + scale_x_discrete("", limits=labels[obj.hc$order]) + scale_y_discrete("", limits=labels[obj.hc$order])
+	
+	# roll labels
+	g = g + opts(axis.text.x=theme_text(angle=-90, hjust=0), axis.text.y=theme_text(angle=0, hjust=1))
+	
+	# drop grey panel background and gridlines
+	g = g + opts(panel.grid.minor=theme_line(colour=NA), panel.grid.major=theme_line(colour=NA), panel.background=theme_rect(fill=NA, colour=NA))
+	
+	# adjust heat scale
+	if (length(heatscale) == 2) {
+		g = g + scale_fill_gradient(low=heatscale[1], high=heatscale[3], name="JS Distance")
+	}
+	else if (length(heatscale) == 3) {
+		if (is.null(heatMidpoint)) {
+			heatMidpoint = max(obj.dists) / 2.0
+		}
+		g = g + scale_fill_gradient2(low=heatscale[1], mid=heatscale[2], high=heatscale[3], midpoint=heatMidpoint, name="JS Distance")
+	}
+	if(samples.not.genes){
+		g <- g + geom_text(aes(label=format(value,digits=3)))
+	}
+	# return
+	g
+}
+
+setMethod("csDistHeat", signature("CuffData"), .distheat)
+
 
 .boxplot<-function(object,logMode=TRUE,pseudocount=0.0001,replicates=FALSE,...){
 	if(replicates){
@@ -732,7 +788,7 @@ setMethod("csDendro",signature(object="CuffData"),.dendro)
 		dat<-.getMA(object,x,y,logMode=logMode,pseudocount=pseudocount)
 	}
 	p<-ggplot(dat)
-	p<-p+geom_point(aes(x=A,y=log2(M)))
+	p<-p+geom_point(aes(x=A,y=log2(M)),size=0.8)
 	
 	#add smoother
 	if(smooth){
@@ -783,7 +839,7 @@ setMethod("MDSplot",signature(object="CuffData"),.MDSplot)
 	dat <- data.frame(obsnames=row.names(PC$x), PC$x)
 	#dat$shoutout<-""
 	#dat$shoutout[matchpt(PC$rotation,PC$x)$index]<-rownames(pca$x[matchpt(pca$rotation,pca$x)$index,])
-	plot <- ggplot(dat, aes_string(x=x, y=y)) + geom_point(alpha=.4, size=1, aes(label=obsnames))
+	plot <- ggplot(dat, aes_string(x=x, y=y)) + geom_point(alpha=.4, size=0.8, aes(label=obsnames))
 	plot <- plot + geom_hline(aes(0), size=.2) + geom_vline(aes(0), size=.2) #+ geom_text(aes(label=shoutout),size=2,color="red")
 	datapc <- data.frame(varnames=rownames(PC$rotation), PC$rotation)
 	mult <- min(
@@ -800,6 +856,8 @@ setMethod("MDSplot",signature(object="CuffData"),.MDSplot)
 	plot <- plot + geom_segment(data=datapc, aes(x=0, y=0, xend=v1, yend=v2), arrow=arrow(length=unit(0.2,"cm")), alpha=0.75, color="red") + theme_bw()
 	plot
 }
+
+setMethod('PCAplot',signature(object="CuffData"),.PCAplot)
 
 #This is most definitely a work in progress
 .confidencePlot<-function(object,percentCutoff=20){
