@@ -1,6 +1,8 @@
 \name{csVolcano}
 \alias{csVolcano}
+\alias{csVolcanoMatrix}
 \alias{csVolcano,CuffData-method}
+\alias{csVolcanoMatrix,CuffData-method}
 \alias{csVolcano,CuffFeatureSet-method}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
@@ -11,6 +13,7 @@ Creates a volcano plot of log fold change in expression vs -log(pval) for a pair
 }
 \usage{
 \S4method{csVolcano}{CuffData}(object, x, y, alpha=0.05, showSignificant=TRUE,features=FALSE, xlimits = c(-20, 20), ...)
+\S4method{csVolcanoMatrix}{CuffData}(object,alpha=0.05,xlimits=c(-20,20),mapping=aes(),...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

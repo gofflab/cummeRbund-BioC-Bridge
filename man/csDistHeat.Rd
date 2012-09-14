@@ -1,6 +1,7 @@
 \name{csDistHeat}
 \alias{csDistHeat}
 \alias{csDistHeat,CuffFeatureSet-method}
+\alias{csDistHeat,CuffData-method}
 
 \title{
   csDistHeat

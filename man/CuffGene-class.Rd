@@ -14,6 +14,7 @@
 \alias{makeGeneRegionTrack,CuffGene-method}
 \alias{genePlot}
 \alias{genePlot,CuffGene-method}
+\alias{features}
 
 \title{Class "CuffGene"}
 \description{
@@ -59,6 +60,7 @@ Class \code{"\linkS4class{CuffFeature}"}, directly.
 		\item{promoters}{\code{signature(object = "CuffGene")}: Access @CDS slot }
 		\item{relCDS}{\code{signature(object = "CuffGene")}: Access @CDS slot }
 		\item{splicing}{\code{signature(object = "CuffGene")}: Access @CDS slot }
+		\item{features}{\code{signature(object = "CuffGene")}: Access @features slot }
 	}
 }
 \references{

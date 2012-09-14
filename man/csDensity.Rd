@@ -10,8 +10,8 @@ Density plot of CuffData
 Creates a smoothed density plot, by sample, for log10 FPKM values from a cuffdiff run.
 }
 \usage{
-\S4method{csDensity}{CuffData}(object, logMode=TRUE, pseudocount=1.0, labels, features=FALSE, replicates=FALSE,...)
-\S4method{csDensity}{CuffFeatureSet}(object, logMode=TRUE, pseudocount=1.0, labels, features=FALSE, replicates=FALSE,...)
+\S4method{csDensity}{CuffData}(object, logMode=TRUE, pseudocount=0, labels, features=FALSE, replicates=FALSE,...)
+\S4method{csDensity}{CuffFeatureSet}(object, logMode=TRUE, pseudocount=0, labels, features=FALSE, replicates=FALSE,...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
