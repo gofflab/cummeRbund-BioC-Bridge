@@ -245,7 +245,7 @@ setMethod("annotation","CuffFeatureSet",function(object){
 	}
 	colnames(dat)[1] <- "tracking_id"
 	p<-ggplot(dat)
-	p <- p + geom_tile(aes(x=tracking_id,y=sample_name,fill=fpkm)) + scale_fill_gradient(low="white",high="red") + opts(axis.text.x=theme_text(angle=-90, hjust=0))
+	p <- p + geom_tile(aes(x=tracking_id,y=sample_name,fill=fpkm)) + scale_fill_gradient(low="white",high="red") + theme(axis.text.x=element_text(angle=-90, hjust=0))
 	p
 }
 
@@ -356,15 +356,15 @@ setMethod("annotation","CuffFeatureSet",function(object){
 	}
 	
 	# Get rid of the ticks, they get way too dense with lots of rows
-    g2 <- g2 + opts(axis.ticks = theme_blank()) 
+    g2 <- g2 + theme(axis.ticks = element_blank()) 
 
 	## get rid of grey panel background and gridlines
 	
-	g2=g2+opts(panel.grid.minor=theme_line(colour=NA), panel.grid.major=theme_line(colour=NA),
-			panel.background=theme_rect(fill=NA, colour=NA))
+	g2=g2+theme(panel.grid.minor=element_line(colour=NA), panel.grid.major=element_line(colour=NA),
+			panel.background=element_rect(fill=NA, colour=NA))
 	
 	##adjust x-axis labels
-	g2=g2+opts(axis.text.x=theme_text(angle=-90, hjust=0))
+	g2=g2+theme(axis.text.x=element_text(angle=-90, hjust=0))
 
     #write(paste(c("Length of heatscale is :", length(heatscale))), stderr())
 	
@@ -431,10 +431,10 @@ setMethod("csHeatmap",signature("CuffFeatureSet"),.ggheat)
   g = g + geom_tile() + scale_x_discrete("", limits=labels[obj.hc$order]) + scale_y_discrete("", limits=labels[obj.hc$order])
 
   # roll labels
-  g = g + opts(axis.text.x=theme_text(angle=-90, hjust=0), axis.text.y=theme_text(angle=0, hjust=1))
+  g = g + theme(axis.text.x=element_text(angle=-90, hjust=0), axis.text.y=element_text(angle=0, hjust=1))
 
   # drop grey panel background and gridlines
-  g = g + opts(panel.grid.minor=theme_line(colour=NA), panel.grid.major=theme_line(colour=NA), panel.background=theme_rect(fill=NA, colour=NA))
+  g = g + theme(panel.grid.minor=element_line(colour=NA), panel.grid.major=element_line(colour=NA), panel.background=element_rect(fill=NA, colour=NA))
 
   # adjust heat scale
   if (length(heatscale) == 2) {
@@ -507,7 +507,7 @@ setMethod("csDistHeat", signature("CuffFeatureSet"), .distheat)
     }
 	
 	#Add title & Return value
-	#p<- p + opts(title=object@tables$mainTable)
+	#p<- p + labs(title=object@tables$mainTable)
 	p
 }
 
@@ -540,7 +540,7 @@ setMethod("csScatter",signature(object="CuffFeatureSet"), .scatter)
 		p<- p + geom_point(aes(x=log2_fold_change,y=-log10(p_value)),alpha=I(1/3),size=0.8)
 	}
 	
-	p<- p + opts(title=paste(s2,"/",s1,sep=""))
+	p<- p + labs(title=paste(s2,"/",s1,sep=""))
 	
 	#Set axis limits
 	p<- p + scale_x_continuous(limits=xlimits)
@@ -612,13 +612,13 @@ setMethod("csVolcano",signature(object="CuffFeatureSet"), .volcano)
 	}
 	#gene_labels = dat$gene_short_name
 	p <- p + scale_x_discrete("",breaks=tracking_ids,labels=gene_labels) + 
-	    opts(axis.text.x=theme_text(hjust=0,angle=-90))
+	    theme(axis.text.x=element_text(hjust=0,angle=-90))
     	
     # p<- p +
     #       geom_bar() +
     #       geom_errorbar(aes(ymin=conf_lo,ymax=conf_hi,group=1),size=0.15) +
     #       facet_wrap('sample_name') +
-    #       opts(axis.text.x=theme_text(hjust=0,angle=-90))
+    #       theme(axis.text.x=element_text(hjust=0,angle=-90))
 	
 	#This does not make immediate sense with the conf_hi and conf_lo values.  Need to figure out appropriate transformation for these
 	#if(logMode)
@@ -631,7 +631,7 @@ setMethod("csVolcano",signature(object="CuffFeatureSet"), .volcano)
         p <- p + ylab("FPKM")
     }
 	
-	#p <- p + opts(legend.position = "none")
+	#p <- p + theme(legend.position = "none")
 	
 	#Default cummeRbund colorscheme
 	p<-p + scale_fill_hue(l=50,h.start=200) + scale_color_hue(l=50,h.start=200)
@@ -846,7 +846,7 @@ setMethod("csDendro",signature(object="CuffFeatureSet"),.dendro)
 		p<-p+geom_density(aes(x=fpkm,group=condition,color=condition,fill=condition),alpha=I(1/3))
 	}
 	
-	#p<-p + opts(title=object@tables$mainTable)
+	#p<-p + labs(title=object@tables$mainTable)
 	
 	#Default cummeRbund colorscheme
 	p<-p + scale_fill_hue(l=50,h.start=200) + scale_color_hue(l=50,h.start=200)

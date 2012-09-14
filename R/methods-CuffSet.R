@@ -802,7 +802,7 @@ setMethod("getSigTable",signature(object="CuffSet"),.getSigTable)
 	
 	#p <- p + geom_tile(aes(fill=..n..))
 	
-	p + theme_bw() + opts(title=paste("Significant ",slot(object,level)@tables$mainTable,"\n at FDR ",alpha*100,"%",sep=""), axis.text.x=theme_text(angle=-90, hjust=0)) + coord_equal(1)
+	p + theme_bw() + labs(title=paste("Significant ",slot(object,level)@tables$mainTable,"\n at alpha ",alpha,sep="")) +theme(axis.text.x=element_text(angle=-90, hjust=0)) + coord_equal(1)
 	
 }
 

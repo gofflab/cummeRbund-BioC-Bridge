@@ -78,7 +78,7 @@ makeprobs<-function(a){
 						data.frame(xvar = names(data)[i], yvar = names(data)[i], 
 								x = data[, i])
 					}))
-	mapping <- defaults(mapping, aes_string(x = "x", y = "y"))
+	mapping <- plyr::defaults(mapping, aes_string(x = "x", y = "y"))
 	class(mapping) <- "uneval"
 	p <-ggplot(all) + facet_grid(xvar ~ yvar)#, scales = "free")
 	

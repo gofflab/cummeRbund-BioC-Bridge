@@ -1,8 +1,8 @@
 %
 %
 %
-%\VignetteIndexEntry{An R package for visualization and analysis of Cufflinks high-throughput sequencing data}
-%\VignetteKeywords{cummeRbund,visualization,sequencing,cufflinks,cuffdiff}
+%\VignetteIndexEntry{CummeRbund User Guide}
+%\VignetteKeywords{cummeRbund,visualization,NGS,sequencing,cufflinks,cuffdiff}
 %\VignettePackage{cummeRbund}
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -240,16 +240,23 @@ To read these files, populate the 'cuffData.db' database backend, and return the
 library(cummeRbund)
 @
 %%fileDir<-("../../extdata/")
-<<read>>=
+<<read,echo=FALSE>>=
 myDir<-system.file("extdata", package="cummeRbund") #You can leave blank if cwd or replace with your own directory path.
 gtfFile<-system.file("extdata/chr1_snippet.gtf",package="cummeRbund") #path to .gtf file used in cuffdiff analysis.
-cuff <- readCufflinks(dir=myDir,gtfFile=gtfFile,genome="hg19")
+cuff <- readCufflinks(dir=myDir,gtfFile=gtfFile,genome="hg19",rebuild=T)
+@
+
+<<read2,eval=FALSE>>=
+cuff<-readCufflinks()
+@
+
+<<read3>>=
 cuff
 @
 
 Again, by default $dir$ is assumed to be the current working directory and \code{cuff<-readCufflinks()} should work if all appropriate files are in the current working directory. We now also
 recommend that you use both the \Rfunarg{genome} and \Rfunarg{gtfFile} arguments to readCufflinks(). This will allow cummeRbund to archive the transcript structure information located in the .gtf file associated with
-your particular cuffdiff run, as well as associate these transcripts with an appropriate genome build (e.g. \'hg19\', \'mm9\', etc) so as to allow for transcript-level visualizations and future integration with other external resources. 
+your particular cuffdiff run, as well as associate these transcripts with an appropriate genome build (e.g. 'hg19', 'mm9', etc) so as to allow for transcript-level visualizations and future integration with other external resources. 
 Should you need to rebuild the SQLite backend for any reason, you can add the option \Rfunarg{rebuild=T} to \Rmethod{readCufflinks}.  Once the database is created, \Rmethod{readCufflinks} will default to using the SQL backend and should not need to rebuild this database.
 Each R session should begin with a call to \Rmethod{readCufflinks} so as to initialize the database connection and create an object with the appropriate RSQLite connection information. 
 
@@ -349,22 +356,46 @@ brep
 \end{figure}
 
 %Scatterplots
-Pairwise comparisons can be made by using \Rmethod{csScatter}. You must specify the sample names to use for the $x$ and $y$ axes:
-<<global_plots_3,include=FALSE>>=
-s<-csScatter(genes(cuff),"hESC","Fibroblasts",smooth=T)
-s
+A matrix of pairwise scatterplots can be drawn using the csScatterMatrix()
+method.
+
+<<global_plots_3.1,include=FALSE>>=
+s<-csScatterMatrix(genes(cuff))
+
 @
 
 \begin{figure}[htp]
 	\begin{center}
 	\subfloat[Scatterplots can be useful to identify global changes and trends in gene expression between pairs of conditions.]{
 	
-<<label=global_plots_scatter,fig=TRUE,echo=FALSE,include=FALSE>>=
-<<global_plots_3>>
+<<label=global_plots_scatter_1,fig=TRUE,echo=FALSE,include=FALSE>>=
+<<global_plots_3.1>>
 	print(s)
 @
 	
-	\includegraphics[width=0.4\textwidth]{cummeRbund-manual-global_plots_scatter}}
+	\includegraphics[width=0.4\textwidth]{cummeRbund-manual-global_plots_scatter_1}}
+	\end{center}
+\end{figure}
+
+
+Individual Pairwise comparisons can be made by using \Rmethod{csScatter}. You
+must specify the sample names to use for the $x$ and $y$ axes:
+<<global_plots_3.2,include=FALSE>>=
+s<-csScatter(genes(cuff),"hESC","Fibroblasts",smooth=T)
+s
+@
+
+\begin{figure}[htp]
+	\begin{center}
+	\subfloat[Pairwise scatterplots can identify biases in gene expression between
+	two particular conditions.]{
+	
+<<label=global_plots_scatter_2,fig=TRUE,echo=FALSE,include=FALSE>>=
+<<global_plots_3.2>>
+	print(s)
+@
+	
+	\includegraphics[width=0.4\textwidth]{cummeRbund-manual-global_plots_scatter_2}}
 	\end{center}
 \end{figure}
 
@@ -427,8 +458,27 @@ mCount
 \end{figure}
 
 %Volcano plots
-Volcano plots are also available for the \Rclass{CuffData} objects. Again, you must specify the comparisons by sample name.
-<<global_plots_5,include=FALSE>>=
+Volcano plots are also available for the \Rclass{CuffData} objects. 
+
+<<global_plots_5_1,include=FALSE>>=
+v<-csVolcanoMatrix(genes(cuff))
+v
+@
+\begin{figure}[htp]
+	\begin{center}
+		\subfloat[Volcano plots explore the relationship between fold-change and significance.]{
+		
+<<label=global_plots_volcano_1,fig=TRUE,echo=FALSE,include=FALSE>>=
+<<global_plots_5_1>>
+print(v)
+@
+		\includegraphics[width=0.4\textwidth]{cummeRbund-manual-global_plots_volcano_1}}
+	\end{center}
+\end{figure}
+
+For individual pairwise comparisons, you must specify the comparisons by sample
+name.
+<<global_plots_5_2,include=FALSE>>=
 v<-csVolcano(genes(cuff),"hESC","Fibroblasts")
 v
 @
@@ -436,11 +486,11 @@ v
 	\begin{center}
 		\subfloat[Volcano plots explore the relationship between fold-change and significance.]{
 		
-<<label=global_plots_volcano,fig=TRUE,echo=FALSE,include=FALSE>>=
-<<global_plots_5>>
+<<label=global_plots_volcano_2,fig=TRUE,echo=FALSE,include=FALSE>>=
+<<global_plots_5_2>>
 print(v)
 @
-		\includegraphics[width=0.4\textwidth]{cummeRbund-manual-global_plots_volcano}}
+		\includegraphics[width=0.4\textwidth]{cummeRbund-manual-global_plots_volcano_2}}
 	\end{center}
 \end{figure}
 
@@ -838,6 +888,7 @@ axtrack<-GenomeAxisTrack()
 trackList<-c(trackList,axtrack)
  
 genetrack<-makeGeneRegionTrack(myGene)
+genetrack
  
 trackList<-c(trackList,genetrack)
  

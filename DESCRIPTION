@@ -7,7 +7,7 @@ Description: Allows for persistent storage, access, exploration, and manipulatio
 Suggests: 
 Imports: methods
 Depends: R (>= 2.7.0), RSQLite, ggplot2, reshape2, fastcluster, rtracklayer, Gviz
-Suggests: cluster
+Suggests: cluster, plyr
 Maintainer: Loyal A. Goff <lgoff@csail.mit.edu>
 License: Artistic-2.0
 Collate: 	AllGenerics.R 

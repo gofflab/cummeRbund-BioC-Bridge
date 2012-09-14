@@ -184,7 +184,7 @@ setMethod("count",signature(object="CuffFeature"),.count)
     }
 	
     p <- p + facet_wrap('tracking_id') +
-          opts(title=object@annotation$gene_short_name,axis.text.x=theme_text(hjust=0,angle=-90))
+          labs(title=object@annotation$gene_short_name)+theme(axis.text.x=element_text(hjust=0,angle=-90))
 	
     if (logMode)
     {
@@ -201,7 +201,7 @@ setMethod("count",signature(object="CuffFeature"),.count)
 		}
 	}
 	
-	p <- p + opts(legend.position="none")
+	p <- p + theme(legend.position="none")
 	
 	#Default cummeRbund colorscheme
 	p<-p + scale_fill_hue(l=50,h.start=200)
@@ -280,7 +280,7 @@ setMethod("expressionBarplot",signature(object="CuffFeature"),.barplot)
 	p<-p + scale_fill_hue(l=50,h.start=200) + scale_color_hue(l=50,h.start=200)
 	
 	#Add Title
-	p<-p + opts(title=object@annotation$gene_short_name,axis.text.x=theme_text(hjust=0,angle=-90))
+	p<-p + labs(title=object@annotation$gene_short_name) + theme(axis.text.x=element_text(hjust=0,angle=-90))
 	
 	#Recolor quant flags
 	#for some reason this doesn't work (ggplot2 problem)

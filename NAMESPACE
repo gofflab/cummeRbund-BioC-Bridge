@@ -1,6 +1,7 @@
 import(methods)
 
 #importFrom(graphics, plot)
+importFrom(plyr, defaults)
 
 exportClasses(CuffSet,
 			CuffData,

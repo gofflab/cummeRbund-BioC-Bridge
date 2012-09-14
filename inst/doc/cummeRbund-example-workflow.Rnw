@@ -1,7 +1,7 @@
 %
 %
 %
-%\VignetteIndexEntry{A sample cummeRbund workflow}
+%\VignetteIndexEntry{Sample cummeRbund workflow}
 %\VignetteKeywords{cummeRbund,visualization,sequencing,cufflinks,cuffdiff}
 %\VignettePackage{cummeRbund}
 %

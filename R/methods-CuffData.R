@@ -493,7 +493,7 @@ setMethod("getRepLevels",signature(object="CuffData"),.getRepLevels)
 			p<-p+geom_density(aes(x=fpkm,group=condition,color=condition,fill=condition),alpha=I(1/3))
 		}
 	
-	p<-p + opts(title=object@tables$mainTable)
+	p<-p + labs(title=object@tables$mainTable)
 	
 	#Default cummeRbund colorscheme
 	p<-p + scale_fill_hue(l=50,h.start=200) + scale_color_hue(l=50,h.start=200)
@@ -559,7 +559,7 @@ setMethod("csDensity",signature(object="CuffData"),.density)
 	}
 	
 	#Add title & Return value
-	p<- p + opts(title=object@tables$mainTable)
+	p<- p + labs(title=object@tables$mainTable)
 	p
 }
 
@@ -633,7 +633,7 @@ setMethod("csScatterMatrix",signature(object="CuffData"),.scatterMat)
 		p<- p + geom_point(aes(x=log2_fold_change,y=-log10(p_value)),size=1.2)
 	}
 	#Add title and return
-	p<- p + opts(title=paste(object@tables$mainTable,": ",s2,"/",s1,sep=""))
+	p<- p + labs(title=paste(object@tables$mainTable,": ",s2,"/",s1,sep=""))
 	p<- p + scale_colour_manual(values = c("black","red"))
 	
 	#Set axis limits
@@ -710,10 +710,10 @@ setMethod("csVolcanoMatrix",signature(object="CuffData"),.volcanoMatrix)
 	g = g + geom_tile(color="black") + scale_x_discrete("", limits=labels[obj.hc$order]) + scale_y_discrete("", limits=labels[obj.hc$order])
 	
 	# roll labels
-	g = g + opts(axis.text.x=theme_text(angle=-90, hjust=0), axis.text.y=theme_text(angle=0, hjust=1))
+	g = g + theme(axis.text.x=element_text(angle=-90, hjust=0), axis.text.y=theme_text(angle=0, hjust=1))
 	
 	# drop grey panel background and gridlines
-	g = g + opts(panel.grid.minor=theme_line(colour=NA), panel.grid.major=theme_line(colour=NA), panel.background=theme_rect(fill=NA, colour=NA))
+	g = g + theme(panel.grid.minor=theme_line(colour=NA), panel.grid.major=theme_line(colour=NA), panel.background=theme_rect(fill=NA, colour=NA))
 	
 	# adjust heat scale
 	if (length(heatscale) == 2) {
@@ -751,7 +751,7 @@ setMethod("csDistHeat", signature("CuffData"), .distheat)
 		p <- ggplot(dat)
 		p<-p+geom_boxplot(aes(x=condition,y=fpkm,fill=condition),alpha=I(1/3),size=0.3)
 	}
-	p<- p + opts(axis.text.x=theme_text(angle=-90, hjust=0))
+	p<- p + theme(axis.text.x=element_text(angle=-90, hjust=0))
 	
 	#Default cummeRbund colorscheme
 	p<-p + scale_fill_hue(l=50,h.start=200)
@@ -872,7 +872,7 @@ setMethod('PCAplot',signature(object="CuffData"),.PCAplot)
 			#facet_wrap('sample_name') + 
 			geom_abline(intercept=0,slope=1,linetype=2,size=0.3) + 
 			scale_color_gradient(name="%CV",low="darkblue",high="white",limits=c(0,percentCutoff), na.value = "white") +
-			opts(title=object@type)
+			labs(title=object@type)
 	p
 }
 

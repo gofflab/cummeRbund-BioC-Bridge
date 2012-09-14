@@ -1,10 +1,11 @@
 Run Report
 ==========
 
-Analysis Parameters
+Run Parameters
 -------------------
 ```{r}
 alpha=0.05
+runInfo()
 ```
 
 
@@ -25,11 +26,18 @@ csDensity(isoforms(cuff))
 csScatterMatrix(genes(cuff),logMode=T)
 ```
 
+Replicate Information
+---------------------
 
-Significant features
---------------------
 
-### Genes
+Model fit
+---------
+
+Differential Expression Analysis
+--------------------------------
+
+### Significant Genes
+
 ```{r fig.width=6,fit.height=6}
 sigMatrix(cuff,level="genes")
 ```
@@ -49,8 +57,7 @@ There are `r length(sigGeneIDs)` significantly different genes at a `r alpha*100
 csHeatmap(sigGenes,cluster="both",labRow=F)
 ```
 
-
-### Isoforms
+### Significant Isoforms
 ```{r fig.width=6,fit.height=6}
 sigMatrix(cuff,level="isoforms")
 ```
