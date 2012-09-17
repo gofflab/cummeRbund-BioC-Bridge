@@ -13,7 +13,7 @@ A scatter plot comparing the FPKM  values from two samples in a cuffdiff run.
 }
 \usage{
 \S4method{csScatter}{CuffData}(object, x, y, logMode=TRUE, pseudocount=1.0, labels, smooth=FALSE, colorByStatus = FALSE, drawRug=TRUE, ...)
-\S4method{csScatterMatrix}{CuffData}(object,x,y,replicates=FALSE,logMode=TRUE,pseudocount=1.0, hexbin=FALSE, useCounts=FALSE, ...)
+\S4method{csScatterMatrix}{CuffData}(object,replicates=FALSE,logMode=TRUE,pseudocount=1.0, hexbin=FALSE, useCounts=FALSE, ...)
 }
 
 \arguments{

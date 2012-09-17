@@ -214,6 +214,37 @@ setMethod("repFpkmMatrix",signature(object="CuffFeatureSet"),.repFpkmMatrix)
 
 setMethod("countMatrix",signature(object="CuffFeatureSet"),.countMatrix)
 
+.repCountMatrix<-function(object,fullnames=FALSE,repIdList){
+	#Sample subsetting
+	if(!missing(repIdList)){
+		if (!all(repIdList %in% replicates(object))){
+			stop("Replicate does not exist!")
+		}else{
+			myReps<-repIdList
+		}
+	}else{
+		myReps<-replicates(object)
+	}
+	if(fullnames){
+		res<-repFpkm(object,features=TRUE)
+		res$tracking_id<-paste(res$gene_short_name,res[,1],sep="|")
+	}else{
+		res<-repFpkm(object)
+		colnames(res)[1]<-"tracking_id"	
+	}
+	selectedRows<-c('tracking_id','rep_name','external_scaled_frags')
+	res<-res[,selectedRows]
+	res<-melt(res)
+	res<-dcast(res,tracking_id~rep_name)
+	res<-data.frame(res[,-1],row.names=res[,1])
+	if(!missing(repIdList)){
+		res<-res[,myReps]
+	}
+	res
+}
+
+setMethod("repCountMatrix",signature(object="CuffFeatureSet"),.repCountMatrix)
+
 .diffData<-function(object){
 	return(object@diff)
 }
@@ -475,7 +506,7 @@ setMethod("csDistHeat", signature("CuffFeatureSet"), .distheat)
 	#make plot object
 	p<-ggplot(dat)
 	p<- p + aes_string(x=x,y=y)
-	p<- p + geom_point(size=0.8,alpha=I(1/3)) + geom_abline(intercept=0,slope=1,linetype=2) + geom_rug(size=0.5,alpha=0.01)
+	p<- p + geom_point(size=1.2,alpha=I(1/3)) + geom_abline(intercept=0,slope=1,linetype=2) + geom_rug(size=0.5,alpha=0.01)
 	
 	#add smoother
 	if(smooth){
@@ -535,9 +566,9 @@ setMethod("csScatter",signature(object="CuffFeatureSet"), .scatter)
 	
 	p<-ggplot(dat)
 	if(showSignificant){
-		p<- p + geom_point(aes(x=log2_fold_change,y=-log10(p_value),color=significant),alpha=I(1/3),size=0.8)
+		p<- p + geom_point(aes(x=log2_fold_change,y=-log10(p_value),color=significant),alpha=I(1/3),size=1.2)
 	}else{
-		p<- p + geom_point(aes(x=log2_fold_change,y=-log10(p_value)),alpha=I(1/3),size=0.8)
+		p<- p + geom_point(aes(x=log2_fold_change,y=-log10(p_value)),alpha=I(1/3),size=1.2)
 	}
 	
 	p<- p + labs(title=paste(s2,"/",s1,sep=""))

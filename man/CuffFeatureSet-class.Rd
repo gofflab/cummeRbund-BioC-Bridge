@@ -7,9 +7,6 @@
 \alias{annotation,CuffFeatureSet-method}
 \alias{featureNames,CuffFeatureSet-method}
 \alias{features,CuffFeatureSet-method}
-\alias{fpkmMatrix,CuffFeatureSet-method}
-\alias{repFpkmMatrix,CuffFeatureSet-method}
-\alias{countMatrix,CuffFeatureSet-method}
 \alias{samples,CuffFeatureSet-method}
 \alias{length,CuffFeatureSet-method}
 

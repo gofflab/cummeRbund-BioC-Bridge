@@ -833,8 +833,13 @@ setMethod("dispersionPlot",signature(object="CuffData"),.dispersionPlot)
 setMethod("MDSplot",signature(object="CuffData"),.MDSplot)
 
 #Not sure if I want to include this or not..
-.PCAplot<-function(object,x="PC1", y="PC2",pseudocount=1.0,scale=TRUE,...){
-	fpkms<-log10(fpkmMatrix(object)+pseudocount)
+.PCAplot<-function(object,x="PC1", y="PC2",replicates=FALSE,pseudocount=1.0,scale=TRUE,...){
+	if(replicates){
+		fpkms<-repFpkmMatrix(object)
+	}else{
+		fpkms<-fpkmMatrix(object)
+	}
+	fpkms<-log10(fpkms+pseudocount)
 	PC<-prcomp(fpkms,scale=scale,...)
 	dat <- data.frame(obsnames=row.names(PC$x), PC$x)
 	#dat$shoutout<-""

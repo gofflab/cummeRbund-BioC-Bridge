@@ -39,6 +39,9 @@ Useful for further manipulations of plot object using feature-level attributes (
   \item{xlimits}{
 Set boundaries for x limits to avoid infinity plotting errors. [Default c(-20,20)]
 }
+  \item{mapping}{
+Passthrough argument for ggplot aesthetics. Can be ignored completely. 
+}
   \item{\dots}{
 Additional arguments
 }

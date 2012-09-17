@@ -1,6 +1,11 @@
 \name{countMatrix}
 \alias{countMatrix}
 \alias{countMatrix,CuffData-method}
+\alias{countMatrix,CuffFeatureSet-method}
+\alias{repCountMatrix}
+\alias{repCountMatrix,CuffData-method}
+\alias{repCountMatrix,CuffFeatureSet-method}
+
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 countMatrix
@@ -10,6 +15,7 @@ Retrieve count values as gene by condition matrix
 }
 \usage{
 \S4method{countMatrix}{CuffData}(object,fullnames=FALSE,sampleIdList)
+\S4method{repCountMatrix}{CuffData}(object,fullnames=FALSE,repIdList)
 }
 
 \arguments{
@@ -22,7 +28,9 @@ A logical value whether or not to concatenate gene_short_name and tracking_id va
   \item{sampleIdList}{
 A vector of sample names to subset the resulting matrix.
 }
-
+  \item{repIdList}{
+A vector of replicate names to subset the resulting replicate matrix.
+}
 }
 \details{
 None.
@@ -43,4 +51,5 @@ None
 \examples{
 	data(sampleData)
 	countMatrix(sampleGeneSet)
+	repCountMatrix(sampleGeneSet)
 }

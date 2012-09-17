@@ -14,7 +14,7 @@
 \alias{makeGeneRegionTrack,CuffGene-method}
 \alias{genePlot}
 \alias{genePlot,CuffGene-method}
-\alias{features}
+\alias{features,CuffGene-method}
 
 \title{Class "CuffGene"}
 \description{
