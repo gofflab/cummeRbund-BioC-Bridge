@@ -62,7 +62,6 @@ setGeneric("MDSplot",function(object,replicates=FALSE,logMode=TRUE,...) standard
 setGeneric("PCAplot",function(object,x="PC1", y="PC2",replicates=TRUE,pseudocount=1.0,scale=TRUE,...) standardGeneric("PCAplot"))
 setGeneric("fpkmSCVPlot",function(object,FPKMLowerBound=1,...) standardGeneric("fpkmSCVPlot"))
 
-
 #CuffDist generics
 setGeneric("distValues",function(object, x, y,...) standardGeneric("distValues"))
 setGeneric("DB",function(object,...) standardGeneric("DB"))

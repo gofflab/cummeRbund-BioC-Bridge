@@ -912,11 +912,11 @@ setMethod('PCAplot',signature(object="CuffData"),.PCAplot)
 	p <-ggplot(dat,aes(x=fpkm,y=(stdev/fpkm)^2),na.rm=T)
 	#p <-ggplot(dat,aes(x=log10(fpkm+1),y=log10(stdev)),na.rm=T)
 	p <- p + #geom_point(aes(color=sample_name),size=1,na.rm=T) +
-	stat_smooth(aes(color=sample_name,fill=sample_name),na.rm=T,method='auto',fullrange=T) + 
-	scale_x_log10() +
-	scale_y_continuous(name=bquote(CV^2)) +
-	xlab(bquote(paste(log[10],"FPKM",sep=" "))) +
-	theme_bw() + xlim(c(log10(FPKMLowerBound),max(log10(dat$fpkm))))
+		stat_smooth(aes(color=sample_name,fill=sample_name),na.rm=T,method='auto',fullrange=T) + 
+		scale_x_log10() +
+		scale_y_continuous(name=bquote(CV^2)) +
+		xlab(bquote(paste(log[10],"FPKM",sep=" "))) +
+		theme_bw() + xlim(c(log10(FPKMLowerBound),max(log10(dat$fpkm)))) + labs(title=object@type)
 	p
 	
 }

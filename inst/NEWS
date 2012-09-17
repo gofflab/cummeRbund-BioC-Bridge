@@ -14,7 +14,6 @@ v1.99.3
 		- Added fpkmSCVPlot() as a CuffData method to visualize replicate-level coefficient of variation across fpkm range per condition.
 		- Added PCAplot() and MDSplot() for dimensionality reduction visualizations (Principle components, and multi-dimensional scaling respectively)
 		- Added csDistHeat() to create a heatmap of JS-distances between conditions.  
-			
 		
 	Bugfixes:
 		- Fixed diffData 'features' argument so that it now does what it's supposed to do.
@@ -22,9 +21,8 @@ v1.99.3
 		
 	Notes:
 		- Once again, there have been modifications to the underlying database schema so you will have to re-run readCufflinks(rebuild=T) to re-analyze existing datasets.
-		- Explicitly added requirement for 'plyr' package in DESCRIPTION.
+		- Importing 'defaults' from plyr instead of requiring entire package (keeps namespace cleaner).
 		- Set pseudocount=0.0 as default for csDensity() and csScatter() methods (This prevents a visual bias for genes with FPKM <1 and ggplot2 handles removing true zero values).
-		
 		
 v1.99.2
 	Bugfixes:
