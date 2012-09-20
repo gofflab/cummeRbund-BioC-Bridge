@@ -679,13 +679,18 @@ setMethod("csVolcano",signature(object="CuffData"), .volcano)
 
 setMethod("csVolcanoMatrix",signature(object="CuffData"),.volcanoMatrix)
 
-.distheat<-function(object, samples.not.genes=T, logMode=T, pseudocount=1.0, heatscale=c(low='lightyellow',mid='orange',high='darkred'), heatMidpoint=NULL, ...) {
+.distheat<-function(object, replicates=F, samples.not.genes=T, logMode=T, pseudocount=1.0, heatscale=c(low='lightyellow',mid='orange',high='darkred'), heatMidpoint=NULL, ...) {
 	# get expression from a sample or gene perspective
+	if(replicates){
+		obj.fpkm<-repFpkmMatrix(object,fullnames=T)
+	}else{
+		obj.fpkm<-fpkmMatrix(object,fullnames=T)
+	}
+	
 	if(samples.not.genes) {
-		obj.fpkm = fpkmMatrix(object)
 		obj.fpkm.pos = obj.fpkm[rowSums(obj.fpkm)>0,]
 	} else {
-		obj.fpkm = t(fpkmMatrix(object,fullnames=T))
+		obj.fpkm = t(obj.fpkm)
 		obj.fpkm.pos = obj.fpkm[,colSums(obj.fpkm)>0]
 	}
 	

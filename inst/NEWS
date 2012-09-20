@@ -1,3 +1,7 @@
+v1.99.5
+	Bugfixes:
+	- Added replicates argument to csDistHeat to view distances between individual replicate samples.
+
 v1.99.3
 	New Features:
 		- Added diffTable() method to return a table of differential results broken out by pairwise comparison. (more human-readable)

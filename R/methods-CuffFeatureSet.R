@@ -361,7 +361,7 @@ setMethod("annotation","CuffFeatureSet",function(object){
 	## add the heat tiles with or without a white border for clarity
 	
 	if(border==TRUE)
-		g2=g+geom_rect(aes(xmin=colInd-1,xmax=colInd,ymin=rowInd-1,ymax=rowInd, fill=value),colour='white')
+		g2=g+geom_rect(aes(xmin=colInd-1,xmax=colInd,ymin=rowInd-1,ymax=rowInd, fill=value),colour='grey')
 	if(border==FALSE)
 		g2=g+geom_rect(aes(xmin=colInd-1,xmax=colInd,ymin=rowInd-1,ymax=rowInd, fill=value))
 	
@@ -431,13 +431,18 @@ setMethod("csHeatmap",signature("CuffFeatureSet"),.ggheat)
 
 
 # Distance Heatmaps
-.distheat<-function(object, samples.not.genes=T, logMode=T, pseudocount=1.0, heatscale=c(low='lightyellow',mid='orange',high='darkred'), heatMidpoint=NULL, ...) {
+.distheat<-function(object, replicates=F, samples.not.genes=T, logMode=T, pseudocount=1.0, heatscale=c(low='lightyellow',mid='orange',high='darkred'), heatMidpoint=NULL, ...) {
   # get expression from a sample or gene perspective
-  if(samples.not.genes) {
-    obj.fpkm = fpkmMatrix(object)
+	if(replicates){
+		obj.fpkm<-repFpkmMatrix(object,fullnames=T)
+	}else{
+		obj.fpkm<-fpkmMatrix(object,fullnames=T)
+	}
+
+	if(samples.not.genes) {
     obj.fpkm.pos = obj.fpkm[rowSums(obj.fpkm)>0,]
   } else {
-    obj.fpkm = t(fpkmMatrix(object))
+    obj.fpkm = t(obj.fpkm)
     obj.fpkm.pos = obj.fpkm[,colSums(obj.fpkm)>0]
   }
   

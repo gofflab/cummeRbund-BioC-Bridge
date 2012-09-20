@@ -11,7 +11,7 @@
   values between samples or genes.
 }
 \usage{
-\S4method{csDistHeat}{CuffFeatureSet}(object, samples.not.genes=T,
+\S4method{csDistHeat}{CuffFeatureSet}(object, replicates=F, samples.not.genes=T,
   logMode=T, pseudocount=1.0,
   heatscale=c(low='lightyellow',mid='orange',high='darkred'),
   heatMidpoint=NULL, ...)
@@ -20,6 +20,9 @@
 \arguments{
   \item{object}{
     An object of class 'CuffFeatureSet' or 'CuffGeneSet'
+  }
+   \item{replicates}{
+    A logical argument whether or not to use individual replicate FPKM values as opposed to condition FPKM estimates. (default: FALSE)
   }
   \item{samples.not.genes}{
     Compute distances between samples rather than genes. If False,

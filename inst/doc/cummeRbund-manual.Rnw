@@ -994,6 +994,16 @@ mySigTable<-getSigTable(cuff,alpha=0.01,level='genes')
 head(mySigTable,20)
 @
 
+\subsection{Exploring the relationships between conditions}
+
+\subsubsection{Distance matrix}
+Similarities between conditions and/or replicates can
+provide useful insight into the relationship between various groupings of
+conditions and can aid in identifying outlier replicates that do not behave as
+expected.
+
+\subsubsection{Dimensionality reduction}
+
 \subsection{Partitioning}
 K-means clustering is a useful tool that can be helpful in identifying clusters of genes with similar expression profiles. In fact, these profiles are learned from the data during the clustering. 
 \Rmethod{csCluster()} uses the \Rmethod{pam()} method from the \Rpackage{clustering} package to perform the partitioning around medoids. In this case however, the distance metric used by default is the
