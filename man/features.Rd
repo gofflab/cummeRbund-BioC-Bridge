@@ -1,24 +1,24 @@
 \name{features}
 \alias{features}
-\alias{features,CuffData-method}
+\alias{features,CuffGene-method}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Features
 }
 \description{
-Returns a data frame of features from a CuffData, CuffFeatureSet, or CuffFeature object
+Returns a data frame of features from a CuffGene object
 }
 \usage{
-\S4method{features}{CuffData}(object)
+\S4method{features}{CuffGene}(object)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{object}{
-An object of class ('CuffData','CuffFeatureSet', or 'CuffFeature')
+An object of class ('CuffGene')
 }
 }
 \details{
-If features have been added to cuffData via addFeatures() then these will be presented as well.
+None
 }
 \value{
 A data.frame of feature-level information
@@ -35,5 +35,5 @@ None
 
 \examples{
 	data(sampleData)
-	features(sampleGeneSet)
+	features(PINK1)
 }

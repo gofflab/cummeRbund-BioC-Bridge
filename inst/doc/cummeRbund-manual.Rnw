@@ -530,10 +530,12 @@ replicates(cuff)
 @
 
 \subsection*{Features/Annotation}
-Feature-level information can be accessed directly from a \Rclass{CuffData} object using the \Rmethod{fpkm}, \Rmethod{repFpkm}, \Rmethod{count}, \Rmethod{diffData}, or \Rmethod{features} methods:
+Feature-level information can be accessed directly from a \Rclass{CuffData}
+object using the \Rmethod{fpkm}, \Rmethod{repFpkm}, \Rmethod{count},
+\Rmethod{diffData}, or \Rmethod{annotation} methods:
 
 <<data_access_1>>=
-gene.features<-features(genes(cuff))
+gene.features<-annotation(genes(cuff))
 head(gene.features)
 
 gene.fpkm<-fpkm(genes(cuff))
@@ -604,7 +606,7 @@ myGeneIds
 myGenes<-getGenes(cuff,myGeneIds)
 myGenes
 @
-The same \Rmethod{fpkm}, \Rmethod{repFpkm}, \Rmethod{count}, \Rmethod{features}, \Rmethod{diffData}, \Rmethod{samples}, and \Rmethod{featureNames} methods are available for instances of the \Rmethod{CuffGeneSet} class, but additional accessor methods are available for the \Rmethod{promoters}, \Rmethod{relCDS}, and \Rmethod{splicing} slot data as well.
+The same \Rmethod{fpkm}, \Rmethod{repFpkm}, \Rmethod{count}, \Rmethod{annotation}, \Rmethod{diffData}, \Rmethod{samples}, and \Rmethod{featureNames} methods are available for instances of the \Rmethod{CuffGeneSet} class, but additional accessor methods are available for the \Rmethod{promoters}, \Rmethod{relCDS}, and \Rmethod{splicing} slot data as well.
 
 <<create_geneset_2>>=
 #FPKM values for genes in gene set

@@ -1,6 +1,7 @@
 v1.99.5
 	Bugfixes:
 	- Added replicates argument to csDistHeat to view distances between individual replicate samples.
+	- Appropriately distinguish now between 'annotation' (external attributes) and features (gene-level sub-features).
 
 v1.99.3
 	New Features:

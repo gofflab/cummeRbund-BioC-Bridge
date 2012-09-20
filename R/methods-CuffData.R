@@ -71,12 +71,12 @@ setMethod("addFeatures",signature="CuffData",.addFeatures)
 ###################
 #Accessors
 ###################
-.features<-function(object){
+.annotation<-function(object){
 	featureQuery<-paste("SELECT * FROM ",object@tables$mainTable," x LEFT JOIN ",object@tables$featureTable," xf ON x.",object@idField,"=xf.",object@idField,sep="")
 	dbGetQuery(object@DB, featureQuery)
 }
 
-setMethod("features","CuffData",.features)
+setMethod("annotation","CuffData",.annotation)
 
 .featureNames<-function(object){
 	featureQuery<-paste("SELECT ",object@idField," FROM ",object@tables$mainTable, sep="")

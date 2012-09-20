@@ -91,7 +91,7 @@ setMethod("replicates","CuffFeatureSet",.replicates)
 	myFPKM<-object@fpkm
 	myFPKM$stdev<-(myFPKM$conf_hi-myFPKM$fpkm)/2
 	if (features){
-		return (merge(object@annotation,myFPKM))
+		return (merge(object@annotation,myFPKM,by=1))
 	}else{
 		return(myFPKM)
 	}
@@ -102,7 +102,7 @@ setMethod("fpkm",signature(object="CuffFeatureSet"),.fpkm)
 	myFPKM<-object@repFpkm
 	#myFPKM$stdev<-(myFPKM$conf_hi-myFPKM$fpkm)/2
 	if (features){
-		return (merge(object@annotation,myFPKM))
+		return (merge(object@annotation,myFPKM,by=1))
 	}else{
 		return(myFPKM)
 	}
@@ -115,11 +115,11 @@ setMethod("repFpkm",signature(object="CuffFeatureSet"),.repFpkm)
 
 setMethod("featureNames",signature(object="CuffFeatureSet"),.featureNames)
 
-.features<-function(object){
+.annotation<-function(object){
 	object@annotation
 }
 
-setMethod("features",signature(object="CuffFeatureSet"),.features)
+setMethod("annotation",signature(object="CuffFeatureSet"),.annotation)
 
 .fpkmMatrix<-function(object,fullnames=FALSE,sampleIdList){
 	#Sample subsetting
@@ -253,7 +253,7 @@ setMethod("diffData",signature(object="CuffFeatureSet"),.diffData)
 
 .count<-function(object,features=FALSE){
 	if (features){
-		return (merge(object@annotation,object@count))
+		return (merge(object@annotation,object@count,by=1))
 	}else{
 		return(object@count)
 	}
@@ -608,7 +608,7 @@ setMethod("csVolcano",signature(object="CuffFeatureSet"), .volcano)
 	
 	colnames(dat)[1]<-"tracking_id"
 	#tracking_ids<-dat$tracking_id
-	obj_features <- features(object)
+	obj_features <- annotation(object)
 	tracking_ids <- obj_features[,1]
 	
 	gene_labels<-obj_features$gene_short_name

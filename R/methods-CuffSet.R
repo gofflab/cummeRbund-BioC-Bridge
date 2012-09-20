@@ -188,7 +188,7 @@ setMethod("relCDS","CuffSet",function(object){
 	whereStringRep = paste("JOIN replicates r ON y.rep_name=r.rep_name WHERE (x.gene_id ='",geneId,"' OR x.gene_short_name = '",geneId,"')",' AND (r.sample_name IN ',sampleString,')',sep="")
 	
 	#dbQueries
-	geneAnnotationQuery<-paste("SELECT * from genes x ",whereString,sep="")
+	geneAnnotationQuery<-paste("SELECT * from genes x LEFT JOIN geneFeatures xf on x.gene_id=xf.gene_id ",whereString,sep="")
 	geneFPKMQuery<-paste("SELECT y.* from genes x JOIN geneData y ON x.gene_id=y.gene_id ",whereStringFPKM,sep="")
 	#print(geneFPKMQuery)
 	geneDiffQuery<-paste("SELECT y.* from genes x JOIN geneExpDiffData y ON x.gene_id=y.gene_id ",whereStringDiff,sep="")
@@ -353,7 +353,8 @@ setMethod("getGene",signature(object="CuffSet"),.getGene)
 	#dbQueries
 	idQuery<-paste("SELECT DISTINCT gene_id from genes x ",whereStringGene,sep="")
 	
-	geneAnnotationQuery<-paste("SELECT * from genes x ", whereStringGene,sep="")
+	#geneAnnotationQuery<-paste("SELECT * from genes x LEFT JOIN geneFeatures xf ON x.gene_id=xf.gene_id ", whereStringGene,sep="")
+	geneAnnotationQuery<-paste("SELECT * from genes x LEFT JOIN geneFeatures xf USING (gene_id) ", whereStringGene,sep="")
 	geneFPKMQuery<-paste("SELECT y.* from genes x JOIN geneData y ON x.gene_id=y.gene_id ", whereStringGeneFPKM,sep="")
 	geneDiffQuery<-paste("SELECT y.* from genes x JOIN geneExpDiffData y ON x.gene_id=y.gene_id ", whereStringGeneDiff,sep="")
 	geneRepFPKMQuery<-paste("SELECT y.* from genes x JOIN geneReplicateData y on x.gene_id=y.gene_id ", whereStringGeneFPKM,sep="")
