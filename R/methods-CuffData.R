@@ -715,10 +715,10 @@ setMethod("csVolcanoMatrix",signature(object="CuffData"),.volcanoMatrix)
 	g = g + geom_tile(color="black") + scale_x_discrete("", limits=labels[obj.hc$order]) + scale_y_discrete("", limits=labels[obj.hc$order])
 	
 	# roll labels
-	g = g + theme(axis.text.x=element_text(angle=-90, hjust=0), axis.text.y=theme_text(angle=0, hjust=1))
+	g = g + theme(axis.text.x=element_text(angle=-90, hjust=0), axis.text.y=element_text(angle=0, hjust=1))
 	
 	# drop grey panel background and gridlines
-	g = g + theme(panel.grid.minor=theme_line(colour=NA), panel.grid.major=theme_line(colour=NA), panel.background=theme_rect(fill=NA, colour=NA))
+	g = g + theme(panel.grid.minor=element_line(colour=NA), panel.grid.major=element_line(colour=NA), panel.background=element_rect(fill=NA, colour=NA))
 	
 	# adjust heat scale
 	if (length(heatscale) == 2) {

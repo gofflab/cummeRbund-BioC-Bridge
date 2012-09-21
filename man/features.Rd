@@ -1,6 +1,5 @@
 \name{features}
 \alias{features}
-\alias{features,CuffGene-method}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Features

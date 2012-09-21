@@ -1002,9 +1002,111 @@ head(mySigTable,20)
 Similarities between conditions and/or replicates can
 provide useful insight into the relationship between various groupings of
 conditions and can aid in identifying outlier replicates that do not behave as
-expected.
+expected. cummeRbund provides the \Rmethod{csDistHeat()} method to visualize the
+pairwise similarities between conditions:
+
+<<dist_heat_1,include=FALSE>>=
+myDistHeat<-csDistHeat(genes(cuff))
+
+@
+
+\begin{figure}[htp]
+	\begin{center}
+	\subfloat[JS distance heatmap between conditions across all gene features.]{
+	
+<<label=dist_heat_plot_1,fig=TRUE,echo=FALSE,include=FALSE>>=
+<<dist_heat_1>>
+print(myDistHeat)
+@
+	\includegraphics[width=0.6\textwidth]{cummeRbund-manual-dist_heat_plot_1}}
+	
+	\end{center}
+\end{figure}
+
+Again with the \Rfunarg{replicates} argument, distances between individual
+replicates can be presented.
+
+<<dist_heat_2,include=FALSE>>=
+myRepDistHeat<-csDistHeat(genes(cuff),replicates=T)
+
+@
+
+\begin{figure}[htp]
+	\begin{center}
+	\subfloat[JS distance heatmap between replicate samples across all gene
+	features.]{
+	
+<<label=dist_heat_plot_2,fig=TRUE,echo=FALSE,include=FALSE>>=
+<<dist_heat_2>>
+print(myRepDistHeat)
+@
+	\includegraphics[width=0.6\textwidth]{cummeRbund-manual-dist_heat_plot_2}}
+	
+	\end{center}
+\end{figure}
+
+This method can be used to explore similarities between conditions for all
+features, or just those features contained within a \RClass{CuffGeneSet} class. 
+Additionally, the \Rfunarg{samples.not.genes=F} argument will display distances
+between individual genes or features across conditions.
 
 \subsubsection{Dimensionality reduction}
+Dimensionality reduction is an informative approach for clustering and exploring
+the relationships between conditions.  It can be useful for feature selection as
+well as identifying the sources of variability within your data.  To this end,
+we have applied two different dimensionality reduction strategies in
+\Rpackage{cummeRbund}: principal component analysis (PCA) and multi-dimensional
+scaling (MDS). We provide the two wrapper methods, \Rmethod{PCAplot} and
+\Rmethod{MDSplot}
+
+<<dim_reduction_1,include=FALSE>>=
+genes.PCA<-PCAplot(genes(cuff),"PC1","PC2")
+genes.MDS<-MDSplot(genes(cuff))
+
+genes.PCA.rep<-PCAplot(genes(cuff),"PC1","PC2",replicates=T)
+genes.MDS.rep<-MDSplot(genes(cuff),replicates=T)
+@
+
+\begin{figure}[htp]
+	\begin{center}
+	\subfloat[PCA plot for gene-level features]{
+	
+<<label=gene_PCA,fig=TRUE,echo=FALSE,include=FALSE>>=
+<<dim_reduction_1>>
+	print(genes.PCA)
+@
+	
+	\includegraphics[width=0.4\textwidth]{cummeRbund-manual-gene_PCA}
+	}
+	\qquad
+	\subfloat[MDS plot for gene-level features]{
+	
+<<label=gene_MDS,fig=TRUE,echo=FALSE,include=FALSE>>=
+
+	print(genes.MDS)
+@
+	
+	\includegraphics[width=0.4\textwidth]{cummeRbund-manual-gene_MDS}}
+	\qquad
+	\subfloat[Individual replicate level PCA plot for gene-level features]{
+	
+<<label=gene_PCA_rep,fig=TRUE,echo=FALSE,include=FALSE>>=
+
+	print(genes.PCA.rep)
+@
+	
+	\includegraphics[width=0.4\textwidth]{cummeRbund-manual-gene_PCA_rep}}
+	\qquad
+	\subfloat[Individual replicate level MDS plot for gene-level features]{
+	
+<<label=gene_MDS_rep,fig=TRUE,echo=FALSE,include=FALSE>>=
+
+	print(genes.MDS.rep)
+@
+	
+	\includegraphics[width=0.4\textwidth]{cummeRbund-manual-gene_MDS_rep}}
+	\end{center}
+\end{figure}
 
 \subsection{Partitioning}
 K-means clustering is a useful tool that can be helpful in identifying clusters of genes with similar expression profiles. In fact, these profiles are learned from the data during the clustering. 
