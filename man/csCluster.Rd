@@ -10,7 +10,7 @@ Returns a ggplot2 plot object with geom_line layer plotting FPKM values over con
 This does not return any of the clustering information directly, but if you want it, you can retrieve it from the ggplot object returned.
 }
 \usage{
-\S4method{csCluster}{CuffFeatureSet}(object,k,pseudocount=1,...)
+\S4method{csCluster}{CuffFeatureSet}(object,k,logMode=T,pseudocount=1,...)
 }
 \arguments{
   \item{object}{
@@ -18,6 +18,9 @@ An object of class CuffFeatureSet.
 }
   \item{k}{
 Number of pre-defined clusters to attempt to find.
+}
+  \item{logMode}{
+A logical value whether or not to log-transform the FPKM values prior to clustering.
 }
   \item{pseudocount}{
 Value added to FPKM to avoid log-transform issues.

@@ -63,7 +63,7 @@
 \title{CummeRbund: Visualization and Exploration of Cufflinks High-throughput Sequencing Data}
 
 \author{Loyal A. Goff, Cole Trapnell}
-\date{May 4, 2012}
+\date{September 24, 2012}
 \begin{document}
 <<init, echo=FALSE>>=
 options(width=65)
@@ -82,10 +82,12 @@ that you update your cufflinks version >=2.0 to take full advantage of the impro
 	\item Packages:
 	\begin{itemize}
 		\item \Rpackage{RSQLite}
-		\item \Rpackage{ggplot2 v0.9}
+		\item \Rpackage{ggplot2 v0.9.2}
 		\item \Rpackage{reshape2}
 		\item \Rpackage{plyr}
 		\item \Rpackage{fastcluster}
+        \item \Rpackage{rtracklayer}
+        \item \Rpackage{Gviz}
 		\item Recommended:
 		\begin{itemize}
 			\item \Rpackage{Hmisc}
@@ -157,6 +159,8 @@ that you update your cufflinks version >=2.0 to take full advantage of the impro
 		\item repFpkm: A data frame of deconvolved FPKM values across individual replicates, for all features in object.
 		\item diff: A data frame of differential expression/regulation data for all features in object.
 		\item count: A data frame containing raw and normalized fragment counts, variance, dispersion, and uncertainty for all features in object.
+        \item genome: A character string indicating which build of the genome
+        the associated features are derived from.  (e.g. `hg19',`mm9')
 	\end{itemize}
 	
 	A specialized sub-class of \Rclass{CuffFeatureSet} is the \Rclass{CuffGeneSet} class. This subclass adds additional slots to contain all isoforms, TSS, and CDS information for a given set of gene\_ids.  The \Rclass{CuffGeneSet} class is designed to aggregate all relevant
@@ -188,6 +192,8 @@ that you update your cufflinks version >=2.0 to take full advantage of the impro
 		\item isoforms: A \Rclass{CuffFeature} object for all isoforms of a given gene.
 		\item TSS: A \Rclass{CuffFeature} object for all TSS of a given gene.
 		\item CDS: A \Rclass{CuffFeature} object for all CDS of a given gene.
+        \item features: A \Rclass{data.frame} object containing feature
+        information for the transcript models describing the gene.
 	\end{itemize}
 
 \clearpage
@@ -396,7 +402,7 @@ s<-csScatterMatrix(genes(cuff))
 	print(s)
 @
 	
-	\includegraphics[width=0.4\textwidth]{cummeRbund-manual-global_plots_scatter_1}}
+	\includegraphics[width=0.65\textwidth]{cummeRbund-manual-global_plots_scatter_1}}
 	\end{center}
 \end{figure}
 
@@ -495,7 +501,7 @@ v
 <<global_plots_5_1>>
 print(v)
 @
-		\includegraphics[width=0.4\textwidth]{cummeRbund-manual-global_plots_volcano_1}}
+		\includegraphics[width=0.65\textwidth]{cummeRbund-manual-global_plots_volcano_1}}
 	\end{center}
 \end{figure}
 
@@ -1046,7 +1052,7 @@ print(myRepDistHeat)
 \end{figure}
 
 This method can be used to explore similarities between conditions for all
-features, or just those features contained within a \RClass{CuffGeneSet} class. 
+features, or just those features contained within a \Rclass{CuffGeneSet} class. 
 Additionally, the \Rfunarg{samples.not.genes=F} argument will display distances
 between individual genes or features across conditions.
 
@@ -1107,6 +1113,8 @@ genes.MDS.rep<-MDSplot(genes(cuff),replicates=T)
 	\includegraphics[width=0.4\textwidth]{cummeRbund-manual-gene_MDS_rep}}
 	\end{center}
 \end{figure}
+
+\clearpage
 
 \subsection{Partitioning}
 K-means clustering is a useful tool that can be helpful in identifying clusters of genes with similar expression profiles. In fact, these profiles are learned from the data during the clustering. 

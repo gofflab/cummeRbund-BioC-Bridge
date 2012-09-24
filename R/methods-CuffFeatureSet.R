@@ -777,10 +777,13 @@ setMethod("expressionPlot",signature(object="CuffFeatureSet"),.expressionPlot)
 #	c
 #}
 
-.cluster<-function(object, k, pseudocount=1,...){
+.cluster<-function(object, k, logMode=T, pseudocount=1,...){
 	require(cluster)
 	m<-as.data.frame(fpkmMatrix(object))
 	m<-m[rowSums(m)>0,]
+	if(logMode){
+		m<-log10(m+pseudocount)
+	}
 	n<-JSdist(makeprobs(t(m)))
 	clusters<-pam(n,k, ...)
 	#clsuters<-pamk(n,krange=2:20)
