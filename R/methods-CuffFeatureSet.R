@@ -287,7 +287,7 @@ setMethod("annotation","CuffFeatureSet",function(object){
 #There is no genericMethod yet, goal is to replace .heatmap with .ggheat for genericMethod 'csHeatmap'
 
 .ggheat<-function(object, rescaling='none', clustering='none', labCol=T, labRow=T, logMode=T, pseudocount=1.0, 
-		border=FALSE, heatscale=c(low='lightyellow',mid='orange',high='darkred'), heatMidpoint=NULL,fullnames=T,replicates=FALSE,...) {
+		border=FALSE, heatscale=c(low='lightyellow',mid='orange',high='darkred'), heatMidpoint=NULL,fullnames=T,replicates=FALSE,method='none',...) {
 	## the function can be be viewed as a two step process
 	## 1. using the rehape package and other funcs the data is clustered, scaled, and reshaped
 	## using simple options or by a user supplied function
@@ -314,17 +314,17 @@ setMethod("annotation","CuffFeatureSet",function(object){
 	## if you want a different distance/cluster method-- or to cluster and then scale
 	## then you can supply a custom function 
 	
-	if(is.function(clustering)) 
-	{
-		m=clustering(m)
-	}else{
-		if(clustering=='row')
-			m=m[hclust(JSdist(makeprobs(t(m))))$order, ]
-		if(clustering=='column')  
-			m=m[,hclust(JSdist(makeprobs(m)))$order]
-		if(clustering=='both')
-			m=m[hclust(JSdist(makeprobs(t(m))))$order ,hclust(JSdist(makeprobs(m)))$order]
+	if(!is.function(method)){
+		method = function(mat){JSdist(makeprobs(t(mat)))}	
 	}
+
+	if(clustering=='row')
+		m=m[hclust(method(m))$order, ]
+	if(clustering=='column')  
+		m=m[,hclust(method(t(m)))$order]
+	if(clustering=='both')
+		m=m[hclust(method(m))$order ,hclust(method(t(m)))$order]
+
 	## this is just reshaping into a ggplot format matrix and making a ggplot layer
 	
 	if(is.function(rescaling))

@@ -2,6 +2,8 @@ v1.99.5
 	Bugfixes:
 	- Added replicates argument to csDistHeat to view distances between individual replicate samples.
 	- Appropriately distinguish now between 'annotation' (external attributes) and features (gene-level sub-features).
+	- csHeatmap now has 'method' argument to pass function for any dissimilarity metric you desire. You must pass a function that returns a 'dist' object applied to rows of a matrix. Default is still JS-distance.
+	
 
 v1.99.3
 	New Features:

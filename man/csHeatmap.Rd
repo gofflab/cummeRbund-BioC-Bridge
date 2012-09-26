@@ -10,7 +10,7 @@ Creates a ggplot plot object with a geom_tile layer of FPKM values per feature a
 }
 \usage{
 \S4method{csHeatmap}{CuffFeatureSet}(object, rescaling='none', clustering='none', labCol=T, labRow=T, logMode=T, pseudocount=1.0, 
-		border=FALSE, heatscale= c(low='lightyellow',mid='orange',high='darkred'), heatMidpoint=NULL, fullnames = T, replicates=FALSE, ...)
+		border=FALSE, heatscale= c(low='lightyellow',mid='orange',high='darkred'), heatMidpoint=NULL, fullnames = T, replicates=FALSE,method='none', ...)
 }
 
 \arguments{
@@ -22,7 +22,6 @@ Rescaling can either be 'row' or 'column' OR you can pass rescale a function tha
 }
   \item{clustering}{
 Clustering can either be 'row','column','none', or 'both', in which case the appropriate indices are re-ordered based on the pairwise Jensen-Shannon distance of FPKM values.
-Alternatively you can pass your own clustering function so long as the returned value is a re-ordered matrix.
 }
   \item{labCol}{
 A logical argument to display column labels.
@@ -50,6 +49,9 @@ A logical value whether to use 'fullnames' (concatenated gene_short_name and gen
 }
   \item{replicates}{
 A logical value whether or not to plot individual replicates or aggregate condition values.
+}
+  \item{method}{
+Function to be used for clustering.  Default is JS-distance. You can pass your own function to this argument as long as the output is an instance of the 'dist' class and is applied to the rows of the input matrix.
 }
   \item{\dots}{
 Additional arguments to csHeatmap
