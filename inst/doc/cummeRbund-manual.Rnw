@@ -6,7 +6,7 @@
 %\VignettePackage{cummeRbund}
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\SweaveOpts{prefix.string=graphics/cummeRbund-manual}
+%\SweaveOpts{prefix.string='graphics/cummeRbund-manual'}
 \documentclass[10pt]{article}
 \usepackage[margin=0.75in]{geometry}
 \usepackage{amsmath}
@@ -62,7 +62,7 @@
 \bibliographystyle{plainnat}
 \title{CummeRbund: Visualization and Exploration of Cufflinks High-throughput Sequencing Data}
 
-\author{Loyal A. Goff, Cole Trapnell}
+\author{Loyal A. Goff, Cole Trapnell, David Kelley}
 \date{September 24, 2012}
 \begin{document}
 <<init, echo=FALSE>>=
