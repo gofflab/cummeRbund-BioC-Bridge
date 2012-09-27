@@ -119,7 +119,7 @@ setMethod("featureNames",signature(object="CuffFeatureSet"),.featureNames)
 	object@annotation
 }
 
-setMethod("annotation",signature(object="CuffFeatureSet"),.annotation)
+setMethod(BiocGenerics::annotation,signature(object="CuffFeatureSet"),.annotation)
 
 .fpkmMatrix<-function(object,fullnames=FALSE,sampleIdList){
 	#Sample subsetting

@@ -72,11 +72,11 @@ setMethod("addFeatures",signature="CuffData",.addFeatures)
 #Accessors
 ###################
 .annotation<-function(object){
-	featureQuery<-paste("SELECT * FROM ",object@tables$mainTable," x LEFT JOIN ",object@tables$featureTable," xf ON x.",object@idField,"=xf.",object@idField,sep="")
+	featureQuery<-paste("SELECT * FROM ",object@tables$mainTable," x LEFT JOIN ",object@tables$featureTable," xf USING (",object@idField,")",sep="")
 	dbGetQuery(object@DB, featureQuery)
 }
 
-setMethod("annotation","CuffData",.annotation)
+setMethod(BiocGenerics::annotation,signature(object="CuffData"),.annotation)
 
 .featureNames<-function(object){
 	featureQuery<-paste("SELECT ",object@idField," FROM ",object@tables$mainTable, sep="")

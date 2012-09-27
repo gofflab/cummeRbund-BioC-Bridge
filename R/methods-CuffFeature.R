@@ -110,7 +110,7 @@ setMethod("samples","CuffFeature",.samples)
 
 setMethod("diffData",signature(object="CuffFeature"),.diffData)
 
-setMethod("annotation","CuffFeature",function(object){
+setMethod(BiocGenerics::annotation,signature(object="CuffFeature"),function(object){
 		return(object@annotation)
 		})
 
