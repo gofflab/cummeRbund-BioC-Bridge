@@ -1,3 +1,5 @@
+importFrom(BiocGenerics, annotation)
+
 import(methods)
 
 #importFrom(graphics, plot)
