@@ -6,7 +6,7 @@
 %\VignettePackage{cummeRbund}
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\SweaveOpts{prefix.string='graphics/cummeRbund-manual'}
+%\SweaveOpts{prefix.string=graphics/cummeRbund-manual}
 \documentclass[10pt]{article}
 \usepackage[margin=0.75in]{geometry}
 \usepackage{amsmath}
@@ -63,7 +63,7 @@
 \title{CummeRbund: Visualization and Exploration of Cufflinks High-throughput Sequencing Data}
 
 \author{Loyal A. Goff, Cole Trapnell, David Kelley}
-\date{September 24, 2012}
+\date{October 2, 2012}
 \begin{document}
 <<init, echo=FALSE>>=
 options(width=65)
@@ -74,7 +74,8 @@ options(width=65)
 \clearpage
 \section{Requirements}
 NOTE: cummeRbund 2.0 was designed in conjunction with the release of cufflinks 2.0.  While we attempted to preserve backwards-compatability, it is highly recommended
-that you update your cufflinks version >=2.0 to take full advantage of the improvements in modeling, reporting, and visualization that have been incorporated. 
+that you update your cufflinks installation to version $\ge$2.0 to take full
+advantage of the improvements in modeling, reporting, and visualization that have been incorporated.
 \begin{itemize}
 	\item Cufflinks $\ge$ v2.0.0
 	\item SQLite 
@@ -88,6 +89,7 @@ that you update your cufflinks version >=2.0 to take full advantage of the impro
 		\item \Rpackage{fastcluster}
         \item \Rpackage{rtracklayer}
         \item \Rpackage{Gviz}
+        \item \Rpackage{BiocGenerics $\ge$ 0.3.2}
 		\item Recommended:
 		\begin{itemize}
 			\item \Rpackage{Hmisc}

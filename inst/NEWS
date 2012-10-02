@@ -1,3 +1,6 @@
+v2.0.1
+
+
 v1.99.6
 	Notes:
 		- 'annotation' and "annotation<-" generics were moved to BiocGenerics 0.3.2. Now using appropriate generic function, but requiring BiocGenerics >= 0.3.2

@@ -131,6 +131,29 @@ setMethod("makeGeneRegionTrack",signature(object="CuffGene"),.makeGeneRegionTrac
 
 setMethod("genePlot",signature(object="CuffGene"),.plot)
 
+
+
+#################
+#Feature Plotting
+#################
+.ideogram<-function(object){
+	myStart<-min(object@features$start)
+	myEnd<-max(object@features$end)
+	mychr<-unique(object@features$seqnames)
+	p<-plotIdeogram(genome=object@genome,subchr=mychr,zoom.region=c(myStart,myEnd))
+	p
+	
+}
+
+.plot2<-function(object){
+	ideoTrack<-.ideogram(object)
+	expressionTrack<-expressionPlot(isoforms(object))+theme_bw() + theme(legend.position='none') 
+	hasAxis(expressionTrack)<-TRUE
+	modelTrack<-autoplot(.asGRangesList(object),aes(fill=transcript,group=transcript),gap.geom="arrow") + theme_bw() + scale_fill_hue(l=50,h.start=200) + scale_color_hue(l=50,h.start=200)
+	hasAxis(modelTrack)<-TRUE
+	tracks(ideoTrack,modelTrack,expressionTrack,heights=c(1,3,3),fixed=c(TRUE,TRUE,FALSE),main=unique(object@annotation$gene_short_name))
+}
+
 #################
 #Coersion methods
 #################
@@ -144,9 +167,15 @@ setMethod("genePlot",signature(object="CuffGene"),.plot)
 	colnames(feats)[colnames(feats)=='exon_number']<-'exon'
 	colnames(feats)[colnames(feats)=='source']<-'feature'
 	feats$symbol<-feats$transcript
-	corCols<-c('seqnames','start','end','strand')
+	corCols<-c('seqnames','start','end','strand','width')
 	myGR<-GRanges(Rle(feats$seqnames),ranges=IRanges(feats$start,end=feats$end),strand=Rle(feats$strand),elementMetadata=feats[,!colnames(feats) %in% corCols])
+	colnames(elementMetadata(myGR))<-colnames(feats[,!colnames(feats) %in% corCols])
 	myGR
 }
 
 #As GRangesList
+.asGRangesList<-function(object,f="transcript"){
+	gr<-.asGRanges(object)
+	grl<-split(gr,f)
+	grl
+}
