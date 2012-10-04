@@ -211,14 +211,19 @@ setMethod("count","CuffData",.count)
 	}
 	
 	samp<-samples(object)
-	FPKMMatQuery<-paste("select x.",object@idField,", ",sep="")
+	FPKMMatQuery<-paste("select x.",object@idField,", x.gene_short_name, ",sep="")
 	for (i in samp){
 		FPKMMatQuery<-paste(FPKMMatQuery,"sum(case when xd.sample_name ='",i,"' then fpkm end) as ",i,",",sep="")
 	}
 	FPKMMatQuery<-substr(FPKMMatQuery, 1, nchar(FPKMMatQuery)-1)
 	FPKMMatQuery<-paste(FPKMMatQuery," from ",object@tables$mainTable," x LEFT JOIN ",object@tables$dataTable," xd on x.",object@idField," = xd.",object@idField," group by x.",object@idField,sep="")
 	res<-dbGetQuery(object@DB,FPKMMatQuery)
-	res<-data.frame(res[,-1],row.names=res[,1])
+	if(fullnames){
+		res<-data.frame(res[,-c(1,2)],row.names=paste(res[,2],res[,1],sep="|"))
+	}else{
+		res<-data.frame(res[,-c(1,2)],row.names=res[,1])	
+	}
+	
 	if(!missing(sampleIdList)){
 		res<-data.frame(res[,sampleIdList],row.names=rownames(res))
 		colnames(res)<-sampleIdList
@@ -241,14 +246,19 @@ setMethod("fpkmMatrix","CuffData",.fpkmMatrix)
 	}
 	
 	samp<-replicates(object)
-	FPKMMatQuery<-paste("select x.",object@idField,", ",sep="")
+	FPKMMatQuery<-paste("select x.",object@idField,", x.gene_short_name, ",sep="")
 	for (i in samp){
 		FPKMMatQuery<-paste(FPKMMatQuery,"sum(case when xd.rep_name ='",i,"' then fpkm end) as ",i,",",sep="")
 	}
 	FPKMMatQuery<-substr(FPKMMatQuery, 1, nchar(FPKMMatQuery)-1)
 	FPKMMatQuery<-paste(FPKMMatQuery," from ",object@tables$mainTable," x LEFT JOIN ",object@tables$replicateTable," xd on x.",object@idField," = xd.",object@idField," group by x.",object@idField,sep="")
 	res<-dbGetQuery(object@DB,FPKMMatQuery)
-	res<-data.frame(res[,-1],row.names=res[,1])
+
+	if(fullnames){
+		res<-data.frame(res[,-c(1,2)],row.names=paste(res[,2],res[,1],sep="|"))
+	}else{
+		res<-data.frame(res[,-c(1,2)],row.names=res[,1])	
+	}
 	if(!missing(repIdList)){
 		res<-data.frame(res[,repIdList],row.names=rownames(res))
 		colnames(res)<-repIdList
@@ -271,14 +281,18 @@ setMethod("repFpkmMatrix","CuffData",.repFpkmMatrix)
 	}
 	
 	samp<-samples(object)
-	CountMatQuery<-paste("select x.",object@idField,", ",sep="")
+	CountMatQuery<-paste("select x.",object@idField,", x.gene_short_name, ",sep="")
 	for (i in samp){
 		CountMatQuery<-paste(CountMatQuery,"sum(case when xd.sample_name ='",i,"' then count end) as ",i,",",sep="")
 	}
 	CountMatQuery<-substr(CountMatQuery, 1, nchar(CountMatQuery)-1)
 	CountMatQuery<-paste(CountMatQuery," from ",object@tables$mainTable," x LEFT JOIN ",object@tables$countTable," xd on x.",object@idField," = xd.",object@idField," group by x.",object@idField,sep="")
 	res<-dbGetQuery(object@DB,CountMatQuery)
-	res<-data.frame(res[,-1],row.names=res[,1])
+	if(fullnames){
+		res<-data.frame(res[,-c(1,2)],row.names=paste(res[,2],res[,1],sep="|"))
+	}else{
+		res<-data.frame(res[,-c(1,2)],row.names=res[,1])	
+	}
 	if(!missing(sampleIdList)){
 		res<-data.frame(res[,sampleIdList],row.names=rownames(res))
 		colnames(res)<-sampleIdList
@@ -300,14 +314,18 @@ setMethod("countMatrix","CuffData",.countMatrix)
 		myLevels<-getRepLevels(object)
 	}
 	reps<-replicates(object)
-	repCountMatQuery<-paste("select x.",object@idField,", ",sep="")
+	repCountMatQuery<-paste("select x.",object@idField,", x.gene_short_name, ",sep="")
 	for (i in reps){
 		repCountMatQuery<-paste(repCountMatQuery,"sum(case when xr.rep_name ='",i,"' then external_scaled_frags end) as ",i,",",sep="")
 	}
 	repCountMatQuery<-substr(repCountMatQuery, 1, nchar(repCountMatQuery)-1)
 	repCountMatQuery<-paste(repCountMatQuery," from ",object@tables$mainTable," x LEFT JOIN ",object@tables$replicateTable," xr on x.",object@idField," = xr.",object@idField," group by x.",object@idField,sep="")
 	res<-dbGetQuery(object@DB,repCountMatQuery)
-	res<-data.frame(res[,-1],row.names=res[,1])
+	if(fullnames){
+		res<-data.frame(res[,-c(1,2)],row.names=paste(res[,2],res[,1],sep="|"))
+	}else{
+		res<-data.frame(res[,-c(1,2)],row.names=res[,1])	
+	}
 	if(!missing(repIdList)){
 		res<-data.frame(res[,repIdList],row.names=rownames(res))
 		colnames(res)<-repIdList

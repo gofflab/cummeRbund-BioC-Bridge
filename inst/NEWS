@@ -1,5 +1,6 @@
 v2.0.1
-
+	Bugfixes:
+		- Fixed 'fullnames' argument to cuffData::*Matrix() methods so that it does what it's supposed to do.
 
 v1.99.6
 	Notes:
