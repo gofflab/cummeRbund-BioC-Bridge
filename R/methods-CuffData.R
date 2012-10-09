@@ -837,6 +837,7 @@ setMethod("dispersionPlot",signature(object="CuffData"),.dispersionPlot)
 .MDSplot<-function(object,replicates=FALSE,logMode=TRUE,pseudocount=1.0){
 	if(replicates){
 		dat<-repFpkmMatrix(object)
+		#repData<-sapply(replicates(object),function(x){strsplit(x,"_")[[1]][1]}) This is to color by condition and not replicate...
 	}else{
 		dat<-fpkmMatrix(object)
 	}
