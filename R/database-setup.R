@@ -1908,6 +1908,73 @@ readCufflinks<-function(dir = getwd(),
 	dbSendQuery(dbConn,genomeInsertQuery)
 }
 
+.cuff2db <- function(gtfFile, out.file = NULL, verbose = TRUE) {
+	
+	require(rtracklayer)
+	require(GenomicRanges)
+	require(GenomicFeatures)
+	
+	requiredAttribs <- c("gene_id", "transcript_id", "exon_number")
+	
+	if (verbose) message("Importing ", gtfFile)
+	tmp <- import(gtfFile, asRangedData=FALSE)
+	
+	#dispose of unspliced unstranded transcripts
+	#tmp <- tmp[ which(strand(tmp) %in% c('+','-')) ]
+	
+	# fix the gene IDs
+	#values(tmp)$gene_id <- gsub('CUFF.', '', values(tmp)$gene_id)
+	
+	# fix the exon IDs
+	#values(tmp)$transcript_id <- gsub('CUFF.', '', values(tmp)$transcript_id)
+	
+	# split the object into transcript and exon pieces
+	#by.type = split(tmp, values(tmp)$type)
+	#browser()
+	
+	#make transcripts table
+	tmpT <- split(tmp,
+			values(tmp)$transcript_id)
+	if(verbose) message('Attempting to create the transcripts data.frame')
+	transcripts <- data.frame(
+			tx_id=1:length(tmpT),
+			tx_name=names(tmpT),
+			tx_chrom=as.character(seqnames(unlist(tmpT))[start(tmpT@partitioning)]),
+			tx_strand=as.character(strand(unlist(tmpT))[start(tmpT@partitioning)]),
+			tx_start=sapply(start(ranges(tmpT)), min),
+			tx_end=sapply(end(ranges(tmpT)), max),
+			stringsAsFactors=FALSE
+	)
+	
+	#make splicings table
+	tmpS <- split(tmp, values(tmp)$transcript_id)
+	if(verbose) message('Attempting to create the splicings data.frame')
+	splicings <- data.frame(
+			tx_id=rep(1:length(tmpS), elementLengths(tmpS)),
+			exon_rank=as.integer(values(unlist(tmpS))$exon_number),
+			exon_chrom=as.character(seqnames(unlist(tmpS))),
+			exon_strand=as.character(strand(unlist(tmpS))),
+			exon_start=start(unlist(tmpS)),
+			exon_end=end(unlist(tmpS)),
+			stringsAsFactors=FALSE
+	)
+	
+	#make genes table
+	if(verbose) message('Attempting to create the genes data.frame')
+	gene_txs <- tapply(values(tmp)$transcript_id, values(tmp)$gene_id, unique)
+	genes <- data.frame(
+			tx_name=unlist(gene_txs),
+			gene_id=rep(names(gene_txs), sapply(gene_txs, length)),
+			stringsAsFactors=FALSE)
+	
+	#create the db
+	if (verbose) message("Creating TranscriptDb")
+	tmpdb <- makeTranscriptDb(transcripts, splicings, genes=genes)
+	if (verbose) message("Use saveFeatures() to save the database to a file")
+	return(tmpdb)
+	
+}
+
 #library(Gviz)
 #myGeneId<-'XLOC_000071'
 #geneQuery<-paste("SELECT start,end,source AS feature,gene_id as gene,exon_number AS exon,transcript_id as transcript,gene_name as symbol, exon_number as rank, strand FROM features WHERE gene_id ='",myGeneId,"'",sep="")

@@ -215,7 +215,7 @@ setMethod("count",signature(object="CuffFeature"),.count)
 setMethod("expressionBarplot",signature(object="CuffFeature"),.barplot)
 
 
-.expressionPlot<-function(object,logMode=FALSE,pseudocount=1.0, drawSummary=FALSE, sumFun=mean_cl_boot, showErrorbars=TRUE,showStatus=TRUE,replicates=FALSE,...){
+.expressionPlot<-function(object,logMode=FALSE,pseudocount=1.0, drawSummary=FALSE, sumFun=mean_cl_boot, showErrorbars=TRUE,showStatus=TRUE,replicates=FALSE,facet=TRUE,...){
 	#Coloring scheme for quant flags
 	quant_types<-c("OK","FAIL","LOWDATA","HIDATA","TOOSHORT")
 	quant_types<-factor(quant_types,levels=quant_types)
@@ -285,7 +285,9 @@ setMethod("expressionBarplot",signature(object="CuffFeature"),.barplot)
 	#Recolor quant flags
 	#for some reason this doesn't work (ggplot2 problem)
 	#p<- p+ scale_colour_manual(name='quant_status',values=quant_colors)
-	p<-p+facet_wrap('tracking_id')
+	if(facet){
+		p<-p+facet_wrap('tracking_id')
+	}
 	p
 }
 

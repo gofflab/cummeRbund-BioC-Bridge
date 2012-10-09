@@ -98,6 +98,7 @@ setGeneric("csDendro",function(object,logMode=T,pseudocount=1,replicates=FALSE,.
 ##################
 setGeneric("genePlot",function(object) standardGeneric("genePlot"))
 setGeneric("makeGeneRegionTrack",function(object) standardGeneric("makeGeneRegionTrack"))
+setGeneric("as.GRangesList",function(object,f="transcript") standardGeneric("as.GRangesList"))
 
 
 ##############

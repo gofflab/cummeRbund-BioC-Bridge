@@ -145,23 +145,36 @@ setMethod("genePlot",signature(object="CuffGene"),.plot)
 	
 }
 
-.plot2<-function(object){
+.plot2<-function(object,...){
+	#Ideogram
 	ideoTrack<-.ideogram(object)
-	expressionTrack<-expressionPlot(isoforms(object))+theme_bw() + theme(legend.position='none') 
+	
+	#Expression levels
+	expressionTrack<-expressionPlot(isoforms(object),facet=T,...)+theme_bw() + theme(legend.position='none')
 	hasAxis(expressionTrack)<-TRUE
-	modelTrack<-autoplot(.asGRangesList(object),aes(fill=transcript,group=transcript),gap.geom="arrow") + theme_bw() + scale_fill_hue(l=50,h.start=200) + scale_color_hue(l=50,h.start=200)
+	
+	#Transcript Models
+	#modelTrack<-autoplot(.asGRangesList(object),aes(fill=transcript,group=transcript),gap.geom="arrow") + theme_bw() + scale_fill_hue(l=50,h.start=200) + scale_color_hue(l=50,h.start=200)
+	modelTrack<-ggplot(as.GRangesList(object),)
+	
 	hasAxis(modelTrack)<-TRUE
+	
+	#Plot it all...
 	tracks(ideoTrack,modelTrack,expressionTrack,heights=c(1,3,3),fixed=c(TRUE,TRUE,FALSE),main=unique(object@annotation$gene_short_name))
+	
 }
 
 #################
 #Coersion methods
 #################
 #As GRanges
-.asGRanges<-function(object){
+.as.GRanges<-function(from){
 	#featCols<-c('seqnames','start','end','source','gene_id','exon_number','isoform_id','isoform_id','exon_number','strand')
-	feats<-object@features
+	feats<-from@features
 	#newColnames<-c('seqnames','start','end','feature','gene','exon','transcript','symbol','rank','strand')
+	#ExpressionValues (transcript)
+	fpkm<-cbind(isoform_id=rownames(fpkmMatrix(isoforms(from))),fpkmMatrix(isoforms(from)))
+	feats<-merge(feats,fpkm)
 	colnames(feats)[colnames(feats)=='isoform_id']<-'transcript'
 	colnames(feats)[colnames(feats)=='gene_id']<-'gene'
 	colnames(feats)[colnames(feats)=='exon_number']<-'exon'
@@ -173,9 +186,24 @@ setMethod("genePlot",signature(object="CuffGene"),.plot)
 	myGR
 }
 
+setAs("CuffGene","GRanges",.as.GRanges)
+
 #As GRangesList
-.asGRangesList<-function(object,f="transcript"){
-	gr<-.asGRanges(object)
+.as.GRangesList<-function(object,f="transcript"){
+	gr<-as(object,"GRanges")
 	grl<-split(gr,f)
 	grl
 }
+setMethod("as.GRangesList",signature(object="CuffGene"),.as.GRangesList)
+
+
+#######################
+# ggbio integration
+#######################
+setMethod("ggplot", "CuffGene", function(data, ...){
+			df <- mold(as.GRangesList(data))
+			g <- ggplot(df, ...)
+			g$.data <- as.GRangesList(data)
+			g <- ggbio(g)
+			g
+		})
