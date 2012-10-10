@@ -477,6 +477,12 @@ setMethod("getLevels",signature(object="CuffData"),.getLevels)
 
 setMethod("getRepLevels",signature(object="CuffData"),.getRepLevels)
 
+.getRepConditionLevels<-function(object){
+	levelsQuery<-'SELECT r.sample_name FROM replicates r JOIN samples s ON r.sample_name=s.sample_name ORDER BY s.sample_index ASC'
+	levels<-dbGetQuery(object@DB,levelsQuery)$sample_name
+	levels
+}
+
 #Useful SQL commands
 
 #SELECT g.gene_id, g.class_code, g.nearest_ref_id, g.gene_short_name, g.locus, g.length, g.coverage, g.status, gd.sample_name, gd.fpkm, gd.conf_hi, gd.conf_lo FROM genes g LEFT JOIN geneData gd ON g.gene_id = gd.gene_id WHERE (g.gene_id = 'XLOC_000001');
@@ -912,15 +918,27 @@ setMethod('PCAplot',signature(object="CuffData"),.PCAplot)
 	p
 }
 
-.fpkmSCVPlot<-function(object,FPKMLowerBound=1){
+.fpkmSCVPlot<-function(object,FPKMLowerBound=1,showPool=FALSE){
+	if(!showPool){
+		showPool=any(table(.getRepConditionLevels(genes(cuff)))<2) # Counts number of replicates per condition and requires a minimum of 2.  If any n<2, values are determined from pooling across samples.
+		if(showPool){
+			warning("At least one of your conditions does not have enough replicates to estimate variance. Estimating variance across all conditions instead.")
+		}
+	}
 	dat<-repFpkm(object)
 	colnames(dat)[1]<-"tracking_id"
 	dat<-dat[,c('tracking_id','sample_name','fpkm')]
 	dat<-dat[dat$fpkm>0,]
 	
+	if(showPool){
+		subsetCols<-c('tracking_id')
+	}else{
+		subsetCols<-c('tracking_id','sample_name')
+	}
+	
 	#Option 3 (tapply on log10(replicateFPKM) values)
-	dat.means<-tapply(dat$fpkm,dat[,c('tracking_id','sample_name')],function(x){mean(x,na.rm=T)})
-	dat.sd<-tapply(dat$fpkm,dat[,c('tracking_id','sample_name')],function(x){sd(x,na.rm=T)})
+	dat.means<-tapply(dat$fpkm,dat[,subsetCols],function(x){mean(x,na.rm=T)})
+	dat.sd<-tapply(dat$fpkm,dat[,subsetCols],function(x){sd(x,na.rm=T)})
 	#write("Calculating replicate fpkm mean...",stderr())
 	dat.means<-melt(dat.means)
 	#write("Calculating replicate fpkm stdev...",stderr())
@@ -931,16 +949,22 @@ setMethod('PCAplot',signature(object="CuffData"),.PCAplot)
 	colnames(dat)[colnames(dat)=="dat.sd$stdev"]<-'stdev'
 	dat<-dat[!is.na(dat$stdev) & !is.na(dat$fpkm),]
 	dat<-dat[dat$fpkm>0 & dat$stdev>0,]
-	dat$sample_name<-factor(dat$sample_name,levels=samples(object))
+	if(!showPool){
+		dat$sample_name<-factor(dat$sample_name,levels=samples(object))
+	}
 	
 	p <-ggplot(dat,aes(x=fpkm,y=(stdev/fpkm)^2),na.rm=T)
 	#p <-ggplot(dat,aes(x=log10(fpkm+1),y=log10(stdev)),na.rm=T)
-	p <- p + #geom_point(aes(color=sample_name),size=1,na.rm=T) +
-		stat_smooth(aes(color=sample_name,fill=sample_name),na.rm=T,method='auto',fullrange=T) + 
-		scale_x_log10() +
-		scale_y_continuous(name=bquote(CV^2)) +
-		xlab(bquote(paste(log[10],"FPKM",sep=" "))) +
-		theme_bw() + xlim(c(log10(FPKMLowerBound),max(log10(dat$fpkm)))) + labs(title=object@type)
+	if(showPool){
+		p <- p + stat_smooth(na.rm=T,method='auto',fullrange=T)
+	}else{
+		p <- p + #geom_point(aes(color=sample_name),size=1,na.rm=T) +
+				stat_smooth(aes(color=sample_name,fill=sample_name),na.rm=T,method='auto',fullrange=T)
+	}
+	p <- p + scale_x_log10() +
+		 scale_y_continuous(name=bquote(CV^2)) +
+		 xlab(bquote(paste(log[10],"FPKM",sep=" "))) +
+		 theme_bw() + xlim(c(log10(FPKMLowerBound),max(log10(dat$fpkm)))) + labs(title=object@type)
 	p
 	
 }

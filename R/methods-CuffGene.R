@@ -200,10 +200,10 @@ setMethod("as.GRangesList",signature(object="CuffGene"),.as.GRangesList)
 #######################
 # ggbio integration
 #######################
-setMethod("ggplot", "CuffGene", function(data, ...){
-			df <- mold(as.GRangesList(data))
-			g <- ggplot(df, ...)
-			g$.data <- as.GRangesList(data)
-			g <- ggbio(g)
-			g
-		})
+#setMethod("ggplot", "CuffGene", function(data, ...){
+#			df <- mold(as.GRangesList(data))
+#			g <- ggplot(df, ...)
+#			g$.data <- as.GRangesList(data)
+#			g <- ggbio(g)
+#			g
+#		})
