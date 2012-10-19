@@ -85,6 +85,7 @@ setGeneric("csBoxplot",function(object, logMode=T, ...) standardGeneric("csBoxpl
 #CuffFeatureSet
 #################
 setGeneric("csHeatmap",function(object,rescaling='none', clustering='none', labCol=T, labRow=T, logMode=T, pseudocount=1.0, border=FALSE, heatscale= c(low='darkred',mid='orange',high='white'), heatMidpoint=NULL, ...) standardGeneric("csHeatmap"))
+setGeneric("csFoldChangeHeatmap",function(object, control_condition, replicate_num=NULL, clustering='none', labCol=T, labRow=T, logMode=F, pseudocount=1.0, border=FALSE, heatscale=c(low='steelblue',mid='white',high='tomato'), heatMidpoint=0,fullnames=T,replicates=FALSE,method='none',heatRange=3, ...) standardGeneric("csFoldChangeHeatmap"))
 setGeneric("csDistHeat",function(object, replicates=F, samples.not.genes=T, logMode=T, pseudocount=1.0, heatscale=c(low='lightyellow',mid='orange',high='darkred'), heatMidpoint=NULL, ...) standardGeneric("csDistHeat"))
 setGeneric("csCluster",function(object, k, logMode=T, pseudocount=1,...) standardGeneric("csCluster"))
 #setGeneric("csClusterPlot",function(clustering, pseudocount=1.0) standardGeneric("csClusterPlot"))

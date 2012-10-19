@@ -920,7 +920,7 @@ setMethod('PCAplot',signature(object="CuffData"),.PCAplot)
 
 .fpkmSCVPlot<-function(object,FPKMLowerBound=1,showPool=FALSE){
 	if(!showPool){
-		showPool=any(table(.getRepConditionLevels(genes(cuff)))<2) # Counts number of replicates per condition and requires a minimum of 2.  If any n<2, values are determined from pooling across samples.
+		showPool=any(table(.getRepConditionLevels(object))<2) # Counts number of replicates per condition and requires a minimum of 2.  If any n<2, values are determined from pooling across samples.
 		if(showPool){
 			warning("At least one of your conditions does not have enough replicates to estimate variance. Estimating variance across all conditions instead.")
 		}

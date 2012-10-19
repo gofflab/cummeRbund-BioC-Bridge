@@ -430,6 +430,135 @@ setMethod("annotation","CuffFeatureSet",function(object){
 setMethod("csHeatmap",signature("CuffFeatureSet"),.ggheat)
 
 
+.fcheatmap<-function(object, control_condition, replicate_num=NULL, clustering='none', labCol=T, labRow=T, logMode=F, pseudocount=1.0, 
+		border=FALSE, heatscale=c(low='steelblue',mid='white',high='tomato'), heatMidpoint=0,fullnames=T,replicates=FALSE,method='none',heatRange=3, ...) {
+	## the function can be be viewed as a two step process
+	## 1. using the rehape package and other funcs the data is clustered, scaled, and reshaped
+	## using simple options or by a user supplied function
+	## 2. with the now resahped data the plot, the chosen labels and plot style are built
+
+	if(replicates){
+	    if (is.null(replicate_num)){
+	        print ("Error: if replicates == TRUE, you must specify both a control condition and a replicate number")
+	        return()
+	    }
+		m=repFpkmMatrix(object,fullnames=fullnames)
+		selected_rep <- paste(control_condition,replicate_num,sep="_")
+		
+		#remove genes with no expression in any condition
+    	m=m[!apply(m,1,sum)==0,]
+    	m=log2(m/m[,selected_rep])
+		m=m[,names(m) != selected_rep]
+	}else{
+		m=fpkmMatrix(object,fullnames=fullnames)
+		#remove genes with no expression in any condition
+    	m=m[!apply(m,1,sum)==0,]
+		m=log2(m/m[,control_condition])
+		m=m[,names(m) != control_condition]
+	}
+	
+	m_vals <- unlist(as.list(m))[is.finite(unlist(as.list(m)))]
+	m_max <- max(m_vals)
+	m_min <- max(m_vals)
+	range_lim <- max(c(abs(m_max), abs(m_min)))
+	range_lim <- min(c(heatRange, range_lim))
+	m_max <- range_lim
+	m_min <- -range_lim
+	m[m <  m_min] <- m_min
+	m[m >  m_max] <- m_max
+	m[is.na(m)] <- 0
+	
+	## I have supplied the default cluster and euclidean distance (JSdist) - and chose to cluster after scaling
+	## if you want a different distance/cluster method-- or to cluster and then scale
+	## then you can supply a custom function 
+	
+	if(!is.function(method)){
+		method = dist
+	}
+
+	if(clustering=='row')
+		m=m[hclust(method(m))$order, ]
+	if(clustering=='column')  
+		m=m[,hclust(method(t(m)))$order]
+	if(clustering=='both')
+		m=m[hclust(method(m))$order ,hclust(method(t(m)))$order]
+	
+	rows=dim(m)[1]
+	cols=dim(m)[2]
+
+    melt.m=cbind(rowInd=rep(1:rows, times=cols), colInd=rep(1:cols, each=rows), melt(m))
+
+	g=ggplot(data=melt.m)
+	
+	## add the heat tiles with or without a white border for clarity
+	
+	if(border==TRUE)
+		g2=g+geom_rect(aes(xmin=colInd-1,xmax=colInd,ymin=rowInd-1,ymax=rowInd, fill=value),colour='grey')
+	if(border==FALSE)
+		g2=g+geom_rect(aes(xmin=colInd-1,xmax=colInd,ymin=rowInd-1,ymax=rowInd, fill=value))
+	
+	## add axis labels either supplied or from the colnames rownames of the matrix
+	
+	if(labCol==T) 
+	{
+		g2=g2+scale_x_continuous(breaks=(1:cols)-0.5, labels=colnames(m))
+	}
+	if(labCol==F) 
+	{
+		g2=g2+scale_x_continuous(breaks=(1:cols)-0.5, labels=rep('',cols))
+	}
+	
+	
+	if(labRow==T) 
+	{
+		g2=g2+scale_y_continuous(breaks=(1:rows)-0.5, labels=rownames(m))	
+	}
+	if(labRow==F)
+	{ 
+		g2=g2+scale_y_continuous(breaks=(1:rows)-0.5, labels=rep('',rows))	
+	}
+	
+	# Get rid of the ticks, they get way too dense with lots of rows
+    g2 <- g2 + theme(axis.ticks = element_blank()) 
+
+	## get rid of grey panel background and gridlines
+	
+	g2=g2+theme(panel.grid.minor=element_line(colour=NA), panel.grid.major=element_line(colour=NA),
+			panel.background=element_rect(fill=NA, colour=NA))
+	
+	##adjust x-axis labels
+	g2=g2+theme(axis.text.x=element_text(angle=-90, hjust=0))
+
+    #write(paste(c("Length of heatscale is :", length(heatscale))), stderr())
+    if(replicates){
+        legendTitle <- bquote(paste(log[2], frac("FPKM",.(selected_rep),sep="")))
+    }else{
+    	legendTitle <- bquote(paste(log[2], frac("FPKM",.(condition_name),sep="")))
+	}
+	#legendTitle <- paste(expression(plain(log)[10])," FPKM + ",pseudocount,sep="")
+
+	if (length(heatscale) == 2){
+	    g2 <- g2 + scale_fill_gradient(low=heatscale[1], high=heatscale[2], name=legendTitle)
+	} else if (length(heatscale) == 3) {
+	    if (is.null(heatMidpoint))
+	    {
+	        heatMidpoint = (max(m) + min(m)) / 2.0
+	        #write(heatMidpoint, stderr())
+	    }
+
+	    g2 <- g2 + scale_fill_gradient2(low=heatscale[1], mid=heatscale[2], high=heatscale[3], midpoint=heatMidpoint, name=legendTitle)
+	}
+	
+	#g2<-g2+scale_x_discrete("",breaks=tracking_ids,labels=gene_short_names)
+	
+	
+	## finally add the fill colour ramp of your choice (default is blue to red)-- and return
+	return (g2)
+	
+}
+
+setMethod("csFoldChangeHeatmap",signature("CuffFeatureSet"),.fcheatmap)
+
 # Distance Heatmaps
 .distheat<-function(object, replicates=F, samples.not.genes=T, logMode=T, pseudocount=1.0, heatscale=c(low='lightyellow',mid='orange',high='darkred'), heatMidpoint=NULL, ...) {
   # get expression from a sample or gene perspective
