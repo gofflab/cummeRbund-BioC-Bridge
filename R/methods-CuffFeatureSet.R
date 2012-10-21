@@ -533,7 +533,7 @@ setMethod("csHeatmap",signature("CuffFeatureSet"),.ggheat)
     if(replicates){
         legendTitle <- bquote(paste(log[2], frac("FPKM",.(selected_rep),sep="")))
     }else{
-    	legendTitle <- bquote(paste(log[2], frac("FPKM",.(condition_name),sep="")))
+    	legendTitle <- bquote(paste(log[2], frac("FPKM",.(control_condition),sep="")))
 	}
 	#legendTitle <- paste(expression(plain(log)[10])," FPKM + ",pseudocount,sep="")
 
