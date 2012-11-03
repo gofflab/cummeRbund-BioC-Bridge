@@ -1034,6 +1034,31 @@ setMethod("csSpecificity",signature(object="CuffData"),.specificity)
 
 setMethod("makeRnk",signature(object="CuffData"),.makeRnk)
 
+.makeRnkTestStat<-function(object,x,y,filename,...){
+	samp<-samples(object)
+	#check to make sure x and y are in samples
+	if (!all(c(x,y) %in% samp)){
+		stop("One or more values of 'x' or 'y' are not valid sample names!")
+	}
+	query<-paste("SELECT gd.gene_id,g.gene_short_name,gd.sample_1, gd.sample_2,gd.test_stat FROM genes g LEFT JOIN geneExpDiffData gd ON g.gene_id=gd.gene_id WHERE ((gd.sample_1 ='",x,"' AND gd.sample_2='",y,"') OR (gd.sample_2='",x,"' AND gd.sample_1='",y,"')) GROUP BY gd.gene_id",sep="")
+	res<-dbGetQuery(object@DB,query)
+	if(unique(res$sample_2)==y){
+		res2<-res
+		res2$test_stat<--(res$test_stat)
+		res2$sample_1<-res$sample_2
+		res2$sample_2<-res$sample_1
+		res<-res2
+	}
+	#Order by test_stat
+	res<-res[order(res$test_stat,decreasing=F),]
+	#Remove gene_id field
+	res<-res[,c('gene_short_name','test_stat')]
+	#Remove rows with "NA" for gene_short_name
+	res<-res[!is.na(res$gene_short_name),]
+	#Write to file
+	write.table(res,file=filename,sep="\t",quote=F,...,row.names=F,col.names=F)
+	#head(res)
+}
 
 #############
 #Utility functions
