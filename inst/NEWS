@@ -4,6 +4,7 @@ v2.1.1
 		- Added 'showPool' argument to fpkmSCVPlot.  When TRUE, empirical mean and standard deviation are determined across all conditions as opposed to cross-replicate. This is set to TRUE anytime you have n<2 replicates per condition.
 	New Features:
 		- Added csNMF() method for CuffData and CuffFeatureSet objects to perform non-negative matrix factorization.  As of now, it's merely a wrapper around the default settings for NMFN::nnmf(), but hope to expand in the future.
+			* As of now, does not adjust sparsity of matrices after output, must be done by user as needed.
 		
 v1.99.6
 	Notes:
