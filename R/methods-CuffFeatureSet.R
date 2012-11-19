@@ -942,7 +942,7 @@ csClusterPlot<-function(clustering,pseudocount=1.0,drawSummary=TRUE, sumFun=mean
 	m$cluster<-factor(clustering$clustering)
 	m.melt<-melt(m,id.vars=c("ids","cluster"))
 	c<-ggplot(m.melt)
-	c<-c+geom_line(aes(x=variable,y=value,color=cluster,group=ids)) + facet_wrap('cluster',scales='free')+scale_y_log10()
+	c<-c+geom_line(aes(x=variable,y=value,color=cluster,group=ids)) + theme_bw() + facet_wrap('cluster',scales='free_y')+scale_y_log10()
 	if(drawSummary){
 		c <- c + stat_summary(aes(x=variable,y=value,group=1),fun.data=sumFun,color="black",fill="black",alpha=0.2,size=1.1,geom="smooth")
 	}
@@ -997,6 +997,31 @@ setMethod("csDendro",signature(object="CuffFeatureSet"),.dendro)
 #	c<-c + scale_color_hue(l=50,h.start=200)
 #	c
 #}
+
+######################
+# Exploratory Analysis
+######################
+
+.nmf<-function(object,k,logMode=T,pseudocount=1,maxiter=1000,replicates=FALSE,fullnames=FALSE){
+	require(NMFN)
+	if(missing(k)) stop("Please provide a rank value for factorization (arg=k)")
+	
+	if(replicates){
+		m=repFpkmMatrix(object,fullnames=fullnames)
+	}else{
+		m=fpkmMatrix(object,fullnames=fullnames)
+	}
+	
+	if(logMode) 
+	{
+		m = log10(m+pseudocount)
+	}
+	
+	myNMF<-nnmf(m,k=k,maxiter=maxiter)
+	return (myNMF)
+}
+
+setMethod("csNMF",signature(object="CuffFeatureSet"),.nmf)
 
 .density<-function(object, logMode = TRUE, pseudocount=0.0, labels, features=FALSE, replicates=FALSE,...){
 	if(replicates){

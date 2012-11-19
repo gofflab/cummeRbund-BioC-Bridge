@@ -72,7 +72,8 @@ exportMethods(
 			csVolcanoMatrix,
 			MDSplot,
 			PCAplot,
-			fpkmSCVPlot
+			fpkmSCVPlot,
+			csNMF
 )
 
 export("readCufflinks",

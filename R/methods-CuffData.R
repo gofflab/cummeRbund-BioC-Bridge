@@ -1007,6 +1007,31 @@ setMethod("fpkmSCVPlot",signature(object="CuffData"),.fpkmSCVPlot)
 
 setMethod("csSpecificity",signature(object="CuffData"),.specificity)
 
+######################
+# Exploratory Analysis
+######################
+
+.nmf<-function(object,k,logMode=T,pseudocount=1,maxiter=1000,replicates=FALSE,fullnames=FALSE){
+	require(NMFN)
+	if(missing(k)) stop("Please provide a rank value for factorization (arg=k)")
+	
+	if(replicates){
+		m=repFpkmMatrix(object,fullnames=fullnames)
+	}else{
+		m=fpkmMatrix(object,fullnames=fullnames)
+	}
+	
+	if(logMode) 
+	{
+		m = log10(m+pseudocount)
+	}
+	
+	myNMF<-nnmf(m,k=k,maxiter=maxiter)
+	return (myNMF)
+}
+
+setMethod("csNMF",signature(object="CuffData"),.nmf)
+
 #############
 # GSEA helper methods
 #############
