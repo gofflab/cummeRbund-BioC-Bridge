@@ -906,14 +906,18 @@ setMethod("expressionPlot",signature(object="CuffFeatureSet"),.expressionPlot)
 #	c
 #}
 
-.cluster<-function(object, k, logMode=T, pseudocount=1,...){
+.cluster<-function(object, k, logMode=T, method='none', pseudocount=1,...){
 	require(cluster)
 	m<-as.data.frame(fpkmMatrix(object))
 	m<-m[rowSums(m)>0,]
 	if(logMode){
 		m<-log10(m+pseudocount)
 	}
-	n<-JSdist(makeprobs(t(m)))
+	
+	if(!is.function(method)){
+		method = function(mat){JSdist(makeprobs(t(m)))}	
+	}		
+	n<-method(m)
 	clusters<-pam(n,k, ...)
 	#clsuters<-pamk(n,krange=2:20)
 	class(clusters)<-"list"
@@ -936,19 +940,45 @@ setMethod("csCluster",signature(object="CuffFeatureSet"),.cluster)
 	clusters
 }
 
-csClusterPlot<-function(clustering,pseudocount=1.0,drawSummary=TRUE, sumFun=mean_cl_boot){
+csClusterPlot<-function(clustering,pseudocount=1.0,logMode=FALSE,drawSummary=TRUE, sumFun=mean_cl_boot){
 	m<-clustering$fpkm+pseudocount
 	m$ids<-rownames(clustering$fpkm)
 	m$cluster<-factor(clustering$clustering)
 	m.melt<-melt(m,id.vars=c("ids","cluster"))
 	c<-ggplot(m.melt)
-	c<-c+geom_line(aes(x=variable,y=value,color=cluster,group=ids)) + theme_bw() + facet_wrap('cluster',scales='free_y')+scale_y_log10()
+	c<-c+geom_line(aes(x=variable,y=value,color=cluster,group=ids)) + theme_bw() + facet_wrap('cluster',scales='free_y')
 	if(drawSummary){
 		c <- c + stat_summary(aes(x=variable,y=value,group=1),fun.data=sumFun,color="black",fill="black",alpha=0.2,size=1.1,geom="smooth")
+	}
+	if(logMode){
+		c<-c + scale_y_log10()
 	}
 	c<-c + scale_color_hue(l=50,h.start=200)
 	c
 }
+
+.findK<-function(object, k.range=c(2:20), logMode=T, pseudocount=1,...){
+	require(cluster)
+	m<-as.data.frame(fpkmMatrix(object))
+	m<-m[rowSums(m)>0,]
+	if(logMode){
+		m<-log10(m+pseudocount)
+	}
+	n<-JSdist(makeprobs(t(m)))
+	myWidths<-c()
+	for (k in k.range){
+		print(k)
+		myWidths<-c(myWidths,pam(n,k,...)$silinfo$avg.width)
+	}
+	plot(k.range,myWidths)
+}
+	
+	
+	
+
+######################
+# 
+######################
 
 .dendro<-function(object,logMode=T,pseudocount=1,replicates=FALSE){
 	if(replicates){
