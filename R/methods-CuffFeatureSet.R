@@ -621,7 +621,7 @@ setMethod("csFoldChangeHeatmap",signature("CuffFeatureSet"),.fcheatmap)
 setMethod("csDistHeat", signature("CuffFeatureSet"), .distheat)
 
 #Scatterplot
-.scatter<-function(object,x,y,logMode=TRUE,pseudocount=0.0,labels,labelAes="text", smooth=FALSE,colorByStatus=FALSE,...){
+.scatter<-function(object,x,y,logMode=TRUE,pseudocount=0.0,labels, smooth=FALSE,colorByStatus=FALSE,...){
 	dat<-fpkmMatrix(object,fullnames=T)
 	
 	samp<-samples(object)
@@ -639,11 +639,12 @@ setMethod("csDistHeat", signature("CuffFeatureSet"), .distheat)
 	}
 	
 	#Attach tracking_id and gene_short_name
-	tracking<-str_split_fixed(rownames(dat),"\\|",2)
-	dat$gene_short_name<-tracking[,1]
-	dat$tracking_id<-tracking[,2]
-	
 	if(!missing(labels)){
+		require(stringr)
+		tracking<-str_split_fixed(rownames(dat),"\\|",2)
+		dat$gene_short_name<-tracking[,1]
+		dat$tracking_id<-tracking[,2]
+
 		labeled.dat<-dat[dat$gene_short_name %in% labels,]
 	}
 	

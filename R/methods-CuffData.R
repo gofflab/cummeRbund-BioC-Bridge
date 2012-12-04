@@ -545,11 +545,12 @@ setMethod("csDensity",signature(object="CuffData"),.density)
 	}
 	
 	#Attach tracking_id and gene_short_name
-	tracking<-str_split_fixed(rownames(dat),"\\|",2)
-	dat$gene_short_name<-tracking[,1]
-	dat$tracking_id<-tracking[,2]
-	
 	if(!missing(labels)){
+		require(stringr)
+		tracking<-str_split_fixed(rownames(dat),"\\|",2)
+		dat$gene_short_name<-tracking[,1]
+		dat$tracking_id<-tracking[,2]
+		
 		labeled.dat<-dat[dat$gene_short_name %in% labels,]
 	}
 	
