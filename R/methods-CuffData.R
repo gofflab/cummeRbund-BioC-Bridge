@@ -544,6 +544,15 @@ setMethod("csDensity",signature(object="CuffData"),.density)
 		}
 	}
 	
+	#Attach tracking_id and gene_short_name
+	tracking<-str_split_fixed(rownames(dat),"\\|",2)
+	dat$gene_short_name<-tracking[,1]
+	dat$tracking_id<-tracking[,2]
+	
+	if(!missing(labels)){
+		labeled.dat<-dat[dat$gene_short_name %in% labels,]
+	}
+	
 	#make plot object
 	p<-ggplot(dat)
 	p<- p + aes_string(x=x,y=y)
@@ -568,15 +577,11 @@ setMethod("csDensity",signature(object="CuffData"),.density)
 	}
 	
 	#Add highlights from labels
-#	if(!missing(labels)){
-#		labelIdx<-fData(object)$gene_short_name %in% labels
-#		labelfp<-fp[labelIdx,]
-#		labelfp$gene_short_name<-fData(object)$gene_short_name[labelIdx]
-#		#print(head(labelfp))
-#		p <- p + geom_point(data=labelfp,size=1.2,color="red")
-#		p <- p + geom_text(data=labelfp,aes(label=gene_short_name),color="red",hjust=0,vjust=0,angle=45,size=2)
-#	}
-#	
+	if(!missing(labels)){
+		p <- p + geom_point(data=labeled.dat,aes_string(x=x,y=y),size=1.3,color="red")
+		p <- p + geom_text(data=labeled.dat,aes_string(x=x,y=y,label='gene_short_name'),color="red",hjust=0,vjust=0,angle=0,size=4)
+	}
+	
 	#logMode
 	if(logMode){
 		p <- p + scale_y_log10() + scale_x_log10()

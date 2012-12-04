@@ -73,7 +73,8 @@ exportMethods(
 			MDSplot,
 			PCAplot,
 			fpkmSCVPlot,
-			csNMF
+			csNMF,
+			conditions
 )
 
 export("readCufflinks",
