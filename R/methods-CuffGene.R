@@ -164,6 +164,24 @@ setMethod("genePlot",signature(object="CuffGene"),.plot)
 	
 }
 
+.pie<-function(object,level="isoforms",pseudocount=0.0001,...){
+	dat<-fpkm(slot(object,level))
+	colnames(dat)[1]<-'tracking_id'
+	#dat$fpkm<-dat$fpkm+pseudocount
+	#print(dat)
+	p<-ggplot(dat,aes(x="",y=fpkm,fill=tracking_id))
+	
+	p<- p + geom_bar(stat="identity",position="fill",line="black")
+	
+	p<- p + coord_polar(theta='y')
+	
+	p<-p + scale_fill_hue(l=50,h.start=200) + scale_color_hue(l=50,h.start=200) + theme_bw()
+	
+	p<-p + facet_wrap('sample_name') + theme(axis.text.x = element_blank(),aspect.ratio=1)
+	
+	p
+}
+
 #################
 #Coersion methods
 #################

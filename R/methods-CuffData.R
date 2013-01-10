@@ -658,7 +658,7 @@ setMethod("csScatterMatrix",signature(object="CuffData"),.scatterMat)
 	
 	p<-ggplot(dat)
 	if(showSignificant){
-		p<- p + geom_point(aes(x=log2_fold_change,y=-log10(p_value),color=significant),size=0.8)
+		p<- p + geom_point(aes(x=log2_fold_change,y=-log10(p_value),color=significant),size=1.2)
 	}else{
 		p<- p + geom_point(aes(x=log2_fold_change,y=-log10(p_value)),size=1.2)
 	}
