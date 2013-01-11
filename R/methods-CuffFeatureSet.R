@@ -936,16 +936,16 @@ setMethod("expressionPlot",signature(object="CuffFeatureSet"),.expressionPlot)
 
 setMethod("csCluster",signature(object="CuffFeatureSet"),.cluster)
 
-.ratioCluster<-function(object,k,ratioTo=NULL,...){
+.ratioCluster<-function(object,k,ratioTo=NULL,pseudocount=0.0001,...){
 	require(cluster)
-	m<-as.data.frame(fpkmMatrix(object))
+	m<-as.data.frame(fpkmMatrix(object)+pseudocount)
 	#TODO: ensure that ratioTo is in colnames(fpkmMatrix(object))
 	m.ratio<-m/m[[ratioTo]]
 	m.log.ratio<-log2(m.ratio)
 	n<-dist(m.log.ratio)
 	clusters<-pam(n,k,...)
 	class(clusters)<-"list"
-	clusters$ratio<-m
+	clusters$fpkm<-m
 	clusters
 }
 
@@ -962,7 +962,7 @@ csClusterPlot<-function(clustering,pseudocount=1.0,logMode=FALSE,drawSummary=TRU
 	if(logMode){
 		c<-c + scale_y_log10()
 	}
-	c<-c + scale_color_hue(l=50,h.start=200)
+	c<-c + scale_color_hue(l=50,h.start=200) + theme(axis.text.x=element_text(angle=-90,hjust=0))
 	c
 }
 
