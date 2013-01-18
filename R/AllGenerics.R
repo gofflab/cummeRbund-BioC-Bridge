@@ -38,7 +38,7 @@ setGeneric("sigMatrix",function(object,alpha=0.05,level='genes',orderByDist=F) s
 
 #CuffData generics
 setGeneric("features",function(object) standardGeneric("features"))
-setGeneric("featureNames",function(object) standardGeneric("featureNames"))
+#setGeneric("featureNames",function(object) standardGeneric("featureNames"))
 setGeneric("fpkm",function(object, features=FALSE,...) standardGeneric("fpkm"))
 setGeneric("repFpkm",function(object,features=FALSE,...) standardGeneric("repFpkm"))
 setGeneric("count",function(object,...) standardGeneric("count"))

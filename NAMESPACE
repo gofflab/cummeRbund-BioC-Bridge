@@ -4,6 +4,7 @@ import(methods)
 
 #importFrom(graphics, plot)
 importFrom(plyr, defaults)
+importFrom(Biobase, featureNames)
 
 exportClasses(CuffSet,
 			CuffData,

@@ -1,5 +1,4 @@
 \name{featureNames}
-\alias{featureNames}
 \alias{featureNames,CuffData-method}
 
 \title{
