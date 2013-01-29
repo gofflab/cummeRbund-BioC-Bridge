@@ -72,7 +72,7 @@ setMethod("addFeatures",signature="CuffData",.addFeatures)
 #Accessors
 ###################
 .annotation<-function(object){
-	featureQuery<-paste("SELECT * FROM ",object@tables$mainTable," x LEFT JOIN ",object@tables$featureTable," xf USING (",object@idField,")",sep="")
+	featureQuery<-paste("SELECT * FROM ",object@tables$mainTable," x LEFT JOIN features xf USING (",object@idField,")",sep="")
 	dbGetQuery(object@DB, featureQuery)
 }
 
@@ -124,7 +124,7 @@ setMethod("replicates","CuffData",.replicates)
 	if(!features){
 		FPKMQuery<-paste("SELECT * FROM ",object@tables$dataTable," WHERE sample_name IN ",sampleString,sep="")
 	}else{
-		FPKMQuery<-paste("SELECT xf.*,xm.*,x.sample_name,x.fpkm,x.conf_hi,x.conf_lo FROM ",object@tables$dataTable," x LEFT JOIN ",object@tables$featureTable," xf ON x.",object@idField,"=xf.",object@idField," LEFT JOIN ",object@tables$mainTable," xm ON x.",object@idField,"=xm.",object@idField," WHERE x.sample_name IN ",sampleString,sep="")
+		FPKMQuery<-paste("SELECT xf.*,xm.*,x.sample_name,x.fpkm,x.conf_hi,x.conf_lo FROM ",object@tables$dataTable," x LEFT JOIN features xf ON x.",object@idField,"=xf.",object@idField," LEFT JOIN ",object@tables$mainTable," xm ON x.",object@idField,"=xm.",object@idField," WHERE x.sample_name IN ",sampleString,sep="")
 		#print(FPKMQuery)
 	}
 	res<-dbGetQuery(object@DB,FPKMQuery)
@@ -157,7 +157,7 @@ setMethod("fpkm","CuffData",.fpkm)
 	if(!features){
 		FPKMQuery<-paste("SELECT * FROM ",object@tables$replicateTable," WHERE rep_name IN ",sampleString,sep="")
 	}else{
-		FPKMQuery<-paste("SELECT xf.*,xm.*,x.rep_name,x.raw_frags,x.internal_scaled_frags,x.external_scaled_frags,x.fpkm,x.effective_length,x.status FROM ",object@tables$replicateTable," x LEFT JOIN ",object@tables$featureTable," xf on x.",object@idField,"=xf.",object@idField," LEFT JOIN ",object@tables$mainTable," xm ON x.",object@idField,"=xm.",object@idField," WHERE x.rep_name IN ",sampleString,sep="")
+		FPKMQuery<-paste("SELECT xf.*,xm.*,x.rep_name,x.raw_frags,x.internal_scaled_frags,x.external_scaled_frags,x.fpkm,x.effective_length,x.status FROM ",object@tables$replicateTable," x LEFT JOIN features xf on x.",object@idField,"=xf.",object@idField," LEFT JOIN ",object@tables$mainTable," xm ON x.",object@idField,"=xm.",object@idField," WHERE x.rep_name IN ",sampleString,sep="")
 	}
 	#print(FPKMQuery)
 	res<-dbGetQuery(object@DB,FPKMQuery)
@@ -349,7 +349,7 @@ setMethod("repCountMatrix","CuffData",.repCountMatrix)
 		if(!features){
 			diffQuery<-paste("SELECT * FROM ",object@tables$expDiffTable,sep="")
 		}else{
-			diffQuery<-paste("SELECT xm.*, xed.*, xf.* FROM ",object@tables$mainTable," xm LEFT JOIN ",object@tables$expDiffTable," xed ON xm.",object@idField,"=xed.",object@idField," LEFT JOIN ",object@tables$featureTable," xf ON xm.",object@idField,"=xf.",object@idField,sep="")
+			diffQuery<-paste("SELECT xm.*, xed.*, xf.* FROM ",object@tables$mainTable," xm LEFT JOIN ",object@tables$expDiffTable," xed ON xm.",object@idField,"=xed.",object@idField," LEFT JOIN features xf ON xm.",object@idField,"=xf.",object@idField,sep="")
 		}
 	}else if (missing(x) || missing(y)){
 		stop("You must supply both x and y or neither.")
@@ -357,7 +357,7 @@ setMethod("repCountMatrix","CuffData",.repCountMatrix)
 		if(!features){
 			diffQuery<-paste("SELECT x.",object@idField,", xed.* FROM ",object@tables$mainTable," x LEFT JOIN ",object@tables$expDiffTable," xed on x.",object@idField," = xed.",object@idField," WHERE ((sample_1 = '",x,"' AND sample_2 = '",y,"') OR (sample_1 = '",y,"' AND sample_2 = '",x,"'))",sep="")
 		}else{
-			diffQuery<-paste("SELECT xm.*, xed.*, xf.* FROM ",object@tables$mainTable," xm LEFT JOIN ",object@tables$expDiffTable," xed on xm.",object@idField," = xed.",object@idField," LEFT JOIN ",object@tables$featureTable," xf ON xm.",object@idField,"=xf.",object@idField," WHERE ((sample_1 = '",x,"' AND sample_2 = '",y,"') OR (sample_1 = '",y,"' AND sample_2 = '",x,"'))",sep="")
+			diffQuery<-paste("SELECT xm.*, xed.*, xf.* FROM ",object@tables$mainTable," xm LEFT JOIN ",object@tables$expDiffTable," xed on xm.",object@idField," = xed.",object@idField," LEFT JOIN features xf ON xm.",object@idField,"=xf.",object@idField," WHERE ((sample_1 = '",x,"' AND sample_2 = '",y,"') OR (sample_1 = '",y,"' AND sample_2 = '",x,"'))",sep="")
 		}
 	}
 	dat<-dbGetQuery(object@DB,diffQuery)
