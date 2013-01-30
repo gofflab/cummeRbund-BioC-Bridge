@@ -166,7 +166,7 @@ setMethod("count",signature(object="CuffFeature"),.count)
 
     p<-ggplot(dat,aes(x=sample_name,y=fpkm,fill=sample_name))
     
-	p <- p + geom_bar()
+	p <- p + geom_bar(stat="identity")
 	
 	if(replicates){
 		p <- p + geom_point(aes(x=sample_name,y=fpkm),size=3,shape=18,colour="black",data=repDat)
