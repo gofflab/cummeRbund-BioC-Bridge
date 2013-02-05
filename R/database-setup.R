@@ -56,7 +56,7 @@ loadRepTable<-function(repTableFile,
 	fileArgs$file = repTableFile
 	
 	#Read Run Info file
-	full = as.data.frame(do.call(read.table,fileArgs))
+	full = as.data.frame(read.delim(repTableFile))
 	#print(head(full))
 	
 	#Fix sample_names
