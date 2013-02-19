@@ -609,8 +609,9 @@ setMethod("csScatter",signature(object="CuffData"), .scatter)
 			dat<-fpkmMatrix(object)
 		}
 	}
-	
-	if(hexbin){
+
+	if(logMode)
+	{
 		dat<-dat+pseudocount
 	}
 	
