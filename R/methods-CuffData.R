@@ -529,7 +529,7 @@ setMethod("getRepLevels",signature(object="CuffData"),.getRepLevels)
 setMethod("csDensity",signature(object="CuffData"),.density)
 
 .scatter<-function(object,x,y,logMode=TRUE,pseudocount=1.0,labels,smooth=FALSE,colorByStatus=FALSE, drawRug=TRUE, ...){
-	dat<-fpkmMatrix(object)
+	dat<-fpkmMatrix(object,fullnames=TRUE)
 	samp<-samples(object)
 	
 	#check to make sure x and y are in samples
