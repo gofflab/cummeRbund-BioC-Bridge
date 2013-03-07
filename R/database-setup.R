@@ -86,7 +86,7 @@ loadVarModelTable<-function(VarModelFile,
 		...) {
 	
 	#Setup and reporting
-	write(paste("Reading Var Model Info  ",repTableFile,sep=""),stderr())
+	write(paste("Reading Var Model Info  ",VarModelFile,sep=""),stderr())
 	fileArgs$file = VarModelFile
 	
 	#Read Run Info file
