@@ -76,7 +76,8 @@ exportMethods(
 			PCAplot,
 			fpkmSCVPlot,
 			csNMF,
-			conditions
+			conditions,
+			csPie
 )
 
 export("readCufflinks",

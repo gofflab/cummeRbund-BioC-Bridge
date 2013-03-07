@@ -182,6 +182,8 @@ setMethod("genePlot",signature(object="CuffGene"),.plot)
 	p
 }
 
+setMethod("csPie",signature(object="CuffGene"),.pie)
+
 #################
 #Coersion methods
 #################

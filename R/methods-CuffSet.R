@@ -775,6 +775,10 @@ setMethod("getSig",signature(object="CuffSet"),.getSig)
 
 setMethod("getSigTable",signature(object="CuffSet"),.getSigTable)
 
+####################
+#QC Visualizations on entire dataset
+#####################
+
 .sigMatrix<-function(object,alpha=0.05,level='genes',orderByDist=FALSE){
 	if(level %in% c('promoters','splicing','relCDS')){
 		diffTable<-slot(object,level)@table
@@ -815,6 +819,17 @@ setMethod("getSigTable",signature(object="CuffSet"),.getSigTable)
 }
 
 setMethod("sigMatrix",signature(object="CuffSet"),.sigMatrix)
+
+#dispersionPlot on cuffSet objects actually draws from the varModel table and is the preferred way to visualize the dispersion and model fitting from cuffdiff 2.1 or greater
+.dispersionPlot<-function(object){
+	dat<-varModel(object)
+	p<-ggplot(dat)
+	p<-p + geom_point(aes(x=compatible_count_mean,y=compatible_count_var,color=condition),alpha=0.3,size=0.8) + geom_line(aes(x=compatible_count_mean,y=fitted_var),lwd=0.5,color="black") + facet_wrap('condition') +scale_y_log10() + scale_x_log10() + theme_bw() + guides(color=FALSE)
+	p
+}
+
+setMethod("dispersionPlot",signature(object="CuffSet"),.dispersionPlot)
+
 
 #Find similar genes
 .findSimilar<-function(object,x,n,distThresh,returnGeneSet=TRUE,...){
