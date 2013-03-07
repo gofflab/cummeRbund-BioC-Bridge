@@ -11,7 +11,7 @@
 setMethod("initialize","CuffSet",
 		function(.Object,
 				DB,
-				runInfo=data.frame(),
+				#runInfo=data.frame(),
 				phenoData=data.frame(),
 				conditions=data.frame(),
 				genes,
@@ -24,7 +24,7 @@ setMethod("initialize","CuffSet",
 				...){
 			.Object<-callNextMethod(.Object,
 					DB = DB,
-					runInfo=runInfo,
+					#runInfo=runInfo,
 					phenoData=phenoData,
 					conditions = conditions,
 					genes = genes,
@@ -109,6 +109,13 @@ setMethod("DB","CuffSet",function(object){
 }
 
 setMethod("runInfo","CuffSet",.runInfo)
+
+.varModel<-function(object){
+	varModelQuery<-"SELECT * from varModel"
+	dbGetQuery(object@DB,varModelQuery)
+}
+
+setMethod("varModel","CuffSet",.varModel)
 
 #setMethod("phenoData","CuffSet",function(object){
 #			return(object@phenoData)

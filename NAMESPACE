@@ -17,6 +17,7 @@ exportClasses(CuffSet,
 
 exportMethods(
 			runInfo,
+			varModel,
 			annotation,
 			genes,
 			isoforms,
