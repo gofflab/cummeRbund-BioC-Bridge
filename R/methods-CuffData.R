@@ -870,7 +870,7 @@ setMethod("dispersionPlot",signature(object="CuffData"),.dispersionPlot)
 setMethod("MDSplot",signature(object="CuffData"),.MDSplot)
 
 #Not sure if I want to include this or not..
-.PCAplot<-function(object,x="PC1", y="PC2",replicates=FALSE,pseudocount=1.0,scale=TRUE,...){
+.PCAplot<-function(object,x="PC1", y="PC2",replicates=FALSE,pseudocount=1.0,scale=TRUE,showPoints=TRUE,...){
 	if(replicates){
 		fpkms<-repFpkmMatrix(object)
 	}else{
@@ -881,7 +881,10 @@ setMethod("MDSplot",signature(object="CuffData"),.MDSplot)
 	dat <- data.frame(obsnames=row.names(PC$x), PC$x)
 	#dat$shoutout<-""
 	#dat$shoutout[matchpt(PC$rotation,PC$x)$index]<-rownames(pca$x[matchpt(pca$rotation,pca$x)$index,])
-	plot <- ggplot(dat, aes_string(x=x, y=y)) + geom_point(alpha=.4, size=0.8, aes(label=obsnames))
+	plot <- ggplot(dat, aes_string(x=x, y=y)) 
+	if(showPoints){
+		plot<- plot + geom_point(alpha=.4, size=0.8, aes(label=obsnames))
+	}
 	plot <- plot + geom_hline(aes(0), size=.2) + geom_vline(aes(0), size=.2) #+ geom_text(aes(label=shoutout),size=2,color="red")
 	datapc <- data.frame(varnames=rownames(PC$rotation), PC$rotation)
 	mult <- min(
@@ -894,8 +897,8 @@ setMethod("MDSplot",signature(object="CuffData"),.MDSplot)
 	)
 	plot <- plot + 
 			#coord_equal() + 
-			geom_text(data=datapc, aes(x=v1, y=v2, label=varnames), size = 3, vjust=1, color="red")
-	plot <- plot + geom_segment(data=datapc, aes(x=0, y=0, xend=v1, yend=v2), arrow=arrow(length=unit(0.2,"cm")), alpha=0.75, color="red") + theme_bw()
+			geom_text(data=datapc, aes(x=v1, y=v2, label=varnames,color=varnames), vjust=1)
+	plot <- plot + geom_segment(data=datapc, aes(x=0, y=0, xend=v1, yend=v2,color=varnames), arrow=arrow(length=unit(0.2,"cm")), alpha=0.75) + theme_bw()
 	plot
 }
 
