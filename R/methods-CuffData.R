@@ -1092,7 +1092,7 @@ setMethod("csNMF",signature(object="CuffData"),.nmf)
 	}
 	query<-paste("SELECT gd.gene_id,g.gene_short_name,gd.sample_1, gd.sample_2,gd.test_stat FROM genes g LEFT JOIN geneExpDiffData gd ON g.gene_id=gd.gene_id WHERE ((gd.sample_1 ='",x,"' AND gd.sample_2='",y,"') OR (gd.sample_2='",x,"' AND gd.sample_1='",y,"')) GROUP BY gd.gene_id",sep="")
 	res<-dbGetQuery(object@DB,query)
-	if(unique(res$sample_2)==y){
+	if(unique(res$sample_2)==x){
 		res2<-res
 		res2$test_stat<--(res$test_stat)
 		res2$sample_1<-res$sample_2
