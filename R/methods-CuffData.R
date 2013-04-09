@@ -595,6 +595,80 @@ setMethod("csDensity",signature(object="CuffData"),.density)
 
 setMethod("csScatter",signature(object="CuffData"), .scatter)
 
+.scatter2<-function(object,x,y,logMode=TRUE,pseudocount=1.0,labels,smooth=FALSE,alpha=0.05,colorByStatus=FALSE, drawRug=TRUE, ...){
+	samp<-samples(object)
+	
+	#check to make sure x and y are in samples
+	if (!all(c(x,y) %in% samp)){
+		stop("One or more values of 'x' or 'y' are not valid sample names!")
+	}
+	
+	#Setup query string
+	sampleList<-paste("('",x,"','",y,"')",sep="")
+	
+	scatterQuery<-paste("SELECT m.gene_short_name,d.",object@idField,",sum(CASE WHEN d.sample_name='",x,"' THEN d.fpkm END) as x,sum(CASE WHEN d.sample_name='",y,"' THEN d.fpkm END) as y, edd.status, edd.p_value, edd.q_value FROM ",object@tables$mainTable," m LEFT JOIN ",object@tables$dataTable," d ON m.",object@idField,"=d.",object@idField," LEFT JOIN ",object@tables$expDiffTable," edd ON m.",object@idField," = edd.",object@idField," WHERE (edd.sample_1 in ",sampleList," AND (edd.sample_2 in ",sampleList,")) GROUP BY d.",object@idField,";",sep="")
+	#write(scatterQuery,stderr())
+	
+	#Retrieve data
+	dat<-dbGetQuery(object@DB,scatterQuery)
+	
+	#add pseudocount if necessary
+	if(logMode){
+		for (i in samp){
+			dat$x<-dat$x+pseudocount
+			dat$y<-dat$y+pseudocount
+		}
+	}
+	
+	#Flag significant genes
+	dat$significant<-"no"
+	dat$significant[dat$q_value<=alpha]<-"yes"
+	dat$significant<-factor(dat$significant,levels=c("no","yes"))
+	
+	#Attach tracking_id and gene_short_name
+	if(!missing(labels)){
+		labeled.dat<-dat[dat$gene_short_name %in% labels,]
+	}
+	
+	#make plot object
+	p<-ggplot(dat) + theme_bw()
+	p<- p + aes_string(x='x',y='y')
+	
+	#Right now, this does nothing, because 'significant' is not returned from fpkmMatrix object so I don't have this as a feature to draw
+	if(colorByStatus){
+		p<- p + geom_point(aes(color=significant),size=1.2) + scale_color_manual(values=c("black","red"))
+	}else{
+		p<- p + geom_point(size=1.2,alpha=I(1/3))
+	}
+	#Add symmetry line
+	p<- p + geom_abline(intercept=0,slope=1,linetype=2) 
+	
+	#Add rug
+	if(drawRug){
+		p<- p + geom_rug(size=0.8,alpha=0.01)
+	}
+	
+	#add smoother
+	if(smooth){
+		p <- p + stat_smooth(method="lm",fill="blue",alpha=0.2)
+	}
+	
+	#Add highlights from labels
+	if(!missing(labels)){
+		p <- p + geom_point(data=labeled.dat,aes_string(x='x',y='y'),size=1.3,color="red")
+		p <- p + geom_text(data=labeled.dat,aes_string(x='x',y='y',label='gene_short_name'),color="red",hjust=0,vjust=0,angle=0,size=4)
+	}
+	
+	#logMode
+	if(logMode){
+		p <- p + scale_y_log10() + scale_x_log10()
+	}
+	
+	#Add title & Return value
+	p<- p + labs(title=object@tables$mainTable,x=x,y=y)
+	p
+}
+
 .scatterMat<-function(object,replicates=FALSE,logMode=TRUE,pseudocount=1.0,hexbin=FALSE,useCounts=FALSE,...){
 	if(replicates){
 		if(useCounts){
