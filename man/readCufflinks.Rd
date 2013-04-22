@@ -16,7 +16,8 @@ readCufflinks(dir = getwd(), dbFile = "cuffData.db", gtfFile = NULL,
 				CDSFPKM = "cds.fpkm_tracking", CDSExpDiff = "cds_exp.diff", CDSCount="cds.count_tracking", CDSRep="cds.read_group_tracking",
 				CDSDiff = "cds.diff",
 				promoterFile = "promoters.diff", 
-				splicingFile = "splicing.diff", 
+				splicingFile = "splicing.diff",
+				varModelFile = "var_model.info",
 				driver = "SQLite", 
 				genome = NULL, 
 				rebuild = FALSE,verbose=FALSE, ...)
@@ -94,6 +95,9 @@ promoters.diff file (distribution tests on promoters)
 }
   \item{splicingFile}{
 splicing.diff (distribution tests on isoforms)
+}
+  \item{varModelFile}{
+varModel.info (emitted in cuffdiff >= v2.1)
 }
   \item{driver}{
 Driver for backend database. (Currently only "SQLite" is supported).

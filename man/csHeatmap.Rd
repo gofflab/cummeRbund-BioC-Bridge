@@ -1,6 +1,8 @@
 \name{csHeatmap}
 \alias{csHeatmap}
+\alias{csFoldChangeHeatmap}
 \alias{csHeatmap,CuffFeatureSet-method}
+\alias{csFoldChangeHeatmap,CuffFeatureSet-method}
 
 \title{
 csHeatmap
@@ -11,11 +13,19 @@ Creates a ggplot plot object with a geom_tile layer of FPKM values per feature a
 \usage{
 \S4method{csHeatmap}{CuffFeatureSet}(object, rescaling='none', clustering='none', labCol=T, labRow=T, logMode=T, pseudocount=1.0, 
 		border=FALSE, heatscale= c(low='lightyellow',mid='orange',high='darkred'), heatMidpoint=NULL, fullnames = T, replicates=FALSE,method='none', ...)
+\S4method{csFoldChangeHeatmap}{CuffFeatureSet}(object, control_condition, replicate_num=NULL, clustering='none', labCol=T, labRow=T, logMode=F, pseudocount=1.0, 
+		border=FALSE, heatscale=c(low='steelblue',mid='white',high='tomato'), heatMidpoint=0,fullnames=T,replicates=FALSE,method='none',heatRange=3, ...)
 }
 
 \arguments{
   \item{object}{
 An object of class 'CuffFeatureSet' or 'CuffGeneSet'
+}
+  \item{control_condition}{
+A character argument indicating which condition should be used as the denominator for fold change. (e.g. "Day0", "Control", etc)
+}
+  \item{replicate_num}{
+If replicates == TRUE, you must specify both a control condition and a replicate number to use as the denominator.
 }
   \item{rescaling}{
 Rescaling can either be 'row' or 'column' OR you can pass rescale a function that operates on a matrix to do your own rescaling. Default is 'none'.
@@ -52,6 +62,9 @@ A logical value whether or not to plot individual replicates or aggregate condit
 }
   \item{method}{
 Function to be used for clustering.  Default is JS-distance. You can pass your own function to this argument as long as the output is an instance of the 'dist' class and is applied to the rows of the input matrix.
+}
+  \item{heatRange}{
+Numerical argument for upper bound on log fold change to be visualized.
 }
   \item{\dots}{
 Additional arguments to csHeatmap

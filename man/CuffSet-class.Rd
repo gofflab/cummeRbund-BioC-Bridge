@@ -11,6 +11,8 @@
 \alias{promoters}
 \alias{splicing}
 \alias{relCDS}
+\alias{conditions}
+\alias{varModel}
 
 \alias{DB,CuffSet-method}
 \alias{genes,CuffSet-method}
@@ -20,6 +22,8 @@
 \alias{promoters,CuffSet-method}
 \alias{splicing,CuffSet-method}
 \alias{relCDS,CuffSet-method}
+\alias{conditions,CuffSet-method}
+\alias{varModel,CuffSet-method}
 
 \alias{[,CuffSet-method}
 
@@ -41,9 +45,9 @@ Available methods are primary accessors to retrieve CuffGeneSet or CuffGene obje
     \item{\code{TSS}:}{Object of class \code{"CuffData"} ~~ }
     \item{\code{CDS}:}{Object of class \code{"CuffData"} ~~ }
     \item{\code{promoters}:}{Object of class \code{"CuffDist"} ~~ }
-    \item{\code{runInfo}:}{Object of class \code{"data.frame"} ~~ }
     \item{\code{splicing}:}{Object of class \code{"CuffDist"} ~~ }
     \item{\code{relCDS}:}{Object of class \code{"CuffDist"} ~~ }
+    \item{\code{conditions}:}{Object of class \code{"data.frame"} ~~ }
   }
 }
 \section{Methods}{
@@ -62,6 +66,7 @@ Available methods are primary accessors to retrieve CuffGeneSet or CuffGene obje
 		\item{promoters}{\code{signature(object = "CuffSet")}: Access @promoters slot }
 		\item{splicing}{\code{signature(object = "CuffSet")}: Access @splicing slot }
 		\item{relCDS}{\code{signature(object = "CuffSet")}: Access @relCDS slot }
+		\item{varModel}{\code{signature(object = "CuffSet")}: Access varModel info }
 	}
 }
 

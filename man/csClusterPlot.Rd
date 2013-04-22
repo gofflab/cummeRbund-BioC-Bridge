@@ -8,7 +8,7 @@ csClusterPlot
 Replaces the default plotting behavior of the old csCluster.  Takes as an argument the output of csCluster and plots expression profiles of features facet by cluster.
 }
 \usage{
-csClusterPlot(clustering, pseudocount=1.0,drawSummary=TRUE,sumFun=mean_cl_boot)
+csClusterPlot(clustering, pseudocount=1.0,logMode=FALSE,drawSummary=TRUE,sumFun=mean_cl_boot)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -17,6 +17,9 @@ The output of csCluster. (Must be the output of csCluster. Only this data format
 }
   \item{pseudocount}{
 Value added to FPKM to avoid log transformation issues.
+}
+  \item{logMode}{
+Logical argument whether to plot FPKM with log axis (Y-axis).
 }
   \item{drawSummary}{
 Logical value whether or not to draw a summary line for each cluster (by default this is the cluster mean)

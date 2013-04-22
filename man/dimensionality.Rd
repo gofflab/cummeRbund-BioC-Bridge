@@ -12,7 +12,7 @@ Dimensionality reduction plots for feature selection and extraction for cummeRbu
 }
 \usage{
 \S4method{MDSplot}{CuffData}(object,replicates=FALSE,logMode=TRUE,pseudocount=1.0)
-\S4method{PCAplot}{CuffData}(object,x="PC1", y="PC2",replicates=FALSE,pseudocount=1.0,scale=TRUE,...)
+\S4method{PCAplot}{CuffData}(object,x="PC1", y="PC2",replicates=FALSE,pseudocount=1.0,scale=TRUE,showPoints = TRUE,...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -36,6 +36,9 @@ A logical value to indicate whether or not individual replicate expression estim
 }
   \item{scale}{
 For PCAplot, a logical value passed directly to prcomp.
+}
+  \item{showPoints}{
+For PCAplot, a logical value whether or not to display individual gene values on final PCA plot.
 }
   \item{\dots}{
 Additional passthrough arguments (may not be fully implemented yet). 

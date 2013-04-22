@@ -1,6 +1,7 @@
 \name{dispersionPlot}
 \alias{dispersionPlot}
 \alias{dispersionPlot,CuffData-method}
+\alias{dispersionPlot,CuffSet-method}
 
 \title{
 Mean count vs dispersion plot
@@ -10,6 +11,7 @@ A scatter plot comparing the mean counts against the estimated dispersion for a 
 }
 \usage{
 \S4method{dispersionPlot}{CuffData}(object)
+\S4method{dispersionPlot}{CuffSet}(object)
 }
 
 \arguments{

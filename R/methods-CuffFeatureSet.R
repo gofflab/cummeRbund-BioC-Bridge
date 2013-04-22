@@ -1054,7 +1054,6 @@ setMethod("csDendro",signature(object="CuffFeatureSet"),.dendro)
 ######################
 # Exploratory Analysis
 ######################
-
 .nmf<-function(object,k,logMode=T,pseudocount=1,maxiter=1000,replicates=FALSE,fullnames=FALSE){
 	require(NMFN)
 	if(missing(k)) stop("Please provide a rank value for factorization (arg=k)")

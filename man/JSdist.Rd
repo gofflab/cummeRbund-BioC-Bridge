@@ -9,12 +9,15 @@ JSdist takes a matrix of expression probabilites (calculated directly or output 
 of the pairwise Jensen-Shannon distances between columns
 }
 \usage{
-JSdist(mat)
+JSdist(mat,...)
 }
 
 \arguments{
   \item{mat}{
 A matrix of expression probabilities (e.g. from makeprobs())
+}
+  \item{\dots}{
+Passthrough argument to as.dist()
 }
 }
 \details{

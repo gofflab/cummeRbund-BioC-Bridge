@@ -14,6 +14,8 @@
 \alias{makeGeneRegionTrack,CuffGene-method}
 \alias{genePlot}
 \alias{genePlot,CuffGene-method}
+\alias{csPie}
+\alias{csPie,CuffGene-method}
 
 \title{Class "CuffGene"}
 \description{
@@ -47,6 +49,7 @@ Class \code{"\linkS4class{CuffFeature}"}, directly.
 	\item{length}{\code{signature(object="CuffFeature")}: Part of length validation (internal use only)}
 	\item{makeGeneRegionTrack}{\code{signature(object="CuffFeature")}: Creates a GeneRegionTrack object (see package Gviz) from a CuffGene object.}
 	\item{genePlot}{\code{signature(object="CuffFeature")}: Internal use only.}
+	\item{csPie}{\code{signature(object="CuffGene")}: Allows for visualization of relative isoform proportion as a pie chart by condition (or optionally as stacked bar charts by adding + coord_cartesian()}
 }
 }
 

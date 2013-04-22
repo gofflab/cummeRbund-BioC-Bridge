@@ -5,9 +5,7 @@
 \alias{dim,CuffData-method}
 \alias{getFeatures,CuffData-method}
 \alias{DB,CuffData-method}
-\alias{diffTable}
 \alias{makeRnk}
-\alias{diffTable,CuffData-method}
 \alias{makeRnk,CuffData-method}
 \alias{annotation,CuffData-method}
 

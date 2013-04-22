@@ -12,7 +12,7 @@ A collection of ggplot2 visualizations for quality control assessment of cuffdif
 
 }
 \usage{
-\S4method{fpkmSCVPlot}{CuffData}(object,FPKMLowerBound=1)
+\S4method{fpkmSCVPlot}{CuffData}(object,FPKMLowerBound=1, showPool = FALSE)
 }
 
 \arguments{
@@ -21,6 +21,9 @@ An object of class CuffData.
 }
   \item{FPKMLowerBound}{
 A lower limit cutoff for FPKM values from which a fit of squared Coefficient of variation (default: 1)  
+}
+  \item{showPool}{
+Logical argument whether to display variability across all replicates independent of condition (TRUE) or the cross-replicate variability for each condition (FALSE)  
 }
 }
 \details{

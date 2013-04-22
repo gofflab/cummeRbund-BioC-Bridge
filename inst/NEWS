@@ -1,14 +1,27 @@
-v2.1.1
+v2.3.1
 	Bugfixes:
 		- Fixed 'fullnames' argument to cuffData::*Matrix() methods so that it does what it's supposed to do.
 		- Added 'showPool' argument to fpkmSCVPlot.  When TRUE, empirical mean and standard deviation are determined across all conditions as opposed to cross-replicate. This is set to TRUE anytime you have n<2 replicates per condition.
-		- added stat="identity" to expressionBarplot to comply with ggplot 0.9.3 enforcement.
+		- Added stat="identity" to expressionBarplot to comply with ggplot 0.9.3 enforcement.
+		- 'labels' argument to csScatter is now working as it's supposed to.  You can pass a vector of 'gene_short_name' identifiers to labels and these will be specifically called out in red text on scatterplot.
+		
 	New Features:
 		- Added csNMF() method for CuffData and CuffFeatureSet objects to perform non-negative matrix factorization.  As of now, it's merely a wrapper around the default settings for NMFN::nnmf(), but hope to expand in the future.
-			* As of now, does not adjust sparsity of matrices after output, must be done by user as needed.
-		- 'labels' argument to csScatter is now working as it's supposed to.  You can pass a vector of 'gene_short_name' identifiers to labels and these will be specifically called out in red text on scatterplot.
+			* Does not adjust sparsity of matrices after output, must be done by user as needed.
+		- Added csPie() method for CuffGene objects. Allows for visualization of relative isoform proportion as a pie chart by condition (or optionally as stacked bar charts by adding + coord_cartesian() ).
+		- Added 'method' argument to csCluster and csHeatmap to allow custom distance functions for clustering. Default = "none" = JSdist(). You can now provide a function that returns a 'dist' object on rows of a matrix.
+		- Added varModel.info tracking for compatibility with cuffdiff >=2.1. Will now find varModel.info file if exists, and incorporate into database.
+		- dispersionPlot() method added for CuffSet object.  This now appropriately draws from varModel.info and is the preferred visualization for dispersion of RNA-Seq data with cummeRbund.
+		- Added diffTable() method to CuffData and CuffFeatureSet objects to allow a 'one-table' snapshot of results for all Features (CuffData) or a set of Features (CuffFeatureSet). This table outputs key values including gene name,
+			gene short name, expression estimates and per-comparison fold-change, p-value, q-value, and significance values (yes/no). A convenient 'data-dump' function to merge across several tables. 
+		- Added coercion methods for CuffGene objects to create GRanges and GRangeslist objects (more BioC friendly!). Will work on making this possible on CuffFeatureSet and CuffFeature objects as well.
+	
 	Notes:
 		- Removed generic for 'featureNames'.  Now appropriately uses featureNames generic from Biobase.  As a consequence, Biobase is now a dependency.
+		- Added passthrough to as.dist(...) in JSdist(...)
+		- Added 'logMode' argument to csClusterPlot.
+		- Added 'showPoints' argument to PCAplot to allow disabling of gene values in PCA plot. If false, only sample projections are plotted.
+		- Added 'facet' argument to expressionPlot to disable faceting by feature_id.
 		
 v1.99.6
 	Notes:

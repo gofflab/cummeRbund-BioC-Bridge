@@ -1,6 +1,9 @@
 \name{diffData}
 \alias{diffData}
 \alias{diffData,CuffData-method}
+\alias{diffTable}
+\alias{diffTable,CuffData-method}
+\alias{diffTable,CuffFeatureSet-method}
 
 \title{
 Differential comparison data
@@ -10,6 +13,7 @@ An accessor method to retrieve differential expression data from a 'CuffData', '
 }
 \usage{
 \S4method{diffData}{CuffData}(object, x, y, features=FALSE)
+\S4method{diffTable}{CuffData}(object,logCutoffValue=99999)
 }
 
 \arguments{
@@ -25,6 +29,9 @@ See 'x'
 }
   \item{features}{
 A logical value that returns all feature-level data as part of data.frame when true.  object must be of class 'CuffData'.
+}
+  \item{logCutoffValue}{
+Cutoff value for FC estimates to convert to [-]Inf values. Should never really be needed...
 }
 
   \item{\dots}{
