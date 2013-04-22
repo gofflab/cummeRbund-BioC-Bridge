@@ -251,6 +251,20 @@ setMethod("repCountMatrix",signature(object="CuffFeatureSet"),.repCountMatrix)
 
 setMethod("diffData",signature(object="CuffFeatureSet"),.diffData)
 
+.diffTable<-function(object,logCutoffValue=99999){
+	measureVars<-c('status','value_1','value_2','log2_fold_change','test_stat','p_value','q_value','significant')
+	all.diff<-diffData(object,features=TRUE)
+	all.diff$log2_fold_change[all.diff$log2_fold_change>=logCutoffValue]<-Inf
+	all.diff$log2_fold_change[all.diff$log2_fold_change<=-logCutoffValue]<--Inf
+	all.diff.melt<-melt(all.diff,measure.vars=measureVars)
+	#all.diff.melt<-all.diff.melt[!grepl("^value_",all.diff.melt$variable),]
+	all.diff.cast<-dcast(all.diff.melt,formula=...~sample_2+sample_1+variable)
+	all.diff.cast
+}
+
+setMethod("diffTable",signature(object="CuffFeatureSet"),.diffTable)
+
+
 .count<-function(object,features=FALSE){
 	if (features){
 		return (merge(object@annotation,object@count,by=1))
