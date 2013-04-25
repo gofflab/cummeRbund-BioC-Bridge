@@ -4,6 +4,7 @@ v2.3.1
 		- Added 'showPool' argument to fpkmSCVPlot.  When TRUE, empirical mean and standard deviation are determined across all conditions as opposed to cross-replicate. This is set to TRUE anytime you have n<2 replicates per condition.
 		- Added stat="identity" to expressionBarplot to comply with ggplot 0.9.3 enforcement.
 		- 'labels' argument to csScatter is now working as it's supposed to.  You can pass a vector of 'gene_short_name' identifiers to labels and these will be specifically called out in red text on scatterplot.
+		- Added repFpkmMatrix() and replicates() methods to CuffFeature objects.
 		
 	New Features:
 		- Added csNMF() method for CuffData and CuffFeatureSet objects to perform non-negative matrix factorization.  As of now, it's merely a wrapper around the default settings for NMFN::nnmf(), but hope to expand in the future.

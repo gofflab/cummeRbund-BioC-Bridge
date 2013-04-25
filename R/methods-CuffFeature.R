@@ -92,12 +92,52 @@ setMethod("fpkm",signature="CuffFeature",.fpkm)
 
 setMethod("fpkmMatrix",signature(object="CuffFeature"),.fpkmMatrix)
 
+#TODO: Replicate FPKM and Replicate FPKM Matrix for cuffFeature objects
+
+.repFpkmMatrix<-function(object,fullnames=FALSE,repIdList){
+	#Sample subsetting
+	if(!missing(repIdList)){
+		if (!all(repIdList %in% replicates(object))){
+			stop("Replicate does not exist!")
+		}else{
+			myReps<-repIdList
+		}
+	}else{
+		myReps<-replicates(object)
+	}
+	if(fullnames){
+		res<-repFpkm(object,features=TRUE)
+		res$tracking_id<-paste(res$gene_short_name,res[,1],sep="|")
+	}else{
+		res<-repFpkm(object)
+		colnames(res)[1]<-"tracking_id"	
+	}
+	selectedRows<-c('tracking_id','rep_name','fpkm')
+	res<-res[,selectedRows]
+	res<-melt(res)
+	res<-dcast(res,tracking_id~rep_name)
+	res<-data.frame(res[,-1],row.names=res[,1])
+	if(!missing(repIdList)){
+		res<-res[,myReps]
+	}
+	res
+}
+
+setMethod("repFpkmMatrix",signature(object="CuffFeature"),.repFpkmMatrix)
+
 .samples<-function(object){
 	res<-fpkm(object)$sample_name
 	res
 }
 
 setMethod("samples","CuffFeature",.samples)
+
+.replicates<-function(object){
+	res<-repFpkm(object)$rep_name
+	res
+}
+
+setMethod("replicates","CuffFeature",.replicates)
 
 
 #setMethod("diff","CuffFeature",function(object){
