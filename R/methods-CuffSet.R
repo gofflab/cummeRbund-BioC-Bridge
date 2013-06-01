@@ -331,8 +331,10 @@ setMethod("getGene",signature(object="CuffSet"),.getGene)
 	}
 	sampleString<-substr(sampleString,1,nchar(sampleString)-1)
 	sampleString<-paste(sampleString,")",sep="")
+
 	
-	#ID Search String (SQL)
+	#idQuery<-paste('SELECT DISTINCT x.gene_id from genes x WHERE (x.gene_id IN ',origIdString,' OR x.gene_short_name IN ',origIdString,')',sep="")
+
 	idString<-'('
 	for (i in geneIdList){
 		idString<-paste(idString,"'",i,"',",sep="")
@@ -340,12 +342,14 @@ setMethod("getGene",signature(object="CuffSet"),.getGene)
 	idString<-substr(idString,1,nchar(idString)-1)
 	idString<-paste(idString,")",sep="")
 	
-	whereStringGene<-paste('WHERE (x.gene_id IN ',idString,' OR x.gene_short_name IN ',idString,')',sep="")
-	whereStringGeneFPKM<-paste('WHERE (x.gene_id IN ',idString,' OR x.gene_short_name IN ',idString,')',sep="")
-	whereStringGeneDiff<-paste('WHERE (x.gene_id IN ',idString,' OR x.gene_short_name IN ',idString,')',sep="")
-	whereString<-paste('WHERE (x.gene_id IN ',idString,' OR g.gene_short_name IN ',idString,')',sep="")
-	whereStringFPKM<-paste('WHERE (x.gene_id IN ',idString,' OR g.gene_short_name IN ',idString,')',sep="")
-	whereStringDiff<-paste('WHERE (x.gene_id IN ',idString,' OR g.gene_short_name IN ',idString,')',sep="")
+	#write(idString,stderr())
+	
+	whereStringGene<-paste('WHERE x.gene_id IN ',idString,sep="")
+	whereStringGeneFPKM<-paste('WHERE x.gene_id IN ',idString,sep="")
+	whereStringGeneDiff<-paste('WHERE x.gene_id IN ',idString,sep="")
+	whereString<-paste('WHERE x.gene_id IN ',idString,sep="")
+	whereStringFPKM<-paste('WHERE x.gene_id IN ',idString,sep="")
+	whereStringDiff<-paste('WHERE x.gene_id IN ',idString,sep="")
 	
 	if(!is.null(sampleIdList)){
 		whereStringGene<-whereStringGene
@@ -356,9 +360,6 @@ setMethod("getGene",signature(object="CuffSet"),.getGene)
 		whereStringDiff<-paste(whereStringDiff,' AND (y.sample_1 IN ',sampleString,' AND y.sample_2 IN ',sampleString,')',sep="")
 		
 	}
-	
-	#dbQueries
-	idQuery<-paste("SELECT DISTINCT gene_id from genes x ",whereStringGene,sep="")
 	
 	#geneAnnotationQuery<-paste("SELECT * from genes x LEFT JOIN geneFeatures xf ON x.gene_id=xf.gene_id ", whereStringGene,sep="")
 	geneAnnotationQuery<-paste("SELECT * from genes x LEFT JOIN geneFeatures xf USING (gene_id) ", whereStringGene,sep="")
@@ -481,7 +482,7 @@ setMethod("getGene",signature(object="CuffSet"),.getGene)
 	
 	res<-new("CuffGeneSet",
 			#TODO: Fix ids so that it only displays those genes in CuffGeneSet
-			ids=as.character(dbGetQuery(object@DB,idQuery)),
+			ids=geneIdList,
 			annotation=genes.annot,
 			fpkm=genes.fpkm,
 			diff=genes.diff,
