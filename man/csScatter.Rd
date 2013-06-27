@@ -27,7 +27,7 @@ Sample name for x axis
 Sample name for y axis
 }
   \item{logMode}{
-Logical argument to log2-transform data (default: T )
+Logical argument to render axes on log10 scale (default: T )
 }
   \item{replicates}{
 Logical argument whether or not to draw individual replicate values instead of condition values. (default: T )

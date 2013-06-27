@@ -732,12 +732,13 @@ setMethod("csScatterMatrix",signature(object="CuffData"),.scatterMat)
 	s2<-unique(dat$sample_2)
 	
 	p<-ggplot(dat)
-	if(showSignificant){
-		p<- p + geom_point(aes(x=log2_fold_change,y=-log10(p_value),color=significant),size=1.2)
-	}else{
+	if(showSignificant==FALSE){
 		p<- p + geom_point(aes(x=log2_fold_change,y=-log10(p_value)),size=1.2)
+	}else{
+		p<- p + geom_point(aes(x=log2_fold_change,y=-log10(p_value),color=significant),size=1.2)
 	}
 	#Add title and return
+	p<- p + theme_bw()
 	p<- p + labs(title=paste(object@tables$mainTable,": ",s2,"/",s1,sep=""))
 	p<- p + scale_colour_manual(values = c("black","red"))
 	
@@ -747,6 +748,7 @@ setMethod("csScatterMatrix",signature(object="CuffData"),.scatterMat)
 	p <- p + xlab(bquote(paste(log[2],"(fold change)",sep=""))) + 
 	    ylab(bquote(paste(-log[10],"(p value)",sep="")))
 	p
+	
 }
 
 setMethod("csVolcano",signature(object="CuffData"), .volcano)

@@ -34,6 +34,12 @@ JSdistVec<-function(p,q){
 	JSdist
 }
 
+JSdivVec<-function(p,q){
+	JSdiv<-shannon.entropy((p+q)/2)-(shannon.entropy(p)+shannon.entropy(q))*0.5
+	#JSdist<-sqrt(JSdiv)
+	JSdiv
+}
+
 JSdistFromP<-function(mat,q){
 	#row_js<-apply(mat,MARGIN=1,shannon.entropy)
 	res<-apply(mat,MARGIN=1,function(p) {
