@@ -786,7 +786,7 @@ setMethod("csVolcano",signature(object="CuffData"), .volcano)
 
 setMethod("csVolcanoMatrix",signature(object="CuffData"),.volcanoMatrix)
 
-.distheat<-function(object, replicates=F, samples.not.genes=T, logMode=T, pseudocount=1.0, heatscale=c(low='lightyellow',mid='orange',high='darkred'), heatMidpoint=NULL, ...) {
+.distheat<-function(object, replicates=F, samples.not.genes=T, logMode=T, pseudocount=1.0, heatscale=c(low='lightyellow',mid='orange',high='darkred'), heatMidpoint=NULL, sigDigits=3, ...) {
 	# get expression from a sample or gene perspective
 	if(replicates){
 		obj.fpkm<-repFpkmMatrix(object,fullnames=T)
@@ -813,7 +813,7 @@ setMethod("csVolcanoMatrix",signature(object="CuffData"),.volcanoMatrix)
 	
 	# make data frame
 	dist.df = melt(as.matrix(obj.dists),varnames=c("X1","X2"))
-	
+	dist.df$value<-as.numeric(format(dist.df$value,digits=sigDigits))
 	# initialize
 	g = ggplot(dist.df, aes(x=X1, y=X2, fill=value))
 	
@@ -838,7 +838,7 @@ setMethod("csVolcanoMatrix",signature(object="CuffData"),.volcanoMatrix)
 		g = g + scale_fill_gradient2(low=heatscale[1], mid=heatscale[2], high=heatscale[3], midpoint=heatMidpoint, name="JS Distance")
 	}
 	if(samples.not.genes){
-		g <- g + geom_text(aes(label=format(value,digits=3)))
+		g <- g + geom_text(aes(label=value))
 	}
 	# return
 	g

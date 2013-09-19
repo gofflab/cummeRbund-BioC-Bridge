@@ -324,6 +324,22 @@ setMethod("annotation","CuffFeatureSet",function(object){
       m = log10(m+pseudocount)
     }
 	
+	
+	if(is.function(rescaling))
+	{ 
+		m=rescaling(m)
+	} else {
+		if(rescaling=='column'){
+			m=scale(m, center=T)
+			m[is.nan(m)] = 0
+		}
+		if(rescaling=='row'){ 
+			m=t(scale(t(m),center=T))
+			m[is.nan(m)] = 0
+		}
+	}
+	
+	
 	## I have supplied the default cluster and euclidean distance (JSdist) - and chose to cluster after scaling
 	## if you want a different distance/cluster method-- or to cluster and then scale
 	## then you can supply a custom function 
@@ -341,20 +357,7 @@ setMethod("annotation","CuffFeatureSet",function(object){
 
 	## this is just reshaping into a ggplot format matrix and making a ggplot layer
 	
-	if(is.function(rescaling))
-	{ 
-		m=rescaling(m)
-	} else {
-		if(rescaling=='column'){
-			m=scale(m, center=T)
-		    m[is.nan(m)] = 0
-		}
-		if(rescaling=='row'){ 
-			m=t(scale(t(m),center=T))
-		    m[is.nan(m)] = 0
-	    }
-	}
-	
+
 	rows=dim(m)[1]
 	cols=dim(m)[2]
 	

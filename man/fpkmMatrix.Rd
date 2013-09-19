@@ -5,6 +5,7 @@
 \alias{repFpkmMatrix}
 \alias{repFpkmMatrix,CuffData-method}
 \alias{repFpkmMatrix,CuffFeatureSet-method}
+\alias{repFpkmMatrix,CuffFeature-method}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{

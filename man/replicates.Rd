@@ -3,6 +3,7 @@
 \alias{replicates,CuffSet-method}
 \alias{replicates,CuffData-method}
 \alias{replicates,CuffFeatureSet-method}
+\alias{replicates,CuffFeature-method}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Get replicate sample list from CuffData object

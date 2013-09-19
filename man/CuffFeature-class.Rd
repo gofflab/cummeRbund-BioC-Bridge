@@ -29,6 +29,7 @@ Objects can be created by calls of the form \code{new("CuffFeature", annotation,
 \section{Methods}{
   \describe{
     \item{fpkmMatrix}{\code{signature(object="CuffFeature")}: ...}
+    \item{repFpkmMatrix}{\code{signature(object = "CuffFeature")}: ... }
     \item{length}{\code{signature(x = "CuffFeature")}: ... }
 	 }
 }
