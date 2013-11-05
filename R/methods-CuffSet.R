@@ -715,7 +715,7 @@ setMethod("getFeatures",signature(object="CuffSet"),.getFeatures)
 #	
 #}
 
-.getSig<-function(object,x,y,alpha=0.05,level='genes'){
+.getSig<-function(object,x,y,alpha=0.05,level='genes',method="BH",useCuffMTC=FALSE){
 	mySamp<-samples(slot(object,level))
 	
 	if(level %in% c('promoters','splicing','relCDS')){
@@ -731,12 +731,14 @@ setMethod("getFeatures",signature(object="CuffSet"),.getFeatures)
 			stop("One or more values of 'x' or 'y' are not valid sample names!")
 		}
 	}
-	
 	queryString<-paste("(",paste(mySamp,collapse="','",sep=""),")",sep="'")
-	sql<-paste("SELECT ",slot(object,level)@idField,",p_value from ", diffTable," WHERE sample_1 IN ",queryString," AND sample_2 IN ",queryString, " AND STATUS='OK'",sep="")
+	sql<-paste("SELECT ",slot(object,level)@idField,",p_value,q_value from ", diffTable," WHERE sample_1 IN ",queryString," AND sample_2 IN ",queryString, " AND STATUS='OK'",sep="")
 	#print(sql)
 	sig<-dbGetQuery(object@DB,sql)
-	sig$q_value<-p.adjust(sig$p_value,method="BH")
+	if(!missing(x) && !missing(y) && !useCuffMTC){
+		sig$q_value<-p.adjust(sig$p_value,method=method)
+		#print(sig[order(sig$q_value,decreasing=T),])
+	}
 	sig<-sig[sig$q_value<=alpha,]
 	sigGenes<-unique(sig[[slot(object,level)@idField]])
 	sigGenes

@@ -17,6 +17,8 @@ v2.3.1
 		- Added diffTable() method to CuffData and CuffFeatureSet objects to allow a 'one-table' snapshot of results for all Features (CuffData) or a set of Features (CuffFeatureSet). This table outputs key values including gene name,
 			gene short name, expression estimates and per-comparison fold-change, p-value, q-value, and significance values (yes/no). A convenient 'data-dump' function to merge across several tables. 
 		- Added coercion methods for CuffGene objects to create GRanges and GRangeslist objects (more BioC friendly!). Will work on making this possible on CuffFeatureSet and CuffFeature objects as well.
+		- Added pass-through to select p.adjust method for getSig (method argument to getSig)
+		- Added ability to revert to cuffdiff q-values for specific paired-wise interrogations with getSig as opposed to re-calculating new ones (useCuffMTC; default=FALSE) 
 	
 	Notes:
 		- Removed generic for 'featureNames'.  Now appropriately uses featureNames generic from Biobase.  As a consequence, Biobase is now a dependency.

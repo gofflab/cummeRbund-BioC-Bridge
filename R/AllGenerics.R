@@ -26,7 +26,7 @@ setGeneric("getGenes",function(object,geneIdList,sampleIdList=NULL) standardGene
 setGeneric("getGeneId",function(object,idList) standardGeneric("getGeneId"))
 setGeneric("findGene",function(object,query) standardGeneric("findGene"))
 setGeneric("getFeatures",function(object,featureIdList,sampleIdList=NULL,...) standardGeneric("getFeatures"))
-setGeneric("getSig", function(object,x,y,alpha=0.05,level="genes") standardGeneric("getSig"))
+setGeneric("getSig", function(object,x,y,alpha=0.05,level="genes",method="BH",useCuffMTC=FALSE) standardGeneric("getSig"))
 setGeneric("getSigTable", function(object,alpha=0.05,level='genes') standardGeneric("getSigTable"))
 setGeneric("addFeatures",function(object, features, ...) standardGeneric("addFeatures"))
 setGeneric("findSimilar",function(object,x,n,...) standardGeneric("findSimilar"))
