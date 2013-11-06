@@ -774,7 +774,7 @@ setMethod("csVolcano",signature(object="CuffData"), .volcano)
 	mapping <- defaults(mapping, aes_string(x = "log2_fold_change", y = "-log10(p_value)", color="significant"))
 	class(mapping) <- "uneval"
 	
-	p <-ggplot(dat) + geom_point(mapping,na.rm=TRUE,size=0.8) + scale_colour_manual(values = c("black","red")) + geom_text(aes(x=0,y=15,label=label),data=filler) + facet_grid(sample_1~sample_2)
+	p <-ggplot(dat) + geom_point(mapping,na.rm=TRUE,size=0.8) + scale_colour_manual(values = c("black","red")) + facet_grid(sample_1~sample_2)
 	
 	p<- p + geom_vline(aes(x=0),linetype=2)
 	

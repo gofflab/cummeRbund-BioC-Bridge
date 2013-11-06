@@ -6,6 +6,7 @@ v2.3.1
 		- 'labels' argument to csScatter is now working as it's supposed to.  You can pass a vector of 'gene_short_name' identifiers to labels and these will be specifically called out in red text on scatterplot.
 		- Added repFpkmMatrix() and replicates() methods to CuffFeature objects.
 		- Removed unnecessary Joins to optimize retrieval speed for several key queries.
+		- Fixed bug in csVolcano matrix that forced ylimits to be c(0,15)
 		
 	New Features:
 		- Added csNMF() method for CuffData and CuffFeatureSet objects to perform non-negative matrix factorization.  As of now, it's merely a wrapper around the default settings for NMFN::nnmf(), but hope to expand in the future.
