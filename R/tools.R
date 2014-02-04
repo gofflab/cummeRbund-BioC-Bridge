@@ -131,6 +131,23 @@ makeprobs<-function(a){
 	return(res)
 }
 
+.specificity<-function(mat,logMode=T,pseudocount=1,relative=FALSE,...){
+	if(logMode){
+		mat<-log10(mat+pseudocount)
+	}
+	mat<-t(makeprobs(t(mat)))
+	d<-diag(ncol(mat))
+	res<-apply(d,MARGIN=1,function(q){
+				JSdistFromP(mat,q)
+			})
+	colnames(res)<-paste(colnames(mat),"_spec",sep="")
+	
+	if(relative){
+		res<-res/max(res)
+	}
+	1-res
+}
+
 
 #multiplot <- function(..., plotlist=NULL, cols) {
 #	require(grid)

@@ -1105,6 +1105,65 @@ setMethod("csNMF",signature(object="CuffFeatureSet"),.nmf)
 
 setMethod("csDensity",signature(object="CuffFeatureSet"),.density)
 
+#################
+# Dimensionality Reduction (use sparingly for Gene Sets)
+#################
+
+.MDSplot<-function(object,replicates=FALSE,logMode=TRUE,pseudocount=1.0){
+	if(replicates){
+		dat<-repFpkmMatrix(object)
+		#repData<-sapply(replicates(object),function(x){strsplit(x,"_")[[1]][1]}) This is to color by condition and not replicate...
+	}else{
+		dat<-fpkmMatrix(object)
+	}
+	
+	if(logMode){
+		dat<-log10(dat+pseudocount)
+	}
+	
+	d<-JSdist(makeprobs(dat))
+	fit <- cmdscale(d,eig=TRUE, k=2)
+	res<-data.frame(names=rownames(fit$points),M1=fit$points[,1],M2=fit$points[,2])
+	p <- ggplot(res)
+	p <- p + geom_point(aes(x=M1,y=M2,color=names)) + geom_text(aes(x=M1,y=M2,label=names,color=names)) + theme_bw()
+	p
+}
+
+setMethod("MDSplot",signature(object="CuffFeatureSet"),.MDSplot)
+
+.PCAplot<-function(object,x="PC1", y="PC2",replicates=FALSE,pseudocount=1.0,scale=TRUE,showPoints=TRUE,...){
+	if(replicates){
+		fpkms<-repFpkmMatrix(object)
+	}else{
+		fpkms<-fpkmMatrix(object)
+	}
+	fpkms<-log10(fpkms+pseudocount)
+	PC<-prcomp(fpkms,scale=scale,...)
+	dat <- data.frame(obsnames=row.names(PC$x), PC$x)
+	#dat$shoutout<-""
+	#dat$shoutout[matchpt(PC$rotation,PC$x)$index]<-rownames(pca$x[matchpt(pca$rotation,pca$x)$index,])
+	plot <- ggplot(dat, aes_string(x=x, y=y)) 
+	if(showPoints){
+		plot<- plot + geom_point(alpha=.4, size=0.8, aes(label=obsnames))
+	}
+	plot <- plot + geom_hline(aes(0), size=.2) + geom_vline(aes(0), size=.2) #+ geom_text(aes(label=shoutout),size=2,color="red")
+	datapc <- data.frame(varnames=rownames(PC$rotation), PC$rotation)
+	mult <- min(
+			(max(dat[,y]) - min(dat[,y])/(max(datapc[,y])-min(datapc[,y]))),
+			(max(dat[,x]) - min(dat[,x])/(max(datapc[,x])-min(datapc[,x])))
+	)
+	datapc <- transform(datapc,
+			v1 = .7 * mult * (get(x)),
+			v2 = .7 * mult * (get(y))
+	)
+	plot <- plot + 
+			#coord_equal() + 
+			geom_text(data=datapc, aes(x=v1, y=v2, label=varnames,color=varnames), vjust=1)
+	plot <- plot + geom_segment(data=datapc, aes(x=0, y=0, xend=v1, yend=v2,color=varnames), arrow=arrow(length=unit(0.2,"cm")), alpha=0.75) + theme_bw()
+	plot
+}
+
+setMethod('PCAplot',signature(object="CuffFeatureSet"),.PCAplot)
 
 #################
 #Misc			#
