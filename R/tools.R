@@ -59,7 +59,7 @@ shannon.entropy <- function(p) {
 	if (min(p) < 0 || sum(p) <=0)
 		return(Inf)
 	p.norm<-p[p>0]/sum(p)
-	-sum( log10(p.norm)*p.norm)
+	-sum( log2(p.norm)*p.norm)
 }
 
 makeprobs<-function(a){

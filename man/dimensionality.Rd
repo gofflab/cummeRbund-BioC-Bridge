@@ -1,8 +1,10 @@
 \name{Dimensionality Reduction}
 \alias{MDSplot}
 \alias{MDSplot,CuffData-method}
+\alias{MDSplot,CuffFeatureset-method}
 \alias{PCAplot}
 \alias{PCAplot,CuffData-method}
+\alias{PCAplot,CuffFeatureset-method}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Dimensionality reduction utilities

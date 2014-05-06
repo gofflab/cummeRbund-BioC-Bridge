@@ -10,7 +10,7 @@ getSig
 Returns the identifiers of significant genes in a vector format.
 }
 \usage{
-\S4method{getSig}{CuffSet}(object,x,y,alpha=0.05,level='genes')
+\S4method{getSig}{CuffSet}(object,x,y,alpha=0.05,level='genes',method="BH", useCuffMTC=FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -28,6 +28,12 @@ An alpha value by which to filter multiple-testing corrected q-values to determi
 }
   \item{level}{
 Feature level to be queried for significance (must be one of c('genes','isoforms','TSS','CDS')
+}
+  \item{method}{
+Multiple testing method to be used for correction. (default: "BH")
+}
+  \item{useCuffMTC}{
+Logical vector whether or not to use the multiple-testing corrected q-values from the cuffdiff analysis directly, or calculate new q-values from a subset of tests.
 }
 
 }

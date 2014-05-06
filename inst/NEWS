@@ -27,6 +27,7 @@ v2.3.1
 		- Added 'logMode' argument to csClusterPlot.
 		- Added 'showPoints' argument to PCAplot to allow disabling of gene values in PCA plot. If false, only sample projections are plotted.
 		- Added 'facet' argument to expressionPlot to disable faceting by feature_id.
+		- shannon.entropy now uses log2 instead of log10 to constrain specificity scores between 0 and 1.  
 		
 v1.99.6
 	Notes:
