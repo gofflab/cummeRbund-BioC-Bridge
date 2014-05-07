@@ -11,7 +11,7 @@ v2.3.1
 	New Features:
 		- Added csNMF() method for CuffData and CuffFeatureSet objects to perform non-negative matrix factorization.  As of now, it's merely a wrapper around the default settings for NMFN::nnmf(), but hope to expand in the future.
 			* Does not adjust sparsity of matrices after output, must be done by user as needed.
-		- Added csPie() method for CuffGene objects. Allows for visualization of relative isoform proportion as a pie chart by condition (or optionally as stacked bar charts by adding + coord_cartesian() ).
+		- Added csPie() method for CuffGene objects. Allows for visualization of relative isoform, CDS, and promoter usage proportions as a pie chart by condition (or optionally as stacked bar charts by adding + coord_cartesian() ).
 		- Added 'method' argument to csCluster and csHeatmap to allow custom distance functions for clustering. Default = "none" = JSdist(). You can now provide a function that returns a 'dist' object on rows of a matrix.
 		- Added varModel.info tracking for compatibility with cuffdiff >=2.1. Will now find varModel.info file if exists, and incorporate into database.
 		- dispersionPlot() method added for CuffSet object.  This now appropriately draws from varModel.info and is the preferred visualization for dispersion of RNA-Seq data with cummeRbund.
