@@ -1967,9 +1967,9 @@ readCufflinks<-function(dir = getwd(),
 
 .cuff2db <- function(gtfFile, out.file = NULL, verbose = TRUE) {
 	
-	require(rtracklayer)
-	require(GenomicRanges)
-	require(GenomicFeatures)
+	#require(rtracklayer)
+	#require(GenomicRanges)
+	#require(GenomicFeatures)
 	
 	requiredAttribs <- c("gene_id", "transcript_id", "exon_number")
 	

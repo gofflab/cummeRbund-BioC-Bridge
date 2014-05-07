@@ -1,4 +1,4 @@
-v2.3.1
+v2.7.1
 	Bugfixes:
 		- Fixed 'fullnames' argument to cuffData::*Matrix() methods so that it does what it's supposed to do.
 		- Added 'showPool' argument to fpkmSCVPlot.  When TRUE, empirical mean and standard deviation are determined across all conditions as opposed to cross-replicate. This is set to TRUE anytime you have n<2 replicates per condition.

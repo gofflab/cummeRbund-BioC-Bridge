@@ -63,7 +63,7 @@
 \title{CummeRbund: Visualization and Exploration of Cufflinks High-throughput Sequencing Data}
 
 \author{Loyal A. Goff, Cole Trapnell, David Kelley}
-\date{October 2, 2012}
+\date{May 7, 2014}
 \begin{document}
 <<init, echo=FALSE>>=
 options(width=65)
@@ -77,13 +77,13 @@ NOTE: cummeRbund 2.0 was designed in conjunction with the release of cufflinks 2
 that you update your cufflinks installation to version $\ge$2.0 to take full
 advantage of the improvements in modeling, reporting, and visualization that have been incorporated.
 \begin{itemize}
-	\item Cufflinks $\ge$ v2.0.0
+	\item Cufflinks $\ge$ v2.0.1
 	\item SQLite 
-	\item R $\ge$ v2.7.0
+	\item R $\ge$ v3.0
 	\item Packages:
 	\begin{itemize}
 		\item \Rpackage{RSQLite}
-		\item \Rpackage{ggplot2 v0.9.2}
+		\item \Rpackage{ggplot2 $\ge$ v0.9.3}
 		\item \Rpackage{reshape2}
 		\item \Rpackage{plyr}
 		\item \Rpackage{fastcluster}
@@ -300,6 +300,9 @@ disp
 	
 	\end{center}
 \end{figure}
+
+Alternatively a call to \code{dispersionPlot(cuff)} directly will allow you to
+visualize the full model fit.
 
 The squared coefficient of variation is a normalized measure of cross-replicate
 variability that can be useful for evaluating the quality your RNA-seq data. 
@@ -631,6 +634,17 @@ head(repFpkm(TSS(myGenes)))
 As of \Rpackage{cummeRbund} $v2.0$ \Rclass{CuffGeneSet} classes can be created from any type of identifier ('gene\_id','isoform\_id','TSS\_group\_id', or 'CDS\_id'). When you pass a list of identifiers that are not gene\_id to \Rmethod{getGenes()}, the function attempts to lookup the parent gene\_id for each feature and returns \emph{all} relevant
 information for the given genes and all of their sub-features (not just the sub-features passed to \Rmethod{getGenes()}).  If you are interested in just retrieving information for a given set of features, please use the new \Rmethod{getFeatures()} method described later.
 
+More recent versions of cummeRbund allow for subsetting of conditions as well,
+by passing a vector of condition names to getGenes using the \Rfunarg{sampleIdList}
+argument.
+
+<<create_geneset_3>>=
+myGeneset.pluri<-getGenes(cuff,myGeneIds,sampleIdList=c("hESC","iPS"))
+
+myGeneset.pluri
+
+@
+
 \subsection{Geneset level plots}
 There are several plotting functions available for gene-set-level visualization:
 
@@ -880,7 +894,26 @@ igb
 <<gene_plots_3>>
 print(igb)
 @
-	\includegraphics[width=0.4\textwidth]{cummeRbund-manual-gene_plots_bar_isoforms}
+
+	\includegraphics[width=0.4\textwidth]{cummeRbund-manual-gene_plots_bar_isoforms}}
+	\end{center}
+\end{figure}
+
+<<gene_plots_4,include=FALSE>>=
+gp<-csPie(myGene,level="isoforms")
+gp
+@
+
+\begin{figure}[htp]
+	\begin{center}
+	\subfloat[Pie charts showing relative proportion of individual isoforms for a
+	single gene across conditions.]{
+	
+<<label=gene_plots_pie,fig=TRUE,echo=FALSE,include=FALSE>>=
+<<gene_plots_4>>
+print(gp)
+@
+	\includegraphics[width=0.4\textwidth]{cummeRbund-manual-gene_plots_pie}
 	}
 	
 	\end{center}
@@ -889,6 +922,7 @@ print(igb)
 \clearpage
 
 \subsubsection{Gene Feature plots}
+
 If you included both the genome build and gtfFile in your call to \Rmethod{readCufflinks()} then you will be able to access some of the transcript-structure level features that are now being integrated into cummeRbund. For now, these features are extended only to the single gene, \Rclass{CuffGene} objects.
 
 Feature data are loaded into the \'features\' table of the cuffData.db database. When a \Rclass{CuffGene} object is created using \Rmethod{getGene()}, all relative features are selected from this table and a \'features\' slot is added to the resulting object.
@@ -907,8 +941,11 @@ plotTracks(genetrack)
 We can then use some of the additional features from the \Rpackage{Gviz} package
 to add additional tracks from an external data source.
 
+\textit{Note: This feature is now deprecated owing to developmental constraints.
+It is still provided with cummeRbund, but is no longer supported.}
+
 <<features_3,fig=TRUE>>=
-trackList<-list()
+trackList<-list() 
 myStart<-min(features(myGene)$start)
 myEnd<-max(features(myGene)$end)
 myChr<-unique(features(myGene)$seqnames)
@@ -931,7 +968,7 @@ biomTrack<-BiomartGeneRegionTrack(genome=genome,chromosome=as.character(myChr),
 trackList<-c(trackList,biomTrack)
  
 conservation <- UcscTrack(genome = genome, chromosome = myChr,
-		track = "Conservation", table = "phyloP46wayPlacental",
+		track = "Conservation", table = "phyloP100wayAll",
 		from = myStart-2000, to = myEnd+2000, trackType = "DataTrack",
 		start = "start", end = "end", data = "score",
 		type = "hist", window = "auto", col.histogram = "darkblue",
@@ -1115,6 +1152,10 @@ genes.MDS.rep<-MDSplot(genes(cuff),replicates=T)
 	\includegraphics[width=0.4\textwidth]{cummeRbund-manual-gene_MDS_rep}}
 	\end{center}
 \end{figure}
+
+CummeRbund also includes a convenience wrapper around the \Rpackage{NMFN}
+function \Rfunction{nnmf} for non-negative matrix factorization. You can use the
+\Rfunction{csNMF()} method for either CuffData and CuffFeatureSet objects.
 
 \clearpage
 
