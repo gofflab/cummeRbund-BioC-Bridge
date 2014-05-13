@@ -1728,6 +1728,13 @@ CREATE INDEX "features.fk_features_genes1" ON "features"("gene_id");
 CREATE INDEX "features.fk_features_isoforms1" ON "features"("isoform_id");
 CREATE INDEX "varModel.varModel_condition1" ON "varModel"("condition");
 CREATE INDEX "varModel.varModel_locus1" ON "varModel"("locus");
+CREATE INDEX "splicingDiffData.fk_splicingDiffData_allSamples" ON "splicingDiffData"("sample_1","sample_2");
+CREATE INDEX "TSSExpDiffData.fk_TSSExpDiffData_allSamples" ON "TSSExpDiffData"("sample_1","sample_2");
+CREATE INDEX "CDSDiffData.fk_CDSDiffData_allSamples" ON "CDSDiffData"("sample_1","sample_2");
+CREATE INDEX "CDSExpDiffData.fk_CDSExpDiffData_allSamples" ON "CDSExpDiffData"("sample_1","sample_2");
+CREATE INDEX "promoterDiffData.fk_promoterDiffData_allSamples" ON "promoterDiffData"("sample_1","sample_2");
+CREATE INDEX "isoformExpDiffData.fk_isoformExpDiffData_allSamples" ON "isoformExpDiffData"("sample_1","sample_2");
+CREATE INDEX "geneExpDiffData.fk_geneExpDiffData_allSamples" ON "geneExpDiffData"("sample_1","sample_2");
 '
 
 	create.sql <- strsplit(index.text,"\n")[[1]]

@@ -1,3 +1,11 @@
+v2.7.2
+	Bugfixes:
+	
+	New Features:
+	
+	Notes:
+		- Trying out a few more indices to speed up queries using sampleIdList.
+
 v2.7.1
 	Bugfixes:
 		- Fixed 'fullnames' argument to cuffData::*Matrix() methods so that it does what it's supposed to do.
