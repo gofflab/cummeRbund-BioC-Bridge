@@ -813,7 +813,7 @@ setMethod("getSigTable",signature(object="CuffSet"),.getSigTable)
 	
 	p<- p + stat_sum(aes(fill=..n..),color="black",size=0.3, geom="tile") + scale_fill_continuous(low="white",high="green") + expand_limits(fill=0)
 	
-	p<- p + stat_sum(aes(label=..n..),geom="text",size=6,legend=FALSE)
+	p<- p + stat_sum(aes(label=..n..),geom="text",size=6,show_guide=FALSE)
 	
 	#p <- p + geom_tile(aes(fill=..n..))
 	

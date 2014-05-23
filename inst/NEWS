@@ -1,5 +1,6 @@
 v2.7.2
 	Bugfixes:
+		- Fixed sigMatrix legend argument to comply with ggplot2 deprecations. No longer throws an error.
 	
 	New Features:
 	
