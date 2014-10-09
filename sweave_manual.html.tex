@@ -1,0 +1,224 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><!-- InstanceBegin template="/Templates/master.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+    <title>CummeRbund - An R package for persistent storage, analysis, and visualization of RNA-Seq from cufflinks output</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="description" content="Open source tools for exploration, analysis and visualization of high-throughput RNA-Seq data">
+	<link href="css/style.css" rel="stylesheet" type="text/css" />
+  	<script type="text/javascript">
+  			function recordOutboundLink(link, category, action) {
+    		_gat._getTrackerByName()._trackEvent(category, action);
+    		setTimeout('document.location = "' + link.href + '"', 100);
+  		}
+	</script>
+    <!-- Place this render call where appropriate -->
+    <script type="text/javascript">
+      (function() {
+        var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+        po.src = 'https://apis.google.com/js/plusone.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+      })();
+    </script>
+    <!--Twitter jscript -->
+	<script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
+    <script type="text/javascript">var switchTo5x=false;</script><script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script><script type="text/javascript">stLight.options({publisher:'e5ec373d-ef95-4662-abba-95e509cba3c5'});</script>
+  </head>
+<body>
+    <div id="wrap">
+      <div id="top">
+        <div class="lefts">
+          <table cellpadding="2" width="100%">
+            <tbody>
+              <tr>
+                <td> <a href="./index.html">
+                    <h1>CummeRbund</h1>
+                  </a>
+                  <h2>Exploration, analysis and visualization of Cufflinks high-throughput RNA-Seq data</h2>
+                </td>
+                <td align="right" valign="middle"> 
+                 <a href="http://csail.mit.edu/" onClick="recordOutboundLink(this, 'Outbound Links', 'CSAIL');return false;"><img style="height:70px;vertical-align:middle;padding-top:4px" src="images/csail-logo-2C-notext.png" border=0></img></a>&nbsp;
+                 <a href="http://www.scrb.harvard.edu/" onClick="recordOutboundLink(this, 'Outbound Links', 'SCRB');return false;"><img style="height:70px;vertical-align:middle;padding-top:4px" src="images/HarvardShield_CMYK.png" border=0></img></a>&nbsp;
+               	 
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div id="subheader"><!-- InstanceBeginEditable name="subheader" -->
+	  <h1>Manual</h1>
+	  <!-- InstanceEndEditable --></div>
+      <div id="main">
+        <div id="rightside">
+          <h2>Site Map</h2>
+          <div class="box">
+            <ul>
+              <li><a href="index.html">Home</a></li>
+              <!-- #NOT SURE THIS IS NEEDED RIGHT NOW <li><a href="tutorial.html">Getting started</a></li> -->
+              <li><a href="manual.html">Manual</a> (<a href="manual.html">HTML</a> | <a href="http://www.bioconductor.org/packages/2.9/bioc/vignettes/cummeRbund/inst/doc/cummeRbund-manual.pdf" target="_blank"  onClick="recordOutboundLink(this, 'Outbound Links', 'Reference Manual PDF');return false;">PDF</a>)</li>
+              <li><a href="cookbook.html">Cookbook</a></li>
+              <!-- <li><a href="future.html">Future development</a></li> -->
+              <li><a href="faq.html">FAQ</a></li>
+              <li><br /><!-- Place this tag where you want the +1 button to render --><g:plusone></g:plusone><br />
+              <!-- Twitter button
+              <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://compbio.mit.edu/cummeRbund/" data-text="CummeRbund: Analysis of Cufflinks RNA-Seq data using #Rstats & #bioconductor" data-count="horizontal">Tweet</a>
+              -->
+              <!--Share This button-->
+              <span  class='st_twitter' ></span><span  class='st_facebook' ></span><span  class='st_email' ></span><span  class='st_delicious' ></span><span  class='st_blogger' ></span><span  class='st_sharethis' ></span>
+              </li>
+            </ul>
+          </div>
+          <h2><u>News and updates</u></h2>
+          <div class="box">
+            <ul>
+              <table width="100%">
+                <tbody>
+                  <tr>
+                    <td>New releases and related tools will be announced
+                      through the <a
+                        href="https://lists.sourceforge.net/lists/listinfo/bowtie-bio-announce"><b>mailing
+                          list</b></a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </ul>
+          </div>
+          <h2><u>Getting Help</u></h2>
+          <div class="box">
+            <ul>
+              <table width="100%">
+                <tbody>
+                  <tr>
+                    <td>Questions about CummeRbund should be sent to <a
+                        href="mailto:tophat.cufflinks@gmail.com"><b>lgoff@csail.mit.edu</b></a>.                      </td>
+                  </tr>
+                </tbody>
+              </table>
+            </ul>
+          </div>
+       
+          <a href="./downloads">
+            <h2><u>Releases</u></h2>
+          </a>
+          <div class="box">
+            <ul>
+              <p>Development Version</p>
+              <table width="100%">
+                <tbody>
+                  <tr>
+                    <td>version 1.1.1</td>
+                    <td align="right">1/23/2012</td>
+                  </tr>
+                  <tr>
+                    <td><a href="http://bioconductor.org/packages/2.10/bioc/src/contrib/cummeRbund_1.1.1.tar.gz" onClick="recordOutboundLink(this, 'Downloads from BioC', 'Source');return false;">&nbsp;&nbsp;&nbsp;Package Source</a></td>
+                  </tr>
+                  <tr>
+                    <td><a href="http://bioconductor.org/packages/2.10/bioc/bin/macosx/leopard/contrib/2.15/cummeRbund_1.1.1.tgz" onClick="recordOutboundLink(this, 'Downloads from BioC', 'Mac OS X');return false;">&nbsp;&nbsp;&nbsp;Mac OS X binary</a></td>
+                  </tr>
+                  <tr>
+                    <td><a href="http://bioconductor.org/packages/2.10/bioc/bin/windows/contrib/2.15/cummeRbund_1.1.1.zip" onClick="recordOutboundLink(this, 'Downloads from BioC', 'Windows');return false;">&nbsp;&nbsp;&nbsp;Windows binary</a></td>
+                  </tr>
+                </tbody>
+              </table>
+              <p>Stable Version (tied to Bioconductor release cycle)</p>
+              <table width="100%">
+                <tbody>
+                  <tr>
+                    <td>version 1.0.0</td>
+                    <td align="right">10/31/2011</td>
+                  </tr>
+                  <tr>
+                    <td><a href="http://www.bioconductor.org/packages/2.9/bioc/src/contrib/cummeRbund_1.0.0.tar.gz" onclick="recordOutboundLink(this, 'Downloads from BioC', 'Source');return false;">&nbsp;&nbsp;&nbsp;Package Source</a></td>
+                  </tr>
+                  <tr>
+                    <td><a href="http://bioconductor.org/packages/2.9/bioc/bin/macosx/leopard/contrib/2.14/cummeRbund_1.0.0.tgz" onclick="recordOutboundLink(this, 'Downloads from BioC', 'Mac OS X');return false;">&nbsp;&nbsp;&nbsp;Mac OS X binary</a></td>
+                  </tr>
+                  <tr>
+                    <td><a href="http://bioconductor.org/packages/2.9/bioc/bin/windows/contrib/2.14/cummeRbund_1.0.0.zip" onclick="recordOutboundLink(this, 'Downloads from BioC', 'Windows');return false;">&nbsp;&nbsp;&nbsp;Windows binary</a></td>
+                  </tr>
+                </tbody>
+              </table>
+              <p>&nbsp;</p>
+              <p style="font-size:xx-small;font-style:italic">* <a href="http://bioconductor.org/packages/2.9/bioc/html/cummeRbund.html" onClick="recordOutboundLink(this, 'Outbound Links', 'bioconductor.org/cummeRbund');return false;">CummeRbund</a> is now included as part of the <a href="http://www.bioconductor.org"  onClick="recordOutboundLink(this, 'Outbound Links', 'bioconductor.org');return false;" target="_blank">R/Bioconductor</a> project v2.9. The links above point to the R packages directly, and  every effort should be made to use the version provided by Bioconductor as it will ensure compatibility with other Bioconductor packages. Easy installation instructions (with dependencies) can be found <a href="http://bioconductor.org/packages/2.9/bioc/html/cummeRbund.html">here</a>.</p>
+            </ul>
+          </div>
+          <h2>Related Tools</h2>
+          <div class="box">
+            <ul>
+              <li><a href="http://tophat.cbcb.umd.edu/"  onClick="recordOutboundLink(this, 'Outbound Links', 'TopHat');return false;">TopHat</a>:
+                Alignment of short RNA-Seq reads</li>
+              <li><a href="http://bowtie.cbcb.umd.edu" onClick="recordOutboundLink(this, 'Outbound Links', 'Bowtie');return false;">Bowtie</a>:
+                Ultrafast short read alignment</li>
+              <li><a href="http://cufflinks.cbcb.umd.edu" onClick="recordOutboundLink(this, 'Outbound Links', 'Cufflinks');return false;">Cufflinks</a>:
+                Transcript assembly, differential expression, and differential regulation for RNA-Seq</li>
+            </ul>
+          </div>
+          <!--
+          <h2>Publications</h2>
+          <div class="box">
+            <ul>
+              
+            </ul>
+          </div>
+          -->
+          <h2>Contributors</h2>
+          <div class="box">
+            <ul>
+              <li>Loyal A. Goff</li>
+              <li><a href="http://www.cs.umd.edu/%7Ecole/">Cole Trapnell</a></li>
+             
+            </ul>
+          </div>
+          <h2>Links</h2>
+          <div class="box">
+            <ul>
+              <li><a href="http://www.csail.mit.edu/" onClick="recordOutboundLink(this, 'Outbound Links', 'CSAIL');return false;">MIT CSAIL</a></li>
+              <li><a href="http://www.scrb.harvard.edu/" onClick="recordOutboundLink(this, 'Outbound Links', 'SCRB');return false;">Harvard SCRB</a></li>
+              <li><a href="http://compbio.mit.edu/" onClick="recordOutboundLink(this, 'Outbound Links', 'Kellis Lab');return false;">Kellis Lab</a></li>
+              <li><a href="http://www.rinnlab.com/"  onClick="recordOutboundLink(this, 'Outbound Links', 'Rinn Lab');return false;">Rinn Lab</a></li>
+            </ul>
+          </div>
+        </div>
+        <!-- End of "rightside" -->
+        <div id="leftside">
+        <!-- InstanceBeginEditable name="leftside" -->
+		<p>This Manual was created dynamically using the following R environment:
+        <<setup>>=
+        library(cummeRbund)
+        sessionInfo()
+        @
+
+        <!-- InstanceEndEditable -->
+        </div>
+        </div>
+      <div id="footer">
+        <table cellspacing="15" width="100%">
+          <tbody>
+            <tr>
+              <td> This research was supported in part by an NSF Postdoctoral Fellowship. </td>
+              <td align="right"> Administrator: <a
+                  href="mailto:lgoff@csail.mit.edu">Loyal Goff</a>.
+                Design by <a href="http://www.free-css-templates.com"
+                  title="Design by David Herreman">David Herreman</a> </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- Google analytics code -->
+		<script type="text/javascript">
+        
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', 'UA-318359-6']);
+          _gaq.push(['_trackPageview']);
+        
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();
+        
+        </script>
+    <!-- End google analytics code -->
+  </body>
+<!-- InstanceEnd --></html>

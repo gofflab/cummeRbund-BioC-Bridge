@@ -1,0 +1,2313 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><!-- InstanceBegin template="/Templates/master.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+    <title>CummeRbund - An R package for persistent storage, analysis, and visualization of RNA-Seq from cufflinks output</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="description" content="Open source tools for exploration, analysis and visualization of high-throughput RNA-Seq data">
+	<link href="css/style.css" rel="stylesheet" type="text/css" />
+  	<script type="text/javascript">
+  			function recordOutboundLink(link, category, action) {
+    		_gat._getTrackerByName()._trackEvent(category, action);
+    		setTimeout('document.location = "' + link.href + '"', 100);
+  		}
+	</script>
+    <!-- Place this render call where appropriate -->
+    <script type="text/javascript">
+      (function() {
+        var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+        po.src = 'https://apis.google.com/js/plusone.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+      })();
+    </script>
+    <!--Twitter jscript -->
+	<script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
+    <script type="text/javascript">var switchTo5x=false;</script><script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script><script type="text/javascript">stLight.options({publisher:'e5ec373d-ef95-4662-abba-95e509cba3c5'});</script>
+  </head>
+<body>
+    <div id="wrap">
+      <div id="top">
+        <div class="lefts">
+          <table cellpadding="2" width="100%">
+            <tbody>
+              <tr>
+                <td> <a href="./index.html">
+                    <h1>CummeRbund</h1>
+                  </a>
+                  <h2>Exploration, analysis and visualization of Cufflinks high-throughput RNA-Seq data</h2>
+                </td>
+                <td align="right" valign="middle"> 
+                 <a href="http://csail.mit.edu/" onClick="recordOutboundLink(this, 'Outbound Links', 'CSAIL');return false;"><img style="height:70px;vertical-align:middle;padding-top:4px" src="images/csail-logo-2C-notext.png" border=0></img></a>&nbsp;
+                 <a href="http://www.scrb.harvard.edu/" onClick="recordOutboundLink(this, 'Outbound Links', 'SCRB');return false;"><img style="height:70px;vertical-align:middle;padding-top:4px" src="images/HarvardShield_CMYK.png" border=0></img></a>&nbsp;
+               	 
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div id="subheader"><!-- InstanceBeginEditable name="subheader" -->
+		<h1>Manual</h1>
+      <!-- InstanceEndEditable --></div>
+      <div id="main">
+        <div id="rightside">
+          <h2>Site Map</h2>
+          <div class="box">
+            <ul>
+              <li><a href="index.html">Home</a></li>
+              <!-- #NOT SURE THIS IS NEEDED RIGHT NOW <li><a href="tutorial.html">Getting started</a></li> -->
+              <li><a href="manual_2_0.html">Manual (Stable)</a> (<a href="manual_2_0.html">HTML</a> | <a href="http://bioconductor.org/packages/2.11/bioc/vignettes/cummeRbund/inst/doc/cummeRbund-manual.pdf" target="_blank"  onClick="recordOutboundLink(this, 'Outbound Links', 'Vignette PDF');return false;">PDF</a>)</li>
+              <!-- <li><a href="../manual_2_0.html">Manual (Development) </a>(<a href="../manual_2_0.html">HTML</a> | <a href="http://www.bioconductor.org/packages/devel/bioc/vignettes/cummeRbund/inst/doc/cummeRbund-manual.pdf" target="_blank"  onclick="recordOutboundLink(this, 'Outbound Links', 'Vignette PDF 2');return false;">PDF</a>)</li> -->
+              <li><a href="http://bioconductor.org/packages/2.11/bioc/manuals/cummeRbund/man/cummeRbund.pdf" target="_blank"  onClick="recordOutboundLink(this, 'Outbound Links', 'Reference PDF');return false;">Reference</a></li>
+              <!--<li><a href="cookbook.html">Cookbook</a></li>-->
+              <!-- <li><a href="future.html">Future development</a></li> -->
+              <li><a href="faq.html">FAQ</a></li>
+              <li><br /><!-- Place this tag where you want the +1 button to render --><g:plusone></g:plusone><br />
+              <!-- Twitter button
+              <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://compbio.mit.edu/cummeRbund/" data-text="CummeRbund: Analysis of Cufflinks RNA-Seq data using #Rstats & #bioconductor" data-count="horizontal">Tweet</a>
+              -->
+              <!--Share This button-->
+              <span  class='st_twitter' ></span><span  class='st_facebook' ></span><span  class='st_email' ></span><span  class='st_delicious' ></span><span  class='st_blogger' ></span><span  class='st_sharethis' ></span>
+              </li>
+            </ul>
+          </div>
+          <h2><u>News and updates</u></h2>
+          <div class="box">
+            <ul>
+              <table width="100%">
+                <tbody>
+                  <tr>
+                    <td>New releases and related tools will be announced
+                      through the <a
+                        href="https://lists.sourceforge.net/lists/listinfo/bowtie-bio-announce"><b>mailing
+                          list</b></a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </ul>
+          </div>
+          <h2><u>Getting Help</u></h2>
+          <div class="box">
+            <ul>
+              <table width="100%">
+                <tbody>
+                  <tr>
+                    <td>Questions about CummeRbund should be sent to <a
+                        href="mailto:tophat.cufflinks@gmail.com"><b>lgoff@csail.mit.edu</b></a>.                      </td>
+                  </tr>
+                </tbody>
+              </table>
+            </ul>
+          </div>
+       
+          <a href="./downloads">
+            <h2><u>Releases</u></h2>
+          </a>
+          <div class="box">
+            <ul>
+              <!--
+              <p>Development Version</p>
+              <table width="100%">
+                <tbody>
+                  <tr>
+                    <td>version 1.2.0</td>
+                    <td align="right">4/1/2012</td>
+                  </tr>
+                  <tr>
+                    <td><a href="http://bioconductor.org/packages/devel/bioc/src/contrib/cummeRbund_1.2.0.tar.gz" onClick="recordOutboundLink(this, 'Downloads from BioC', 'Source');return false;">&nbsp;&nbsp;&nbsp;Package Source</a></td>
+                  </tr>
+                  <tr>
+                    <td><a href="http://bioconductor.org/packages/devel/bioc/bin/macosx/leopard/contrib/2.15/cummeRbund_1.2.0.tgz" onClick="recordOutboundLink(this, 'Downloads from BioC', 'Mac OS X');return false;">&nbsp;&nbsp;&nbsp;Mac OS X binary</a></td>
+                  </tr>
+                  <tr>
+                    <td><a href="http://bioconductor.org/packages/devel/bioc/bin/windows/contrib/2.15/cummeRbund_1.2.0.zip" onClick="recordOutboundLink(this, 'Downloads from BioC', 'Windows');return false;">&nbsp;&nbsp;&nbsp;Windows binary</a></td>
+                  </tr>
+                </tbody>
+              </table>
+              -->
+              <p>Stable Version (tied to Bioconductor release cycle)</p>
+              <table width="100%">
+                <tbody>
+                  <tr>
+                    <td><a href="http://bioconductor.org/packages/2.11/bioc/html/cummeRbund.html" onclick="recordOutboundLink(this, 'Bioconductor', 'BioC 2.11');return false;">version 2.0.0</a> (BioC 2.11)</td>
+                    <td align="right">10/2/2012</td>
+                  </tr>
+                  <tr>
+                    <td><a href="http://bioconductor.org/packages/2.11/bioc/src/contrib/cummeRbund_2.0.0.tar.gz" onclick="recordOutboundLink(this, 'Downloads from BioC', 'Source');return false;">&nbsp;&nbsp;&nbsp;Package Source</a></td>
+                  </tr>
+                  <tr>
+                    <td><a href="http://bioconductor.org/packages/2.11/bioc/bin/macosx/leopard/contrib/2.15/cummeRbund_2.0.0.tgz" onclick="recordOutboundLink(this, 'Downloads from BioC', 'Mac OS X');return false;">&nbsp;&nbsp;&nbsp;Mac OS X binary</a></td>
+                  </tr>
+                  <tr>
+                    <td><a href="http://bioconductor.org/packages/2.11/bioc/bin/windows/contrib/2.15/cummeRbund_2.0.0.zip" onclick="recordOutboundLink(this, 'Downloads from BioC', 'Windows');return false;">&nbsp;&nbsp;&nbsp;Windows binary</a></td>
+                  </tr>
+                </tbody>
+              </table>
+           <!-- #Development version link table
+              
+              <p>Development Version (tied to Bioconductor devel cycle)</p>
+              <table width="100%">
+                <tbody>
+                  <tr>
+                    <td>version 2.0.1</td>
+                    <td align="right">10/3/2012</td>
+                  </tr>
+                  <tr>
+                    <td><a href="http://www.bioconductor.org/packages/devel/bioc/src/contrib/cummeRbund_1.99.3.tar.gz" onclick="recordOutboundLink(this, 'Downloads from BioC', 'Source');return false;">&nbsp;&nbsp;&nbsp;Package Source</a></td>
+                  </tr>
+                  <tr>
+                    <td><a href="http://www.bioconductor.org/packages/devel/bioc/bin/macosx/leopard/contrib/2.15/cummeRbund_1.99.3.tgz" onclick="recordOutboundLink(this, 'Downloads from BioC', 'Mac OS X');return false;">&nbsp;&nbsp;&nbsp;Mac OS X binary</a></td>
+                  </tr>
+                  <tr>
+                    <td><a href="http://www.bioconductor.org/packages/devel/bioc/bin/windows/contrib/2.15/cummeRbund_1.99.3.zip" onclick="recordOutboundLink(this, 'Downloads from BioC', 'Windows');return false;">&nbsp;&nbsp;&nbsp;Windows binary</a></td>
+                  </tr>
+                </tbody>
+              </table>
+              -->
+              <!-- #Previous Releases -->
+              
+              <p>Previous Releases</p>
+              <table width="100%">
+                <tbody>
+                  <tr>
+                    <td><a href="http://www.bioconductor.org/packages/2.10/bioc/html/cummeRbund.html" onclick="recordOutboundLink(this, 'Bioconductor', 'BioC 2.10');return false;">version 1.2.0</a> (BioC 2.10)</td>
+                    <td align="right">4/12/2012</td>
+                  </tr>
+                </tbody>
+              </table>
+      
+              <p style="font-size:xx-small;font-style:italic">* <a href="http://www.bioconductor.org/packages/release/bioc/html/cummeRbund.html" onClick="recordOutboundLink(this, 'Outbound Links', 'bioconductor.org/cummeRbund');return false;">CummeRbund</a> is now included as part of the <a href="http://www.bioconductor.org"  onClick="recordOutboundLink(this, 'Outbound Links', 'bioconductor.org');return false;" target="_blank">R/Bioconductor</a> project. The links above point to the R packages directly, and  every effort should be made to use the version provided by Bioconductor as it will ensure compatibility with other Bioconductor packages. Easy installation instructions (with dependencies) can be found <a href="http://www.bioconductor.org/packages/release/bioc/html/cummeRbund.html">here</a>.</p>
+            </ul>
+          </div>
+          <h2>Related Tools</h2>
+          <div class="box">
+            <ul>
+              <li><a href="http://tophat.cbcb.umd.edu/"  onClick="recordOutboundLink(this, 'Outbound Links', 'TopHat');return false;">TopHat</a>:
+                Alignment of short RNA-Seq reads</li>
+              <li><a href="http://bowtie.cbcb.umd.edu" onClick="recordOutboundLink(this, 'Outbound Links', 'Bowtie');return false;">Bowtie</a>:
+                Ultrafast short read alignment</li>
+              <li><a href="http://cufflinks.cbcb.umd.edu" onClick="recordOutboundLink(this, 'Outbound Links', 'Cufflinks');return false;">Cufflinks</a>:
+                Transcript assembly, differential expression, and differential regulation for RNA-Seq</li>
+            </ul>
+          </div>
+          <!--
+          <h2>Publications</h2>
+          <div class="box">
+            <ul>
+              
+            </ul>
+          </div>
+          -->
+          <h2>Contributors</h2>
+          <div class="box">
+            <ul>
+              <li><a href="http://people.csail.mit.edu/lgoff/about.html">Loyal A. Goff</a></li>
+              <li><a href="http://www.cs.umd.edu/%7Ecole/">Cole Trapnell</a></li>
+              <li><a href="http://www.cbcb.umd.edu/~dakelley/">David Kelley</a></li>
+              <!--<li>David Kelley</li>-->
+             
+            </ul>
+          </div>
+          <h2>Links</h2>
+          <div class="box">
+            <ul>
+              <li><a href="http://www.csail.mit.edu/" onClick="recordOutboundLink(this, 'Outbound Links', 'CSAIL');return false;">MIT CSAIL</a></li>
+              <li><a href="http://www.scrb.harvard.edu/" onClick="recordOutboundLink(this, 'Outbound Links', 'SCRB');return false;">Harvard SCRB</a></li>
+              <li><a href="http://compbio.mit.edu/" onClick="recordOutboundLink(this, 'Outbound Links', 'Kellis Lab');return false;">Kellis Lab</a></li>
+              <li><a href="http://www.rinnlab.com/"  onClick="recordOutboundLink(this, 'Outbound Links', 'Rinn Lab');return false;">Rinn Lab</a></li>
+            </ul>
+          </div>
+        </div>
+        <!-- End of "rightside" -->
+        <div id="leftside">
+        <!-- InstanceBeginEditable name="leftside" -->
+<p align="center"><strong>v2.0.0 -- Oct 2, 2012 </strong></p>
+
+<h1>Contents </h1><a href="#tth_sEc1"
+>1&nbsp; Requirements</a><br />
+<a href="#tth_sEc2"
+>2&nbsp; Introduction</a><br />
+<a href="#tth_sEc3"
+>3&nbsp; CummeRbund Classes</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc3.1"
+>3.1&nbsp; CuffSet Class</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc3.2"
+>3.2&nbsp; CuffData Class</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc3.3"
+>3.3&nbsp; CuffDist Class</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc3.4"
+>3.4&nbsp; CuffFeatureSet Class</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc3.5"
+>3.5&nbsp; CuffFeature Class</a><br />
+<a href="#tth_sEc4"
+>4&nbsp; Reading cuffdiff output</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc4.1"
+>4.1&nbsp; Adding additional feature annotation</a><br />
+<a href="#tth_sEc5"
+>5&nbsp; Global statistics and Quality Control</a><br />
+<a href="#tth_sEc6"
+>6&nbsp; Accessing Data</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc6.1"
+>6.1&nbsp; Writing your own SQL accessors</a><br />
+<a href="#tth_sEc7"
+>7&nbsp; Creating Gene Sets</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc7.1"
+>7.1&nbsp; Geneset level plots</a><br />
+<a href="#tth_sEc8"
+>8&nbsp; Individual Genes</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc8.1"
+>8.1&nbsp; Gene-level plots</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc8.1.1"
+>8.1.1&nbsp; Gene Feature plots</a><br />
+<a href="#tth_sEc9"
+>9&nbsp; Data Exploration</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc9.1"
+>9.1&nbsp; Overview of significant features</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc9.2"
+>9.2&nbsp; Creating gene sets from significantly regulated genes</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc9.3"
+>9.3&nbsp; Exploring the relationships between conditions</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc9.3.1"
+>9.3.1&nbsp; Distance matrix</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc9.3.2"
+>9.3.2&nbsp; Dimensionality reduction</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc9.4"
+>9.4&nbsp; Partitioning</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc9.5"
+>9.5&nbsp; Specificity</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc9.6"
+>9.6&nbsp; Finding similar genes</a><br />
+<a href="#tth_sEc10"
+>10&nbsp; Miscellaneous</a><br />
+<a href="#tth_sEc11"
+>11&nbsp; Known Issues</a><br />
+<a href="#tth_sEc12"
+>12&nbsp; Session info</a><br />
+
+
+
+ <a id="tth_sEc1"></a><h2>
+1&nbsp;&nbsp;Requirements</h2>
+NOTE: cummeRbund 2.0 was designed in conjunction with the release of cufflinks 2.0.  While we attempted to preserve backwards-compatability, it is highly recommended
+that you update your cufflinks version &#62;=2.0 to take full advantage of the improvements in modeling, reporting, and visualization that have been incorporated. 
+
+<ul>
+<li> Cufflinks  &#8805;  v2.0.0
+<div class="p"><!----></div>
+</li>
+
+<li> SQLite
+<div class="p"><!----></div>
+</li>
+
+<li> R  &#8805;  v2.7.0
+<div class="p"><!----></div>
+</li>
+
+<li> Packages:
+	
+<ul>
+<li> <span style="font-family:helvetica">RSQLite</span>
+<div class="p"><!----></div>
+</li>
+
+<li> <span style="font-family:helvetica">ggplot2 v0.9.2</span>
+<div class="p"><!----></div>
+</li>
+
+<li> <span style="font-family:helvetica">reshape2</span>
+<div class="p"><!----></div>
+</li>
+
+<li> <span style="font-family:helvetica">plyr</span>
+<div class="p"><!----></div>
+</li>
+
+<li> <span style="font-family:helvetica">fastcluster</span>
+<div class="p"><!----></div>
+</li>
+
+<li> <span style="font-family:helvetica">rtracklayer</span>
+<div class="p"><!----></div>
+</li>
+
+<li> <span style="font-family:helvetica">Gviz</span></li>
+<li><span style="font-family: helvetica">BiocGenerics (&gt;=0.3.2)</span>
+  <div class="p"><!----></div>
+</li>
+
+<li> Recommended:
+		
+<ul>
+<li> <span style="font-family:helvetica">Hmisc</span>
+<div class="p"><!----></div>
+</li>
+</ul>
+<div class="p"><!----></div>
+</li>
+</ul>
+<div class="p"><!----></div>
+</li>
+</ul>
+
+<div class="p"><!----></div>
+ <a id="tth_sEc2"></a><h2>
+2&nbsp;&nbsp;Introduction</h2>
+	<span style="font-family:helvetica">cummeRbund</span> is a visualization package for Cufflinks high-throughput sequencing data. It is designed to help you navigate through the large amount of data produced from a Cuffdiff RNA-Seq differential expression
+	analysis. The results of this analysis are typically a large number of inter-related files that are not terribly intuitive to navigate through. cummeRbund helps promote rapid analysis of RNA-Seq data by aggregating, indexing,
+	and allowing you easily visualize and create publication-ready figures of your RNA-Seq data while maintaining appropriate relationships between connected data points.
+	CummeRbund is a multifaceted suite for streamlined analysis and visualization of massively parallel RNA differential expression data sequencing data. 
+
+<div class="p"><!----></div>
+	CummeRbund begins by re-organizing output files of a cuffdiff analysis, and storing these data in a local SQLite database. CummeRbund indexes the data to speed up access to specific feature data (genes, isoforms, TSS, CDS, etc.),
+	and preserves the various relationships between these features. Access to data elements is managed via the RSQLite package and data are presented in appropriately structured R classes with various convenience functions designed
+	to streamline your workflow. This persistent database storage means that inter-connected expression values are rapidly accessible and quickly searchable in future analyses.
+
+<div class="p"><!----></div>
+	CummeRbund defines two types of data classes, 'pointer' or reference classes describe SQL connections to the database without directly containing data, and 'data' classes that retrieve a subset of related data points such as associated
+	features from a given gene or gene set. Each class type has methods for direct access to FPKM vales, differential expression information, statistical test results, raw and normalized fragment counts, individual replicate FPKM values, and additional annotation information for features. Output formats allow 
+	for browsing and analysis of data in standard R objects (data.frame, list, etc). CummeRbund was designed to provide analysis and visualization tools analogous to microarray data. In this regard, numerous plotting methods are provided for visualization 
+	of RNA-Seq data quality and global statistics, and simple routines for plotting expression levels for one or thousands of genes, their isoforms, TSS groups, or CDS groups.
+
+<div class="p"><!----></div>
+	The base class, <i>cuffSet</i> is a 'pointer' to cuffdiff data that are stored out-of-memory in a sqlite database.
+
+<div class="p"><!----></div>
+ <a id="tth_sEc3"></a><h2>
+3&nbsp;&nbsp;CummeRbund Classes</h2>
+
+<div class="p"><!----></div>
+     <a id="tth_sEc3.1"></a><h3>
+3.1&nbsp;&nbsp;CuffSet Class</h3>
+	A pointer class to control access to the sqlite tables holding the Cufflinks data. The primary slot is DB which contains the RSQLite connection object. This can be accessed using the <i>DB()</i> accessor.
+	The additional slots (genes, isoforms, TSS, and CDS) are each instances of the <i>CuffData</i> class and are pointers to sets of tables for each data subtype. They can be accessed with similar accessor wrappers.
+	This is the default class created by <i>readCufflinks</i>.  By default, <i>CuffData</i> accessor methods applied to a <i>CuffSet</i> class will operate on the 'genes' slot. The <i>runInfo()</i> method can be used to retrieve information about
+	the actual cuffdiff run itself, including command-line arguments used to generate the results files.
+
+<div class="p"><!----></div>
+     <a id="tth_sEc3.2"></a><h3>
+3.2&nbsp;&nbsp;CuffData Class</h3>
+	The <i>CuffData</i> class is also a pointer class to the SQL backend, but each instance is specific for a data subtype (genes, isoforms, TSS, CDS). Again, there is an DB slot (accessible using <i>DB()</i>) that contains the RSQLite connection object.
+	There are several accessor, setter, and plotting methods that allow for global analysis of all features within a <i>CuffData</i> class.Subsetting is currently being re-written, however, it is primarily done through the 'gene_id' field.
+	Available slots for the CuffData class are: 
+	
+<ul>
+<li> DB: RSQLite connection object
+<div class="p"><!----></div>
+</li>
+
+<li> tables: A <i>list</i> of tables in the SQLite DB that contain the cufflinks data.
+<div class="p"><!----></div>
+</li>
+
+<li> filters: A <i>list</i> of filters for subsetting (not implemented yet).
+<div class="p"><!----></div>
+</li>
+
+<li> type: A <i>character</i> field describing the data (ie. 'genes','isoforms','TSS','CDS','other')
+<div class="p"><!----></div>
+</li>
+
+<li> idField: The name of the identifying index field for this object (eg. 'gene_id' for type='gene', or 'isoform_id' for type='isoform')
+<div class="p"><!----></div>
+</li>
+</ul>
+	Making the best use of either the CuffSet or CuffData classes will enable you to keep the entire dataset out of memory and significantly improve performance for large cufflinks datasets.
+
+<div class="p"><!----></div>
+     <a id="tth_sEc3.3"></a><h3>
+3.3&nbsp;&nbsp;CuffDist Class</h3>
+	The <i>CuffDist</i> class is an pointer class that contains the results of the various 'distribution tests' performed by cuffdiff.  These include differential promoter usage, differential splicing, and differential CDS usage.  These are independent tests from the differential analysis of gene-, isoform-, TSS-, and CDS-level features and therefore
+	have their own container type to distinguish them as such.  The 'promoters', 'relCDS', and 'splicing' slots of a <i>CuffSet</i> class are all <i>CuffDist</i> instances.
+
+<div class="p"><!----></div>
+	Available slots for the CuffDist class are:
+	
+<ul>
+<li> DB: RSQLite connection object
+<div class="p"><!----></div>
+</li>
+
+<li> tables: A <i>list</i> of tables in the SQLite DB that contain the distribution test data.
+<div class="p"><!----></div>
+</li>
+
+<li> type: A <i>character</i> field describing the data (ie. 'promoters','relCDS','splicing')
+<div class="p"><!----></div>
+</li>
+
+<li> idField: The name of the identifying index field for this object (eg. 'TSS_group_id' for type='promoters', or 'CDS_id' for type='relCDS', etc.)
+<div class="p"><!----></div>
+</li>
+</ul>
+
+<div class="p"><!----></div>
+     <a id="tth_sEc3.4"></a><h3>
+3.4&nbsp;&nbsp;CuffFeatureSet Class</h3>
+	The <i>CuffFeatureSet</i> class is a data-storage container that holds all available data for a pre-determined list of features. Slots for FPKM data, differential regulation data, and feature-level annotation are all available. Unlike the previous classes, this class contains no connection information to the SQL database, but
+	rather contains several slots with <i>data.frame</i> objects storing multiple-features worth of information.  There are available accessors, and plotting methods that are designed to present multiple-features worth of information (eg. heatmaps, scatterplots, etc)
+	Available slots for a <i>CuffFeatureSet</i> object include:
+	
+<ul>
+<li> annotation: Holds all feature-level annotation information for all features in object.
+<div class="p"><!----></div>
+</li>
+
+<li> fpkm: A data frame of FPKM data across all conditions, for all features in object.
+<div class="p"><!----></div>
+</li>
+
+<li> repFpkm: A data frame of deconvolved FPKM values across individual replicates, for all features in object.
+<div class="p"><!----></div>
+</li>
+
+<li> diff: A data frame of differential expression/regulation data for all features in object.
+<div class="p"><!----></div>
+</li>
+
+<li> count: A data frame containing raw and normalized fragment counts, variance, dispersion, and uncertainty for all features in object.
+<div class="p"><!----></div>
+</li>
+
+<li> genome: A character string indicating which build of the genome
+        the associated features are derived from.  (e.g. `hg19',`mm9')
+<div class="p"><!----></div>
+</li>
+</ul>
+
+<div class="p"><!----></div>
+	A specialized sub-class of <i>CuffFeatureSet</i> is the <i>CuffGeneSet</i> class. This subclass adds additional slots to contain all isoforms, TSS, and CDS information for a given set of gene_ids.  The <i>CuffGeneSet</i> class is designed to aggregate all relevant
+	information for a set of genes into one object for easy analysis and/or manipulation.
+	The <i>CuffGeneSet</i> object adds the following slots:
+	
+<ul>
+<li> ids: A 'character' list of all gene_ids used in object.
+<div class="p"><!----></div>
+</li>
+
+<li> isoforms: A <i>CuffFeatureSet</i> object for all isoforms of genes in object.
+<div class="p"><!----></div>
+</li>
+
+<li> TSS: A <i>CuffFeatureSet</i> object for all TSS of genes in object.
+<div class="p"><!----></div>
+</li>
+
+<li> CDS: A <i>CuffFeatureSet</i> object for all CDS of genes in object.
+<div class="p"><!----></div>
+</li>
+</ul>
+
+<div class="p"><!----></div>
+     <a id="tth_sEc3.5"></a><h3>
+3.5&nbsp;&nbsp;CuffFeature Class</h3>
+	The <i>CuffFeature</i> class is designed for single-feature-level data analysis and plotting.  The methods available for this object are designed to analyze or visualize information about a specific feature.
+	This is a 'data' object, as opposed to a 'pointer' object to the database backend. There is a validity requirement that a <i>CuffFeature</i> object only point to data from a single feature.
+	Available slots for a <i>CuffFeature</i> object include:
+	
+<ul>
+<li> annotation: Holds feature-level annotation information for a given feature.
+<div class="p"><!----></div>
+</li>
+
+<li> fpkm: A data frame of FPKM data across all samples for a given feature.
+<div class="p"><!----></div>
+</li>
+
+<li> repFpkm: A data frame of deconvolved FPKM values across all replicates for a given feature.
+<div class="p"><!----></div>
+</li>
+
+<li> diff: A data frame of differential expression/regulation data for a given feature.
+<div class="p"><!----></div>
+</li>
+
+<li> count: A data frame containing raw and normalized fragment counts, variance, dispersion, and uncertainty for a given feature.
+<div class="p"><!----></div>
+</li>
+</ul>
+
+<div class="p"><!----></div>
+	A specialized sub-class of <i>CuffFeature</i> is the <i>CuffGene</i> class. This subclass adds additional slots to contain all isoform, TSS, and CDS information for a given gene.
+	The <i>CuffGene</i> object adds the following slots:
+	
+<ul>
+<li> id: The common 'gene_id' for all data in object
+<div class="p"><!----></div>
+</li>
+
+<li> isoforms: A <i>CuffFeature</i> object for all isoforms of a given gene.
+<div class="p"><!----></div>
+</li>
+
+<li> TSS: A <i>CuffFeature</i> object for all TSS of a given gene.
+<div class="p"><!----></div>
+</li>
+
+<li> CDS: A <i>CuffFeature</i> object for all CDS of a given gene.
+<div class="p"><!----></div>
+</li>
+
+<li> features: A <i>data.frame</i> object containing feature
+        information for the transcript models describing the gene.
+<div class="p"><!----></div>
+</li>
+</ul>
+
+<div class="p"><!----></div>
+ <a id="tth_sEc4"></a><h2>
+4&nbsp;&nbsp;Reading cuffdiff output</h2>
+<span style="font-family:helvetica">cummeRbund</span> was designed to process the multi-file output format for a 'cuffdiff' differential expression analysis.  In this type of analysis, a user will use a reference .gtf file (either known annotation or a .gtf file created from a cufflinks assembly or merge of assemblies) and quantitate the expression values and differential regulation of the annotation(s) in the .gtf file across two or more SAM/BAM files.
+By design, cuffdiff produces a number of output files that contain test results for changes in expression at the level of transcripts, primary transcripts, and genes. It also tracks changes in the relative abundance of transcripts sharing a common transcription start site, and in the relative abundances of the primary transcripts of each gene. Tracking the former allows one to see changes in splicing, and the latter lets one see changes in relative promoter use within a gene. <br />
+
+<div class="p"><!----></div>
+Note:Early versions of Cuffdiff required that transcripts in the input GTF be annotated with certain attributes in order to look for changes in primary transcript expression, splicing, coding output, and promoter use. This is no longer the case with &#62;=v1.1.1 of <span style="font-family:helvetica">cummeRbund</span>, however we still recommend the use of both the following attributes in your GTF file to enable all downstream features of <span style="font-family:helvetica">cummeRbund</span>. <br />
+
+<div class="p"><!----></div>
+These attributes are:
+
+<ul>
+<li> tss_id: The ID of this transcript's inferred start site. Determines which primary transcript this processed transcript is believed to come from. Cuffcompare appends this attribute to every transcript reported in the .combined.gtf file.
+<div class="p"><!----></div>
+</li>
+
+<li> p_id	The ID of the coding sequence this transcript contains. This attribute is attached by Cuffcompare to the .combined.gtf records only when it is run with a reference annotation that include CDS records. Further, differential CDS analysis is only performed when all isoforms of a gene have p_id attributes, because neither Cufflinks nor Cuffcompare attempt to assign an open reading frame to transcripts.
+<div class="p"><!----></div>
+</li>
+</ul>
+
+<div class="p"><!----></div>
+cuffdiff calculates the FPKM of each transcript, primary transcript, and gene in each sample. Primary transcript and gene FPKMs are computed by summing the FPKMs of transcripts in each primary transcript group or gene group. The results are output in FPKM tracking files, the structure of which can be found in the cufflinks manual.<br />
+
+<div class="p"><!----></div>
+There are four FPKM tracking files:
+
+<ul>
+<li> <em>isoforms.fpkm_tracking</em>	Transcript FPKMs
+<div class="p"><!----></div>
+</li>
+
+<li> <em>genes.fpkm_tracking</em>	Gene FPKMs. Tracks the summed FPKM of transcripts sharing each gene_id
+<div class="p"><!----></div>
+</li>
+
+<li> <em>cds.fpkm_tracking</em>	Coding sequence FPKMs. Tracks the summed FPKM of transcripts sharing each p_id, independent of tss_id
+<div class="p"><!----></div>
+</li>
+
+<li> <em>tss_groups.fpkm_tracking</em>	Primary transcript FPKMs. Tracks the summed FPKM of transcripts sharing each tss_id
+<div class="p"><!----></div>
+</li>
+</ul>
+
+<div class="p"><!----></div>
+cuffdiff also performs differential expression tests between supplied conditions. This tab delimited file lists the results of differential expression testing between samples for spliced transcripts, primary transcripts, genes, and coding sequences. For detailed file structure see cufflinks manual. <br />
+
+<div class="p"><!----></div>
+Four .diff files are created:
+
+<ul>
+<li> <em>isoform_exp.diff</em>	Transcript differential FPKM.
+<div class="p"><!----></div>
+</li>
+
+<li> <em>gene_exp.diff</em>	Gene differential FPKM. Tests difference sin the summed FPKM of transcripts sharing each gene_id
+<div class="p"><!----></div>
+</li>
+
+<li> <em>tss_group_exp.diff</em>	Primary transcript differential FPKM. Tests differences in the summed FPKM of transcripts sharing each tss_id
+<div class="p"><!----></div>
+</li>
+
+<li> <em>cds_exp.diff</em>	Coding sequence differential FPKM. Tests differences in the summed FPKM of transcripts sharing each p_id independent of tss_id
+<div class="p"><!----></div>
+</li>
+</ul>
+
+<div class="p"><!----></div>
+In addition, cuffdiff also performs differential splicing, CDS usage, and promoter usage tests for each gene across conditions:
+
+<div class="p"><!----></div>
+
+<ul>
+<li> <em>splicing.diff</em>	Differential splicing tests.
+<div class="p"><!----></div>
+</li>
+
+<li> <em>CDS.diff</em>	Differential coding output.
+<div class="p"><!----></div>
+</li>
+
+<li> <em>promoters.diff</em>	Differential promoter use.
+<div class="p"><!----></div>
+</li>
+</ul>
+
+<div class="p"><!----></div>
+All of these output files are related to each other through their various tracking_ids, but parsing through individual files to query for important result information requires both a good deal of patience and a strong grasp of command-line text manipulation. Enter cummeRbund, an R solution to aggregate, organize, and help visualize this multi-layered dataset. <br />
+One of the principle benefits of using cummeRbund is that data are stored in a SQLite database.  This allows for out-of-memory analysis of data, quick retrieval, and only a one-time cost to setup the tables. By default, cummeRbund assumes that all output files from cuffdiff are in the current working directory.
+To read these files, populate the 'cuffData.db' database backend, and return the <i>CuffSet</i> pointer object, you can do the following. 
+
+<div class="p"><!----></div>
+   <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;library(cummeRbund)
+&nbsp;
+</pre> </span>
+
+<div class="p"><!----></div>
+
+<div class="p"><!----></div>
+   <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;cuff&lt;-readCufflinks()
+&nbsp;
+</pre> </span>
+
+<div class="p"><!----></div>
+   <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;cuff
+&nbsp;
+</pre> </span>
+  <span style="color:#0000FF">
+<pre>
+CuffSet&nbsp;instance&nbsp;with:
+	&nbsp;3&nbsp;samples
+	&nbsp;400&nbsp;genes
+	&nbsp;1203&nbsp;isoforms
+	&nbsp;662&nbsp;TSS
+	&nbsp;906&nbsp;CDS
+	&nbsp;1062&nbsp;promoters
+	&nbsp;1986&nbsp;splicing
+	&nbsp;990&nbsp;relCDS
+&nbsp;
+</pre> </span>
+
+<div class="p"><!----></div>
+Again, by default dir is assumed to be the current working directory and <tt>cuff&lt;-readCufflinks()</tt> should work if all appropriate files are in the current working directory. We now also
+recommend that you use both the <i>genome</i> and <i>gtfFile</i> arguments to readCufflinks(). This will allow cummeRbund to archive the transcript structure information located in the .gtf file associated with
+your particular cuffdiff run, as well as associate these transcripts with an appropriate genome build (e.g. 'hg19', 'mm9', etc) so as to allow for transcript-level visualizations and future integration with other external resources. 
+Should you need to rebuild the SQLite backend for any reason, you can add the option <i>rebuild=T</i> to <i>readCufflinks</i>.  Once the database is created, <i>readCufflinks</i> will default to using the SQL backend and should not need to rebuild this database.
+Each R session should begin with a call to <i>readCufflinks</i> so as to initialize the database connection and create an object with the appropriate RSQLite connection information. 
+
+<div class="p"><!----></div>
+     <a id="tth_sEc4.1"></a><h3>
+4.1&nbsp;&nbsp;Adding additional feature annotation</h3>
+Gene- or feature-level annotation can be permanently added to the database tables for future querying. If you have a data.frame where the first column contains the 'tracking_id' (eg. 'gene_id' for genes, 'isoform_id' for isoforms, etc). You can easily add feature level annotation using the <tt>addFeatures()</tt> function:
+
+<div class="p"><!----></div>
+   <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;annot&lt;-read.table("gene_annotation.tab",sep="\t",header=T,na.string="-")
+&#62;&nbsp;addFeatures(cuff,annot,level="genes")
+&nbsp;
+</pre> </span>
+
+<div class="p"><!----></div>
+By default, features added to a <i>CuffSet</i> object are assumed to be gene-level annotations, but the level can selected using the argument <i>level</i>. Features added to a <i>CuffData</i> object are assumed to be of the same type as the 'type' value for that given object (e.g. gene-level features for 'genes', isoform-level features for isoforms, etc.)
+
+<div class="p"><!----></div>
+ <a id="tth_sEc5"></a><h2>
+5&nbsp;&nbsp;Global statistics and Quality Control</h2>
+Several plotting methods are available that allow for quality-control or global analysis of cufflinks data. A good place to begin is to evaluate the quality of the model fitting. Overdispersion is a common problem in RNA-Seq data. As of cufflinks v2.0 mean counts, variance, and dispersion are all emitted,
+allowing you to visualize the estimated overdispersion for each sample as a quality control measure.
+
+<div class="p"><!----></div>
+   <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;disp&lt;-dispersionPlot(genes(cuff))
+&#62;&nbsp;disp
+&nbsp;
+<img src="images/plots/cummeRbund-manual-global_dispersion_plot.png" alt="" width="432" height="432" /></pre> 
+</span>
+
+<div class="p"><!----></div>
+
+<div class="p"><!----></div>
+<a id="tth_fIg1">
+</a> 	
+<div style="text-align:center">			</div>
+<div class="p"><!----></div>
+The squared coefficient of variation is a normalized measure of cross-replicate
+variability that can be useful for evaluating the quality your RNA-seq data. 
+Differences in CV<sup>2</sup> can result in lower numbers of differentially expressed
+genes due to a higher degree of variability between replicate fpkm estimates.
+
+<div class="p"><!----></div>
+   <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;genes.scv&lt;-fpkmSCVPlot(genes(cuff))
+&#62;&nbsp;isoforms.scv&lt;-fpkmSCVPlot(isoforms(cuff))
+<img src="images/plots/ENCODE_SCV.png" width="981" height="490" alt="ENCODE SCV plot" />
+&nbsp;
+</pre> </span>
+
+<div class="p"><!----></div>
+
+<div class="p"><!----></div>
+<a id="tth_fIg1">
+</a> 	
+<div style="text-align:center">			</div>
+<div class="p"><!----></div>
+To assess the distributions of FPKM scores across samples, you can use the <i>csDensity</i> plot (Figure 1).
+
+<div class="p"><!----></div>
+  <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;dens&lt;-csDensity(genes(cuff))
+&#62;&nbsp;dens
+<img src="images/plots/cummeRbund-manual-global_plots_dens-0.png" alt="" width="432" height="432" />
+&#62;&nbsp;densRep&lt;-csDensity(genes(cuff),replicates=T)
+&#62;&nbsp;densRep
+&nbsp;
+<img src="images/plots/cummeRbund-manual-global_plots_dens-1.png" alt="" width="432" height="432" /></pre> 
+</span>
+
+<div class="p"><!----></div>
+
+<div class="p"><!----></div>
+<a id="tth_fIg1">
+</a> 	
+<div style="text-align:center">		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	
+	</div>
+
+<div class="p"><!----></div>
+Boxplots can be visualized using the <i>csBoxplot</i> method (Figure 2).
+
+<div class="p"><!----></div>
+  <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;b&lt;-csBoxplot(genes(cuff))
+&#62;&nbsp;b
+<img src="images/plots/cummeRbund-manual-global_plots_box-0.png" alt="" width="432" height="432" />
+&#62;&nbsp;brep&lt;-csBoxplot(genes(cuff),replicates=T)
+&#62;&nbsp;brep
+&nbsp;
+<img src="images/plots/cummeRbund-manual-global_plots_box_rep.png" alt="" width="432" height="432" /></pre> 
+</span>
+
+<div class="p"><!----></div>
+
+<div class="p"><!----></div>
+<a id="tth_fIg1">
+</a> 	
+<div style="text-align:center">		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	
+	</div>
+
+<div class="p"><!----></div>
+A matrix of pairwise scatterplots can be drawn using the csScatterMatrix()
+method.
+
+<div class="p"><!----></div>
+   <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;s&lt;-csScatterMatrix(genes(cuff))
+&#62;&nbsp;s
+<img src="images/plots/cummeRbund-manual-global_plots_scatter_1.png" alt="" width="432" height="432" />
+&nbsp;
+</pre> </span>
+
+<div class="p"><!----></div>
+
+<div class="p"><!----></div>
+<a id="tth_fIg1">
+</a> 	
+<div style="text-align:center">		</div>
+<div class="p"><!----></div>
+Individual Pairwise comparisons can be made by using <i>csScatter</i>. You
+must specify the sample names to use for the x and y axes:
+
+<div class="p"><!----></div>
+  <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;s&lt;-csScatter(genes(cuff),"hESC","Fibroblasts",smooth=T)
+&#62;&nbsp;s
+&nbsp;
+<img src="images/plots/cummeRbund-manual-global_plots_scatter_2-1.png" alt="" width="432" height="432" /></pre> 
+</span>
+
+<div class="p"><!----></div>
+
+<div class="p"><!----></div>
+<a id="tth_fIg1">
+</a> 	
+<div style="text-align:center">		</div>
+<div class="p"><!----></div>
+
+<div class="p"><!----></div>
+  
+<pre>
+<span style="color:#FF0000">&#62;&nbsp;dend&lt;-csDendro(genes(cuff))
+&gt; dend
+<img src="images/plots/cummeRbund-manual-global_plots_dendro-2.png" alt="" width="432" height="432" />
+&#62;&nbsp;dend.rep&lt;-csDendro(genes(cuff),replicates=T)
+&gt; dend.rep
+&nbsp;<img src="images/plots/cummeRbund-manual-global_plots_dendro_rep.png" alt="" width="432" height="432" />
+</span></pre> 
+
+<div class="p"><!----></div>
+
+<div class="p"><!----></div>
+<a id="tth_fIg1">
+</a> 	
+<div style="text-align:center">		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	
+	</div>
+
+<div class="p"><!----></div>
+MvsA plots can be useful to determine any systematic bias that may be present between conditions. The CuffData method <i>MAplot()</i> can be used to examine these intensity vs fold-change plots. You must specify the sample names to use for the pairwise comparison with x and y:
+
+<div class="p"><!----></div>
+  <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;m&lt;-MAplot(genes(cuff),"hESC","Fibroblasts")
+&#62;&nbsp;m
+<img src="images/plots/cummeRbund-manual-global_plots_MA-2.png" alt="" width="432" height="432" />
+&#62;&nbsp;mCount&lt;-MAplot(genes(cuff),"hESC","Fibroblasts",useCount=T)
+&#62;&nbsp;mCount
+&nbsp;
+<img src="images/plots/cummeRbund-manual-global_plots_MA_count.png" alt="" width="432" height="432" /></pre> 
+</span>
+
+<div class="p"><!----></div>
+
+<div class="p"><!----></div>
+<a id="tth_fIg1">
+</a> 	
+<div style="text-align:center">			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	
+	</div>
+
+<div class="p"><!----></div>
+Volcano plots are also available for the <i>CuffData</i> objects. 
+
+<div class="p"><!----></div>
+   <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;v&lt;-csVolcanoMatrix(genes(cuff))
+&#62;&nbsp;v
+&nbsp;
+<img src="images/plots/cummeRbund-manual-global_plots_volcano_1-0.png" alt="" width="432" height="432" /></pre> 
+</span>
+
+<div class="p"><!----></div>
+
+<div class="p"><!----></div>
+<a id="tth_fIg1">
+</a> 	
+<div style="text-align:center">			</div>
+<div class="p"><!----></div>
+For individual pairwise comparisons, you must specify the comparisons by sample
+name.
+
+<div class="p"><!----></div>
+  <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;v&lt;-csVolcano(genes(cuff),"hESC","Fibroblasts")
+&#62;&nbsp;v
+&nbsp;
+<img src="images/plots/cummeRbund-manual-global_plots_volcano_2-1.png" alt="" width="432" height="432" /></pre> 
+</span>
+
+<div class="p"><!----></div>
+
+<div class="p"><!----></div>
+<a id="tth_fIg1">
+</a> 	
+<div style="text-align:center">			</div>
+<div class="p"><!----></div>
+ <a id="tth_sEc6"></a><h2>
+6&nbsp;&nbsp;Accessing Data</h2>
+
+<div class="p"><!----></div>
+
+<h3>Cuffdiff run information</h3>
+Run-level information such as run parameters, and sample information can be accessed from a <i>CuffSet</i> object by using the <i>runInfo</i> and <i>replicates</i> methods:
+
+<div class="p"><!----></div>
+   <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;runInfo(cuff)
+&nbsp;
+</pre> </span>
+  <span style="color:#0000FF">
+<pre>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;param
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cmd_line
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;version
+3&nbsp;&nbsp;SVN_revision
+4&nbsp;boost_version
+5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;genome
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value
+1&nbsp;cuffdiff&nbsp;-L&nbsp;iPS,hESC,Fibroblasts&nbsp;-p&nbsp;6&nbsp;chr1_snippet.gtf&nbsp;-o&nbsp;iPS_hESC_fibro&nbsp;iPS_rep1.bam,iPS_rep2.bam&nbsp;H1_rep1.bam,H1_rep3.bam&nbsp;NHLF_rep1.bam,NHLF_rep2.bam&nbsp;
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.4.0
+3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3285
+4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;104900
+5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hg19
+&nbsp;
+</pre> </span>
+  <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;replicates(cuff)
+&nbsp;
+</pre> </span>
+  <span style="color:#0000FF">
+<pre>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;file&nbsp;sample_name&nbsp;replicate&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rep_name&nbsp;total_mass
+1&nbsp;&nbsp;iPS_rep1.bam&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iPS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iPS_0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;173431
+2&nbsp;&nbsp;iPS_rep2.bam&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iPS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iPS_1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;173007
+3&nbsp;&nbsp;&nbsp;H1_rep1.bam&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hESC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hESC_0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;754749
+4&nbsp;&nbsp;&nbsp;H1_rep3.bam&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hESC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hESC_1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;762643
+5&nbsp;NHLF_rep1.bam&nbsp;Fibroblasts&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;Fibroblasts_0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;876775
+6&nbsp;NHLF_rep2.bam&nbsp;Fibroblasts&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;Fibroblasts_1&nbsp;&nbsp;&nbsp;&nbsp;1412130
+&nbsp;&nbsp;norm_mass&nbsp;internal_scale&nbsp;external_scale
+1&nbsp;&nbsp;&nbsp;&nbsp;706934&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.958068&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.584877
+2&nbsp;&nbsp;&nbsp;&nbsp;706934&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.037970&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.584877
+3&nbsp;&nbsp;&nbsp;&nbsp;706934&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.989851&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.513060
+4&nbsp;&nbsp;&nbsp;&nbsp;706934&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.010250&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.513060
+5&nbsp;&nbsp;&nbsp;&nbsp;706934&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.840416&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.223240
+6&nbsp;&nbsp;&nbsp;&nbsp;706934&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.198470&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.223240
+&nbsp;
+</pre> </span>
+
+<div class="p"><!----></div>
+
+<h3>Features/Annotation</h3>
+Feature-level information can be accessed directly from a <i>CuffData</i>
+object using the <i>fpkm</i>, <i>repFpkm</i>, <i>count</i>,
+<i>diffData</i>, or <i>annotation</i> methods:
+
+<div class="p"><!----></div>
+   <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;gene.features&lt;-annotation(genes(cuff))
+&#62;&nbsp;head(gene.features)
+&nbsp;
+</pre> </span>
+  <span style="color:#0000FF">
+<pre>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gene_id&nbsp;class_code&nbsp;nearest_ref_id&nbsp;gene_short_name
+1&nbsp;XLOC_000001&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;NA&#62;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;NA&#62;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;NA&#62;
+2&nbsp;XLOC_000002&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;NA&#62;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;NA&#62;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OR4F5
+3&nbsp;XLOC_000003&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;NA&#62;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;NA&#62;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;NA&#62;
+4&nbsp;XLOC_000004&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;NA&#62;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;NA&#62;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;NA&#62;
+5&nbsp;XLOC_000005&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;NA&#62;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;NA&#62;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;NA&#62;
+6&nbsp;XLOC_000006&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;NA&#62;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;NA&#62;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OR4F16
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;locus&nbsp;length&nbsp;coverage
+1&nbsp;&nbsp;&nbsp;chr1:11873-29961&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NA
+2&nbsp;&nbsp;&nbsp;chr1:69090-70008&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NA
+3&nbsp;chr1:321083-321114&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NA
+4&nbsp;chr1:321145-321223&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NA
+5&nbsp;chr1:322036-328580&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NA
+6&nbsp;chr1:367658-368595&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NA
+&nbsp;
+</pre> </span>
+  <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;gene.fpkm&lt;-fpkm(genes(cuff))
+&#62;&nbsp;head(gene.fpkm)
+&nbsp;
+</pre> </span>
+  <span style="color:#0000FF">
+<pre>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gene_id&nbsp;sample_name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fpkm&nbsp;&nbsp;&nbsp;&nbsp;conf_hi&nbsp;conf_lo
+1&nbsp;XLOC_000001&nbsp;Fibroblasts&nbsp;&nbsp;&nbsp;&nbsp;16.1506&nbsp;&nbsp;&nbsp;182.9240&nbsp;0.00000
+2&nbsp;XLOC_000002&nbsp;Fibroblasts&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.0000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.0000&nbsp;0.00000
+3&nbsp;XLOC_000003&nbsp;Fibroblasts&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.0000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.0000&nbsp;0.00000
+4&nbsp;XLOC_000004&nbsp;Fibroblasts&nbsp;14237.7000&nbsp;78180.9000&nbsp;0.00000
+5&nbsp;XLOC_000005&nbsp;Fibroblasts&nbsp;&nbsp;&nbsp;&nbsp;48.0566&nbsp;&nbsp;&nbsp;&nbsp;90.6526&nbsp;5.46055
+6&nbsp;XLOC_000006&nbsp;Fibroblasts&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.0000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.0000&nbsp;0.00000
+&nbsp;&nbsp;quant_status&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stdev
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;83.3867
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.0000
+3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.0000
+4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;31971.6000
+5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;21.2980
+6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.0000
+&nbsp;
+</pre> </span>
+  <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;gene.repFpkm&lt;-repFpkm(genes(cuff))
+&#62;&nbsp;head(gene.repFpkm)
+&nbsp;
+</pre> </span>
+  <span style="color:#0000FF">
+<pre>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gene_id&nbsp;sample_name&nbsp;replicate&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rep_name&nbsp;&nbsp;raw_frags
+1&nbsp;XLOC_000001&nbsp;Fibroblasts&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;Fibroblasts_0&nbsp;&nbsp;12.000100
+2&nbsp;XLOC_000002&nbsp;Fibroblasts&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;Fibroblasts_0&nbsp;&nbsp;&nbsp;0.000000
+3&nbsp;XLOC_000003&nbsp;Fibroblasts&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;Fibroblasts_0&nbsp;&nbsp;&nbsp;0.000000
+4&nbsp;XLOC_000004&nbsp;Fibroblasts&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;Fibroblasts_0&nbsp;&nbsp;&nbsp;0.333333
+5&nbsp;XLOC_000005&nbsp;Fibroblasts&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;Fibroblasts_0&nbsp;137.100000
+6&nbsp;XLOC_000006&nbsp;Fibroblasts&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;Fibroblasts_0&nbsp;&nbsp;&nbsp;0.000000
+&nbsp;&nbsp;internal_scaled_frags&nbsp;external_scaled_frags&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fpkm
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;14.278800&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;11.672900&nbsp;&nbsp;&nbsp;&nbsp;11.1815
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.000000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.000000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.0000
+3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.000000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.000000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.0000
+4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.396629&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.324245&nbsp;28475.5000
+5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;163.134000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;133.362000&nbsp;&nbsp;&nbsp;&nbsp;57.8929
+6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.000000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.000000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.0000
+&nbsp;&nbsp;effective_length&nbsp;status
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK
+3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK
+4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK
+5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK
+6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK
+&nbsp;
+</pre> </span>
+  <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;gene.counts&lt;-count(genes(cuff))
+&#62;&nbsp;head(gene.counts)
+&nbsp;
+</pre> </span>
+  <span style="color:#0000FF">
+<pre>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gene_id&nbsp;sample_name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;count&nbsp;&nbsp;&nbsp;&nbsp;variance&nbsp;uncertainty
+1&nbsp;XLOC_000001&nbsp;Fibroblasts&nbsp;&nbsp;20.072500&nbsp;1.05160e+04&nbsp;1.77636e-15
+2&nbsp;XLOC_000002&nbsp;Fibroblasts&nbsp;&nbsp;&nbsp;0.000000&nbsp;0.00000e+00&nbsp;0.00000e+00
+3&nbsp;XLOC_000003&nbsp;Fibroblasts&nbsp;&nbsp;&nbsp;0.000000&nbsp;0.00000e+00&nbsp;0.00000e+00
+4&nbsp;XLOC_000004&nbsp;Fibroblasts&nbsp;&nbsp;&nbsp;0.198315&nbsp;1.98315e-01&nbsp;0.00000e+00
+5&nbsp;XLOC_000005&nbsp;Fibroblasts&nbsp;131.575000&nbsp;3.35882e+03&nbsp;5.68434e-14
+6&nbsp;XLOC_000006&nbsp;Fibroblasts&nbsp;&nbsp;&nbsp;0.000000&nbsp;0.00000e+00&nbsp;0.00000e+00
+&nbsp;&nbsp;&nbsp;dispersion&nbsp;status
+1&nbsp;1311.870000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK
+2&nbsp;&nbsp;&nbsp;&nbsp;0.000000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK
+3&nbsp;&nbsp;&nbsp;&nbsp;0.000000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK
+4&nbsp;&nbsp;&nbsp;&nbsp;0.198315&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK
+5&nbsp;2161.890000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK
+6&nbsp;&nbsp;&nbsp;&nbsp;0.000000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK
+&nbsp;
+</pre> </span>
+  <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;isoform.fpkm&lt;-fpkm(isoforms(cuff))
+&#62;&nbsp;head(isoform.fpkm)
+&nbsp;
+</pre> </span>
+  <span style="color:#0000FF">
+<pre>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isoform_id&nbsp;sample_name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fpkm&nbsp;&nbsp;&nbsp;conf_hi&nbsp;conf_lo
+1&nbsp;TCONS_00000001&nbsp;Fibroblasts&nbsp;&nbsp;&nbsp;&nbsp;10.99630&nbsp;&nbsp;&nbsp;118.178&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0
+2&nbsp;TCONS_00000002&nbsp;Fibroblasts&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.00000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0
+3&nbsp;TCONS_00000003&nbsp;Fibroblasts&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.15434&nbsp;&nbsp;&nbsp;132.926&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0
+4&nbsp;TCONS_00000004&nbsp;Fibroblasts&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.00000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0
+5&nbsp;TCONS_00000005&nbsp;Fibroblasts&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.00000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0
+6&nbsp;TCONS_00000006&nbsp;Fibroblasts&nbsp;14237.70000&nbsp;78180.900&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0
+&nbsp;&nbsp;quant_status&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stdev
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;53.59085
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.00000
+3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;63.88583
+4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.00000
+5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.00000
+6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;31971.60000
+&nbsp;
+</pre> </span>
+  <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;gene.diff&lt;-diffData(genes(cuff))
+&#62;&nbsp;head(gene.diff)
+&nbsp;
+</pre> </span>
+  <span style="color:#0000FF">
+<pre>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gene_id&nbsp;sample_1&nbsp;sample_2&nbsp;status&nbsp;&nbsp;&nbsp;value_1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value_2
+1&nbsp;XLOC_000001&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iPS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hESC&nbsp;NOTEST&nbsp;&nbsp;20.21750&nbsp;3.47386e-01
+2&nbsp;XLOC_000002&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iPS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hESC&nbsp;NOTEST&nbsp;&nbsp;&nbsp;0.00000&nbsp;0.00000e+00
+3&nbsp;XLOC_000003&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iPS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hESC&nbsp;NOTEST&nbsp;&nbsp;&nbsp;0.00000&nbsp;0.00000e+00
+4&nbsp;XLOC_000004&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iPS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hESC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;0.00000&nbsp;6.97259e+05
+5&nbsp;XLOC_000005&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iPS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hESC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;355.82300&nbsp;6.96704e+02
+6&nbsp;XLOC_000006&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iPS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hESC&nbsp;NOTEST&nbsp;&nbsp;&nbsp;1.51396&nbsp;0.00000e+00
+&nbsp;&nbsp;log2_fold_change&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;test_stat&nbsp;&nbsp;&nbsp;&nbsp;p_value&nbsp;&nbsp;&nbsp;&nbsp;q_value
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-5.86292e+00&nbsp;&nbsp;&nbsp;7.13525e-01&nbsp;0.47552100&nbsp;1.00000000
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.00000e+00&nbsp;&nbsp;&nbsp;0.00000e+00&nbsp;1.00000000&nbsp;1.00000000
+3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.00000e+00&nbsp;&nbsp;&nbsp;0.00000e+00&nbsp;1.00000000&nbsp;1.00000000
+4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.79769e+308&nbsp;&nbsp;1.79769e+308&nbsp;0.00857693&nbsp;0.02109120
+5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;9.69385e-01&nbsp;&nbsp;-2.98373e+00&nbsp;0.00284757&nbsp;0.00840284
+6&nbsp;&nbsp;&nbsp;&nbsp;-1.79769e+308&nbsp;-1.79769e+308&nbsp;0.24382400&nbsp;1.00000000
+&nbsp;&nbsp;significant
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;no
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;no
+3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;no
+4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;yes
+5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;yes
+6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;no
+&nbsp;
+</pre> </span>
+
+<div class="p"><!----></div>
+
+<h3>Condition and feature names</h3>
+Vectors of sample names and feature names are available by using the <i>samples</i> and <i>featureNames</i> methods:
+
+<div class="p"><!----></div>
+   <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;sample.names&lt;-samples(genes(cuff))
+&#62;&nbsp;head(sample.names)
+&nbsp;
+</pre> </span>
+  <span style="color:#0000FF">
+<pre>
+[1]&nbsp;"iPS"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"hESC"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Fibroblasts"
+&nbsp;
+</pre> </span>
+  <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;gene.featurenames&lt;-featureNames(genes(cuff))
+&#62;&nbsp;head(gene.featurenames)
+&nbsp;
+</pre> </span>
+  <span style="color:#0000FF">
+<pre>
+[1]&nbsp;"XLOC_000001"&nbsp;"XLOC_000002"&nbsp;"XLOC_000003"&nbsp;"XLOC_000004"
+[5]&nbsp;"XLOC_000005"&nbsp;"XLOC_000006"
+&nbsp;
+</pre> </span>
+
+<div class="p"><!----></div>
+
+<h3>Convenience functions</h3>
+To facilitate Bioconductor-like operations, an 'FPKM-matrix' can be returned easily using the <i>fpkmMatrix</i> method:
+
+<div class="p"><!----></div>
+  <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;gene.matrix&lt;-fpkmMatrix(genes(cuff))
+&#62;&nbsp;head(gene.matrix)
+&nbsp;
+</pre> </span>
+  <span style="color:#0000FF">
+<pre>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iPS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hESC&nbsp;Fibroblasts
+XLOC_000001&nbsp;&nbsp;20.21750&nbsp;3.47386e-01&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;16.1506
+XLOC_000002&nbsp;&nbsp;&nbsp;0.00000&nbsp;0.00000e+00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.0000
+XLOC_000003&nbsp;&nbsp;&nbsp;0.00000&nbsp;0.00000e+00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.0000
+XLOC_000004&nbsp;&nbsp;&nbsp;0.00000&nbsp;6.97259e+05&nbsp;&nbsp;14237.7000
+XLOC_000005&nbsp;355.82300&nbsp;6.96704e+02&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;48.0566
+XLOC_000006&nbsp;&nbsp;&nbsp;1.51396&nbsp;0.00000e+00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.0000
+&nbsp;
+</pre> </span>
+
+<div class="p"><!----></div>
+A matrix of replicate FPKM values can be retrieved by using <i>repFpkmMatrix</i>
+
+<div class="p"><!----></div>
+  <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;gene.rep.matrix&lt;-repFpkmMatrix(genes(cuff))
+&#62;&nbsp;head(gene.rep.matrix)
+&nbsp;
+</pre> </span>
+  <span style="color:#0000FF">
+<pre>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iPS_0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iPS_1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hESC_0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hESC_1
+XLOC_000001&nbsp;&nbsp;17.2049&nbsp;&nbsp;22.92880&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.000&nbsp;6.21918e-01
+XLOC_000002&nbsp;&nbsp;&nbsp;0.0000&nbsp;&nbsp;&nbsp;0.00000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.000&nbsp;0.00000e+00
+XLOC_000003&nbsp;&nbsp;&nbsp;0.0000&nbsp;&nbsp;&nbsp;0.00000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.000&nbsp;0.00000e+00
+XLOC_000004&nbsp;&nbsp;&nbsp;0.0000&nbsp;&nbsp;&nbsp;0.00000&nbsp;1377990.000&nbsp;8.35811e+05
+XLOC_000005&nbsp;319.0300&nbsp;390.45500&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;687.563&nbsp;7.21983e+02
+XLOC_000006&nbsp;&nbsp;&nbsp;0.0000&nbsp;&nbsp;&nbsp;3.02791&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.000&nbsp;0.00000e+00
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fibroblasts_0&nbsp;Fibroblasts_1
+XLOC_000001&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;11.1815&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;20.6009
+XLOC_000002&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.0000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.0000
+XLOC_000003&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.0000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.0000
+XLOC_000004&nbsp;&nbsp;&nbsp;&nbsp;28475.5000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.0000
+XLOC_000005&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;57.8929&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;38.0084
+XLOC_000006&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.0000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.0000
+&nbsp;
+</pre> </span>
+
+<div class="p"><!----></div>
+Similarly, a matrix of normalized counts can be generated by using <i>countMatrix</i>
+
+<div class="p"><!----></div>
+  <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;gene.count.matrix&lt;-countMatrix(genes(cuff))
+&#62;&nbsp;head(gene.count.matrix)
+&nbsp;
+</pre> </span>
+  <span style="color:#0000FF">
+<pre>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iPS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hESC&nbsp;Fibroblasts
+XLOC_000001&nbsp;&nbsp;11.440900&nbsp;&nbsp;&nbsp;&nbsp;0.494996&nbsp;&nbsp;&nbsp;20.072500
+XLOC_000002&nbsp;&nbsp;&nbsp;0.000000&nbsp;&nbsp;&nbsp;&nbsp;0.000000&nbsp;&nbsp;&nbsp;&nbsp;0.000000
+XLOC_000003&nbsp;&nbsp;&nbsp;0.000000&nbsp;&nbsp;&nbsp;&nbsp;0.000000&nbsp;&nbsp;&nbsp;&nbsp;0.000000
+XLOC_000004&nbsp;&nbsp;&nbsp;0.000000&nbsp;&nbsp;&nbsp;&nbsp;5.680560&nbsp;&nbsp;&nbsp;&nbsp;0.198315
+XLOC_000005&nbsp;486.456000&nbsp;2495.560000&nbsp;&nbsp;131.575000
+XLOC_000006&nbsp;&nbsp;&nbsp;0.481711&nbsp;&nbsp;&nbsp;&nbsp;0.000000&nbsp;&nbsp;&nbsp;&nbsp;0.000000
+&nbsp;
+</pre> </span>
+
+<div class="p"><!----></div>
+     <a id="tth_sEc6.1"></a><h3>
+6.1&nbsp;&nbsp;Writing your own SQL accessors</h3>
+Since the cuffData.db is a SQLite database backend, if you are familiar with SQL and/or RSQLite query construction, you can simply design your own SQL queries to access the data that you are after. 
+
+<div class="p"><!----></div>
+
+<div class="p"><!----></div>
+<p><a id="tth_fIg1">
+</a> </p>
+<p><a href="images/plots/cuffData_schema.pdf"><img src="images/plots/cuffData_schema.png" alt="" width="1118" height="783" /></a></p>
+<div style="text-align:center">
+  
+  <div class="p"><!----></div>
+</div>
+<div class="p"><!----></div>
+  <a id="tth_sEc7"></a><h2>
+7&nbsp;&nbsp;Creating Gene Sets</h2>
+Gene Sets (stored in a <i>CuffGeneSet</i> object) can be created using the <i>getGenes</i> method on a CuffSet object.
+You must first create a vector of 'gene_id' or 'gene_short_name' values to identify the genes you wish to select:
+
+<div class="p"><!----></div>
+   <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;data(sampleData)
+&#62;&nbsp;myGeneIds&lt;-sampleIDs
+&#62;&nbsp;myGeneIds
+&nbsp;
+</pre> </span>
+  <span style="color:#0000FF">
+<pre>
+&nbsp;[1]&nbsp;"XLOC_001363"&nbsp;"XLOC_001297"&nbsp;"XLOC_001339"&nbsp;"XLOC_000132"
+&nbsp;[5]&nbsp;"XLOC_001265"&nbsp;"XLOC_000151"&nbsp;"XLOC_001359"&nbsp;"XLOC_000069"
+&nbsp;[9]&nbsp;"XLOC_000170"&nbsp;"XLOC_000105"&nbsp;"XLOC_001262"&nbsp;"XLOC_001348"
+[13]&nbsp;"XLOC_001411"&nbsp;"XLOC_001369"&nbsp;"XLOC_000158"&nbsp;"XLOC_001370"
+[17]&nbsp;"XLOC_001263"&nbsp;"XLOC_000115"&nbsp;"XLOC_000089"&nbsp;"XLOC_001240"
+&nbsp;
+</pre> </span>
+  <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;myGenes&lt;-getGenes(cuff,myGeneIds)
+&#62;&nbsp;myGenes
+&nbsp;
+</pre> </span>
+  <span style="color:#0000FF">
+<pre>
+CuffGeneSet&nbsp;instance&nbsp;for&nbsp;&nbsp;20&nbsp;&nbsp;genes
+&nbsp;
+Slots:
+	&nbsp;annotation
+	&nbsp;fpkm
+	&nbsp;repFpkm
+	&nbsp;diff
+	&nbsp;count
+	&nbsp;isoforms	&nbsp;CuffFeatureSet&nbsp;instance&nbsp;of&nbsp;size&nbsp;45&nbsp;
+	&nbsp;TSS		&nbsp;CuffFeatureSet&nbsp;instance&nbsp;of&nbsp;size&nbsp;23&nbsp;
+	&nbsp;CDS		&nbsp;CuffFeatureSet&nbsp;instance&nbsp;of&nbsp;size&nbsp;36&nbsp;
+	&nbsp;promoters		&nbsp;CuffFeatureSet&nbsp;instance&nbsp;of&nbsp;size&nbsp;20&nbsp;
+	&nbsp;splicing		&nbsp;CuffFeatureSet&nbsp;instance&nbsp;of&nbsp;size&nbsp;23&nbsp;
+	&nbsp;relCDS		&nbsp;CuffFeatureSet&nbsp;instance&nbsp;of&nbsp;size&nbsp;20&nbsp;
+&nbsp;
+</pre> </span>
+
+<div class="p"><!----></div>
+The same <i>fpkm</i>, <i>repFpkm</i>, <i>count</i>, <i>annotation</i>, <i>diffData</i>, <i>samples</i>, and <i>featureNames</i> methods are available for instances of the <i>CuffGeneSet</i> class, but additional accessor methods are available for the <i>promoters</i>, <i>relCDS</i>, and <i>splicing</i> slot data as well.
+
+<div class="p"><!----></div>
+   <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;#FPKM&nbsp;values&nbsp;for&nbsp;genes&nbsp;in&nbsp;gene&nbsp;set
+&#62;&nbsp;head(fpkm(myGenes))
+&nbsp;
+</pre> </span>
+  <span style="color:#0000FF">
+<pre>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gene_id&nbsp;sample_name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fpkm&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;conf_hi&nbsp;&nbsp;conf_lo
+1&nbsp;XLOC_000069&nbsp;Fibroblasts&nbsp;2.05083e-01&nbsp;8.94501e-01&nbsp;&nbsp;&nbsp;&nbsp;0.000
+2&nbsp;XLOC_000069&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hESC&nbsp;1.77686e+02&nbsp;2.15888e+02&nbsp;&nbsp;139.484
+3&nbsp;XLOC_000069&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iPS&nbsp;1.90000e+01&nbsp;3.88149e+01&nbsp;&nbsp;&nbsp;&nbsp;0.000
+4&nbsp;XLOC_000089&nbsp;Fibroblasts&nbsp;1.39701e+04&nbsp;2.19187e+04&nbsp;6021.450
+5&nbsp;XLOC_000089&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hESC&nbsp;7.18339e+03&nbsp;7.92296e+03&nbsp;6443.810
+6&nbsp;XLOC_000089&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iPS&nbsp;1.41690e+03&nbsp;1.96558e+03&nbsp;&nbsp;868.215
+&nbsp;&nbsp;quant_status&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stdev
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;0.344709
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;19.101000
+3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;9.907450
+4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;3974.300000
+5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;369.785000
+6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;274.340000
+&nbsp;
+</pre> </span>
+  <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;#Isoform-level&nbsp;FPKMs&nbsp;for&nbsp;gene&nbsp;set
+&#62;&nbsp;head(fpkm(isoforms(myGenes)))
+&nbsp;
+</pre> </span>
+  <span style="color:#0000FF">
+<pre>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isoform_id&nbsp;sample_name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fpkm&nbsp;&nbsp;&nbsp;&nbsp;conf_hi&nbsp;&nbsp;&nbsp;conf_lo
+1&nbsp;TCONS_00000179&nbsp;Fibroblasts&nbsp;&nbsp;&nbsp;0.205083&nbsp;&nbsp;&nbsp;0.894501&nbsp;&nbsp;&nbsp;0.00000
+2&nbsp;TCONS_00000179&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hESC&nbsp;&nbsp;20.360900&nbsp;&nbsp;33.840500&nbsp;&nbsp;&nbsp;6.88119
+3&nbsp;TCONS_00000179&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iPS&nbsp;&nbsp;&nbsp;7.694340&nbsp;&nbsp;16.356900&nbsp;&nbsp;&nbsp;0.00000
+4&nbsp;TCONS_00000180&nbsp;Fibroblasts&nbsp;&nbsp;&nbsp;0.000000&nbsp;&nbsp;&nbsp;0.000000&nbsp;&nbsp;&nbsp;0.00000
+5&nbsp;TCONS_00000180&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hESC&nbsp;157.325000&nbsp;198.673000&nbsp;115.97800
+6&nbsp;TCONS_00000180&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iPS&nbsp;&nbsp;11.305600&nbsp;&nbsp;27.105700&nbsp;&nbsp;&nbsp;0.00000
+&nbsp;&nbsp;quant_status&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stdev
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;0.344709
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;6.739800
+3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;4.331280
+4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;0.000000
+5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;20.674000
+6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;7.900050
+&nbsp;
+</pre> </span>
+  <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;#Replicate&nbsp;FPKMs&nbsp;for&nbsp;TSS&nbsp;groups&nbsp;within&nbsp;gene&nbsp;set
+&#62;&nbsp;head(repFpkm(TSS(myGenes)))
+&nbsp;
+</pre> </span>
+  <span style="color:#0000FF">
+<pre>
+&nbsp;&nbsp;TSS_group_id&nbsp;sample_name&nbsp;replicate&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rep_name&nbsp;raw_frags
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TSS128&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iPS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iPS_0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;987.0
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TSS128&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iPS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iPS_1&nbsp;&nbsp;&nbsp;&nbsp;1065.0
+3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TSS128&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hESC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hESC_1&nbsp;&nbsp;&nbsp;13196.0
+4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TSS128&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hESC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hESC_0&nbsp;&nbsp;&nbsp;13588.0
+5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TSS128&nbsp;Fibroblasts&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;Fibroblasts_1&nbsp;&nbsp;&nbsp;18899.5
+6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TSS128&nbsp;Fibroblasts&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;Fibroblasts_0&nbsp;&nbsp;&nbsp;22201.0
+&nbsp;&nbsp;internal_scaled_frags&nbsp;external_scaled_frags&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fpkm
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1030.20&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1761.39&nbsp;&nbsp;1412.22
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1026.04&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1754.29&nbsp;&nbsp;1404.74
+3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;13062.10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8632.91&nbsp;&nbsp;7131.86
+4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;13727.30&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;9072.58&nbsp;&nbsp;7500.15
+5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;15769.70&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;12891.80&nbsp;10368.60
+6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;26416.70&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;21595.70&nbsp;17372.90
+&nbsp;&nbsp;effective_length&nbsp;status
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK
+3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK
+4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK
+5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK
+6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK
+&nbsp;
+</pre> </span>
+  <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;
+&nbsp;
+</pre> </span>
+
+<div class="p"><!----></div>
+As of <span style="font-family:helvetica">cummeRbund</span> v2.0 <i>CuffGeneSet</i> classes can be created from any type of identifier ('gene_id','isoform_id','TSS_group_id', or 'CDS_id'). When you pass a list of identifiers that are not gene_id to <i>getGenes()</i>, the function attempts to lookup the parent gene_id for each feature and returns <em>all</em> relevant
+information for the given genes and all of their sub-features (not just the sub-features passed to <i>getGenes()</i>).  If you are interested in just retrieving information for a given set of features, please use the new <i>getFeatures()</i> method described later.
+
+<div class="p"><!----></div>
+     <a id="tth_sEc7.1"></a><h3>
+7.1&nbsp;&nbsp;Geneset level plots</h3>
+There are several plotting functions available for gene-set-level visualization:
+
+<div class="p"><!----></div>
+The <i>csHeatmap()</i> function is a plotting wrapper that takes as input either a CuffGeneSet or a CuffFeatureSet object (essentially a collection of genes and/or features) and produces a heatmap of FPKM expression values.  The 'cluster' argument can be used to re-order either 'row', 'column', or 'both' dimensions of this matrix.
+By default, the Jensen-Shannon distance is used as the clustering metric, however, any function that produces a <i>dist</i> object can be passed to the 'cluster' argument as well.
+
+<div class="p"><!----></div>
+   <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;h&lt;-csHeatmap(myGenes,cluster='both')
+&#62;&nbsp;h
+<img src="images/plots/cummeRbund-manual-geneset_plots_heatmap-2.png" alt="" width="432" height="432" />
+&#62;&nbsp;h.rep&lt;-csHeatmap(myGenes,cluster='both',replicates=T)
+&#62;&nbsp;h.rep
+&nbsp;
+<img src="images/plots/cummeRbund-manual-geneset_plots_heatmap_rep.png" alt="" width="432" height="432" /></pre> 
+</span>
+
+<div class="p"><!----></div>
+
+<div class="p"><!----></div>
+<a id="tth_fIg1">
+</a> 	
+<div style="text-align:center">			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	
+	</div>
+
+<div class="p"><!----></div>
+If you prefer barplots over heatmaps for genesets (although this is not necessarily recommended for large gene sets). You can use the <i>expressionBarplot()</i> method on a <i>CuffFeatureSet</i> or a <i>CuffGeneSet</i> object.
+
+<div class="p"><!----></div>
+  <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;b&lt;-expressionBarplot(myGenes)
+&#62;&nbsp;b
+&nbsp;
+<img src="images/plots/cummeRbund-manual-geneset_plots_barplot-1.png" alt="" width="576" height="288" /></pre> 
+</span>
+
+<div class="p"><!----></div>
+
+<div class="p"><!----></div>
+<a id="tth_fIg1">
+</a> 	
+<div style="text-align:center">			</div>
+<div class="p"><!----></div>
+The <i>csScatter()</i> method can be used to produce scatter plot comparisons between any two conditions.
+
+<div class="p"><!----></div>
+  <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;s&lt;-csScatter(myGenes,"Fibroblasts","hESC",smooth=T)
+&#62;&nbsp;s
+&nbsp;
+<img src="images/plots/cummeRbund-manual-geneset_plots_scatter-1.png" alt="" width="432" height="432" /></pre> 
+</span>
+
+<div class="p"><!----></div>
+
+<div class="p"><!----></div>
+<a id="tth_fIg1">
+</a> 	
+<div style="text-align:center">			</div>
+<div class="p"><!----></div>
+The volcano plot is a useful visualization to compare fold change between any two conditions and significance (-log P-values).
+
+<div class="p"><!----></div>
+  <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;v&lt;-csVolcano(myGenes,"Fibroblasts","hESC")
+&#62;&nbsp;v
+&nbsp;
+<img src="images/plots/cummeRbund-manual-geneset_plots_volcano-1.png" alt="" width="432" height="432" /></pre> 
+</span>
+
+<div class="p"><!----></div>
+
+<div class="p"><!----></div>
+<a id="tth_fIg1">
+</a> 	
+<div style="text-align:center">			</div>
+<div class="p"><!----></div>
+Similar plots can be made for all sub-level features of a <i>CuffGeneSet</i> class by specifying which slot you would like to plot (eg. <i>isoforms(myGenes)</i>,<i>TSS(myGenes)</i>,<i>CDS(myGenes)</i>).
+
+<div class="p"><!----></div>
+   <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;ih&lt;-csHeatmap(isoforms(myGenes),cluster='both',labRow=F)
+&#62;&nbsp;ih
+<img src="images/plots/cummeRbund-manual-geneset_plots_isoform_heatmap-2.png" alt="" width="432" height="432" />
+&#62;&nbsp;th&lt;-csHeatmap(TSS(myGenes),cluster='both',labRow=F)
+&#62;&nbsp;th
+&nbsp;
+<img src="images/plots/cummeRbund-manual-geneset_plots_TSS_heatmap.png" alt="" width="432" height="432" /></pre> 
+</span>
+
+<div class="p"><!----></div>
+
+<div class="p"><!----></div>
+<a id="tth_fIg1">
+</a> 	
+<div style="text-align:center">				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		
+
+<div class="p"><!----></div>
+	</div>
+<div class="p"><!----></div>
+Dendrograms can provide insight into the relationships between conditions for various genesets (e.g. significant genes used to draw relationships between conditions). As of v1.1.3 the method <i>csDendro()</i>
+can be used to plot a dendrogram based on Jensen-Shannon distances between conditions for a given <i>CuffFeatureSet</i> or <i>CuffGeneSet</i>.
+
+<div class="p"><!----></div>
+  <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;den&lt;-csDendro(myGenes)
+&nbsp;
+<img src="images/plots/cummeRbund-manual-geneset_plots_dendro-1.png" alt="" width="432" height="432" /></pre> 
+</span>
+
+<div class="p"><!----></div>
+
+<div class="p"><!----></div>
+<a id="tth_fIg1">
+</a> 	
+<div style="text-align:center">				</div>
+<div class="p"><!----></div>
+ <a id="tth_sEc8"></a><h2>
+8&nbsp;&nbsp;Individual Genes</h2>
+An individual CuffGene object can be created by using the <tt>getGene()</tt> function for a given 'gene_id' or 'gene_short_name'. As of cummeRbund  &#8805; v2.0 you can also use isoform_id, tss_group_id, or
+cds_id values to retrieve the corresponding parent gene object.
+
+<div class="p"><!----></div>
+   <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;myGeneId&lt;-"PINK1"
+&#62;&nbsp;myGene&lt;-getGene(cuff,myGeneId)
+&#62;&nbsp;myGene
+&nbsp;
+</pre> </span>
+  <span style="color:#0000FF">
+<pre>
+CuffGene&nbsp;instance&nbsp;for&nbsp;gene&nbsp;XLOC_000172&nbsp;
+Short&nbsp;name:	&nbsp;PINK1&nbsp;
+Slots:
+	&nbsp;annotation
+	&nbsp;features
+	&nbsp;fpkm
+	&nbsp;repFpkm
+	&nbsp;diff
+	&nbsp;count
+	&nbsp;isoforms	&nbsp;CuffFeature&nbsp;instance&nbsp;of&nbsp;size&nbsp;2&nbsp;
+	&nbsp;TSS		&nbsp;CuffFeature&nbsp;instance&nbsp;of&nbsp;size&nbsp;2&nbsp;
+	&nbsp;CDS		&nbsp;CuffFeature&nbsp;instance&nbsp;of&nbsp;size&nbsp;2&nbsp;
+&nbsp;
+</pre> </span>
+  <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;head(fpkm(myGene))
+&nbsp;
+</pre> </span>
+  <span style="color:#0000FF">
+<pre>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gene_id&nbsp;sample_name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fpkm&nbsp;&nbsp;conf_hi&nbsp;&nbsp;conf_lo
+1&nbsp;XLOC_000172&nbsp;Fibroblasts&nbsp;3045.930&nbsp;4529.840&nbsp;1562.020
+2&nbsp;XLOC_000172&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hESC&nbsp;&nbsp;441.939&nbsp;&nbsp;523.916&nbsp;&nbsp;359.961
+3&nbsp;XLOC_000172&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iPS&nbsp;&nbsp;640.208&nbsp;&nbsp;914.562&nbsp;&nbsp;365.853
+&nbsp;&nbsp;quant_status
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK
+3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK
+&nbsp;
+</pre> </span>
+  <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;head(fpkm(isoforms(myGene)))
+&nbsp;
+</pre> </span>
+  <span style="color:#0000FF">
+<pre>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isoform_id&nbsp;sample_name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fpkm&nbsp;&nbsp;conf_hi&nbsp;&nbsp;&nbsp;conf_lo
+1&nbsp;TCONS_00000480&nbsp;Fibroblasts&nbsp;2213.850&nbsp;3284.980&nbsp;1142.7100
+2&nbsp;TCONS_00000480&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hESC&nbsp;&nbsp;326.979&nbsp;&nbsp;388.108&nbsp;&nbsp;265.8500
+3&nbsp;TCONS_00000480&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iPS&nbsp;&nbsp;640.208&nbsp;&nbsp;914.562&nbsp;&nbsp;365.8530
+4&nbsp;TCONS_00000481&nbsp;Fibroblasts&nbsp;&nbsp;832.083&nbsp;1760.820&nbsp;&nbsp;&nbsp;&nbsp;0.0000
+5&nbsp;TCONS_00000481&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hESC&nbsp;&nbsp;114.960&nbsp;&nbsp;166.530&nbsp;&nbsp;&nbsp;63.3891
+6&nbsp;TCONS_00000481&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iPS&nbsp;&nbsp;&nbsp;&nbsp;0.000&nbsp;&nbsp;&nbsp;&nbsp;0.000&nbsp;&nbsp;&nbsp;&nbsp;0.0000
+&nbsp;&nbsp;quant_status
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK
+3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK
+4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK
+5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK
+6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK
+&nbsp;
+</pre> </span>
+
+<div class="p"><!----></div>
+     <a id="tth_sEc8.1"></a><h3>
+8.1&nbsp;&nbsp;Gene-level plots</h3>
+
+<div class="p"><!----></div>
+  <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;gl&lt;-expressionPlot(myGene)
+&#62;&nbsp;gl
+<img src="images/plots/cummeRbund-manual-gene_plots_line-4.png" alt="" width="432" height="432" />
+&#62;&nbsp;gl.rep&lt;-expressionPlot(myGene,replicates=TRUE)
+&#62;&nbsp;gl.rep
+<img src="images/plots/cummeRbund-manual-gene_plots_replicate_line.png" alt="" width="432" height="432" />
+&#62;&nbsp;gl.iso.rep&lt;-expressionPlot(isoforms(myGene),replicates=T)
+&#62;&nbsp;gl.iso.rep
+<img src="images/plots/cummeRbund-manual-gene_plots_iso_replicate_line.png" alt="" width="432" height="432" />
+&#62;&nbsp;gl.cds.rep&lt;-expressionPlot(CDS(myGene),replicates=T)
+&#62;&nbsp;gl.cds.rep
+&nbsp;<img src="images/plots/cummeRbund-manual-gene_plots_cds_replicate_line.png" alt="" width="432" height="432" /></pre> 
+</span>
+
+<div class="p"><!----></div>
+
+<div class="p"><!----></div>
+<a id="tth_fIg1">
+</a> 	
+<div style="text-align:center">		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	
+	</div>
+
+<div class="p"><!----></div>
+   <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;gb&lt;-expressionBarplot(myGene)
+&#62;&nbsp;gb
+<img src="images/plots/cummeRbund-manual-gene_plots_bar-2.png" alt="" width="432" height="432" />
+&#62;&nbsp;gb.rep&lt;-expressionBarplot(myGene,replicates=T)
+&#62;&nbsp;gb.rep
+&nbsp;
+<img src="images/plots/cummeRbund-manual-gene_plots_bar_rep.png" alt="" width="432" height="432" /></pre> 
+</span>
+
+<div class="p"><!----></div>
+
+<div class="p"><!----></div>
+<a id="tth_fIg1">
+</a> 	
+<div style="text-align:center">		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	
+	</div>
+
+<div class="p"><!----></div>
+   <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;igb&lt;-expressionBarplot(isoforms(myGene),replicates=T)
+&#62;&nbsp;igb
+&nbsp;
+<img src="images/plots/cummeRbund-manual-gene_plots_bar_isoforms-1.png" alt="" width="432" height="432" /></pre> 
+</span>
+
+<div class="p"><!----></div>
+
+<div class="p"><!----></div>
+<a id="tth_fIg1">
+</a> 	
+<div style="text-align:center">			</div>
+<div class="p"><!----></div>
+      <a id="tth_sEc8.1.1"></a><h4>
+8.1.1&nbsp;&nbsp;Gene Feature plots</h4>
+If you included both the genome build and gtfFile in your call to <i>readCufflinks()</i> then you will be able to access some of the transcript-structure level features that are now being integrated into cummeRbund. For now, these features are extended only to the single gene, <i>CuffGene</i> objects.
+
+<div class="p"><!----></div>
+Feature data are loaded into the \'features\'table of the cuffData.db database. When a <i>CuffGene</i> object is created using <i>getGene()</i>, all relative features are selected from this table and a \'features\'slot is added to the resulting object.
+
+<div class="p"><!----></div>
+   <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;head(features(myGene))
+&nbsp;
+</pre> </span>
+  <span style="color:#0000FF">
+<pre>
+&nbsp;&nbsp;seqnames&nbsp;&nbsp;&nbsp;&nbsp;start&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end&nbsp;width&nbsp;strand&nbsp;source&nbsp;type&nbsp;score
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;chr1&nbsp;20959948&nbsp;20960428&nbsp;&nbsp;&nbsp;481&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;coding&nbsp;exon&nbsp;&nbsp;&nbsp;&nbsp;NA
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;chr1&nbsp;20964335&nbsp;20964622&nbsp;&nbsp;&nbsp;288&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;coding&nbsp;exon&nbsp;&nbsp;&nbsp;&nbsp;NA
+3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;chr1&nbsp;20966385&nbsp;20966485&nbsp;&nbsp;&nbsp;101&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;coding&nbsp;exon&nbsp;&nbsp;&nbsp;&nbsp;NA
+4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;chr1&nbsp;20970983&nbsp;20971165&nbsp;&nbsp;&nbsp;183&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;coding&nbsp;exon&nbsp;&nbsp;&nbsp;&nbsp;NA
+5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;chr1&nbsp;20972053&nbsp;20972216&nbsp;&nbsp;&nbsp;164&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;coding&nbsp;exon&nbsp;&nbsp;&nbsp;&nbsp;NA
+6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;chr1&nbsp;20974998&nbsp;20975125&nbsp;&nbsp;&nbsp;128&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;coding&nbsp;exon&nbsp;&nbsp;&nbsp;&nbsp;NA
+&nbsp;&nbsp;phase&nbsp;class_code&nbsp;exon_number&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gene_id&nbsp;gene_name&nbsp;nearest_ref
+1&nbsp;&nbsp;&nbsp;&nbsp;NA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;XLOC_000172&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PINK1&nbsp;&nbsp;uc001bdm.2
+2&nbsp;&nbsp;&nbsp;&nbsp;NA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2&nbsp;XLOC_000172&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PINK1&nbsp;&nbsp;uc001bdm.2
+3&nbsp;&nbsp;&nbsp;&nbsp;NA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3&nbsp;XLOC_000172&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PINK1&nbsp;&nbsp;uc001bdm.2
+4&nbsp;&nbsp;&nbsp;&nbsp;NA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4&nbsp;XLOC_000172&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PINK1&nbsp;&nbsp;uc001bdm.2
+5&nbsp;&nbsp;&nbsp;&nbsp;NA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5&nbsp;XLOC_000172&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PINK1&nbsp;&nbsp;uc001bdm.2
+6&nbsp;&nbsp;&nbsp;&nbsp;NA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6&nbsp;XLOC_000172&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PINK1&nbsp;&nbsp;uc001bdm.2
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;oId&nbsp;CDS_id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isoform_id&nbsp;TSS_group_id
+1&nbsp;uc001bdm.2&nbsp;&nbsp;&nbsp;P364&nbsp;TCONS_00000480&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TSS264
+2&nbsp;uc001bdm.2&nbsp;&nbsp;&nbsp;P364&nbsp;TCONS_00000480&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TSS264
+3&nbsp;uc001bdm.2&nbsp;&nbsp;&nbsp;P364&nbsp;TCONS_00000480&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TSS264
+4&nbsp;uc001bdm.2&nbsp;&nbsp;&nbsp;P364&nbsp;TCONS_00000480&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TSS264
+5&nbsp;uc001bdm.2&nbsp;&nbsp;&nbsp;P364&nbsp;TCONS_00000480&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TSS264
+6&nbsp;uc001bdm.2&nbsp;&nbsp;&nbsp;P364&nbsp;TCONS_00000480&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TSS264
+&nbsp;
+</pre> </span>
+
+<div class="p"><!----></div>
+The <span style="font-family:helvetica">Gviz</span> package can be used to display features in a 'track'-like format. In particular, the <i>GeneRegionTrack</i> class creates a mechanism by which we can start to visualize transcript-level structures in their genomic context. <span style="font-family:helvetica">cummeRbund</span> implements the <i>makeGeneRegionTrack()</i> method to quickly create a <i>GeneRegionTrack</i> from the gene features.
+
+<div class="p"><!----></div>
+   <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;genetrack&lt;-makeGeneRegionTrack(myGene)
+&#62;&nbsp;plotTracks(genetrack)
+&nbsp;
+</pre> </span>
+
+<div class="p"><!----></div>
+<img src="images/plots/cummeRbund-manual-features_2.png" alt="" width="432" height="432" />
+
+<div class="p"><!----></div>
+We can then use some of the additional features from the <span style="font-family:helvetica">Gviz</span> package
+to add additional tracks from an external data source.
+
+<div class="p"><!----></div>
+   <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;trackList&lt;-list()
+&#62;&nbsp;myStart&lt;-min(features(myGene)$start)
+&#62;&nbsp;myEnd&lt;-max(features(myGene)$end)
+&#62;&nbsp;myChr&lt;-unique(features(myGene)$seqnames)
+&#62;&nbsp;genome&lt;-'hg19'
+&#62;&nbsp;ideoTrack&nbsp;&lt;-&nbsp;IdeogramTrack(genome&nbsp;=&nbsp;genome,&nbsp;chromosome&nbsp;=&nbsp;myChr)
+&#62;&nbsp;trackList&lt;-c(trackList,ideoTrack)
+&#62;&nbsp;axtrack&lt;-GenomeAxisTrack()
+&#62;&nbsp;trackList&lt;-c(trackList,axtrack)
+&#62;&nbsp;genetrack&lt;-makeGeneRegionTrack(myGene)
+&#62;&nbsp;genetrack
+&nbsp;
+</pre> </span>
+  <span style="color:#0000FF">
+<pre>
+GeneRegionTrack&nbsp;'CuffDiff'
+|&nbsp;genome:&nbsp;hg19
+|&nbsp;active&nbsp;chromosome:&nbsp;chr1
+|&nbsp;annotation&nbsp;features:&nbsp;12
+&nbsp;
+</pre> </span>
+  <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;trackList&lt;-c(trackList,genetrack)
+&#62;&nbsp;biomTrack&lt;-BiomartGeneRegionTrack(genome=genome,chromosome=as.character(myChr),
++&nbsp;		start=myStart,end=myEnd,name="ENSEMBL",showId=T)
+&#62;&nbsp;trackList&lt;-c(trackList,biomTrack)
+&#62;&nbsp;conservation&nbsp;&lt;-&nbsp;UcscTrack(genome&nbsp;=&nbsp;genome,&nbsp;chromosome&nbsp;=&nbsp;myChr,
++&nbsp;		track&nbsp;=&nbsp;"Conservation",&nbsp;table&nbsp;=&nbsp;"phyloP46wayPlacental",
++&nbsp;		from&nbsp;=&nbsp;myStart-2000,&nbsp;to&nbsp;=&nbsp;myEnd+2000,&nbsp;trackType&nbsp;=&nbsp;"DataTrack",
++&nbsp;		start&nbsp;=&nbsp;"start",&nbsp;end&nbsp;=&nbsp;"end",&nbsp;data&nbsp;=&nbsp;"score",
++&nbsp;		type&nbsp;=&nbsp;"hist",&nbsp;window&nbsp;=&nbsp;"auto",&nbsp;col.histogram&nbsp;=&nbsp;"darkblue",
++&nbsp;		fill.histogram&nbsp;=&nbsp;"darkblue",&nbsp;ylim&nbsp;=&nbsp;c(-3.7,&nbsp;4),
++&nbsp;		name&nbsp;=&nbsp;"Conservation")
+&#62;&nbsp;trackList&lt;-c(trackList,conservation)
+&#62;&nbsp;plotTracks(trackList,from=myStart-2000,to=myEnd+2000)
+&#62;&nbsp;
+&nbsp;
+<img src="images/plots/cummeRbund-manual-features_3.png" alt="" width="432" height="432" /></pre> 
+</span>
+
+<div class="p"><!----></div>
+<div class="p"><!----></div>
+ <a id="tth_sEc9"></a><h2>
+9&nbsp;&nbsp;Data Exploration</h2>
+The cummeRbund package is more than just a visualization tool as well.  We are working to implement several different means of data exploration from gene and condition clustering, finding features with similar expression profiles, as well as incorporating Gene Ontology analysis.
+
+<div class="p"><!----></div>
+     <a id="tth_sEc9.1"></a><h3>
+9.1&nbsp;&nbsp;Overview of significant features</h3>
+The <i>sigMatrix()</i> function can provide you with a "quick-and-dirty"
+view of the number of significant features of a particular type, and at a given alpha (0.05 by default). For example:
+
+<div class="p"><!----></div>
+   <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;mySigMat&lt;-sigMatrix(cuff,level='genes',alpha=0.05)
+&#62;&nbsp;mySigMat
+<img src="images/plots/cummeRbund-manual-sig_mat_plot_1.png" alt="" width="432" height="432" />
+&nbsp;
+</pre> </span>
+
+<div class="p"><!----></div>
+
+<div class="p"><!----></div>
+<a id="tth_fIg1">
+</a> 	
+<div style="text-align:center">			</div>
+<div class="p"><!----></div>
+     <a id="tth_sEc9.2"></a><h3>
+9.2&nbsp;&nbsp;Creating gene sets from significantly regulated genes</h3>
+One of the primary roles of a differential expression analysis is to conduct significance tests on each feature (genes, isoforms, TSS, and CDS) for appropriate pairwise comparisons of conditions. The results of these tests (after multiple testing correction of course) can be used to determine which genes are differentially regulated. 
+<span style="font-family:helvetica">cummeRbund</span> makes accessing the results of these significance tests simple via <i>getSig()</i>. This function takes a CuffSet object and will scan at various feature levels ('genes' by default) to produce a <i>vector</i> of feature IDs.
+By default <i>getSig()</i> outputs a vector of tracking IDs corresponding to all <em>genes</em> that reject the null hypothesis in any condition tested. The default feature type can be changed by adjusting the 'level' argument to <i>getSig()</i>. In addition, a alpha value can be provided on which to filter the resulting list
+(the default is 0.05 to match the default of cuffdiff). 
+
+<div class="p"><!----></div>
+   <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;mySigGeneIds&lt;-getSig(cuff,alpha=0.05,level='genes')
+&#62;&nbsp;head(mySigGeneIds)
+&nbsp;
+</pre> </span>
+  <span style="color:#0000FF">
+<pre>
+[1]&nbsp;"XLOC_000004"&nbsp;"XLOC_000005"&nbsp;"XLOC_000008"&nbsp;"XLOC_000009"
+[5]&nbsp;"XLOC_000011"&nbsp;"XLOC_000013"
+&nbsp;
+</pre> </span>
+  <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;length(mySigGeneIds)
+&nbsp;
+</pre> </span>
+  <span style="color:#0000FF">
+<pre>
+[1]&nbsp;207
+&nbsp;
+</pre> </span>
+
+<div class="p"><!----></div>
+By default <i>getSig()</i> outputs a vector of tracking IDs corresponding to all <em>genes</em> that reject the null hypothesis in any condition tested. The default feature type can be changed by adjusting the 'level' argument to <i>getSig()</i>. In addition, a alpha value can be provided on which to filter the resulting list
+(the default is 0.05 to match the default of cuffdiff). Significance results for specific pairwise comparisons can be retrieved as well by specifying the two conditions as 'x' and 'y'. In this case, p-values are adjusted to reduce the impact of multiple-testing correction when only one set of tests is being conducted.
+
+<div class="p"><!----></div>
+   <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;hESC_vs_iPS.sigIsoformIds&lt;-getSig(cuff,x='hESC',y='iPS',alpha=0.05,level='isoforms')
+&#62;&nbsp;head(hESC_vs_iPS.sigIsoformIds)
+&nbsp;
+</pre> </span>
+  <span style="color:#0000FF">
+<pre>
+[1]&nbsp;"TCONS_00000006"&nbsp;"TCONS_00000013"&nbsp;"TCONS_00000015"
+[4]&nbsp;"TCONS_00000018"&nbsp;"TCONS_00000034"&nbsp;"TCONS_00000041"
+&nbsp;
+</pre> </span>
+  <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;length(hESC_vs_iPS.sigIsoformIds)
+&nbsp;
+</pre> </span>
+  <span style="color:#0000FF">
+<pre>
+[1]&nbsp;118
+&nbsp;
+</pre> </span>
+
+<div class="p"><!----></div>
+The values returned for each level of this list can be used as an argument to getGenes, to create a <i>CuffGeneSet</i> object of significantly regulated genes (or features).
+
+<div class="p"><!----></div>
+   <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;mySigGenes&lt;-getGenes(cuff,mySigGeneIds)
+&#62;&nbsp;mySigGenes
+&nbsp;
+</pre> </span>
+  <span style="color:#0000FF">
+<pre>
+CuffGeneSet&nbsp;instance&nbsp;for&nbsp;&nbsp;207&nbsp;&nbsp;genes
+&nbsp;
+Slots:
+	&nbsp;annotation
+	&nbsp;fpkm
+	&nbsp;repFpkm
+	&nbsp;diff
+	&nbsp;count
+	&nbsp;isoforms	&nbsp;CuffFeatureSet&nbsp;instance&nbsp;of&nbsp;size&nbsp;717&nbsp;
+	&nbsp;TSS		&nbsp;CuffFeatureSet&nbsp;instance&nbsp;of&nbsp;size&nbsp;399&nbsp;
+	&nbsp;CDS		&nbsp;CuffFeatureSet&nbsp;instance&nbsp;of&nbsp;size&nbsp;577&nbsp;
+	&nbsp;promoters		&nbsp;CuffFeatureSet&nbsp;instance&nbsp;of&nbsp;size&nbsp;207&nbsp;
+	&nbsp;splicing		&nbsp;CuffFeatureSet&nbsp;instance&nbsp;of&nbsp;size&nbsp;399&nbsp;
+	&nbsp;relCDS		&nbsp;CuffFeatureSet&nbsp;instance&nbsp;of&nbsp;size&nbsp;207&nbsp;
+&nbsp;
+</pre> </span>
+  <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;
+&nbsp;
+</pre> </span>
+
+<div class="p"><!----></div>
+Alternatively, you can use the <i>getSigTable()</i> method to return a full test-table of 'significant features' x 'pairwise tests' for all comparisons. Only features in which the null hypothesis can be rejected in at least one test are reported.
+
+<div class="p"><!----></div>
+   <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;mySigTable&lt;-getSigTable(cuff,alpha=0.01,level='genes')
+&#62;&nbsp;head(mySigTable,20)
+&nbsp;
+</pre> </span>
+  <span style="color:#0000FF">
+<pre>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hESCvsFibroblasts&nbsp;iPSvsFibroblasts&nbsp;iPSvshESC
+XLOC_000005&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1
+XLOC_000008&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1
+XLOC_000009&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1
+XLOC_000011&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1
+XLOC_000013&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0
+XLOC_000014&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0
+XLOC_000016&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1
+XLOC_000017&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0
+XLOC_000018&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0
+XLOC_000019&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1
+XLOC_000025&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1
+XLOC_000026&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0
+XLOC_000027&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1
+XLOC_000029&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0
+XLOC_000032&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0
+XLOC_000034&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1
+XLOC_000036&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1
+XLOC_000044&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1
+XLOC_000047&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1
+XLOC_000048&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0
+&nbsp;
+</pre> </span>
+
+<div class="p"><!----></div>
+     <a id="tth_sEc9.3"></a><h3>
+9.3&nbsp;&nbsp;Exploring the relationships between conditions</h3>
+
+<div class="p"><!----></div>
+      <a id="tth_sEc9.3.1"></a><h4>
+9.3.1&nbsp;&nbsp;Distance matrix</h4>
+Similarities between conditions and/or replicates can
+provide useful insight into the relationship between various groupings of
+conditions and can aid in identifying outlier replicates that do not behave as
+expected. cummeRbund provides the <i>csDistHeat()</i> method to visualize the
+pairwise similarities between conditions:
+
+<div class="p"><!----></div>
+   <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;myDistHeat&lt;-csDistHeat(genes(cuff))
+&#62;&nbsp;myDistHeat
+<img src="images/plots/cummeRbund-manual-dist_heat_plot_1.png" alt="" width="432" height="432" />
+&nbsp;
+</pre> </span>
+
+<div class="p"><!----></div>
+
+<div class="p"><!----></div>
+<a id="tth_fIg1">
+</a> 	
+<div style="text-align:center">			</div>
+<div class="p"><!----></div>
+Again with the <i>replicates</i> argument, distances between individual
+replicates can be presented.
+
+<div class="p"><!----></div>
+   <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;myRepDistHeat&lt;-csDistHeat(genes(cuff),replicates=T)
+&#62;&nbsp;myRepDistHeat
+<img src="images/plots/cummeRbund-manual-dist_heat_plot_2.png" alt="" width="432" height="432" />
+&nbsp;
+</pre> </span>
+
+<div class="p"><!----></div>
+
+<div class="p"><!----></div>
+<a id="tth_fIg1">
+</a> 	
+<div style="text-align:center">			</div>
+<div class="p"><!----></div>
+This method can be used to explore similarities between conditions for all
+features, or just those features contained within a <i>CuffGeneSet</i> class. 
+Additionally, the <i>samples.not.genes=F</i> argument will display distances
+between individual genes or features across conditions.
+
+<div class="p"><!----></div>
+      <a id="tth_sEc9.3.2"></a><h4>
+9.3.2&nbsp;&nbsp;Dimensionality reduction</h4>
+Dimensionality reduction is an informative approach for clustering and exploring
+the relationships between conditions.  It can be useful for feature selection as
+well as identifying the sources of variability within your data.  To this end,
+we have applied two different dimensionality reduction strategies in
+<span style="font-family:helvetica">cummeRbund</span>: principal component analysis (PCA) and multi-dimensional
+scaling (MDS). We provide the two wrapper methods, <i>PCAplot</i> and
+<i>MDSplot</i>
+
+<div class="p"><!----></div>
+   <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;genes.PCA&lt;-PCAplot(genes(cuff),"PC1","PC2")
+&gt; genes.PCA
+<img src="images/plots/cummeRbund-manual-gene_PCA.png" alt="" width="432" height="432" />
+&#62;&nbsp;genes.MDS&lt;-MDSplot(genes(cuff))
+&gt; genes.MDS
+<img src="images/plots/cummeRbund-manual-gene_MDS.png" alt="" width="432" height="432" />
+&#62;&nbsp;genes.PCA.rep&lt;-PCAplot(genes(cuff),"PC1","PC2",replicates=T)
+&gt; genes.PCA.rep
+<img src="images/plots/cummeRbund-manual-gene_PCA_rep.png" alt="" width="432" height="432" />
+&#62;&nbsp;genes.MDS.rep&lt;-MDSplot(genes(cuff),replicates=T)
+&gt; genes.MDS.rep
+<img src="images/plots/cummeRbund-manual-gene_MDS_rep.png" alt="" width="432" height="432" />
+&nbsp;
+</pre> </span>
+
+<div class="p"><!----></div>
+
+<div class="p"><!----></div>
+<a id="tth_fIg1">
+</a> 	
+<div style="text-align:center">		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	
+	</div>
+
+<div class="p"><!----></div>
+     <a id="tth_sEc9.4"></a><h3>
+9.4&nbsp;&nbsp;Partitioning</h3>
+K-means clustering is a useful tool that can be helpful in identifying clusters of genes with similar expression profiles. In fact, these profiles are learned from the data during the clustering. 
+<i>csCluster()</i> uses the <i>pam()</i> method from the <span style="font-family:helvetica">clustering</span> package to perform the partitioning around medoids. In this case however, the distance metric used by default is the
+Jensen-Shannon distance instead of the default Euclidean distance. Prior to performing this particular partitioning, the user must choose the number of clusters (K) into which the expression profiles should be divided. 
+
+<div class="p"><!----></div>
+   <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;ic&lt;-csCluster(myGenes,k=4)
+&#62;&nbsp;head(ic$cluster)
+&nbsp;
+</pre> </span>
+  <span style="color:#0000FF">
+<pre>
+XLOC_000069&nbsp;XLOC_000089&nbsp;XLOC_000105&nbsp;XLOC_000115&nbsp;XLOC_000132&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2&nbsp;
+XLOC_000151&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;
+&nbsp;
+</pre> </span>
+  <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;icp&lt;-csClusterPlot(ic)
+&#62;&nbsp;icp
+<img src="images/plots/cummeRbund-manual-geneset_plots_cluster.png" alt="" width="432" height="432" />
+&nbsp;
+</pre> </span>
+
+<div class="p"><!----></div>
+As of v1.1.1 of <span style="font-family:helvetica">cummeRbund</span>, the output of csCluster is a modified <i>pam</i> object. This replaces the default plotting behavior of the original csCluster plot to allow for further analysis of the clustering results. The original plotting behavior has been recapitulated
+in the <i>csClusterPlot()</i> method.
+
+<div class="p"><!----></div>
+
+<div class="p"><!----></div>
+<a id="tth_fIg1">
+</a> 	
+<div style="text-align:center">			</div>
+<div class="p"><!----></div>
+     <a id="tth_sEc9.5"></a><h3>
+9.5&nbsp;&nbsp;Specificity</h3>
+In some cases, a researcher may be interested in identifying features that are 'condition-specific'. Or, more likely, producing an ordered list of genes based on their specificity for a given condition. 
+We define a specificity score (S) as the following:
+
+<br clear="all" /><table border="0" width="100%"><tr><td>
+<table align="center" cellspacing="0"  cellpadding="2"><tr><td nowrap="nowrap" align="center">
+S<sub>g,i</sub>=1&#8722;JSD(p<sub>g</sub>,</td><td nowrap="nowrap" align="center">
+<div class="comp">^<br /></div>
+<div class="norm">q<sub>i</sub><br /></div>
+<div class="comb">&nbsp;</div>
+</td><td nowrap="nowrap" align="center">
+)</td></tr></table>
+</td><td width="1%">(1)</td></tr></table>
+
+
+
+<div class="p"><!----></div>
+Where JSD is the Jensen-Shannon distance, p<sub>g</sub> is the expression profile of a given gene g expressed as a density (probability) of log<sub>10</sub> FPKM+1, and <span class="overacc1">&#8743;</span>q<sub>i</sub> is the unit vector of 'perfect expression' in a particular condition i. 
+
+<div class="p"><!----></div>
+We have created a method, <i>csSpecificity()</i> that outputs a matrix (with identical shape to that produced by <i>fpkmMatrix()</i>) of specificity scores (S) across all conditions for all features in a <i>CuffFeatureSet</i> or <i>CuffGeneSet</i>.
+
+<div class="p"><!----></div>
+  <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;myGenes.spec&lt;-csSpecificity(myGenes)
+&#62;&nbsp;head(myGenes.spec)
+&nbsp;
+</pre> </span>
+  <span style="color:#0000FF">
+<pre>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iPS_spec&nbsp;hESC_spec&nbsp;Fibroblasts_spec
+XLOC_000069&nbsp;0.6381500&nbsp;0.7411063&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.4730055
+XLOC_000089&nbsp;0.6073556&nbsp;0.6332403&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.6435982
+XLOC_000105&nbsp;0.6163066&nbsp;0.6235261&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.6445646
+XLOC_000115&nbsp;1.0000000&nbsp;0.4513380&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.4513380
+XLOC_000132&nbsp;0.6126800&nbsp;0.6199645&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.6514962
+XLOC_000151&nbsp;0.7244614&nbsp;0.6295328&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.5141304
+&nbsp;
+</pre> </span>
+
+<div class="p"><!----></div>
+S=1.0 if the feature is expressed exclusively in that condition.
+The <i>findSimilar()</i> method outlined below is another method that can be used to identify genes based on specificity but has the added feature that you can determine similarity to a more complex q expression profile.
+
+<div class="p"><!----></div>
+     <a id="tth_sEc9.6"></a><h3>
+9.6&nbsp;&nbsp;Finding similar genes</h3>
+Another common question in large-scale gene expression analyses is 'How can I find genes with similar expression profiles to gene x?'. We have implemented a method, <i>findSimilar</i> to allow you to identify a fixed number of the most similar genes to a given gene of interest.
+For example, if you wanted to find the 20 genes most similar to "PINK1", you could do the following:
+
+<div class="p"><!----></div>
+   <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;mySimilar&lt;-findSimilar(cuff,"PINK1",n=20)
+&#62;&nbsp;mySimilar.expression&lt;-expressionPlot(mySimilar,logMode=T,showErrorbars=F)
+&gt; mySimilar.expression
+<img src="images/plots/cummeRbund-manual-similar_plots_1.png" alt="" width="432" height="432" />
+&nbsp;
+</pre> </span>
+
+<div class="p"><!----></div>
+
+<div class="p"><!----></div>
+<a id="tth_fIg1">
+</a> 	
+<div style="text-align:center">			</div>
+<div class="p"><!----></div>
+By default, findSimilar will return a CuffGeneSet of similar genes matching your criteria. 
+Recently a few additional features have been added as well to enhance this type of exploration:
+
+<div class="p"><!----></div>
+
+<ul>
+<li> If 'returnGeneSet' is set to FALSE, then findSimilar returns a data.frame of distance-ranked similar genes with distances. This is useful if you would
+	like to see a rank-ordered list of similar genes.
+<div class="p"><!----></div>
+</li>
+
+<li> The 'distThresh' argument allows you to pass a value [between 0-1] to be used as a distance threshold instead of an arbitrary 'n' number of genes. setting distThresh=1.0 will return all genes ranked by their distance to your gene of interest.
+<div class="p"><!----></div>
+</li>
+</ul>
+
+<div class="p"><!----></div>
+You are also able to provide your own expression profile in lieu of a 'gene_id'.  The vector provided must match the order and length of <i>samples()</i>.
+
+<div class="p"><!----></div>
+   
+<pre>
+<span style="color:#FF0000">&#62;&nbsp;myProfile&lt;-c(500,0,400)
+&#62;&nbsp;mySimilar2&lt;-findSimilar(cuff,myProfile,n=10)
+&#62;&nbsp;mySimilar2.expression&lt;-expressionPlot(mySimilar2,logMode=T,showErrorbars=F)
+&gt; mySimilar2.expression
+<img src="images/plots/cummeRbund-manual-similar_plots_2.png" alt="" width="432" height="432" />
+&nbsp;
+</span></pre> 
+
+<div class="p"><!----></div>
+
+<div class="p"><!----></div>
+<a id="tth_fIg1">
+</a> 	
+<div style="text-align:center">			</div>
+<div class="p"><!----></div>
+<i>findSimilar()</i> also uses the Jensen-Shannon distance between the probability distributions of each gene across conditions to determine the similarity.  
+We have found this to be a more robust way to determine distance between genes using the high dynamic range of FPKM data. Future versions may allow for other dissimilarity measures to be used instead.
+
+<div class="p"><!----></div>
+ <a id="tth_sEc10"></a><h2>
+10&nbsp;&nbsp;Miscellaneous</h2>
+
+<ul>
+<li> In appropriate plots, using the argument replicates=T will allow you to visualize replicate-level FPKM values either in lieu of or in addition to condition-level FPKMs.
+<div class="p"><!----></div>
+</li>
+
+<li> As of v1.1.3 we attempt to provide new visual cues in most plots that will indicate the quantification status for a particular feature in each given condition. We have enabled this feature by default for most
+	plots to suggest a measure of reliability for each feature in a particular condition. In most cases, this feature can be disabled by setting 'showStatus=FALSE'.
+<div class="p"><!----></div>
+</li>
+
+<li> CummeRbund will now work with the hidden '-no-diff' argument for cuffdiff.  This will quantify features against .bam files but not do differential testing.  This is useful when you want to aggregate very large numbers
+	of conditions, and cannot afford the time or space for the differential test results. (Not recommended unless you have a SPECIFIC need for this).
+<div class="p"><!----></div>
+</li>
+
+<li> All plotting functions return ggplot objects and the resulting objects can be manipulated/faceted/altered using standard ggplot2 methods.
+<div class="p"><!----></div>
+</li>
+
+<li> There are occasional DB connectivity issues that arise.  Not entirely sure why yet.  If necessary, just <tt>readCufflinks</tt> again and this should solve connectivity issues with a new
+	RSQLite connection object.  If connectivity continues to be a problem, try <tt>cuff&lt;-readCufflinks(rebuild=T)</tt>
+<div class="p"><!----></div>
+</li>
+
+<li> I am still working on fully documenting each of the methods.  There are a good number of arguments that exist, but might be hard to find without looking at the reference manual.
+<div class="p"><!----></div>
+</li>
+</ul>
+
+<div class="p"><!----></div>
+ <a id="tth_sEc11"></a><h2>
+11&nbsp;&nbsp;Known Issues</h2>
+
+<ul>
+<li> Large cuffdiff runs (e.g.  &#8805; 10 conditions) produce very large results files.  These will take some time to parse and populate the cuffData.db sqlite database.  While this is only a one time cost, the process can take a while. We are working on making the table writes and indexing significantly faster.
+<div class="p"><!----></div>
+</li>
+
+<li> Cuffdiff does not 'require' that gene_ids, isoform_ids, TSS_group_ids, or CDS_ids be unique in your reference gtf file. In fact, duplicate IDs will be aggregated by cummeRbund in the indexing phase and will produce undesireable effects. Please ensure that all of your IDs are unique prior to running cuffdiff (see cuffmerge for help) to avoid this issue.
+<div class="p"><!----></div>
+</li>
+</ul>
+
+<div class="p"><!----></div>
+ <a id="tth_sEc12"></a><h2>
+12&nbsp;&nbsp;Session info</h2>
+
+<div class="p"><!----></div>
+   <span style="color:#FF0000">
+<pre>
+&#62;&nbsp;sessionInfo()
+&nbsp;
+</pre> </span>
+  <span style="color:#0000FF">
+<pre>
+R&nbsp;version&nbsp;2.15.1&nbsp;(2012-06-22)
+Platform:&nbsp;i386-apple-darwin9.8.0/i386&nbsp;(32-bit)
+
+locale:
+[1]&nbsp;en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached&nbsp;base&nbsp;packages:
+[1]&nbsp;splines&nbsp;&nbsp;&nbsp;grid&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stats&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;graphics&nbsp;&nbsp;grDevices&nbsp;utils&nbsp;&nbsp;&nbsp;&nbsp;
+[7]&nbsp;datasets&nbsp;&nbsp;methods&nbsp;&nbsp;&nbsp;base&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+other&nbsp;attached&nbsp;packages:
+&nbsp;[1]&nbsp;Hmisc_3.9-3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;survival_2.36-14&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;[3]&nbsp;cluster_1.14.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cummeRbund_1.99.6&nbsp;&nbsp;&nbsp;
+&nbsp;[5]&nbsp;Gviz_1.1.17&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rtracklayer_1.17.21&nbsp;
+&nbsp;[7]&nbsp;GenomicRanges_1.9.66&nbsp;IRanges_1.15.47&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;[9]&nbsp;fastcluster_1.1.7&nbsp;&nbsp;&nbsp;&nbsp;reshape2_1.2.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+[11]&nbsp;ggplot2_0.9.2.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RSQLite_0.11.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+[13]&nbsp;DBI_0.2-5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BiocGenerics_0.3.2&nbsp;&nbsp;
+
+loaded&nbsp;via&nbsp;a&nbsp;namespace&nbsp;(and&nbsp;not&nbsp;attached):
+&nbsp;[1]&nbsp;AnnotationDbi_1.19.46&nbsp;&nbsp;Biobase_2.17.8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;[3]&nbsp;biomaRt_2.13.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Biostrings_2.25.12&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;[5]&nbsp;biovizBase_1.5.9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bitops_1.0-4.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;[7]&nbsp;BSgenome_1.25.9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;colorspace_1.1-1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;[9]&nbsp;dichromat_1.2-4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;digest_0.5.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+[11]&nbsp;GenomicFeatures_1.9.44&nbsp;gtable_0.1.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+[13]&nbsp;labeling_0.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lattice_0.20-10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+[15]&nbsp;MASS_7.3-21&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;memoise_0.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+[17]&nbsp;munsell_0.4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;parallel_2.15.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+[19]&nbsp;plyr_1.7.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;proto_0.3-9.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+[21]&nbsp;RColorBrewer_1.0-5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RCurl_1.91-1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+[23]&nbsp;Rsamtools_1.9.30&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;scales_0.2.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+[25]&nbsp;stats4_2.15.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stringr_0.6.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+[27]&nbsp;tools_2.15.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;XML_3.9-4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+[29]&nbsp;zlibbioc_1.3.0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;
+</pre> </span>
+
+<div class="p"><!----></div>
+
+<br /><br /><hr /><small>File translated from
+T<sub><span class="small">E</span></sub>X
+by <a href="http://hutchinson.belmont.ma.us/tth/">
+T<sub><span class="small">T</span></sub>H</a>,
+version 4.03.<br />On  2 Oct 2012, 12:03.</small>
+
+	<!-- InstanceEndEditable -->
+        </div>
+        </div>
+      <div id="footer">
+        <table cellspacing="15" width="100%">
+          <tbody>
+            <tr>
+              <td> This research was supported in part by an NSF Postdoctoral Fellowship. </td>
+              <td align="right"> Administrator: <a
+                  href="mailto:lgoff@csail.mit.edu">Loyal Goff</a>.
+                Design by <a href="http://www.free-css-templates.com"
+                  title="Design by David Herreman">David Herreman</a> </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- Google analytics code -->
+		<script type="text/javascript">
+        
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', 'UA-318359-6']);
+          _gaq.push(['_trackPageview']);
+        
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();
+        
+        </script>
+    <!-- End google analytics code -->
+  </body>
+<!-- InstanceEnd --></html>

@@ -1,0 +1,1293 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><!-- InstanceBegin template="/Templates/master.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+    <title>CummeRbund - An R package for persistent storage, analysis, and visualization of RNA-Seq from cufflinks output</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="description" content="Open source tools for exploration, analysis and visualization of high-throughput RNA-Seq data">
+	<link href="css/style.css" rel="stylesheet" type="text/css" />
+  	<script type="text/javascript">
+  			function recordOutboundLink(link, category, action) {
+    		_gat._getTrackerByName()._trackEvent(category, action);
+    		setTimeout('document.location = "' + link.href + '"', 100);
+  		}
+	</script>
+    <!-- Place this render call where appropriate -->
+    <script type="text/javascript">
+      (function() {
+        var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+        po.src = 'https://apis.google.com/js/plusone.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+      })();
+    </script>
+    <!--Twitter jscript -->
+	<script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
+    <script type="text/javascript">var switchTo5x=false;</script><script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script><script type="text/javascript">stLight.options({publisher:'e5ec373d-ef95-4662-abba-95e509cba3c5'});</script>
+  </head>
+<body>
+    <div id="wrap">
+      <div id="top">
+        <div class="lefts">
+          <table cellpadding="2" width="100%">
+            <tbody>
+              <tr>
+                <td> <a href="./index.html">
+                    <h1>CummeRbund</h1>
+                  </a>
+                  <h2>Exploration, analysis and visualization of Cufflinks high-throughput RNA-Seq data</h2>
+                </td>
+                <td align="right" valign="middle"> 
+                 <a href="http://csail.mit.edu/" onClick="recordOutboundLink(this, 'Outbound Links', 'CSAIL');return false;"><img style="height:70px;vertical-align:middle;padding-top:4px" src="images/csail-logo-2C-notext.png" border=0></img></a>&nbsp;
+                 <a href="http://www.scrb.harvard.edu/" onClick="recordOutboundLink(this, 'Outbound Links', 'SCRB');return false;"><img style="height:70px;vertical-align:middle;padding-top:4px" src="images/HarvardShield_CMYK.png" border=0></img></a>&nbsp;
+               	 
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div id="subheader"><!-- InstanceBeginEditable name="subheader" -->
+		<h1>Manual</h1>
+      <!-- InstanceEndEditable --></div>
+      <div id="main">
+        <div id="rightside">
+          <h2>Site Map</h2>
+          <div class="box">
+            <ul>
+              <li><a href="index.html">Home</a></li>
+              <!-- #NOT SURE THIS IS NEEDED RIGHT NOW <li><a href="tutorial.html">Getting started</a></li> -->
+              <li><a href="manual_2_0.html">Manual (Stable)</a> (<a href="manual_2_0.html">HTML</a> | <a href="http://bioconductor.org/packages/2.11/bioc/vignettes/cummeRbund/inst/doc/cummeRbund-manual.pdf" target="_blank"  onClick="recordOutboundLink(this, 'Outbound Links', 'Vignette PDF');return false;">PDF</a>)</li>
+              <!-- <li><a href="../manual_2_0.html">Manual (Development) </a>(<a href="../manual_2_0.html">HTML</a> | <a href="http://www.bioconductor.org/packages/devel/bioc/vignettes/cummeRbund/inst/doc/cummeRbund-manual.pdf" target="_blank"  onclick="recordOutboundLink(this, 'Outbound Links', 'Vignette PDF 2');return false;">PDF</a>)</li> -->
+              <li><a href="http://bioconductor.org/packages/2.11/bioc/manuals/cummeRbund/man/cummeRbund.pdf" target="_blank"  onClick="recordOutboundLink(this, 'Outbound Links', 'Reference PDF');return false;">Reference</a></li>
+              <!--<li><a href="cookbook.html">Cookbook</a></li>-->
+              <!-- <li><a href="future.html">Future development</a></li> -->
+              <li><a href="faq.html">FAQ</a></li>
+              <li><br /><!-- Place this tag where you want the +1 button to render --><g:plusone></g:plusone><br />
+              <!-- Twitter button
+              <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://compbio.mit.edu/cummeRbund/" data-text="CummeRbund: Analysis of Cufflinks RNA-Seq data using #Rstats & #bioconductor" data-count="horizontal">Tweet</a>
+              -->
+              <!--Share This button-->
+              <span  class='st_twitter' ></span><span  class='st_facebook' ></span><span  class='st_email' ></span><span  class='st_delicious' ></span><span  class='st_blogger' ></span><span  class='st_sharethis' ></span>
+              </li>
+            </ul>
+          </div>
+          <h2><u>News and updates</u></h2>
+          <div class="box">
+            <ul>
+              <table width="100%">
+                <tbody>
+                  <tr>
+                    <td>New releases and related tools will be announced
+                      through the <a
+                        href="https://lists.sourceforge.net/lists/listinfo/bowtie-bio-announce"><b>mailing
+                          list</b></a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </ul>
+          </div>
+          <h2><u>Getting Help</u></h2>
+          <div class="box">
+            <ul>
+              <table width="100%">
+                <tbody>
+                  <tr>
+                    <td>Questions about CummeRbund should be sent to <a
+                        href="mailto:tophat.cufflinks@gmail.com"><b>lgoff@csail.mit.edu</b></a>.                      </td>
+                  </tr>
+                </tbody>
+              </table>
+            </ul>
+          </div>
+       
+          <a href="./downloads">
+            <h2><u>Releases</u></h2>
+          </a>
+          <div class="box">
+            <ul>
+              <!--
+              <p>Development Version</p>
+              <table width="100%">
+                <tbody>
+                  <tr>
+                    <td>version 1.2.0</td>
+                    <td align="right">4/1/2012</td>
+                  </tr>
+                  <tr>
+                    <td><a href="http://bioconductor.org/packages/devel/bioc/src/contrib/cummeRbund_1.2.0.tar.gz" onClick="recordOutboundLink(this, 'Downloads from BioC', 'Source');return false;">&nbsp;&nbsp;&nbsp;Package Source</a></td>
+                  </tr>
+                  <tr>
+                    <td><a href="http://bioconductor.org/packages/devel/bioc/bin/macosx/leopard/contrib/2.15/cummeRbund_1.2.0.tgz" onClick="recordOutboundLink(this, 'Downloads from BioC', 'Mac OS X');return false;">&nbsp;&nbsp;&nbsp;Mac OS X binary</a></td>
+                  </tr>
+                  <tr>
+                    <td><a href="http://bioconductor.org/packages/devel/bioc/bin/windows/contrib/2.15/cummeRbund_1.2.0.zip" onClick="recordOutboundLink(this, 'Downloads from BioC', 'Windows');return false;">&nbsp;&nbsp;&nbsp;Windows binary</a></td>
+                  </tr>
+                </tbody>
+              </table>
+              -->
+              <p>Stable Version (tied to Bioconductor release cycle)</p>
+              <table width="100%">
+                <tbody>
+                  <tr>
+                    <td><a href="http://bioconductor.org/packages/2.11/bioc/html/cummeRbund.html" onclick="recordOutboundLink(this, 'Bioconductor', 'BioC 2.11');return false;">version 2.0.0</a> (BioC 2.11)</td>
+                    <td align="right">10/2/2012</td>
+                  </tr>
+                  <tr>
+                    <td><a href="http://bioconductor.org/packages/2.11/bioc/src/contrib/cummeRbund_2.0.0.tar.gz" onclick="recordOutboundLink(this, 'Downloads from BioC', 'Source');return false;">&nbsp;&nbsp;&nbsp;Package Source</a></td>
+                  </tr>
+                  <tr>
+                    <td><a href="http://bioconductor.org/packages/2.11/bioc/bin/macosx/leopard/contrib/2.15/cummeRbund_2.0.0.tgz" onclick="recordOutboundLink(this, 'Downloads from BioC', 'Mac OS X');return false;">&nbsp;&nbsp;&nbsp;Mac OS X binary</a></td>
+                  </tr>
+                  <tr>
+                    <td><a href="http://bioconductor.org/packages/2.11/bioc/bin/windows/contrib/2.15/cummeRbund_2.0.0.zip" onclick="recordOutboundLink(this, 'Downloads from BioC', 'Windows');return false;">&nbsp;&nbsp;&nbsp;Windows binary</a></td>
+                  </tr>
+                </tbody>
+              </table>
+           <!-- #Development version link table
+              
+              <p>Development Version (tied to Bioconductor devel cycle)</p>
+              <table width="100%">
+                <tbody>
+                  <tr>
+                    <td>version 2.0.1</td>
+                    <td align="right">10/3/2012</td>
+                  </tr>
+                  <tr>
+                    <td><a href="http://www.bioconductor.org/packages/devel/bioc/src/contrib/cummeRbund_1.99.3.tar.gz" onclick="recordOutboundLink(this, 'Downloads from BioC', 'Source');return false;">&nbsp;&nbsp;&nbsp;Package Source</a></td>
+                  </tr>
+                  <tr>
+                    <td><a href="http://www.bioconductor.org/packages/devel/bioc/bin/macosx/leopard/contrib/2.15/cummeRbund_1.99.3.tgz" onclick="recordOutboundLink(this, 'Downloads from BioC', 'Mac OS X');return false;">&nbsp;&nbsp;&nbsp;Mac OS X binary</a></td>
+                  </tr>
+                  <tr>
+                    <td><a href="http://www.bioconductor.org/packages/devel/bioc/bin/windows/contrib/2.15/cummeRbund_1.99.3.zip" onclick="recordOutboundLink(this, 'Downloads from BioC', 'Windows');return false;">&nbsp;&nbsp;&nbsp;Windows binary</a></td>
+                  </tr>
+                </tbody>
+              </table>
+              -->
+              <!-- #Previous Releases -->
+              
+              <p>Previous Releases</p>
+              <table width="100%">
+                <tbody>
+                  <tr>
+                    <td><a href="http://www.bioconductor.org/packages/2.10/bioc/html/cummeRbund.html" onclick="recordOutboundLink(this, 'Bioconductor', 'BioC 2.10');return false;">version 1.2.0</a> (BioC 2.10)</td>
+                    <td align="right">4/12/2012</td>
+                  </tr>
+                </tbody>
+              </table>
+      
+              <p style="font-size:xx-small;font-style:italic">* <a href="http://www.bioconductor.org/packages/release/bioc/html/cummeRbund.html" onClick="recordOutboundLink(this, 'Outbound Links', 'bioconductor.org/cummeRbund');return false;">CummeRbund</a> is now included as part of the <a href="http://www.bioconductor.org"  onClick="recordOutboundLink(this, 'Outbound Links', 'bioconductor.org');return false;" target="_blank">R/Bioconductor</a> project. The links above point to the R packages directly, and  every effort should be made to use the version provided by Bioconductor as it will ensure compatibility with other Bioconductor packages. Easy installation instructions (with dependencies) can be found <a href="http://www.bioconductor.org/packages/release/bioc/html/cummeRbund.html">here</a>.</p>
+            </ul>
+          </div>
+          <h2>Related Tools</h2>
+          <div class="box">
+            <ul>
+              <li><a href="http://tophat.cbcb.umd.edu/"  onClick="recordOutboundLink(this, 'Outbound Links', 'TopHat');return false;">TopHat</a>:
+                Alignment of short RNA-Seq reads</li>
+              <li><a href="http://bowtie.cbcb.umd.edu" onClick="recordOutboundLink(this, 'Outbound Links', 'Bowtie');return false;">Bowtie</a>:
+                Ultrafast short read alignment</li>
+              <li><a href="http://cufflinks.cbcb.umd.edu" onClick="recordOutboundLink(this, 'Outbound Links', 'Cufflinks');return false;">Cufflinks</a>:
+                Transcript assembly, differential expression, and differential regulation for RNA-Seq</li>
+            </ul>
+          </div>
+          <!--
+          <h2>Publications</h2>
+          <div class="box">
+            <ul>
+              
+            </ul>
+          </div>
+          -->
+          <h2>Contributors</h2>
+          <div class="box">
+            <ul>
+              <li><a href="http://people.csail.mit.edu/lgoff/about.html">Loyal A. Goff</a></li>
+              <li><a href="http://www.cs.umd.edu/%7Ecole/">Cole Trapnell</a></li>
+              <li><a href="http://www.cbcb.umd.edu/~dakelley/">David Kelley</a></li>
+              <!--<li>David Kelley</li>-->
+             
+            </ul>
+          </div>
+          <h2>Links</h2>
+          <div class="box">
+            <ul>
+              <li><a href="http://www.csail.mit.edu/" onClick="recordOutboundLink(this, 'Outbound Links', 'CSAIL');return false;">MIT CSAIL</a></li>
+              <li><a href="http://www.scrb.harvard.edu/" onClick="recordOutboundLink(this, 'Outbound Links', 'SCRB');return false;">Harvard SCRB</a></li>
+              <li><a href="http://compbio.mit.edu/" onClick="recordOutboundLink(this, 'Outbound Links', 'Kellis Lab');return false;">Kellis Lab</a></li>
+              <li><a href="http://www.rinnlab.com/"  onClick="recordOutboundLink(this, 'Outbound Links', 'Rinn Lab');return false;">Rinn Lab</a></li>
+            </ul>
+          </div>
+        </div>
+        <!-- End of "rightside" -->
+        <div id="leftside">
+        <!-- InstanceBeginEditable name="leftside" -->
+<p align="center"><strong>v1.1.3 -- February 19, 2012 </strong></p>
+
+<h2>Contents </h2>
+<p><a href="#tth_sEc1"
+>1&nbsp; Requirements</a><br />
+  <a href="#tth_sEc2"
+>2&nbsp; Introduction</a><br />
+  <a href="#tth_sEc3"
+>3&nbsp; CummeRbund Classes</a><br />
+  &nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc3.1"
+>3.1&nbsp; CuffSet Class</a><br />
+  &nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc3.2"
+>3.2&nbsp; CuffData Class</a><br />
+  &nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc3.3"
+>3.3&nbsp; CuffDist Class</a><br />
+  &nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc3.4"
+>3.4&nbsp; CuffFeatureSet Class</a><br />
+  &nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc3.5"
+>3.5&nbsp; CuffFeature Class</a><br />
+  <a href="#tth_sEc4"
+>4&nbsp; Reading cuffdiff output</a><br />
+  &nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc4.1"
+>4.1&nbsp; Adding additional feature annotation</a><br />
+  <a href="#tth_sEc5"
+>5&nbsp; Global statistics</a><br />
+  <a href="#tth_sEc6"
+>6&nbsp; Accessing Data</a><br />
+  &nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc6.1"
+>6.1&nbsp; Writing your own SQL accessors</a><br />
+  <a href="#tth_sEc7"
+>7&nbsp; Creating Gene Sets</a><br />
+  &nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc7.1"
+>7.1&nbsp; Geneset level plots</a><br />
+  <a href="#tth_sEc8"
+>8&nbsp; Individual Genes</a><br />
+  &nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc8.1"
+>8.1&nbsp; Gene-level plots</a><br />
+  <a href="#tth_sEc9"
+>9&nbsp; Data Exploration</a><br />
+  &nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc9.1"
+>9.1&nbsp; Creating gene sets from significantly regulated genes</a><br />
+  &nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc9.2"
+>9.2&nbsp; Partitioning</a><br />
+  &nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc9.3"
+>9.3&nbsp; Specificity</a><br />
+  &nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc9.4"
+>9.4&nbsp; Finding similar genes</a><br />
+  <a href="#tth_sEc10"
+>10&nbsp; Miscellaneous</a><br />
+  <a href="#tth_sEc11"
+>11&nbsp; Known Issues</a><br />
+  <a href="#tth_sEc12"
+>12&nbsp; Session info</a></p>
+<p><br />
+  
+  
+  
+</p>
+<h2><a name="tth_sEc1">1</a> 
+Requirements</h2>
+
+<ul>
+<li> Cufflinks  <font face="symbol">≥</font
+>  v1.1.0 (Note: as of the release of this package, the current version of cufflinks is 1.3.3.  While this package will work with &#62;v1.1, we recommend updating your cufflinks prior to using cummeRbund)</li>
+
+<li> R  <font face="symbol">≥</font
+>  v2.7.0<br /></li>
+
+<li> Packages:
+	
+<ul>
+<li> <font face="helvetica">RSQLite</font><br /></li>
+
+<li> <font face="helvetica">ggplot2</font><br /></li>
+
+<li> <font face="helvetica">reshape2</font><br /></li>
+
+<li> <font face="helvetica">plyr</font></li>
+</ul>
+<br />
+</li>
+</ul>
+
+
+ <h2><a name="tth_sEc2">
+2</a>&nbsp;&nbsp;Introduction</h2>
+	<p><font face="helvetica">cummeRbund</font> is a visualization package for Cufflinks high-throughput sequencing data. The base class, <i>cuffSet</i> 
+	  is a 'pointer' to cufflinks data that are stored out-of-memory in a sqlite database.
+	 </p>
+	<p>&nbsp; </p>
+	<h2><a name="tth_sEc3">
+3</a>&nbsp;&nbsp;CummeRbund Classes     </h2>
+	<h3><a name="tth_sEc3.1">
+	  3.1</a>&nbsp;&nbsp;CuffSet Class</h3>
+	 <p>A pointer class to control access to the sqlite tables holding the Cufflinks data. The primary slot is DB which contains the RSQLite connection object. This can be accessed using the <i>DB()</i> accessor.
+	   The additional slots (genes, isoforms, TSS, and CDS) are each instances of the <i>CuffData</i> class and are pointers to sets of tables for each data subtype. They can be accessed with similar accessor wrappers.
+	   This is the default class created by <i>readCufflinks</i>.  By default, <i>CuffData</i> accessor methods applied to a <i>CuffSet</i> class will operate on the 'genes' slot.
+	  </p>
+	 <p>&nbsp; </p>
+	 <h3><a name="tth_sEc3.2">
+3.2</a>&nbsp;&nbsp;CuffData Class</h3>
+	The <i>CuffData</i> class is also a pointer class to the SQL backend, but each instance is specific for a data subtype (genes, isoforms, TSS, CDS). Again, there is an DB slot (accessible using <i>DB()</i>) that contains the RSQLite connection object.
+	There are several accessor, setter, and plotting methods that allow for global analysis of all features within a <i>CuffData</i> class.Subsetting is currently being re-written, however, it is primarily done through the 'gene_id' field.
+	Available slots for the CuffData class are: 
+	
+<ul>
+<li> DB: RSQLite connection object<br /><br /></li>
+
+<li> tables: A <i>list</i> of tables in the SQLite DB that contain the cufflinks data.<br /><br /></li>
+
+<li> filters: A <i>list</i> of filters for subsetting (not implemented yet).<br /><br /></li>
+
+<li> type: A <i>character</i> field describing the data (ie. 'genes','isoforms','TSS','CDS','other')<br /><br /></li>
+
+<li> idField: The name of the identifying index field for this object (eg. 'gene_id' for type='gene', or 'isoform_id' for type='isoform')<br /><br /></li>
+</ul>
+	<p>Making the best use of either the CuffSet or CuffData classes will enable you to keep the entire dataset out of memory and significantly improve performance for large cufflinks datasets. </p>
+	<p>&nbsp;</p>
+	<h3><a name="tth_sEc3.3">
+3.3</a>&nbsp;&nbsp;CuffDist Class</h3>
+	The <i>CuffDist</i> class is an pointer class that contains the results of the various 'distribution tests' performed by cuffdiff.  These include differential promoter usage, differential splicing, and differential CDS usage.  These are independent tests from the differential analysis of gene-, isoform-, TSS-, and CDS-level features and therefore
+	have their own container type to distinguish them as such.  The 'promoters', 'relCDS', and 'splicing' slots of a <i>CuffSet</i> class are all <i>CuffDist</i> instances.
+
+
+	Available slots for the CuffDist class are:
+	
+<ul>
+<li> DB: RSQLite connection object<br /><br /></li>
+
+<li> tables: A <i>list</i> of tables in the SQLite DB that contain the distribution test data.<br /><br /></li>
+
+<li> type: A <i>character</i> field describing the data (ie. 'promoters','relCDS','splicing')<br /><br /></li>
+
+<li> idField: The name of the identifying index field for this object (eg. 'TSS_group_id' for type='promoters', or 'CDS_id' for type='relCDS', etc.)<br /><br /></li>
+</ul>
+
+
+     <h3><a name="tth_sEc3.4">
+3.4</a>&nbsp;&nbsp;CuffFeatureSet Class</h3>
+	The <i>CuffFeatureSet</i> class is a data-storage container that holds all available data for a pre-determined list of features. Slots for FPKM data, differential regulation data, and feature-level annotation are all available. Unlike the previous classes, this class contains no connection information to the SQL database, but
+	rather contains several slots with <i>data.frame</i> objects storing multiple-features worth of information.  There are available accessors, and plotting methods that are designed to present multiple-features worth of information (eg. heatmaps, scatterplots, etc)
+	Available slots for a <i>CuffFeatureSet</i> object include:
+	
+<ul>
+<li> annotation: Holds all feature-level annotation information for all features in object.<br /><br /></li>
+
+<li> fpkm: A data frame of FPKM data across all samples, for all features in object.<br /><br /></li>
+
+<li> diff: A data frame of differential expression/regulation data for all features in object.<br /><br /></li>
+</ul>
+
+
+	A specialized sub-class of <i>CuffFeatureSet</i> is the <i>CuffGeneSet</i> class. This subclass adds additional slots to contain all isoforms, TSS, and CDS information for a given set of gene_ids.  The <i>CuffGeneSet</i> class is designed to aggregate all relevant
+	information for a set of genes into one object for easy analysis and/or manipulation.
+	The <i>CuffGeneSet</i> object adds the following slots:
+	
+<ul>
+<li> ids: A 'character' list of all gene_ids used in object.<br /><br /></li>
+
+<li> isoforms: A <i>CuffFeatureSet</i> object for all isoforms of genes in object.<br /><br /></li>
+
+<li> TSS: A <i>CuffFeatureSet</i> object for all TSS of genes in object.<br /><br /></li>
+
+<li> CDS: A <i>CuffFeatureSet</i> object for all CDS of genes in object.<br /><br /></li>
+</ul>
+
+
+     <h3><a name="tth_sEc3.5">
+3.5</a>&nbsp;&nbsp;CuffFeature Class</h3>
+	The <i>CuffFeature</i> class is designed for single-feature-level data analysis and plotting.  The methods available for this object are designed to analyze or visualize information about a specific feature.
+	This is a 'data' object, as opposed to a 'pointer' object to the database backend. There is a validity requirement that a <i>CuffFeature</i> object only point to data from a single feature.
+	Available slots for a <i>CuffFeature</i> object include:
+	
+<ul>
+<li> annotation: Holds feature-level annotation information for a given feature.<br /><br /></li>
+
+<li> fpkm: A data frame of FPKM data across all samples for a given feature.<br /><br /></li>
+
+<li> diff: A data frame of differential expression/regulation data for a given feature.<br /><br /></li>
+</ul>
+
+
+	A specialized sub-class of <i>CuffFeature</i> is the <i>CuffGene</i> class. This subclass adds additional slots to contain all isoform, TSS, and CDS information for a given gene.
+	The <i>CuffGene</i> object adds the following slots:
+	
+<ul>
+<li> id: The common 'gene_id' for all data in object<br /><br /></li>
+
+<li> isoforms: A <i>CuffFeature</i> object for all isoforms of a given gene.<br /><br /></li>
+
+<li> TSS: A <i>CuffFeature</i> object for all TSS of a given gene.<br /><br /></li>
+
+<li> CDS: A <i>CuffFeature</i> object for all CDS of a given gene.<br /><br /></li>
+</ul>
+
+
+ <h2><a name="tth_sEc4">
+4</a>&nbsp;&nbsp;Reading cuffdiff output</h2>
+<font face="helvetica">cummeRbund</font> was designed to process the multi-file output format for a 'cuffdiff' differential expression analysis.  In this type of analysis, a user will use a reference .gtf file (either known annotation or a .gtf file created from a cufflinks assembly or merge of assemblies) and quantitate the expression values and differential regulation of the annotation(s) in the .gtf file across two or more SAM/BAM files.
+By design, cuffdiff produces a number of output files that contain test results for changes in expression at the level of transcripts, primary transcripts, and genes. It also tracks changes in the relative abundance of transcripts sharing a common transcription start site, and in the relative abundances of the primary transcripts of each gene. Tracking the former allows one to see changes in splicing, and the latter lets one see changes in relative promoter use within a gene. <br />
+
+
+Note:Early versions of Cuffdiff required that transcripts in the input GTF be annotated with certain attributes in order to look for changes in primary transcript expression, splicing, coding output, and promoter use. This is no longer the case with &#62;=v1.1.1 of <font face="helvetica">cummeRbund</font>, however we still recommend the use of both the following attributes in your GTF file to enable all downstream features of <font face="helvetica">cummeRbund</font>. <br />
+
+
+These attributes are:
+
+<ul>
+<li> tss_id: The ID of this transcript's inferred start site. Determines which primary transcript this processed transcript is believed to come from. Cuffcompare appends this attribute to every transcript reported in the .combined.gtf file.<br /><br /></li>
+
+<li> p_id	The ID of the coding sequence this transcript contains. This attribute is attached by Cuffcompare to the .combined.gtf records only when it is run with a reference annotation that include CDS records. Further, differential CDS analysis is only performed when all isoforms of a gene have p_id attributes, because neither Cufflinks nor Cuffcompare attempt to assign an open reading frame to transcripts.<br /><br /></li>
+</ul>
+
+
+cuffdiff calculates the FPKM of each transcript, primary transcript, and gene in each sample. Primary transcript and gene FPKMs are computed by summing the FPKMs of transcripts in each primary transcript group or gene group. The results are output in FPKM tracking files, the structure of which can be found in the cufflinks manual.<br />
+
+
+There are four FPKM tracking files:
+
+<ul>
+<li> <em>isoforms.fpkm_tracking</em>	Transcript FPKMs<br /><br /></li>
+
+<li> <em>genes.fpkm_tracking</em>	Gene FPKMs. Tracks the summed FPKM of transcripts sharing each gene_id<br /><br /></li>
+
+<li> <em>cds.fpkm_tracking</em>	Coding sequence FPKMs. Tracks the summed FPKM of transcripts sharing each p_id, independent of tss_id<br /><br /></li>
+
+<li> <em>tss_groups.fpkm_tracking</em>	Primary transcript FPKMs. Tracks the summed FPKM of transcripts sharing each tss_id<br /><br /></li>
+</ul>
+
+
+cuffdiff also performs differential expression tests between supplied conditions. This tab delimited file lists the results of differential expression testing between samples for spliced transcripts, primary transcripts, genes, and coding sequences. For detailed file structure see cufflinks manual. <br />
+
+
+Four .diff files are created:
+
+<ul>
+<li> <em>isoform_exp.diff</em>	Transcript differential FPKM.<br /><br /></li>
+
+<li> <em>gene_exp.diff</em>	Gene differential FPKM. Tests difference sin the summed FPKM of transcripts sharing each gene_id<br /><br /></li>
+
+<li> <em>tss_group_exp.diff</em>	Primary transcript differential FPKM. Tests differences in the summed FPKM of transcripts sharing each tss_id<br /><br /></li>
+
+<li> <em>cds_exp.diff</em>	Coding sequence differential FPKM. Tests differences in the summed FPKM of transcripts sharing each p_id independent of tss_id<br /><br /></li>
+</ul>
+
+
+In addition, cuffdiff also performs differential splicing, CDS usage, and promoter usage tests for each gene across conditions:
+
+
+
+<ul>
+<li> <em>splicing.diff</em>	Differential splicing tests.<br /><br /></li>
+
+<li> <em>CDS.diff</em>	Differential coding output.<br /><br /></li>
+
+<li> <em>promoters.diff</em>	Differential promoter use.<br /><br /></li>
+</ul>
+
+
+All of these output files are related to each other through their various tracking_ids, but parsing through individual files to query for important result information requires both a good deal of patience and a strong grasp of command-line text manipulation. Enter cummeRbund, an R solution to aggregate, organize, and help visualize this multi-layered dataset. <br />
+One of the principle benefits of using cummeRbund is that data are stored in a SQLite database.  This allows for out-of-memory analysis of data, quick retrieval, and only a one-time cost to setup the tables. By default, cummeRbund assumes that all output files from cuffdiff are in the current working directory.
+To read these files, populate the 'cuffData.db' database backend, and return the <i>CuffSet</i> pointer object, you can do the following. 
+
+
+   <font color="#FF0000">
+<pre>
+&#62; library(cummeRbund)
+</pre> </font>
+
+
+
+
+  <font color="#FF0000">
+<pre>
+&#62; cuff &lt;- readCufflinks(dir = system.file("extdata", 
++     package = "cummeRbund"))
+&#62; cuff
+ 
+</pre> </font>
+  <font color="#0000FF">
+<pre>
+CuffSet instance with:
+	 3 samples
+	 400 genes
+	 1203 isoforms
+	 575 TSS
+	 545 CDS
+	 960 promoters
+	 1725 splicing
+	 696 relCDS
+ 
+</pre></font>
+  <p><font color="#0000FF"> </font>
+    
+    
+    Again, by default dir is assumed to be the current working directory and <tt>cuff&lt;-readCufflinks()</tt> should work if all appropriate files are in the current working directory. Should you need to rebuild the SQLite backend for any reason, you can add the option <i>rebuild=T</i> to <i>readCufflinks</i>.  Once the database is created, <i>readCufflinks</i> will default to using the SQL backend and should not need to rebuild this database.
+    Each R session should begin with a call to <i>readCufflinks</i> so as to initialize the database connection and create an object with the appropriate RSQLite connection information. 
+   </p>
+  <p>&nbsp; </p>
+  <h3><a name="tth_sEc4.1">
+4.1</a>&nbsp;&nbsp;Adding additional feature annotation</h3>
+     <p>Gene- or feature-level annotation can be permanently added to the database tables for future querying. If you have a data.frame where the first column contains the 'tracking_id' (eg. 'gene_id' for genes, 'isoform_id' for isoforms, etc). You can easily add feature level annotation using the <tt>addFeatures()</tt> function:
+       
+       
+       By default, features added to a <i>CuffSet</i> object are assumed to be gene-level annotations, but the level can selected using the argument <i>level</i>. Features added to a <i>CuffData</i> object are assumed to be of the same type as the 'type' value for that given object (e.g. gene-level features for 'genes', isoform-level features for isoforms, etc.)
+      </p>
+     <p>&nbsp; </p>
+     <h2><a name="tth_sEc5">
+5</a>&nbsp;&nbsp;Global statistics</h2>
+Several plotting methods are available that allow for quality-control or global analysis of cufflinks data. For example, to assess the
+distributions of FPKM scores across samples, you can use the <i>csDensity</i> plot (Figure 1).
+
+
+  <font color="#FF0000">
+<pre>
+&#62; dens &lt;- csDensity(genes(cuff))
+&#62; dens
+ 
+<img src="images/plots/cummeRbund-manual-global_plots_dens.png" alt="" width="500" height="500" /></pre> 
+</font>
+
+
+
+Boxplots can be visualized using the <i>csBoxplot</i> method (Figure 2).
+
+
+  <font color="#FF0000">
+<pre>
+&#62; b &lt;- csBoxplot(genes(cuff))
+&#62; b
+ 
+<img src="images/plots/cummeRbund-manual-global_plots_box.png" alt="" width="500" height="500" /></pre> 
+</font>
+
+
+
+Pairwise comparisons can be made by using <i>csScatter</i>. You must specify the sample names to use for the x and y axes:
+
+
+  <font color="#FF0000">
+<pre>
+&#62; s &lt;- csScatter(genes(cuff), "hESC", "Fibroblasts", 
++     smooth = T)
+&#62; s
+ 
+<img src="images/plots/cummeRbund-manual-global_plots_scatter.png" alt="" width="500" height="500" /></pre> 
+</font>
+
+
+
+Volcano plots are also available for the <i>CuffData</i> objects. Again, you must specify the comparisons by sample name.
+
+
+  <font color="#FF0000">
+<pre>
+&#62; v &lt;- csVolcano(genes(cuff), "hESC", "Fibroblasts")
+&#62; v
+ 
+<img src="images/plots/cummeRbund-manual-global_plots_volcano.png" alt="" width="500" height="500" /></pre> 
+</font>
+
+
+
+ <h2><a name="tth_sEc6">
+6</a>&nbsp;&nbsp;Accessing Data</h2>
+Feature-level information can be accessed directly from a <i>CuffData</i> object using the <i>fpkm</i>, <i>diffData</i>, or <i>features</i> methods:
+
+
+   <font color="#FF0000">
+<pre>
+&#62; gene.features &lt;- features(genes(cuff))
+&#62; head(gene.features)
+ 
+</pre> </font>
+  <font color="#0000FF">
+<pre>
+      gene_id class_code nearest_ref_id gene_short_name
+1 XLOC_000001       &lt;NA&#62;           &lt;NA&#62;            &lt;NA&#62;
+2 XLOC_000002       &lt;NA&#62;           &lt;NA&#62;           OR4F5
+3 XLOC_000003       &lt;NA&#62;           &lt;NA&#62;            &lt;NA&#62;
+4 XLOC_000004       &lt;NA&#62;           &lt;NA&#62;            &lt;NA&#62;
+5 XLOC_000005       &lt;NA&#62;           &lt;NA&#62;            &lt;NA&#62;
+6 XLOC_000006       &lt;NA&#62;           &lt;NA&#62;          OR4F16
+               locus length coverage gene_id
+1   chr1:11873-29961     NA       NA    &lt;NA&#62;
+2   chr1:69090-70008     NA       NA    &lt;NA&#62;
+3 chr1:321083-321114     NA       NA    &lt;NA&#62;
+4 chr1:321145-321223     NA       NA    &lt;NA&#62;
+5 chr1:322036-328580     NA       NA    &lt;NA&#62;
+6 chr1:367658-368595     NA       NA    &lt;NA&#62;
+ 
+</pre> </font>
+  <font color="#FF0000">
+<pre>
+&#62; gene.fpkm &lt;- fpkm(genes(cuff))
+&#62; head(gene.fpkm)
+ 
+</pre> </font>
+  <font color="#0000FF">
+<pre>
+      gene_id sample_name      fpkm    conf_hi conf_lo
+1 XLOC_000001 Fibroblasts 16.401100  428.14700       0
+2 XLOC_000001        hESC  0.723836    3.01108       0
+3 XLOC_000001         iPS 54.067200 1402.31000       0
+4 XLOC_000002 Fibroblasts  0.000000    0.00000       0
+5 XLOC_000002        hESC  0.000000    0.00000       0
+6 XLOC_000002         iPS  0.000000    0.00000       0
+  quant_status
+1      LOWDATA
+2           OK
+3      LOWDATA
+4           OK
+5           OK
+6           OK
+ 
+</pre> </font>
+  <font color="#FF0000">
+<pre>
+&#62; isoform.fpkm &lt;- fpkm(isoforms(cuff))
+&#62; head(isoform.fpkm)
+ 
+</pre> </font>
+  <font color="#0000FF">
+<pre>
+      isoform_id sample_name      fpkm  conf_hi  conf_lo
+1 TCONS_00000001 Fibroblasts 11.910700 19.96650  3.85498
+2 TCONS_00000001        hESC  0.000000  0.00000  0.00000
+3 TCONS_00000001         iPS  9.563700 23.68410  0.00000
+4 TCONS_00000002 Fibroblasts  0.000000  8.55378  0.00000
+5 TCONS_00000002        hESC  0.723836  3.01108  0.00000
+6 TCONS_00000002         iPS 32.934400 47.93760 17.93130
+  quant_status
+1           OK
+2           OK
+3      LOWDATA
+4           OK
+5           OK
+6           OK
+ 
+</pre> </font>
+  <font color="#FF0000">
+<pre>
+&#62; gene.diff &lt;- diffData(genes(cuff))
+&#62; head(gene.diff)
+ 
+</pre> </font>
+  <font color="#0000FF">
+<pre>
+      gene_id sample_1    sample_2 status     value_1    value_2
+1 XLOC_000001     hESC Fibroblasts     OK 7.23836e-01    16.4011
+2 XLOC_000002     hESC Fibroblasts NOTEST 0.00000e+00     0.0000
+3 XLOC_000003     hESC Fibroblasts NOTEST 0.00000e+00     0.0000
+4 XLOC_000004     hESC Fibroblasts     OK 1.20000e+06 22616.4000
+5 XLOC_000005     hESC Fibroblasts     OK 1.13903e+03    41.1644
+6 XLOC_000006     hESC Fibroblasts NOTEST 0.00000e+00     0.0000
+  log2_fold_change test_stat  p_value  q_value significant
+1          4.50198 -0.246654 0.805176 0.893616          no
+2          0.00000  0.000000 1.000000 1.000000          no
+3          0.00000  0.000000 1.000000 1.000000          no
+4         -5.72952  1.310270 0.190105 0.300329          no
+5         -4.79027 10.857600 0.000000 0.000000         yes
+6          0.00000  0.000000 1.000000 1.000000          no
+ 
+</pre> </font>
+
+
+Vectors of sample names and feature names are available by using the <i>samples</i> and <i>featureNames</i> methods:
+
+
+   <font color="#FF0000">
+<pre>
+&#62; sample.names &lt;- samples(genes(cuff))
+&#62; head(sample.names)
+ 
+</pre> </font>
+  <font color="#0000FF">
+<pre>
+[1] "hESC"        "Fibroblasts" "iPS"        
+ 
+</pre> </font>
+  <font color="#FF0000">
+<pre>
+&#62; gene.featurenames &lt;- featureNames(genes(cuff))
+&#62; head(gene.featurenames)
+ 
+</pre> </font>
+  <font color="#0000FF">
+<pre>
+[1] "XLOC_000001" "XLOC_000002" "XLOC_000003" "XLOC_000004"
+[5] "XLOC_000005" "XLOC_000006"
+ 
+</pre> </font>
+
+
+To facilitate Bioconductor-like operations, an 'FPKM-matrix' can be returned easily using the <i>fpkmMatrix</i> method:
+
+
+  <font color="#FF0000">
+<pre>
+&#62; gene.matrix &lt;- fpkmMatrix(genes(cuff))
+&#62; head(gene.matrix)
+ 
+</pre> </font>
+  <font color="#0000FF">
+<pre>
+                   hESC Fibroblasts       iPS
+XLOC_000001 7.23836e-01     16.4011  54.06720
+XLOC_000002 0.00000e+00      0.0000   0.00000
+XLOC_000003 0.00000e+00      0.0000   0.00000
+XLOC_000004 1.20000e+06  22616.4000   0.00000
+XLOC_000005 1.13903e+03     41.1644 944.30800
+XLOC_000006 0.00000e+00      0.0000   9.00455
+ 
+</pre> </font>
+
+
+     <h3><a name="tth_sEc6.1">
+6.1</a>&nbsp;&nbsp;Writing your own SQL accessors</h3>
+Since the cuffData.db is a SQLite database backend, if you are familiar with SQL and/or RSQLite query construction, you can simply design your own SQL queries to access the data that you are after. 
+
+
+
+
+<a name="tth_fIg1">
+</a> <center><a href="images/cuffData_schema.pdf"><img src="images/cuffData_schema.png" alt="" width="895" height="624" />Figure</a>
+
+
+</center>
+
+  <h2><a name="tth_sEc7">
+7</a>&nbsp;&nbsp;Creating Gene Sets</h2>
+Gene Sets (stored in a <i>CuffGeneSet</i> object) can be created using the <i>getGenes</i> method on a CuffSet object.
+You must first create a vector of 'gene_id' or 'gene_short_name' values to identify the genes you wish to select:
+
+
+   <font color="#FF0000">
+<pre>
+&#62; data(sampleData)
+&#62; myGeneIds &lt;- sampleIDs
+&#62; myGeneIds
+ 
+</pre> </font>
+  <font color="#0000FF">
+<pre>
+ [1] "XLOC_001363" "XLOC_001297" "XLOC_001339" "XLOC_000132"
+ [5] "XLOC_001265" "XLOC_000151" "XLOC_001359" "XLOC_000069"
+ [9] "XLOC_000170" "XLOC_000105" "XLOC_001262" "XLOC_001348"
+[13] "XLOC_001411" "XLOC_001369" "XLOC_000158" "XLOC_001370"
+[17] "XLOC_001263" "XLOC_000115" "XLOC_000089" "XLOC_001240"
+ 
+</pre> </font>
+  <font color="#FF0000">
+<pre>
+&#62; myGenes &lt;- getGenes(cuff, myGeneIds)
+&#62; myGenes
+ 
+</pre> </font>
+  <font color="#0000FF">
+<pre>
+CuffGeneSet instance for  20  genes
+ 
+Slots:
+	 annotation
+	 fpkm
+	 diff
+	 isoforms	 CuffFeatureSet instance of size 45 
+	 TSS		 CuffFeatureSet instance of size 18 
+	 CDS		 CuffFeatureSet instance of size 31 
+	 promoters		 CuffFeatureSet instance of size 20 
+	 splicing		 CuffFeatureSet instance of size 18 
+	 relCDS		 CuffFeatureSet instance of size 20 
+ 
+</pre></font>
+  <p><font color="#0000FF"> </font>
+    
+    
+    The same <i>fpkm</i>, <i>fpkmMatrix</i>, <i>features</i>, <i>diffData</i>, <i>samples</i>, and <i>featureNames</i> are available for instances of the <i>CuffGeneSet</i> class, but additional accessor methods are available for the <i>promoters</i>,<i>relCDS</i>, and <i>splicing</i> slot data as well.
+   </p>
+  <p>&nbsp; </p>
+  <h3><a name="tth_sEc7.1">
+7.1</a>&nbsp;&nbsp;Geneset level plots</h3>
+There are several plotting functions available for gene-set-level visualization:
+
+
+The <i>csHeatmap()</i> function is a plotting wrapper that takes as input either a CuffGeneSet or a CuffFeatureSet object (essentially a collection of genes and/or features) and produces a heatmap of FPKM expression values.  The 'cluster' argument can be used to re-order either 'row', 'column', or 'both' dimensions of this matrix.
+By default, the Jensen-Shannon distance is used as the clustering metric, however, any function that produces a <i>dist</i> object can be passed to the 'cluster' argument as well.
+
+
+   <font color="#FF0000">
+<pre>
+&#62; h &lt;- csHeatmap(myGenes, cluster = "both")
+&#62; h
+</pre> </font>
+
+<div class="p"><img src="images/plots/cummeRbund-manual-geneset_plots_heatmap.png" alt="" width="500" height="500" /></div>
+
+If you prefer barplots over heatmaps for genesets (although this is not necessarily recommended for large gene sets). You can use the <i>expressionBarplot()</i> method on a <i>CuffFeatureSet</i> or a <i>CuffGeneSet</i> object.
+
+
+  <font color="#FF0000">
+<pre>
+&#62; b &lt;- expressionBarplot(myGenes)
+&#62; b
+<a href="graphics/plot-geneset_plots_barplot"></a><img src="images/plots/cummeRbund-manual-geneset_plots_barplot.png" alt="" width="500" height="500" />
+</pre>
+  </font>
+  
+The <i>csScatter()</i> method can be used to produce scatter plot comparisons between any two conditions.
+
+
+  <font color="#FF0000">
+<pre>
+&#62; s &lt;- csScatter(myGenes, "Fibroblasts", "hESC", smooth = T)
+&#62; s
+
+<img src="images/plots/cummeRbund-manual-geneset_plots_scatter.png" alt="" width="500" height="500" /></pre>
+  </font>
+  
+The volcano plot is a useful visualization to compare fold change between any two conditions and significance (-log P-values).
+
+
+  <font color="#FF0000">
+<pre>
+&#62; v &lt;- csVolcano(myGenes, "Fibroblasts", "hESC")
+&#62; v<a href="graphics/plot-geneset_plots_volcano"></a>
+
+<img src="images/plots/cummeRbund-manual-geneset_plots_volcano.png" alt="" width="500" height="500" /></pre>
+  </font>
+  
+Similar plots can be made for all sub-level features of a <i>CuffGeneSet</i> class by specifying which slot you would like to plot (eg. <i>isoforms(myGenes)</i>,<i>TSS(myGenes)</i>,<i>CDS(myGenes)</i>).
+
+
+   <font color="#FF0000">
+<pre>
+&#62; ih &lt;- csHeatmap(isoforms(myGenes), cluster = "both", 
++     labRow = F)
+&#62; ih
+ </pre> </font>
+
+<div class="p"><img src="images/plots/cummeRbund-manual-geneset_plots_isoform_heatmap.png" alt="" width="500" height="500" /></div>
+
+Dendrograms can provide insight into the relationships between conditions for various genesets (e.g. significant genes used to draw relationships between conditions). As of v1.1.3 the method <i>csDendro()</i>
+can be used to plot a dendrogram based on Jensen-Shannon distances between conditions for a given <i>CuffFeatureSet</i> or <i>CuffGeneSet</i>.
+
+
+  <font color="#FF0000">
+<pre>
+&#62; den &lt;- csDendro(myGenes)<a href="graphics/plot-geneset_plots_dendro"></a>
+
+<img src="images/plots/cummeRbund-manual-geneset_plots_dendro.png" alt="" width="500" height="500" /></pre>
+  </font>
+  
+ <h2><a name="tth_sEc8">
+8</a>&nbsp;&nbsp;Individual Genes</h2>
+An individual CuffGene object can be created by using the <tt>getGene</tt> function for a given 'gene_id' or 'gene_short_name'.
+
+
+  <font color="#FF0000">
+<pre>
+&#62; myGeneId &lt;- "PINK1"
+&#62; myGene &lt;- getGene(cuff, myGeneId)
+&#62; myGene
+ 
+</pre> </font>
+  <font color="#0000FF">
+<pre>
+CuffGene instance for gene PINK1 
+Short name:	 PINK1 
+Slots:
+	 annotation
+	 fpkm
+	 diff
+	 isoforms	 CuffFeature instance of size 2 
+	 TSS		 CuffFeature instance of size 2 
+	 CDS		 CuffFeature instance of size 2 
+ 
+</pre> </font>
+  <font color="#FF0000">
+<pre>
+&#62; head(fpkm(myGene))
+ 
+</pre> </font>
+  <font color="#0000FF">
+<pre>
+      gene_id sample_name     fpkm  conf_hi  conf_lo
+1 XLOC_000172 Fibroblasts 2919.340 4002.960 1835.730
+2 XLOC_000172        hESC  693.465  813.869  573.062
+3 XLOC_000172         iPS 1598.040 2282.380  913.710
+  quant_status
+1           OK
+2           OK
+3           OK
+ 
+</pre> </font>
+  <font color="#FF0000">
+<pre>
+&#62; head(fpkm(isoforms(myGene)))
+ 
+</pre> </font>
+  <font color="#0000FF">
+<pre>
+      isoform_id sample_name     fpkm  conf_hi   conf_lo
+1 TCONS_00000480 Fibroblasts 2101.640 3111.330 1091.9400
+2 TCONS_00000481 Fibroblasts  817.704 1391.700  243.7120
+3 TCONS_00000480        hESC  573.512  668.688  478.3370
+4 TCONS_00000481        hESC  119.953  152.675   87.2311
+5 TCONS_00000480         iPS 1598.040 2282.380  913.7100
+6 TCONS_00000481         iPS    0.000    0.000    0.0000
+  quant_status
+1           OK
+2           OK
+3           OK
+4           OK
+5           OK
+6           OK
+ 
+</pre> </font>
+
+
+     <h3><a name="tth_sEc8.1">
+8.1</a>&nbsp;&nbsp;Gene-level plots</h3>
+
+
+  <font color="#FF0000">
+<pre>
+&#62; gl &lt;- expressionPlot(myGene)
+&#62; gl
+</pre> </font>
+
+<div class="p"><img src="images/plots/cummeRbund-manual-gene_plots_line.png" alt="" width="500" height="500" /></div>
+
+   <font color="#FF0000">
+<pre>
+&#62; gb &lt;- expressionBarplot(myGene)
+&#62; gb<a href="graphics/plot-gene_plots_bar"></a>
+
+<img src="images/plots/cummeRbund-manual-gene_plots_bar.png" alt="" width="500" height="500" /></pre>
+   </font>
+   
+   <font color="#FF0000">
+<pre>
+&#62; igb &lt;- expressionBarplot(isoforms(myGene))
+&#62; igb<a href="graphics/plot-gene_plots_bar_isoforms"></a>
+<img src="images/plots/cummeRbund-manual-gene_plots_bar_isoforms.png" alt="" width="500" height="500" />
+</pre>
+   </font>
+   
+ <h2><a name="tth_sEc9">
+9</a>&nbsp;&nbsp;Data Exploration</h2>
+ <p>The cummeRbund package is more than just a visualization tool as well.  We are working to implement several different means of data exploration from gene and condition clustering, finding features with similar expression profiles, as well as incorporating Gene Ontology analysis. </p>
+ <p>&nbsp;</p>
+ <h3><a name="tth_sEc9.1">
+9.1</a>&nbsp;&nbsp;Creating gene sets from significantly regulated genes</h3>
+One of the primary roles of a differential expression analysis is to conduct significance tests on each feature (genes, isoforms, TSS, and CDS) for appropriate pairwise comparisons of conditions. The results of these tests (after multiple testing correction of course) can be used to determine which genes are differentially regulated. 
+<font face="helvetica">cummeRbund</font> makes accessing the results of these significance tests simple via <i>getSig()</i>. This function takes a CuffSet object and will scan at various feature levels ('genes' by default) to produce a <i>vector</i> of feature IDs.
+By default <i>getSig()</i> outputs a vector of tracking IDs corresponding to all <em>genes</em> that reject the null hypothesis in any condition tested. The default feature type can be changed by adjusting the 'level' argument to <i>getSig()</i>. In addition, a alpha value can be provided on which to filter the resulting list
+(the default is 0.05 to match the default of cuffdiff). 
+
+
+   <font color="#FF0000">
+<pre>
+&#62; mySigGenes &lt;- getSig(cuff, alpha = 0.05, level = "genes")
+&#62; head(mySigGenes)
+ 
+</pre> </font>
+  <font color="#0000FF">
+<pre>
+[1] "XLOC_000005" "XLOC_000014" "XLOC_000015" "XLOC_000016"
+[5] "XLOC_000018" "XLOC_000025"
+ 
+</pre> </font>
+  <font color="#FF0000">
+<pre>
+&#62; length(mySigGenes)
+ 
+</pre> </font>
+  <font color="#0000FF">
+<pre>
+[1] 220
+ 
+</pre> </font>
+
+
+By default <i>getSig()</i> outputs a vector of tracking IDs corresponding to all <em>genes</em> that reject the null hypothesis in any condition tested. The default feature type can be changed by adjusting the 'level' argument to <i>getSig()</i>. In addition, a alpha value can be provided on which to filter the resulting list
+(the default is 0.05 to match the default of cuffdiff). Significance results for specific pairwise comparisons can be retrieved as well by specifying the two conditions as 'x' and 'y'. In this case, p-values are adjusted to reduce the impact of multiple-testing correction when only one set of tests is being conducted.
+
+
+   <font color="#FF0000">
+<pre>
+&#62; hESC_vs_iPS.sigIsoforms &lt;- getSig(cuff, x = "hESC", 
++     y = "iPS", alpha = 0.05, level = "isoforms")
+&#62; head(hESC_vs_iPS.sigIsoforms)
+ 
+</pre> </font>
+  <font color="#0000FF">
+<pre>
+[1] "TCONS_00000006" "TCONS_00000018" "TCONS_00000034"
+[4] "TCONS_00000041" "TCONS_00000043" "TCONS_00000048"
+ 
+</pre> </font>
+  <font color="#FF0000">
+<pre>
+&#62; length(hESC_vs_iPS.sigIsoforms)
+ 
+</pre> </font>
+  <font color="#0000FF">
+<pre>
+[1] 247
+ 
+</pre> </font>
+
+
+The values returned for each level of this list can be used as an argument to getGenes, to create a <i>CuffGeneSet</i> object of significantly regulated genes (or features).
+
+
+Alternatively, you can use the <i>getSigTable()</i> method to return a full test-table of 'significant features' x 'pairwise tests' for all comparisons. Only features in which the null hypothesis can be rejected in at least one test are reported.
+
+
+   <font color="#FF0000">
+<pre>
+&#62; mySigTable &lt;- getSigTable(cuff, alpha = 0.01, level = "genes")
+&#62; head(mySigTable, 20)
+ 
+</pre> </font>
+  <font color="#0000FF">
+<pre>
+       gene_id FibroblastsvsiPS hESCvsFibroblasts hESCvsiPS
+3  XLOC_000005                1                 1         0
+6  XLOC_000014                1                 1         0
+7  XLOC_000015                1                 0         1
+8  XLOC_000016                0                 1         1
+11 XLOC_000019                1                 0         1
+14 XLOC_000025                0                 1         1
+15 XLOC_000026                0                 1         0
+17 XLOC_000029                0                 1         0
+20 XLOC_000032               NA                 1         0
+22 XLOC_000034                0                 1         1
+23 XLOC_000035                0                 1         0
+30 XLOC_000043                0                 1         0
+31 XLOC_000044                1                 1         0
+35 XLOC_000048                0                 1         0
+37 XLOC_000050                1                 1         0
+39 XLOC_000054                1                 1         0
+40 XLOC_000055                0                 1         0
+45 XLOC_000060                0                 1         0
+46 XLOC_000063                1                 1         0
+47 XLOC_000064                1                 1         1
+ 
+</pre> </font>
+
+
+     <h3><a name="tth_sEc9.2">
+9.2</a>&nbsp;&nbsp;Partitioning</h3>
+K-means clustering is a useful tool that can be helpful in identifying clusters of genes with similar expression profiles. In fact, these profiles are learned from the data during the clustering. 
+<i>csCluster()</i> uses the <i>pam()</i> method from the <font face="helvetica">clustering</font> package to perform the partitioning around medoids. In this case however, the distance metric used by default is the
+Jensen-Shannon distance instead of the default Euclidean distance. Prior to performing this particular partitioning, the user must choose the number of clusters (K) into which the expression profiles should be divided. 
+
+
+   <font color="#FF0000">
+<pre>
+&#62; ic &lt;- csCluster(myGenes, k = 4)
+&#62; head(ic$cluster)
+ 
+</pre> </font>
+  <font color="#0000FF">
+<pre>
+XLOC_000069 XLOC_000089 XLOC_000105 XLOC_000115 XLOC_000132 
+          1           2           2           3           2 
+XLOC_000151 
+          4 
+</pre></font>
+ As of v1.1.1 of <font face="helvetica">cummeRbund</font>, the output of csCluster is a modified <i>pam</i> object. This replaces the default plotting behavior of the original csCluster plot to allow for further analysis of the clustering results. The original plotting behavior has been recapitulated
+in the <i>csClusterPlot()</i> method. 
+
+  <font color="#FF0000">
+<pre>
+&#62; icp &lt;- csClusterPlot(ic)
+&#62; icp
+</pre> </font>
+
+<div class="p"></div>
+
+   <font color="#0000FF">
+<pre>&nbsp;
+ </pre> </font>
+
+<div class="p">
+  <p><img src="images/plots/cummeRbund-manual-geneset_plots_cluster.png" alt="" width="500" height="500" /></p>
+  <p>&nbsp;</p>
+</div>
+<h3><a name="tth_sEc9.3">
+  9.3</a>&nbsp;&nbsp;Specificity</h3>
+<p>In some cases, a researcher may be interested in identifying features that are 'condition-specific'. Or, more likely, producing an ordered list of genes based on their specificity for a given condition. 
+  We define a specificity score (S) as the following: </p>
+<p><br clear="all" />
+</p>
+<table border="0" width="100%"><tr>
+  <td align="center">
+<img src="images/Spec_score_latex.png"alt="" width="236" height="26" />
+</td><td width="1%">(1)</td></tr></table>
+
+
+
+
+Where JSD is the Jensen-Shannon distance, p<sub>g</sub> is the expression profile of a given gene g expressed as a density (probability) of log<sub>10</sub> FPKM+1, and [^(q<sub>i</sub>)] is the unit vector of 'perfect expression' in a particular condition i. 
+
+
+We have created a method, <i>csSpecificity()</i> that outputs a matrix (with identical shape to that produced by <i>fpkmMatrix()</i>) of specificity scores (S) across all conditions for all features in a <i>CuffFeatureSet</i> or <i>CuffGeneSet</i>.
+
+
+  <font color="#FF0000">
+<pre>
+&#62; myGenes.spec &lt;- csSpecificity(myGenes)
+&#62; head(myGenes.spec)
+ 
+</pre> </font>
+  <font color="#0000FF">
+<pre>
+            hESC_spec Fibroblasts_spec  iPS_spec
+XLOC_000069 0.7235320        0.4762355 0.6539797
+XLOC_000089 0.6339018        0.6338870 0.6167502
+XLOC_000105 0.6246540        0.6337900 0.6261973
+XLOC_000115 0.4513380        0.4513380 1.0000000
+XLOC_000132 0.6216916        0.6390527 0.6238131
+XLOC_000151 0.6233090        0.5276278 0.7208011
+ 
+</pre></font>
+  <p><font color="#0000FF"> </font>
+    
+    
+    S=1.0 if the feature is expressed exclusively in that condition.
+    The <i>findSimilar()</i> method outlined below is another method that can be used to identify genes based on specificity but has the added feature that you can determine similarity to a more complex q expression profile.
+   </p>
+  <p>&nbsp; </p>
+  <h3><a name="tth_sEc9.4">
+9.4</a>&nbsp;&nbsp;Finding similar genes</h3>
+Another common question in large-scale gene expression analyses is 'How can I find genes with similar expression profiles to gene x?'. We have implemented a method, <i>findSimilar</i> to allow you to identify a fixed number of the most similar genes to a given gene of interest.
+For example, if you wanted to find the 20 genes most similar to "PINK1", you could do the following:
+
+
+   <font color="#FF0000">
+<pre>
+&#62; mySimilar &lt;- findSimilar(cuff, "PINK1", n = 20)
+&#62; mySimilar.expression &lt;- expressionPlot(mySimilar, 
++     logMode = T, showErrorbars = F)
+ </pre> </font>
+
+<div class="p"><img src="images/plots/cummeRbund-manual-similar_plots_1.png" alt="" width="500" height="500" /></div>
+
+You are also able to provide your own expression profile in lieu of a 'gene_id'.  The vector provided must match the order and length of <i>samples()</i>.
+
+
+   <font color="#FF0000">
+<pre>
+&#62; myProfile &lt;- c(500, 0, 400)
+&#62; mySimilar2 &lt;- findSimilar(cuff, myProfile, n = 10)
+&#62; mySimilar2.expression &lt;- expressionPlot(mySimilar2, 
++     logMode = T, showErrorbars = F)
+
+ <img src="images/plots/cummeRbund-manual-similar_plots_2.png" alt="" width="500" height="500" />
+</pre> 
+</font>
+
+<div class="p"></div>
+
+<p><i>findSimilar()</i> also uses the Jensen-Shannon distance between the probability distributions of each gene across conditions to determine the similarity.  
+  We have found this to be a more robust way to determine distance between genes using the high dynamic range of FPKM data. Future versions may allow for other dissimilarity measures to be used instead.
+ </p>
+<p>&nbsp; </p>
+<h2><a name="tth_sEc10">
+10</a>&nbsp;&nbsp;Miscellaneous</h2>
+
+<ul>
+<li> As of v1.1.3 we attempt to provide new visual cues in most plots that will indicate the quantification status for a particular feature in each given condition. We have enabled this feature by default for most
+	plots to suggest a measure of reliability for each feature in a particular condition. In most cases, this feature can be disabled by setting 'showStatus=FALSE'.<br /><br /></li>
+
+<li> All plotting functions return ggplot objects and the resulting objects can be manipulated/faceted/altered using standard ggplot2 methods.<br /><br /></li>
+
+<li> There are occasional DB connectivity issues that arise.  Not entirely sure why yet.  If necessary, just <tt>readCufflinks</tt> again and this should solve connectivity issues with a new
+	RSQLite connection object.  If connectivity continues to be a problem, try <tt>cuff&lt;-readCufflinks(rebuild=T)</tt><br /><br /></li>
+
+<li> I am still working on fully documenting each of the methods.  There are a good number of arguments that exist, but might be hard to find without looking at the source.<br /><br /></li>
+</ul>
+
+
+ <h2><a name="tth_sEc11">
+11</a>&nbsp;&nbsp;Known Issues</h2>
+
+<ul>
+<li> Large cuffdiff runs (e.g.  <font face="symbol">≥</font
+> 10 conditions) produce very large results files.  These will take some time to parse and populate the cuffData.db sqlite database.  While this is only a one time cost, the process can take a while. We are working on making the table writes and indexing significantly faster.<br /><br /></li>
+
+<li> Cuffdiff does not 'require' that gene_ids, isoform_ids, TSS_group_ids, or CDS_ids be unique in your reference gtf file. In fact, duplicate IDs will be aggregated by cummeRbund in the indexing phase and will produce undesireable effects. Please ensure that all of your IDs are unique prior to running cuffdiff (see cuffmerge for help) to avoid this issue.<br /><br /></li>
+</ul>
+
+
+ <h2><a name="tth_sEc12">
+12</a>&nbsp;&nbsp;Session info</h2>
+
+
+   <font color="#FF0000">
+<pre>
+&#62; sessionInfo()
+ 
+</pre> </font>
+  <font color="#0000FF">
+<pre>
+R version 2.13.1 (2011-07-08)
+Platform: x86_64-apple-darwin9.8.0/x86_64 (64-bit)
+
+locale:
+[1] en_US.utf-8/en_US.utf-8/C/C/en_US.utf-8/en_US.utf-8
+
+attached base packages:
+[1] splines   grid      stats     graphics  grDevices utils    
+[7] datasets  methods   base     
+
+other attached packages:
+ [1] Hmisc_3.9-1      survival_2.36-9  cluster_1.14.0  
+ [4] cummeRbund_1.1.3 reshape2_1.2.1   ggplot2_0.8.9   
+ [7] proto_0.3-9.2    reshape_0.8.4    plyr_1.6        
+[10] RSQLite_0.9-4    DBI_0.2-5       
+
+loaded via a namespace (and not attached):
+[1] digest_0.5.0    lattice_0.19-30 stringr_0.5    
+[4] tools_2.13.1   
+ 
+</pre> </font>
+
+
+
+<br /><br /><hr /><small>File translated from
+T<sub><font size="-1">E</font></sub>X
+by <a href="http://hutchinson.belmont.ma.us/tth/">
+T<sub><font size="-1">T</font></sub>H</a>,
+version 3.35.<br />On 18 Feb 2012, 14:06.</small>
+
+	<!-- InstanceEndEditable -->
+        </div>
+        </div>
+      <div id="footer">
+        <table cellspacing="15" width="100%">
+          <tbody>
+            <tr>
+              <td> This research was supported in part by an NSF Postdoctoral Fellowship. </td>
+              <td align="right"> Administrator: <a
+                  href="mailto:lgoff@csail.mit.edu">Loyal Goff</a>.
+                Design by <a href="http://www.free-css-templates.com"
+                  title="Design by David Herreman">David Herreman</a> </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- Google analytics code -->
+		<script type="text/javascript">
+        
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', 'UA-318359-6']);
+          _gaq.push(['_trackPageview']);
+        
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();
+        
+        </script>
+    <!-- End google analytics code -->
+  </body>
+<!-- InstanceEnd --></html>

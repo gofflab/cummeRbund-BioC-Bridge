@@ -1,0 +1,30 @@
+\BOOKMARK [1][-]{section.1}{Requirements}{}% 1
+\BOOKMARK [1][-]{section.2}{Introduction}{}% 2
+\BOOKMARK [1][-]{section.3}{CummeRbund Classes}{}% 3
+\BOOKMARK [2][-]{subsection.3.1}{CuffSet Class}{section.3}% 4
+\BOOKMARK [2][-]{subsection.3.2}{CuffData Class}{section.3}% 5
+\BOOKMARK [2][-]{subsection.3.3}{CuffDist Class}{section.3}% 6
+\BOOKMARK [2][-]{subsection.3.4}{CuffFeatureSet Class}{section.3}% 7
+\BOOKMARK [2][-]{subsection.3.5}{CuffFeature Class}{section.3}% 8
+\BOOKMARK [1][-]{section.4}{Reading cuffdiff output}{}% 9
+\BOOKMARK [2][-]{subsection.4.1}{Adding additional feature annotation}{section.4}% 10
+\BOOKMARK [1][-]{section.5}{Global statistics and Quality Control}{}% 11
+\BOOKMARK [1][-]{section.6}{Accessing Data}{}% 12
+\BOOKMARK [2][-]{subsection.6.1}{Writing your own SQL accessors}{section.6}% 13
+\BOOKMARK [1][-]{section.7}{Creating Gene Sets}{}% 14
+\BOOKMARK [2][-]{subsection.7.1}{Geneset level plots}{section.7}% 15
+\BOOKMARK [1][-]{section.8}{Individual Genes}{}% 16
+\BOOKMARK [2][-]{subsection.8.1}{Gene-level plots}{section.8}% 17
+\BOOKMARK [3][-]{subsubsection.8.1.1}{Gene Feature plots}{subsection.8.1}% 18
+\BOOKMARK [1][-]{section.9}{Data Exploration}{}% 19
+\BOOKMARK [2][-]{subsection.9.1}{Overview of significant features}{section.9}% 20
+\BOOKMARK [2][-]{subsection.9.2}{Creating gene sets from significantly regulated genes}{section.9}% 21
+\BOOKMARK [2][-]{subsection.9.3}{Exploring the relationships between conditions}{section.9}% 22
+\BOOKMARK [3][-]{subsubsection.9.3.1}{Distance matrix}{subsection.9.3}% 23
+\BOOKMARK [3][-]{subsubsection.9.3.2}{Dimensionality reduction}{subsection.9.3}% 24
+\BOOKMARK [2][-]{subsection.9.4}{Partitioning}{section.9}% 25
+\BOOKMARK [2][-]{subsection.9.5}{Specificity}{section.9}% 26
+\BOOKMARK [2][-]{subsection.9.6}{Finding similar genes}{section.9}% 27
+\BOOKMARK [1][-]{section.10}{Miscellaneous}{}% 28
+\BOOKMARK [1][-]{section.11}{Known Issues}{}% 29
+\BOOKMARK [1][-]{section.12}{Session info}{}% 30

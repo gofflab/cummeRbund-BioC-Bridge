@@ -1,0 +1,30 @@
+\contentsline {section}{\numberline {1}Requirements}{2}{section.1}
+\contentsline {section}{\numberline {2}Introduction}{3}{section.2}
+\contentsline {section}{\numberline {3}CummeRbund Classes}{4}{section.3}
+\contentsline {subsection}{\numberline {3.1}CuffSet Class}{4}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}CuffData Class}{4}{subsection.3.2}
+\contentsline {subsection}{\numberline {3.3}CuffDist Class}{4}{subsection.3.3}
+\contentsline {subsection}{\numberline {3.4}CuffFeatureSet Class}{4}{subsection.3.4}
+\contentsline {subsection}{\numberline {3.5}CuffFeature Class}{5}{subsection.3.5}
+\contentsline {section}{\numberline {4}Reading cuffdiff output}{6}{section.4}
+\contentsline {subsection}{\numberline {4.1}Adding additional feature annotation}{7}{subsection.4.1}
+\contentsline {section}{\numberline {5}Global statistics and Quality Control}{8}{section.5}
+\contentsline {section}{\numberline {6}Accessing Data}{14}{section.6}
+\contentsline {subsection}{\numberline {6.1}Writing your own SQL accessors}{17}{subsection.6.1}
+\contentsline {section}{\numberline {7}Creating Gene Sets}{19}{section.7}
+\contentsline {subsection}{\numberline {7.1}Geneset level plots}{20}{subsection.7.1}
+\contentsline {section}{\numberline {8}Individual Genes}{24}{section.8}
+\contentsline {subsection}{\numberline {8.1}Gene-level plots}{24}{subsection.8.1}
+\contentsline {subsubsection}{\numberline {8.1.1}Gene Feature plots}{27}{subsubsection.8.1.1}
+\contentsline {section}{\numberline {9}Data Exploration}{29}{section.9}
+\contentsline {subsection}{\numberline {9.1}Overview of significant features}{29}{subsection.9.1}
+\contentsline {subsection}{\numberline {9.2}Creating gene sets from significantly regulated genes}{29}{subsection.9.2}
+\contentsline {subsection}{\numberline {9.3}Exploring the relationships between conditions}{31}{subsection.9.3}
+\contentsline {subsubsection}{\numberline {9.3.1}Distance matrix}{31}{subsubsection.9.3.1}
+\contentsline {subsubsection}{\numberline {9.3.2}Dimensionality reduction}{31}{subsubsection.9.3.2}
+\contentsline {subsection}{\numberline {9.4}Partitioning}{33}{subsection.9.4}
+\contentsline {subsection}{\numberline {9.5}Specificity}{34}{subsection.9.5}
+\contentsline {subsection}{\numberline {9.6}Finding similar genes}{35}{subsection.9.6}
+\contentsline {section}{\numberline {10}Miscellaneous}{36}{section.10}
+\contentsline {section}{\numberline {11}Known Issues}{37}{section.11}
+\contentsline {section}{\numberline {12}Session info}{38}{section.12}
