@@ -1,5 +1,5 @@
 # TODO: Add comment
-# 
+#
 # Author: lgoff
 ###############################################################################
 
@@ -20,22 +20,22 @@ loadRunInfo<-function(runInfoFile,
 		stringsAsFactors=FALSE,
 		row.names=NULL,
 		...) {
-	
+
 	#Setup and reporting
 	write(paste("Reading Run Info File ",runInfoFile,sep=""),stderr())
 	fileArgs$file = runInfoFile
-	
+
 	#Read Run Info file
 	runInfo = as.data.frame(do.call(read.table,fileArgs))
-	
+
 	#Parsing
 	#not needed...
-	
+
 	#Load into database (runInfo table)
 	write("Writing runInfo Table",stderr())
 	insert_SQL<-'INSERT INTO runInfo VALUES(:param, :value)'
 	bulk_insert(dbConn,insert_SQL,runInfo)
-	
+
 }
 
 #ReplicateTable
@@ -50,22 +50,22 @@ loadRepTable<-function(repTableFile,
 		stringsAsFactors=FALSE,
 		row.names=NULL,
 		...) {
-		
+
 	#Setup and reporting
 	write(paste("Reading Read Group Info  ",repTableFile,sep=""),stderr())
 	fileArgs$file = repTableFile
-	
+
 	#Read Run Info file
 	full = as.data.frame(read.delim(repTableFile))
 	#print(head(full))
-	
+
 	#Fix sample_names
 	full$condition<-make.db.names(dbConn,as.character(full$condition),unique=FALSE)
-	
+
 	#Parsing
 	#For now, I need to concatenate condition and replicate number
 	full$rep_name<-paste(full$condition,full$replicate_num,sep="_")
-	
+
 	#Load into database (replicates table)
 	write("Writing replicates Table",stderr())
 	insert_SQL<-'INSERT INTO replicates VALUES(:file, :condition, :replicate_num, :rep_name, :total_mass, :norm_mass, :internal_scale, :external_scale)'
@@ -84,19 +84,19 @@ loadVarModelTable<-function(VarModelFile,
 		stringsAsFactors=FALSE,
 		row.names=NULL,
 		...) {
-	
+
 	#Setup and reporting
 	write(paste("Reading Var Model Info  ",VarModelFile,sep=""),stderr())
 	fileArgs$file = VarModelFile
-	
+
 	#Read Run Info file
 	full = as.data.frame(read.delim(VarModelFile))
 	#print(head(full))
-	
+
 	#Fix sample_names
 	full$condition<-make.db.names(dbConn,as.character(full$condition),unique=FALSE)
-	
-	
+
+
 	#Load into database (replicates table)
 	write("Writing varModel Table",stderr())
 	insert_SQL<-'INSERT INTO varModel VALUES(:condition, :locus, :compatible_count_mean, :compatible_count_var, :total_count_mean, :total_count_var, :fitted_var)'
@@ -128,24 +128,24 @@ loadGenes<-function(fpkmFile,
 	#Error Trapping
 	if (missing(fpkmFile))
 		stop("fpkmFile cannot be missing!")
-	
+
 	if (missing(dbConn))
 		stop("Must provide a dbConn connection")
-	
+
 	#TODO test dbConn connection and database structure
-	
+
 	idCols = c(1:9)
 
 	#Read primary file
 	write(paste("Reading ",fpkmFile,sep=""),stderr())
 	fpkmArgs$file = fpkmFile
 	full = as.data.frame(do.call(read.table,fpkmArgs))
-	
+
 	########
 	#Handle Sample Names
 	########
 
-	
+
 	#Check that samples table is populated
 	write("Checking samples table...",stderr())
 	samples<-getSamplesFromColnames(full)
@@ -161,7 +161,7 @@ loadGenes<-function(fpkmFile,
 		write("Populating samples table...",stderr())
 		populateSampleTable(samples,dbConn)
 	}
-	
+
 	######
 	#Populate genes table
 	######
@@ -170,7 +170,7 @@ loadGenes<-function(fpkmFile,
 	#dbWriteTable(dbConn,'genes',genesTable,row.names=F,append=T)
 	insert_SQL<-'INSERT INTO genes VALUES(:tracking_id, :class_code, :nearest_ref_id, :gene_short_name, :locus, :length, :coverage)'
 	bulk_insert(dbConn,insert_SQL,genesTable)
-	
+
 	######
 	#Populate geneData table
 	######
@@ -179,7 +179,7 @@ loadGenes<-function(fpkmFile,
 	colnames(genemelt)[colnames(genemelt)=='variable']<-'sample_name'
 	#Clean up and normalize data
 	genemelt$measurement = ""
-	
+
 	genemelt$measurement[grepl("_FPKM$",genemelt$sample_name)] = "fpkm"
 	genemelt$measurement[grepl("_conf_lo$",genemelt$sample_name)] = "conf_lo"
 	genemelt$measurement[grepl("_conf_hi$",genemelt$sample_name)] = "conf_hi"
@@ -189,27 +189,27 @@ loadGenes<-function(fpkmFile,
 	genemelt$sample_name<-gsub("_conf_lo$","",genemelt$sample_name)
 	genemelt$sample_name<-gsub("_conf_hi$","",genemelt$sample_name)
 	genemelt$sample_name<-gsub("_status$","",genemelt$sample_name)
-	
+
 	#Adjust sample names with make.db.names
 	genemelt$sample_name <- make.db.names(dbConn,as.vector(genemelt$sample_name),unique=FALSE)
-	
+
 	#Recast
 	write("Recasting",stderr())
 	genemelt<-as.data.frame(dcast(genemelt,...~measurement))
-	
+
 	#debugging
 	#write(colnames(genemelt),stderr())
-	
+
 	#Write geneData table
 	write("Writing geneData table",stderr())
 	#dbWriteTable(dbConn,'geneData',as.data.frame(genemelt[,c(1:2,5,3,4,6)]),row.names=F,append=T)
 	insert_SQL<-'INSERT INTO geneData VALUES(:tracking_id,:sample_name,:fpkm,:conf_hi,:conf_lo,:status)'
 	bulk_insert(dbConn,insert_SQL,genemelt[,c(1:2,5,3,4,6)])
-	
+
 	#######
 	#Handle gene_exp.diff
 	#######
-	
+
 	if(file.exists(diffFile)){
 		#Read diff file
 		write(paste("Reading ",diffFile,sep=""),stderr())
@@ -221,22 +221,22 @@ loadGenes<-function(fpkmFile,
 			#Adjust sample names with make.db.names
 			diff$sample_1<-make.db.names(dbConn,as.vector(diff$sample_1),unique=FALSE)
 			diff$sample_2<-make.db.names(dbConn,as.vector(diff$sample_2),unique=FALSE)
-			
+
 			write("Writing geneExpDiffData table",stderr())
 			diffCols<-c(1,5:14)
-			
+
 			#debugging
 			#write(colnames(diff[,diffCols]),stderr())
-			
+
 			#dbWriteTable(dbConn,'geneExpDiffData',diff[,diffCols],row.names=F,append=T)
 			insert_SQL<-"INSERT INTO geneExpDiffData VALUES(:test_id,:sample_1,:sample_2,:status,:value_1,:value_2,?,:test_stat,:p_value,:q_value,:significant)"
 			bulk_insert(dbConn,insert_SQL,diff[,diffCols])
 		}else{
 			write(paste("No records found in", diffFile),stderr())
 		}
-	
+
 	}
-	
+
 	########
 	#TODO: Handle promoters.diff
 	########
@@ -245,7 +245,7 @@ loadGenes<-function(fpkmFile,
 		write(paste("Reading ",promoterFile,sep=""),stderr())
 		promoterArgs$file = promoterFile
 		promoter<-as.data.frame(do.call(read.table,promoterArgs))
-		
+
 		write("Writing promoterDiffData table",stderr())
 		promoterCols<-c(2,5:14)
 		if(dim(promoter)[1]>0){
@@ -256,54 +256,54 @@ loadGenes<-function(fpkmFile,
 			write(paste("No records found in", promoterFile),stderr())
 		}
 	}
-	
+
 	#########
 	#Handle Feature Data (this will actually be done on CuffData objects instead...but I may include something here as well)
 	#########
-	
+
 	###########
 	#Handle Counts .count_tracking
 	###########
 	if(file.exists(countFile)){
-		
+
 		idCols = c(1)
-		
+
 		#Read countFile
 		write(paste("Reading ", countFile,sep=""),stderr())
 		countArgs$file = countFile
 		counts<-as.data.frame(do.call(read.table,countArgs))
-		
+
 		if(dim(counts)[1]>0){
 			#Reshape geneCount table
 			write("Reshaping geneCount table",stderr())
 			countmelt<-melt(counts,id.vars=c("tracking_id"),measure.vars=-idCols)
 			colnames(countmelt)[colnames(countmelt)=='variable']<-'sample_name'
-			
+
 			countmelt$measurement = ""
-			
+
 			countmelt$measurement[grepl("_count$",countmelt$sample_name)] = "count"
 			countmelt$measurement[grepl("_count_variance$",countmelt$sample_name)] = "variance"
 			countmelt$measurement[grepl("_count_uncertainty_var$",countmelt$sample_name)] = "uncertainty"
 			countmelt$measurement[grepl("_count_dispersion_var$",countmelt$sample_name)] = "dispersion"
 			countmelt$measurement[grepl("_status$",countmelt$sample_name)] = "status"
-			
+
 			countmelt$sample_name<-gsub("_count$","",countmelt$sample_name)
 			countmelt$sample_name<-gsub("_count_variance$","",countmelt$sample_name)
 			countmelt$sample_name<-gsub("_count_uncertainty_var$","",countmelt$sample_name)
 			countmelt$sample_name<-gsub("_count_dispersion_var$","",countmelt$sample_name)
 			countmelt$sample_name<-gsub("_status$","",countmelt$sample_name)
-			
+
 			#Adjust sample names with make.db.names
 			countmelt$sample_name <- make.db.names(dbConn,as.vector(countmelt$sample_name),unique=FALSE)
-			
+
 			#Recast
 			write("Recasting",stderr())
 			countmelt<-as.data.frame(dcast(countmelt,...~measurement))
-			
+
 			#debugging
 			#write(colnames(countmelt),stderr())
-			
-	
+
+
 			#Write geneCount table
 			write("Writing geneCount table",stderr())
 			insert_SQL<-'INSERT INTO geneCount VALUES(:tracking_id,:sample_name,:count,:variance,:uncertainty,:dispersion,:status)'
@@ -311,10 +311,10 @@ loadGenes<-function(fpkmFile,
 		}else{
 			write(paste("No records found in", countFile),stderr())
 		}
-		
+
 	}
-		
-		
+
+
 	###########
 	#Handle Replicates .rep_tracking
 	###########
@@ -326,16 +326,16 @@ loadGenes<-function(fpkmFile,
 		replicateArgs$file = replicateFile
 		reps<-as.data.frame(do.call(read.table,replicateArgs))
 		#print(head(reps))
-		
+
 		if(dim(reps)[1]>0){
-		
+
 			#Adjust sample names with make.db.names
 			reps$condition <- make.db.names(dbConn,as.character(reps$condition),unique=FALSE)
-		
+
 			#Create unique rep name
 			reps$rep_name<-paste(reps$condition,reps$replicate,sep="_")
 			colnames(reps)[colnames(reps)=="condition"]<-"sample_name"
-			
+
 			#Write geneReplicateData table
 			write("Writing geneReplicateData table",stderr())
 			insert_SQL<-'INSERT INTO geneReplicateData VALUES(:tracking_id,:sample_name,:replicate,:rep_name,:raw_frags,:internal_scaled_frags,:external_scaled_frags,:FPKM,:effective_length,:status)'
@@ -343,11 +343,11 @@ loadGenes<-function(fpkmFile,
 		}else{
 			write(paste("No records found in", replicateFile),stderr())
 		}
-		
+
 	}
-	
+
 }
-	
+
 #Isoforms
 loadIsoforms<-function(fpkmFile,
 		diffFile,
@@ -367,28 +367,28 @@ loadIsoforms<-function(fpkmFile,
 		stringsAsFactors = FALSE,
 		row.names=NULL,
 		...) {
-	
+
 	#Error Trapping
 	if (missing(fpkmFile))
 		stop("fpkmFile cannot be missing!")
-	
+
 	if (missing(dbConn))
 		stop("Must provide a dbConn connection")
-	
+
 	#TODO test dbConn connection and database structure
-	
+
 	idCols = c(1:9)
-	
+
 	#Read primary file
 	write(paste("Reading ",fpkmFile,sep=""),stderr())
 	fpkmArgs$file = fpkmFile
 	full = as.data.frame(do.call(read.table,fpkmArgs))
-	
+
 	########
 	#Handle Sample Names
 	########
-	
-	
+
+
 	#Check that samples table is populated
 	write("Checking samples table...",stderr())
 	samples<-getSamplesFromColnames(full)
@@ -405,22 +405,22 @@ loadIsoforms<-function(fpkmFile,
 		write("Populating samples table...",stderr())
 		populateSampleTable(samples,dbConn)
 	}
-	
+
 	######
 	#Populate isoforms table
 	######
 	isoformCols<-c(1,4,5,6,2,3,7:9)
 	isoformsTable<-full[,isoformCols]
-	
+
 	#This is a temporary fix until p_id is added to the 'isoforms.fpkm_tracking' file
 	isoformsTable<-cbind(isoformsTable[,1:2],data.frame(CDS_id=rep("NA",dim(isoformsTable)[1])),isoformsTable[,-c(1:2)])
 	#print (head(isoformsTable))
-	
+
 	write("Writing isoforms table",stderr())
 	#dbWriteTable(dbConn,'isoforms',as.data.frame(isoformsTable),row.names=F,append=T)
 	insert_SQL<-'INSERT INTO isoforms VALUES(?,?,?,?,?,?,?,?,?,?)'
 	bulk_insert(dbConn,insert_SQL,isoformsTable)
-	
+
 	######
 	#Populate isoformData table
 	######
@@ -429,34 +429,34 @@ loadIsoforms<-function(fpkmFile,
 	colnames(isoformmelt)[colnames(isoformmelt)=='variable']<-'sample_name'
 	#Clean up and normalize data
 	isoformmelt$measurement = ""
-	
+
 	isoformmelt$measurement[grepl("_FPKM$",isoformmelt$sample_name)] = "fpkm"
 	isoformmelt$measurement[grepl("_conf_lo$",isoformmelt$sample_name)] = "conf_lo"
 	isoformmelt$measurement[grepl("_conf_hi$",isoformmelt$sample_name)] = "conf_hi"
 	isoformmelt$measurement[grepl("_status$",isoformmelt$sample_name)] = "status"
-	
+
 	isoformmelt$sample_name<-gsub("_FPKM$","",isoformmelt$sample_name)
 	isoformmelt$sample_name<-gsub("_conf_lo$","",isoformmelt$sample_name)
 	isoformmelt$sample_name<-gsub("_conf_hi$","",isoformmelt$sample_name)
 	isoformmelt$sample_name<-gsub("_status$","",isoformmelt$sample_name)
-	
+
 	#Adjust sample names with make.db.names
 	isoformmelt$sample_name <- make.db.names(dbConn,as.vector(isoformmelt$sample_name),unique=FALSE)
-	
+
 	#Recast
 	write("Recasting",stderr())
 	isoformmelt<-as.data.frame(dcast(isoformmelt,...~measurement))
-	
+
 	#Write geneData table
 	write("Writing isoformData table",stderr())
 	#dbWriteTable(dbConn,'isoformData',as.data.frame(isoformmelt[,c(1:2,5,3,4,6)]),row.names=F,append=T)
 	insert_SQL<-"INSERT INTO isoformData VALUES(?,?,?,?,?,?)"
 	bulk_insert(dbConn,insert_SQL,isoformmelt[,c(1:2,5,3,4,6)])
-	
+
 	#######
 	#Handle isoform_exp.diff
 	#######
-	
+
 	if(file.exists(diffFile)){
 		#Read diff file
 		write(paste("Reading ",diffFile,sep=""),stderr())
@@ -466,7 +466,7 @@ loadIsoforms<-function(fpkmFile,
 			#Adjust sample names with make.db.names
 			diff$sample_1<-make.db.names(dbConn,as.vector(diff$sample_1),unique=FALSE)
 			diff$sample_2<-make.db.names(dbConn,as.vector(diff$sample_2),unique=FALSE)
-		
+
 			write("Writing isoformExpDiffData table",stderr())
 			diffCols<-c(1,5:14)
 			#dbWriteTable(dbConn,'isoformExpDiffData',diff[,diffCols],row.names=F,append=T)
@@ -476,52 +476,52 @@ loadIsoforms<-function(fpkmFile,
 			write(paste("No records found in",diffFile),stderr())
 		}
 	}
-	
+
 	###########
 	#Handle Counts .count_tracking
 	###########
 	if(file.exists(countFile)){
-		
+
 		idCols = c(1)
-		
+
 		#Read countFile
 		write(paste("Reading ", countFile,sep=""),stderr())
 		countArgs$file = countFile
 		counts<-as.data.frame(do.call(read.table,countArgs))
-		
+
 		if(dim(counts)[1]>0){
-		
+
 			#Reshape isoformCount table
 			write("Reshaping isoformCount table",stderr())
 			countmelt<-melt(counts,id.vars=c("tracking_id"),measure.vars=-idCols)
 			colnames(countmelt)[colnames(countmelt)=='variable']<-'sample_name'
-			
+
 			countmelt$measurement = ""
-			
+
 			countmelt$measurement[grepl("_count$",countmelt$sample_name)] = "count"
 			countmelt$measurement[grepl("_count_variance$",countmelt$sample_name)] = "variance"
 			countmelt$measurement[grepl("_count_uncertainty_var$",countmelt$sample_name)] = "uncertainty"
 			countmelt$measurement[grepl("_count_dispersion_var$",countmelt$sample_name)] = "dispersion"
 			countmelt$measurement[grepl("_status$",countmelt$sample_name)] = "status"
-			
+
 			countmelt$sample_name<-gsub("_count$","",countmelt$sample_name)
 			countmelt$sample_name<-gsub("_count_variance$","",countmelt$sample_name)
 			countmelt$sample_name<-gsub("_count_uncertainty_var$","",countmelt$sample_name)
 			countmelt$sample_name<-gsub("_count_dispersion_var$","",countmelt$sample_name)
 			countmelt$sample_name<-gsub("_status$","",countmelt$sample_name)
-			
+
 			#Adjust sample names with make.db.names
 			countmelt$sample_name <- make.db.names(dbConn,as.vector(countmelt$sample_name),unique=FALSE)
-			
-			
+
+
 			#Recast
 			write("Recasting",stderr())
 			countmelt<-as.data.frame(dcast(countmelt,...~measurement))
-			
+
 			#debugging
 			#write(colnames(countmelt),stderr())
-			
-			
+
+
 			#Write isoformCount table
 			write("Writing isoformCount table",stderr())
 			insert_SQL<-'INSERT INTO isoformCount VALUES(:tracking_id,:sample_name,:count,:variance,:uncertainty,:dispersion,:status)'
@@ -530,38 +530,38 @@ loadIsoforms<-function(fpkmFile,
 			write(paste("No records found in",countFile),stderr())
 		}
 	}
-	
-	
+
+
 	###########
 	#Handle Replicates .rep_tracking
 	###########
 	if(file.exists(replicateFile)){
-		
+
 		idCols = 1
 		#Read countFile
 		write(paste("Reading read group info in ", replicateFile,sep=""),stderr())
 		replicateArgs$file = replicateFile
 		reps<-as.data.frame(do.call(read.table,replicateArgs))
 		#print(head(reps))
-		
+
 		if(dim(reps)[1]>0){
-			
+
 			#Adjust sample names with make.db.names
 			reps$condition <- make.db.names(dbConn,as.character(reps$condition),unique=FALSE)
-		
+
 			#Create unique rep name
 			reps$rep_name<-paste(reps$condition,reps$replicate,sep="_")
 			colnames(reps)[colnames(reps)=="condition"]<-"sample_name"
-			
+
 			#Write isoformReplicateData table
 			write("Writing isoformReplicateData table",stderr())
 			insert_SQL<-'INSERT INTO isoformReplicateData VALUES(:tracking_id,:sample_name,:replicate,:rep_name,:raw_frags,:internal_scaled_frags,:external_scaled_frags,:FPKM,:effective_length,:status)'
 			bulk_insert(dbConn,insert_SQL,reps)
 		}else{
 			write(paste("No records found in",replicateFile),stderr())
-		}	
+		}
 	}
-	
+
 }
 
 #TSS groups
@@ -585,28 +585,28 @@ loadTSS<-function(fpkmFile,
 		stringsAsFactors = FALSE,
 		row.names=NULL,
 		...) {
-	
+
 	#Error Trapping
 	if (missing(fpkmFile))
 		stop("fpkmFile cannot be missing!")
-	
+
 	if (missing(dbConn))
 		stop("Must provide a dbConn connection")
-	
+
 	#TODO test dbConn connection and database structure
-	
+
 	idCols = c(1:9)
-	
+
 	#Read primary file
 	write(paste("Reading ",fpkmFile,sep=""),stderr())
 	fpkmArgs$file = fpkmFile
 	full = as.data.frame(do.call(read.table,fpkmArgs))
-	
+
 	########
 	#Handle Sample Names
 	########
-	
-	
+
+
 	#Check that samples table is populated
 	write("Checking samples table...",stderr())
 	samples<-getSamplesFromColnames(full)
@@ -622,7 +622,7 @@ loadTSS<-function(fpkmFile,
 		write("Populating samples table...",stderr())
 		populateSampleTable(samples,dbConn)
 	}
-	
+
 	######
 	#Populate TSS table
 	######
@@ -632,7 +632,7 @@ loadTSS<-function(fpkmFile,
 	if (nrow(tssTable)>0){
 		insert_SQL<-"INSERT INTO TSS VALUES(?,?,?,?,?,?,?,?)"
 		bulk_insert(dbConn,insert_SQL,tssTable)
-		
+
 		######
 		#Populate geneData table
 		######
@@ -641,24 +641,24 @@ loadTSS<-function(fpkmFile,
 		colnames(tssmelt)[colnames(tssmelt)=='variable']<-'sample_name'
 		#Clean up and normalize data
 		tssmelt$measurement = ""
-		
+
 		tssmelt$measurement[grepl("_FPKM$",tssmelt$sample_name)] = "fpkm"
 		tssmelt$measurement[grepl("_conf_lo$",tssmelt$sample_name)] = "conf_lo"
 		tssmelt$measurement[grepl("_conf_hi$",tssmelt$sample_name)] = "conf_hi"
 		tssmelt$measurement[grepl("_status$",tssmelt$sample_name)] = "status"
-		
+
 		tssmelt$sample_name<-gsub("_FPKM$","",tssmelt$sample_name)
 		tssmelt$sample_name<-gsub("_conf_lo$","",tssmelt$sample_name)
 		tssmelt$sample_name<-gsub("_conf_hi$","",tssmelt$sample_name)
 		tssmelt$sample_name<-gsub("_status$","",tssmelt$sample_name)
-		
+
 		#Adjust sample names with make.db.names
 		tssmelt$sample_name <- make.db.names(dbConn,as.vector(tssmelt$sample_name),unique=FALSE)
-		
+
 		#Recast
 		write("Recasting",stderr())
 		tssmelt<-as.data.frame(dcast(tssmelt,...~measurement))
-		
+
 		#Write geneData table
 		write("Writing TSSData table",stderr())
 		#dbWriteTable(dbConn,'TSSData',as.data.frame(tssmelt[,c(1:2,5,3,4,6)]),row.names=F,append=T)
@@ -672,13 +672,13 @@ loadTSS<-function(fpkmFile,
 	#######
 	#Handle tss_groups_exp.diff
 	#######
-	
+
 	if(file.exists(diffFile)){
 		#Read diff file
 		write(paste("Reading ",diffFile,sep=""),stderr())
 		diffArgs$file = diffFile
 		diff<-as.data.frame(do.call(read.table,diffArgs))
-		
+
 		if(dim(diff)[1]>0){
 			#Adjust sample names with make.db.names
 			diff$sample_1<-make.db.names(dbConn,as.vector(diff$sample_1),unique=FALSE)
@@ -693,7 +693,7 @@ loadTSS<-function(fpkmFile,
 			write(paste("No records found in",diffFile),stderr())
 		}
 	}
-	
+
 	#########
 	#TODO: Handle splicing.diff
 	########
@@ -702,7 +702,7 @@ loadTSS<-function(fpkmFile,
 		write(paste("Reading ",splicingFile,sep=""),stderr())
 		splicingArgs$file = splicingFile
 		splicing<-as.data.frame(do.call(read.table,splicingArgs))
-		
+
 		if(dim(splicing)[1]>0){
 			write("Writing splicingDiffData table",stderr())
 			splicingCols<-c(1:2,5:14)
@@ -713,52 +713,52 @@ loadTSS<-function(fpkmFile,
 			write(paste("No records found in",splicingFile),stderr())
 		}
 	}
-	
+
 	###########
 	#Handle Counts .count_tracking
 	###########
 	if(file.exists(countFile)){
-		
+
 		idCols = c(1)
-		
+
 		#Read countFile
 		write(paste("Reading ", countFile,sep=""),stderr())
 		countArgs$file = countFile
 		counts<-as.data.frame(do.call(read.table,countArgs))
-		
+
 		if(dim(counts)[1]>0){
-		
+
 			#Reshape TSSCount table
 			write("Reshaping TSSCount table",stderr())
 			countmelt<-melt(counts,id.vars=c("tracking_id"),measure.vars=-idCols)
 			colnames(countmelt)[colnames(countmelt)=='variable']<-'sample_name'
-			
+
 			countmelt$measurement = ""
-			
+
 			countmelt$measurement[grepl("_count$",countmelt$sample_name)] = "count"
 			countmelt$measurement[grepl("_count_variance$",countmelt$sample_name)] = "variance"
 			countmelt$measurement[grepl("_count_uncertainty_var$",countmelt$sample_name)] = "uncertainty"
 			countmelt$measurement[grepl("_count_dispersion_var$",countmelt$sample_name)] = "dispersion"
 			countmelt$measurement[grepl("_status$",countmelt$sample_name)] = "status"
-			
+
 			countmelt$sample_name<-gsub("_count$","",countmelt$sample_name)
 			countmelt$sample_name<-gsub("_count_variance$","",countmelt$sample_name)
 			countmelt$sample_name<-gsub("_count_uncertainty_var$","",countmelt$sample_name)
 			countmelt$sample_name<-gsub("_count_dispersion_var$","",countmelt$sample_name)
 			countmelt$sample_name<-gsub("_status$","",countmelt$sample_name)
-			
+
 			#Adjust sample names with make.db.names
 			countmelt$sample_name <- make.db.names(dbConn,as.vector(countmelt$sample_name),unique=FALSE)
-			
-			
+
+
 			#Recast
 			write("Recasting",stderr())
 			countmelt<-as.data.frame(dcast(countmelt,...~measurement))
-			
+
 			#debugging
 			#write(colnames(countmelt),stderr())
-			
-			
+
+
 			#Write TSSCount table
 			write("Writing TSSCount table",stderr())
 			insert_SQL<-'INSERT INTO TSSCount VALUES(:tracking_id,:sample_name,:count,:variance,:uncertainty,:dispersion,:status)'
@@ -767,29 +767,29 @@ loadTSS<-function(fpkmFile,
 			write(paste("No records found in",countFile),stderr())
 		}
 	}
-	
-	
+
+
 	###########
 	#Handle Replicates .rep_tracking
 	###########
 	if(file.exists(replicateFile)){
-		
+
 		idCols = 1
 		#Read countFile
 		write(paste("Reading read group info in ", replicateFile,sep=""),stderr())
 		replicateArgs$file = replicateFile
 		reps<-as.data.frame(do.call(read.table,replicateArgs))
 		#print(head(reps))
-		
+
 		if(dim(reps)[1]>0){
-				
+
 			#Adjust sample names with make.db.names
 			reps$condition <- make.db.names(dbConn,as.character(reps$condition),unique=FALSE)
-		
+
 			#Create unique rep name
 			reps$rep_name<-paste(reps$condition,reps$replicate,sep="_")
 			colnames(reps)[colnames(reps)=="condition"]<-"sample_name"
-			
+
 			#Write TSSReplicateData table
 			write("Writing TSSReplicateData table",stderr())
 			insert_SQL<-'INSERT INTO TSSReplicateData VALUES(:tracking_id,:sample_name,:replicate,:rep_name,:raw_frags,:internal_scaled_frags,:external_scaled_frags,:FPKM,:effective_length,:status)'
@@ -797,9 +797,9 @@ loadTSS<-function(fpkmFile,
 		}else{
 			write(paste("No records found in",replicateFile),stderr())
 		}
-		
+
 	}
-	
+
 }
 
 #CDS
@@ -823,29 +823,29 @@ loadCDS<-function(fpkmFile,
 		stringsAsFactors = FALSE,
 		row.names=NULL,
 		...) {
-	
+
 	#Error Trapping
 	if (missing(fpkmFile))
 		stop("fpkmFile cannot be missing!")
-	
+
 	if (missing(dbConn))
 		stop("Must provide a dbConn connection")
-	
+
 	#TODO test dbConn connection and database structure
-	
+
 	idCols = c(1:9)
-	
+
 	#Read primary file
 	write(paste("Reading ",fpkmFile,sep=""),stderr())
 	fpkmArgs$file = fpkmFile
 	full = as.data.frame(do.call(read.table,fpkmArgs))
-	
+
 	########
 	#Handle Sample Names
 	########
-	
-	
-	
+
+
+
 	#Check that samples table is populated
 	write("Checking samples table...",stderr())
 	samples<-getSamplesFromColnames(full)
@@ -861,7 +861,7 @@ loadCDS<-function(fpkmFile,
 		write("Populating samples table...",stderr())
 		populateSampleTable(samples,dbConn)
 	}
-	
+
 	######
 	#Populate CDS table
 	######
@@ -871,7 +871,7 @@ loadCDS<-function(fpkmFile,
 	if (nrow(cdsTable)>0){
 		insert_SQL<-"INSERT INTO CDS VALUES(?,?,?,?,?,?,?,?,?)"
 		bulk_insert(dbConn,insert_SQL,cdsTable)
-		
+
 		######
 		#Populate geneData table
 		######
@@ -880,51 +880,51 @@ loadCDS<-function(fpkmFile,
 		colnames(cdsmelt)[colnames(cdsmelt)=='variable']<-'sample_name'
 		#Clean up and normalize data
 		cdsmelt$measurement = ""
-		
+
 		cdsmelt$measurement[grepl("_FPKM$",cdsmelt$sample_name)] = "fpkm"
 		cdsmelt$measurement[grepl("_conf_lo$",cdsmelt$sample_name)] = "conf_lo"
 		cdsmelt$measurement[grepl("_conf_hi$",cdsmelt$sample_name)] = "conf_hi"
 		cdsmelt$measurement[grepl("_status$",cdsmelt$sample_name)] = "status"
-		
+
 		cdsmelt$sample_name<-gsub("_FPKM$","",cdsmelt$sample_name)
 		cdsmelt$sample_name<-gsub("_conf_lo$","",cdsmelt$sample_name)
 		cdsmelt$sample_name<-gsub("_conf_hi$","",cdsmelt$sample_name)
 		cdsmelt$sample_name<-gsub("_status$","",cdsmelt$sample_name)
-		
+
 		#Adjust sample names with make.db.names
 		cdsmelt$sample_name <- make.db.names(dbConn,as.vector(cdsmelt$sample_name),unique=FALSE)
-		
+
 		#Recast
 		write("Recasting",stderr())
 		cdsmelt<-as.data.frame(dcast(cdsmelt,...~measurement))
-		
+
 		#Write geneData table
 		write("Writing CDSData table",stderr())
 		#dbWriteTable(dbConn,'CDSData',as.data.frame(cdsmelt[,c(1:2,5,3,4,6)]),row.names=F,append=T)
 		insert_SQL<-"INSERT INTO CDSData VALUES(?,?,?,?,?,?)"
 		bulk_insert(dbConn,insert_SQL,cdsmelt[,c(1:2,5,3,4,6)])
-	
+
 	}else {
 		write(paste("No records found in",fpkmFile),stderr())
 		write("CDS FPKM tracking file was empty.",stderr())
 	}
-	
-	
+
+
 	#######
 	#Handle cds_groups_exp.diff
 	#######
-	
+
 	if(file.exists(diffFile)){
 		#Read diff file
 		write(paste("Reading ",diffFile,sep=""),stderr())
 		diffArgs$file = diffFile
 		diff<-as.data.frame(do.call(read.table,diffArgs))
-		
+
 		if(dim(diff)[1]>0){
 			#Adjust sample names with make.db.names
 			diff$sample_1<-make.db.names(dbConn,as.vector(diff$sample_1),unique=FALSE)
 			diff$sample_2<-make.db.names(dbConn,as.vector(diff$sample_2),unique=FALSE)
-			
+
 			write("Writing CDSExpDiffData table",stderr())
 			diffCols<-c(1,5:14)
 			#dbWriteTable(dbConn,'CDSExpDiffData',diff[,diffCols],row.names=F,append=T)
@@ -934,7 +934,7 @@ loadCDS<-function(fpkmFile,
 			write(paste("No records found in",diffFile),stderr())
 		}
 	}
-	
+
 	#########
 	#TODO: Handle CDS.diff
 	########
@@ -953,52 +953,52 @@ loadCDS<-function(fpkmFile,
 			write(paste("No records found in",CDSDiff),stderr())
 		}
 	}
-	
+
 	###########
 	#Handle Counts .count_tracking
 	###########
 	if(file.exists(countFile)){
-		
+
 		idCols = c(1)
-		
+
 		#Read countFile
 		write(paste("Reading ", countFile,sep=""),stderr())
 		countArgs$file = countFile
 		counts<-as.data.frame(do.call(read.table,countArgs))
-		
+
 		if(dim(counts)[1]>0){
-		
+
 			#Reshape CDSCount table
 			write("Reshaping CDSCount table",stderr())
 			countmelt<-melt(counts,id.vars=c("tracking_id"),measure.vars=-idCols)
 			colnames(countmelt)[colnames(countmelt)=='variable']<-'sample_name'
-			
+
 			countmelt$measurement = ""
-			
+
 			countmelt$measurement[grepl("_count$",countmelt$sample_name)] = "count"
 			countmelt$measurement[grepl("_count_variance$",countmelt$sample_name)] = "variance"
 			countmelt$measurement[grepl("_count_uncertainty_var$",countmelt$sample_name)] = "uncertainty"
 			countmelt$measurement[grepl("_count_dispersion_var$",countmelt$sample_name)] = "dispersion"
 			countmelt$measurement[grepl("_status$",countmelt$sample_name)] = "status"
-			
+
 			countmelt$sample_name<-gsub("_count$","",countmelt$sample_name)
 			countmelt$sample_name<-gsub("_count_variance$","",countmelt$sample_name)
 			countmelt$sample_name<-gsub("_count_uncertainty_var$","",countmelt$sample_name)
 			countmelt$sample_name<-gsub("_count_dispersion_var$","",countmelt$sample_name)
 			countmelt$sample_name<-gsub("_status$","",countmelt$sample_name)
-			
+
 			#Adjust sample names with make.db.names
 			countmelt$sample_name <- make.db.names(dbConn,as.vector(countmelt$sample_name),unique=FALSE)
-			
-			
+
+
 			#Recast
 			write("Recasting",stderr())
 			countmelt<-as.data.frame(dcast(countmelt,...~measurement))
-			
+
 			#debugging
 			#write(colnames(countmelt),stderr())
-			
-			
+
+
 			#Write CDSCount table
 			write("Writing CDSCount table",stderr())
 			insert_SQL<-'INSERT INTO CDSCount VALUES(:tracking_id,:sample_name,:count,:variance,:uncertainty,:dispersion,:status)'
@@ -1007,29 +1007,29 @@ loadCDS<-function(fpkmFile,
 			write(paste("No records found in",countFile),stderr())
 		}
 	}
-	
-	
+
+
 	###########
 	#Handle Replicates .rep_tracking
 	###########
 	if(file.exists(replicateFile)){
-		
+
 		idCols = 1
 		#Read countFile
 		write(paste("Reading read group info in ", replicateFile,sep=""),stderr())
 		replicateArgs$file = replicateFile
 		reps<-as.data.frame(do.call(read.table,replicateArgs))
 		#print(head(reps))
-		
+
 		if(dim(reps)[1]>0){
-				
+
 			#Adjust sample names with make.db.names
 			reps$condition <- make.db.names(dbConn,as.character(reps$condition),unique=FALSE)
-		
+
 			#Create unique rep name
 			reps$rep_name<-paste(reps$condition,reps$replicate,sep="_")
 			colnames(reps)[colnames(reps)=="condition"]<-"sample_name"
-			
+
 			#Write CDSReplicateData table
 			write("Writing CDSReplicateData table",stderr())
 			insert_SQL<-'INSERT INTO CDSReplicateData VALUES(:tracking_id,:sample_name,:replicate,:rep_name,:raw_frags,:internal_scaled_frags,:external_scaled_frags,:FPKM,:effective_length,:status)'
@@ -1037,9 +1037,9 @@ loadCDS<-function(fpkmFile,
 		}else{
 			write(paste("No records found in",replicateFile),stderr())
 		}
-		
+
 	}
-	
+
 }
 
 ########################
@@ -1054,10 +1054,10 @@ loadCDS<-function(fpkmFile,
 createDB_noIndex<-function(dbFname="cuffData.db",driver="SQLite") {
 	#Builds sqlite db at 'dbFname' and returns a dbConnect object pointing to newly created database.
 	#No indexes are present
-	
+
 	drv<-dbDriver(driver)
 	db <- dbConnect(drv,dbname=dbFname)
-	
+
 	schema.text<-'
 -- Creator:       MySQL Workbench 5.2.33/ExportSQLite plugin 2009.12.02
 -- Author:        Loyal Goff
@@ -1636,17 +1636,17 @@ COMMIT;
 	create.sql <- paste(collapse="\n", create.sql)
 	create.sql <- strsplit(create.sql, ";")[[1]]
 	create.sql <- create.sql[-length(create.sql)] #nothing to run here
-	
-	tmp <- sapply(create.sql,function(x) sqliteQuickSQL(db,x))
+
+	tmp <- sapply(create.sql,function(x) dbGetQuery(db,x))
 	db
 }
 
 
 createIndices<-function(dbFname="cuffData.db",driver="SQLite",verbose=F){
-	
+
 	drv<-dbDriver(driver)
 	db <- dbConnect(drv,dbname=dbFname)
-	
+
 	index.text<-
 'CREATE INDEX "genes.gsn_index" ON "genes"("gene_short_name");
 CREATE INDEX "genes.cc_index" ON "genes"("class_code");
@@ -1738,12 +1738,12 @@ CREATE INDEX "geneExpDiffData.fk_geneExpDiffData_allSamples" ON "geneExpDiffData
 '
 
 	create.sql <- strsplit(index.text,"\n")[[1]]
-	
+
 	tmp <- sapply(create.sql,function(x){
 			if (verbose){
 						write(paste(x,sep=""),stderr())
 					}
-			sqliteQuickSQL(db,x)
+			dbGetQuery(db,x)
 	})
 }
 
@@ -1765,7 +1765,7 @@ populateSampleTable<-function(samples,dbConn){
 
 bulk_insert <- function(dbConn,sql,bound.data)
 {
-	dbBeginTransaction(dbConn)
+	dbBegin(dbConn)
 	dbGetPreparedQuery(dbConn, sql, bind.data = bound.data)
 	dbCommit(dbConn)
 }
@@ -1804,7 +1804,7 @@ readCufflinks<-function(dir = getwd(),
 						rebuild = FALSE,
 						verbose = FALSE,
 						...){
-	
+
 	#Set file locations with directory
 	dbFile=file.path(dir,dbFile)
 	runInfoFile=file.path(dir,runInfoFile)
@@ -1829,53 +1829,53 @@ readCufflinks<-function(dir = getwd(),
 	promoterFile=file.path(dir,promoterFile)
 	splicingFile=file.path(dir,splicingFile)
 	varModelFile=file.path(dir,varModelFile)
-					
-					
+
+
 	#Check to see whether dbFile exists
 	if (!file.exists(dbFile) || rebuild == TRUE){
 		#if not, create it
 		write(paste("Creating database ",dbFile,sep=""),stderr())
 		dbConn<-createDB_noIndex(dbFile)
-		
+
 		#populate DB
 		if(file.exists(runInfoFile)){
 			loadRunInfo(runInfoFile,dbConn)
 		}
-		
+
 		if(file.exists(repTableFile)){
 			loadRepTable(repTableFile,dbConn)
 		}
-		
+
 		if(file.exists(varModelFile)){
 			loadVarModelTable(varModelFile,dbConn)
 		}
-		
+
 		if(!is.null(gtfFile)){
 			if(!is.null(genome)){
 				.loadGTF(gtfFile,genome,dbConn)
 			}else{
-				stop("'genome' cannot be NULL if you are supplying a .gtf file!")	
+				stop("'genome' cannot be NULL if you are supplying a .gtf file!")
 			}
 		}
-		
+
 		loadGenes(geneFPKM,geneDiff,promoterFile,countFile=geneCount,replicateFile=geneRep,dbConn)
 		loadIsoforms(isoformFPKM,isoformDiff,isoformCount,isoformRep,dbConn)
 		loadTSS(TSSFPKM,TSSDiff,splicingFile,TSSCount,TSSRep,dbConn)
 		loadCDS(CDSFPKM,CDSExpDiff,CDSDiff,CDSCount,CDSRep,dbConn)
-		
+
 		#Create Indexes on DB
 		write("Indexing Tables...",stderr())
 		createIndices(dbFile,verbose=verbose)
-		
+
 		#load Distribution Tests
 		#loadDistTests(promoterFile,splicingFile,CDSDiff)
-		
+
 	}
 	dbConn<-dbConnect(dbDriver(driver),dbFile)
 	return (
 			new("CuffSet",DB = dbConn,
 					#TODO: need to add replicate and count tables here and in AllClasses.R
-					
+
 					genes = new("CuffData",DB = dbConn, tables = list(mainTable = "genes",dataTable = "geneData",expDiffTable = "geneExpDiffData",featureTable = "geneFeatures",countTable="geneCount",replicateTable="geneReplicateData"), filters = list(),type = "genes",idField = "gene_id"),
 					isoforms = new("CuffData", DB = dbConn, tables = list(mainTable = "isoforms",dataTable = "isoformData",expDiffTable = "isoformExpDiffData",featureTable = "isoformFeatures",countTable="isoformCount",replicateTable="isoformReplicateData"), filters = list(),type="isoforms",idField = "isoform_id"),
 					TSS = new("CuffData", DB = dbConn, tables = list(mainTable = "TSS",dataTable = "TSSData",expDiffTable = "TSSExpDiffData",featureTable = "TSSFeatures",countTable="TSSCount",replicateTable="TSSReplicateData"), filters = list(),type = "TSS",idField = "TSS_group_id"),
@@ -1884,71 +1884,71 @@ readCufflinks<-function(dir = getwd(),
 					splicing = new("CuffDist", DB = dbConn, table = "splicingDiffData",type="splicing",idField="TSS_group_id"),
 					relCDS = new("CuffDist", DB = dbConn, table = "CDSDiffData",type="relCDS",idField="gene_id")
 			)
-	)	
-							
+	)
+
 }
 
 ############
 # Handle GTF file
 ############
 #loadGTF<-function(gtfFile,dbConn) {
-#	
+#
 #	#Error Trapping
 #	if (missing(gtfFile))
 #		stop("GTF file cannot be missing!")
-#	
+#
 #	if (missing(dbConn))
 #		stop("Must provide a dbConn connection")
-#	
+#
 #	write("Reading GTF file")
 #	gtf<-read.table(gtfFile,sep="\t",header=F)
-#	
+#
 #	write("Melting attributes")
 #	attributes<-melt(strsplit(as.character(gtf$V9),"; "))
 #	colnames(attributes)<-c("attribute","featureID")
 #	attributes<-paste(attributes$attribute,attributes$featureID)
 #	attributes<-strsplit(as.character(attributes)," ")
 #	attributes<-as.data.frame(do.call("rbind",attributes))
-#	
+#
 #	colnames(attributes)<-c("attribute","value","featureID")
 #	attributes<-attributes[,c(3,1,2)]
-#	
+#
 #	#Grab only gene_ID and transcript_ID to add to features table
 #	id.attributes<-attributes[attributes$attribute %in% c("gene_id","transcript_id"),]
 #	id.attributes$featureID<-as.numeric(as.character(id.attributes$featureID))
 #	id.attributes<-dcast(id.attributes,...~attribute)
-#	
+#
 #	#Main features table
 #	features<-gtf[,c(1:8)]
 #	colnames(features)<-c("seqname","source","type","start","end","score","strand","frame")
 #	features$featureID<-as.numeric(as.character(rownames(features)))
-#	
+#
 #	#Merge features and id.attributes
 #	features<-merge(features,id.attributes,by.x='featureID',by.y='featureID')
 #	features<-features[,c(1,10:11,2:9)]
-#	
+#
 #	#strip gene_id and transcript_id from attributes
 #	attributes<-attributes[!(attributes$attribute %in% c("gene_id","transcript_id")),]
-#	
+#
 #	#Write features table
 #	write("Writing features table",stderr())
 #	#dbWriteTable(dbConn,'geneData',as.data.frame(genemelt[,c(1:2,5,3,4,6)]),row.names=F,append=T)
 #	dbWriteTable(dbConn,'features',as.data.frame(features),append=T)
-#	
+#
 #	#Write features attribtues table
 #	#write("Writing feature attributes table",stderr())
 #	dbWriteTable(dbConn,'attributes',as.data.frame(attributes),append=T)
-#	
+#
 #}
 
 .loadGTF<-function(gtfFile,genomebuild,dbConn){
 	#Error Trapping
 	if (missing(gtfFile))
 		stop("GTF file cannot be missing!")
-	
+
 	if (missing(dbConn))
 		stop("Must provide a dbConn connection")
-	
+
 	write("Reading GTF file",stderr())
 	gr<-import(gtfFile,asRangedData=FALSE)
 	gr<-as(gr,"data.frame")
@@ -1958,7 +1958,7 @@ readCufflinks<-function(dir = getwd(),
 	colnames(gr)[grepl('^p_id$',colnames(gr))]<-'CDS_id'
 	write("Writing GTF features to 'features' table...",stderr())
 	#dbSendQuery(dbConn,"DROP TABLE IF EXISTS 'features'")
-	#dbBeginTransaction(dbConn)
+	#dbBegin(dbConn)
 	dbWriteTable(dbConn,'features',gr,row.names=F,overwrite=T)
 	#record Genome build
 	.recordGenome(genomebuild,dbConn)
@@ -1973,29 +1973,29 @@ readCufflinks<-function(dir = getwd(),
 }
 
 .cuff2db <- function(gtfFile, out.file = NULL, verbose = TRUE) {
-	
+
 	#require(rtracklayer)
 	#require(GenomicRanges)
 	#require(GenomicFeatures)
-	
+
 	requiredAttribs <- c("gene_id", "transcript_id", "exon_number")
-	
+
 	if (verbose) message("Importing ", gtfFile)
 	tmp <- import(gtfFile, asRangedData=FALSE)
-	
+
 	#dispose of unspliced unstranded transcripts
 	#tmp <- tmp[ which(strand(tmp) %in% c('+','-')) ]
-	
+
 	# fix the gene IDs
 	#values(tmp)$gene_id <- gsub('CUFF.', '', values(tmp)$gene_id)
-	
+
 	# fix the exon IDs
 	#values(tmp)$transcript_id <- gsub('CUFF.', '', values(tmp)$transcript_id)
-	
+
 	# split the object into transcript and exon pieces
 	#by.type = split(tmp, values(tmp)$type)
 	#browser()
-	
+
 	#make transcripts table
 	tmpT <- split(tmp,
 			values(tmp)$transcript_id)
@@ -2009,7 +2009,7 @@ readCufflinks<-function(dir = getwd(),
 			tx_end=sapply(end(ranges(tmpT)), max),
 			stringsAsFactors=FALSE
 	)
-	
+
 	#make splicings table
 	tmpS <- split(tmp, values(tmp)$transcript_id)
 	if(verbose) message('Attempting to create the splicings data.frame')
@@ -2022,7 +2022,7 @@ readCufflinks<-function(dir = getwd(),
 			exon_end=end(unlist(tmpS)),
 			stringsAsFactors=FALSE
 	)
-	
+
 	#make genes table
 	if(verbose) message('Attempting to create the genes data.frame')
 	gene_txs <- tapply(values(tmp)$transcript_id, values(tmp)$gene_id, unique)
@@ -2030,13 +2030,13 @@ readCufflinks<-function(dir = getwd(),
 			tx_name=unlist(gene_txs),
 			gene_id=rep(names(gene_txs), sapply(gene_txs, length)),
 			stringsAsFactors=FALSE)
-	
+
 	#create the db
 	if (verbose) message("Creating TranscriptDb")
 	tmpdb <- makeTranscriptDb(transcripts, splicings, genes=genes)
 	if (verbose) message("Use saveFeatures() to save the database to a file")
 	return(tmpdb)
-	
+
 }
 
 #library(Gviz)
