@@ -2,3 +2,4 @@ cuffData.db
 .RData
 .Rhistory
 .DS*
+.Rapp.history
