@@ -9,8 +9,8 @@ Depends: R (>= 2.7.0), BiocGenerics (>= 0.3.2), RSQLite, ggplot2, reshape2, fast
 Suggests: cluster, plyr, NMFN, stringr, GenomicFeatures, GenomicRanges, rjson
 Maintainer: Loyal A. Goff <lgoff@csail.mit.edu>
 License: Artistic-2.0
-Collate: 	AllGenerics.R 
-			AllClasses.R 
+Collate: 	AllGenerics.R
+			AllClasses.R
 			database-setup.R
 			methods-CuffSet.R
 			methods-CuffData.R
@@ -22,4 +22,3 @@ Collate: 	AllGenerics.R
 			tools.R
 LazyLoad: yes
 biocViews: HighThroughputSequencing, HighThroughputSequencingData, RNAseq, RNAseqData, GeneExpression, DifferentialExpression, Infrastructure, DataImport, DataRepresentation, Visualization, Bioinformatics, Clustering, MultipleComparisons, QualityControl
-
