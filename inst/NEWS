@@ -1,3 +1,7 @@
+v2.9.3
+	Bugfix:
+		- Introduced CHECK error by adding to .Rbuildignore...this is now fixed.
+
 v2.9.2
 	- version bump to let BioC nightly build grab commit.
 
