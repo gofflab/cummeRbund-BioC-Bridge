@@ -35,10 +35,10 @@
                   </a>
                   <h2>Exploration, analysis and visualization of Cufflinks high-throughput RNA-Seq data</h2>
                 </td>
-                <td align="right" valign="middle"> 
+                <td align="right" valign="middle">
                  <a href="http://csail.mit.edu/" onClick="recordOutboundLink(this, 'Outbound Links', 'CSAIL');return false;"><img style="height:70px;vertical-align:middle;padding-top:4px" src="../images/csail-logo-2C-notext.png" border=0></img></a>&nbsp;
                  <a href="http://www.scrb.harvard.edu/" onClick="recordOutboundLink(this, 'Outbound Links', 'SCRB');return false;"><img style="height:70px;vertical-align:middle;padding-top:4px" src="../images/HarvardShield_CMYK.png" border=0></img></a>&nbsp;
-               	 
+
                 </td>
               </tr>
             </tbody>
@@ -111,52 +111,59 @@
               </table>
             </ul>
           </div>
-       
+
           <a href="./downloads">
-            <h2><u>Releases</u></h2>
-          </a>
+          <h2><u>Releases</u></h2>
           <div class="box">
             <ul>
-              <!--
-              <p>Development Version</p>
+              <tr>
+                <td><a href="http://www.github.com/gofflab/cummeRbund/" onClick="recordOutboundLink(this, 'Github', 'Github-devel-branch');return false;">Github Source</a></td>
+              </tr>
+              <h4>Development Version (tied to BioC devel cycle)</h4>
               <table width="100%">
                 <tbody>
                   <tr>
-                    <td>version 1.2.0</td>
-                    <td align="right">4/1/2012</td>
+                    <td><a href="http://bioconductor.org/packages/3.1/bioc/html/cummeRbund.html" onClick="recordOutboundLink(this, 'Bioconductor', 'BioC 3.0');return false;">version 2.9.3</td>
+                    <td align="right">11/10/2014</td>
                   </tr>
                   <tr>
-                    <td><a href="http://bioconductor.org/packages/devel/bioc/src/contrib/cummeRbund_1.2.0.tar.gz" onClick="recordOutboundLink(this, 'Downloads from BioC', 'Source');return false;">&nbsp;&nbsp;&nbsp;Package Source</a></td>
+                    <td><a href="http://bioconductor.org/packages/3.1/bioc/src/contrib/cummeRbund_2.9.3.tar.gz" onClick="recordOutboundLink(this, 'Downloads from BioC', 'Source');return false;">&nbsp;&nbsp;&nbsp;Package Source</a></td>
                   </tr>
                   <tr>
-                    <td><a href="http://bioconductor.org/packages/devel/bioc/bin/macosx/leopard/contrib/2.15/cummeRbund_1.2.0.tgz" onClick="recordOutboundLink(this, 'Downloads from BioC', 'Mac OS X');return false;">&nbsp;&nbsp;&nbsp;Mac OS X binary</a></td>
+                    <td><a href="http://bioconductor.org/packages/3.1/bioc/bin/macosx/contrib/3.2/cummeRbund_2.9.3.tgz" onClick="recordOutboundLink(this, 'Downloads from BioC', 'Mac OS X 10.6');return false;">&nbsp;&nbsp;&nbsp;Mac OS X 10.6 binary</a></td>
                   </tr>
                   <tr>
-                    <td><a href="http://bioconductor.org/packages/devel/bioc/bin/windows/contrib/2.15/cummeRbund_1.2.0.zip" onClick="recordOutboundLink(this, 'Downloads from BioC', 'Windows');return false;">&nbsp;&nbsp;&nbsp;Windows binary</a></td>
+                    <td><a href="http://bioconductor.org/packages/3.1/bioc/bin/macosx/mavericks/contrib/3.2/cummeRbund_2.9.3.tgz" onClick="recordOutboundLink(this, 'Downloads from BioC', 'Mac OS X 10.9');return false;">&nbsp;&nbsp;&nbsp;Mac OS X >= 10.9 binary</a></td>
+                  </tr>
+                  <tr>
+                    <td><a href="http://bioconductor.org/packages/3.1/bioc/bin/windows/contrib/3.2/cummeRbund_2.9.3.zip" onClick="recordOutboundLink(this, 'Downloads from BioC', 'Windows');return false;">&nbsp;&nbsp;&nbsp;Windows binary</a></td>
                   </tr>
                 </tbody>
               </table>
-              -->
-              <p>Stable Version (tied to Bioconductor release cycle)</p>
+
+              <h4>Stable Version (tied to Bioconductor release cycle)</h4>
               <table width="100%">
-                <tbody>
+              <tbody>
                   <tr>
-                    <td><a href="http://bioconductor.org/packages/2.11/bioc/html/cummeRbund.html" onclick="recordOutboundLink(this, 'Bioconductor', 'BioC 2.11');return false;">version 2.0.0</a> (BioC 2.11)</td>
-                    <td align="right">10/2/2012</td>
+                    <td><a href="http://bioconductor.org/packages/3.0/bioc/html/cummeRbund.html" onClick="recordOutboundLink(this, 'Bioconductor', 'BioC 3.0');return false;">version 2.8.2</td>
+                    <td align="right">11/05/2014</td>
                   </tr>
                   <tr>
-                    <td><a href="http://bioconductor.org/packages/2.11/bioc/src/contrib/cummeRbund_2.0.0.tar.gz" onclick="recordOutboundLink(this, 'Downloads from BioC', 'Source');return false;">&nbsp;&nbsp;&nbsp;Package Source</a></td>
+                    <td><a href="http://www.bioconductor.org/packages/3.0/bioc/src/contrib/cummeRbund_2.8.2.tar.gz" onClick="recordOutboundLink(this, 'Downloads from BioC', 'Source');return false;">&nbsp;&nbsp;&nbsp;Package Source</a></td>
                   </tr>
                   <tr>
-                    <td><a href="http://bioconductor.org/packages/2.11/bioc/bin/macosx/leopard/contrib/2.15/cummeRbund_2.0.0.tgz" onclick="recordOutboundLink(this, 'Downloads from BioC', 'Mac OS X');return false;">&nbsp;&nbsp;&nbsp;Mac OS X binary</a></td>
+                    <td><a href="http://bioconductor.org/packages/3.0/bioc/bin/macosx/contrib/3.1/cummeRbund_2.8.2.tgz" onClick="recordOutboundLink(this, 'Downloads from BioC', 'Mac OS X 10.6');return false;">&nbsp;&nbsp;&nbsp;Mac OS X 10.6 binary</a></td>
                   </tr>
                   <tr>
-                    <td><a href="http://bioconductor.org/packages/2.11/bioc/bin/windows/contrib/2.15/cummeRbund_2.0.0.zip" onclick="recordOutboundLink(this, 'Downloads from BioC', 'Windows');return false;">&nbsp;&nbsp;&nbsp;Windows binary</a></td>
+                    <td><a href="http://bioconductor.org/packages/3.0/bioc/bin/macosx/mavericks/contrib/3.1/cummeRbund_2.8.2.tgz" onClick="recordOutboundLink(this, 'Downloads from BioC', 'Mac OS X 10.9');return false;">&nbsp;&nbsp;&nbsp;Mac OS X >=10.9 binary</a></td>
+                  </tr>
+                  <tr>
+                    <td><a href="http://www.bioconductor.org/packages/3.0/bioc/bin/windows/contrib/3.1/cummeRbund_2.8.2.zip" onClick="recordOutboundLink(this, 'Downloads from BioC', 'Windows');return false;">&nbsp;&nbsp;&nbsp;Windows binary</a></td>
                   </tr>
                 </tbody>
               </table>
            <!-- #Development version link table
-              
+
               <p>Development Version (tied to Bioconductor devel cycle)</p>
               <table width="100%">
                 <tbody>
@@ -177,7 +184,7 @@
               </table>
               -->
               <!-- #Previous Releases -->
-              
+
               <p>Previous Releases</p>
               <table width="100%">
                 <tbody>
@@ -187,7 +194,7 @@
                   </tr>
                 </tbody>
               </table>
-      
+
               <p style="font-size:xx-small;font-style:italic">* <a href="http://www.bioconductor.org/packages/release/bioc/html/cummeRbund.html" onClick="recordOutboundLink(this, 'Outbound Links', 'bioconductor.org/cummeRbund');return false;">CummeRbund</a> is now included as part of the <a href="http://www.bioconductor.org"  onClick="recordOutboundLink(this, 'Outbound Links', 'bioconductor.org');return false;" target="_blank">R/Bioconductor</a> project. The links above point to the R packages directly, and  every effort should be made to use the version provided by Bioconductor as it will ensure compatibility with other Bioconductor packages. Easy installation instructions (with dependencies) can be found <a href="http://www.bioconductor.org/packages/release/bioc/html/cummeRbund.html">here</a>.</p>
             </ul>
           </div>
@@ -206,7 +213,7 @@
           <h2>Publications</h2>
           <div class="box">
             <ul>
-              
+
             </ul>
           </div>
           -->
@@ -217,7 +224,7 @@
               <li><a href="http://www.cs.umd.edu/%7Ecole/">Cole Trapnell</a></li>
               <li><a href="http://www.cbcb.umd.edu/~dakelley/">David Kelley</a></li>
               <!--<li>David Kelley</li>-->
-             
+
             </ul>
           </div>
           <h2>Links</h2>
@@ -254,17 +261,17 @@
     </div>
     <!-- Google analytics code -->
 		<script type="text/javascript">
-        
+
           var _gaq = _gaq || [];
           _gaq.push(['_setAccount', 'UA-318359-6']);
           _gaq.push(['_trackPageview']);
-        
+
           (function() {
             var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
             ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
             var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
           })();
-        
+
         </script>
     <!-- End google analytics code -->
   </body>
