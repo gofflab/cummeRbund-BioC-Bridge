@@ -2033,7 +2033,7 @@ readCufflinks<-function(dir = getwd(),
 
 	#create the db
 	if (verbose) message("Creating TranscriptDb")
-	tmpdb <- makeTranscriptDb(transcripts, splicings, genes=genes)
+	tmpdb <- makeTxDb(transcripts, splicings, genes=genes)
 	if (verbose) message("Use saveFeatures() to save the database to a file")
 	return(tmpdb)
 
