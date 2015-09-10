@@ -1950,7 +1950,7 @@ readCufflinks<-function(dir = getwd(),
 		stop("Must provide a dbConn connection")
 
 	write("Reading GTF file",stderr())
-	gr<-import(gtfFile,asRangedData=FALSE)
+	gr<-import(gtfFile)
 	gr<-as(gr,"data.frame")
 	#gr$genome<-genomebuild
 	colnames(gr)[grepl('^transcript_id$',colnames(gr))]<-'isoform_id'
@@ -1981,7 +1981,7 @@ readCufflinks<-function(dir = getwd(),
 	requiredAttribs <- c("gene_id", "transcript_id", "exon_number")
 
 	if (verbose) message("Importing ", gtfFile)
-	tmp <- import(gtfFile, asRangedData=FALSE)
+	tmp <- import(gtfFile)
 
 	#dispose of unspliced unstranded transcripts
 	#tmp <- tmp[ which(strand(tmp) %in% c('+','-')) ]
