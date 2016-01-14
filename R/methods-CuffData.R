@@ -776,7 +776,7 @@ setMethod("csVolcano",signature(object="CuffData"), .volcano)
 	
 	p <-ggplot(dat) + geom_point(mapping,na.rm=TRUE,size=0.8) + scale_colour_manual(values = c("black","red")) + facet_grid(sample_1~sample_2)
 	
-	p<- p + geom_vline(aes(x=0),linetype=2)
+	p<- p + geom_vline(aes(xintercept=0),linetype=2)
 	
 	p <- p + theme_bw() + xlab(bquote(paste(log[2],"(fold change)",sep=""))) + ylab(bquote(paste(-log[10],"(p value)",sep="")))
 
@@ -961,7 +961,7 @@ setMethod("MDSplot",signature(object="CuffData"),.MDSplot)
 	if(showPoints){
 		plot<- plot + geom_point(alpha=.4, size=0.8, aes(label=obsnames))
 	}
-	plot <- plot + geom_hline(aes(0), size=.2) + geom_vline(aes(0), size=.2) #+ geom_text(aes(label=shoutout),size=2,color="red")
+	plot <- plot + geom_hline(aes(0), size=.2) + geom_vline(aes(xintercept=0), size=.2) #+ geom_text(aes(label=shoutout),size=2,color="red")
 	datapc <- data.frame(varnames=rownames(PC$rotation), PC$rotation)
 	mult <- min(
 			(max(dat[,y]) - min(dat[,y])/(max(datapc[,y])-min(datapc[,y]))),
